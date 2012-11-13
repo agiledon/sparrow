@@ -4,10 +4,9 @@ package com.sparrowframework.core.command
  * Created with IntelliJ IDEA.
  * User: twer
  * Date: 11/13/12
- * Time: 4:28 PM
+ * Time: 5:01 PM
  * To change this template use File | Settings | File Templates.
  */
-abstract class CommandHandler {
-  def handle(commandMessage: CommandMessage): Option
+class CommandMessage {
 
 }
