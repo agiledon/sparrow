@@ -9,7 +9,7 @@ package com.sparrowframework.core.command
 
 object CommandBus {
   def send[T <: Command](message: T) {
-    val commandMap = Map("commandName" -> new CommandHandler)
+    val commandMap = Map("commandName" -> new CustomCommandHandler)
     val commandProcessor: CommandProcessor[CommandHandler] = {
       CommandProcessorFactory.create(commandMap)
     }

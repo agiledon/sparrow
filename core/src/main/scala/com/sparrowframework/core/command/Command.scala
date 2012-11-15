@@ -6,5 +6,6 @@ package com.sparrowframework.core.command
  * Date: 11/15/12
  * Time: 10:02 AM
  */
-class Command(val name: String) {
+trait Command {
+  def getName(): String
 }

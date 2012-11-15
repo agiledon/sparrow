@@ -16,7 +16,7 @@ class CommandProcessor[THandler <: CommandHandler]() extends Actor {
     while (true) {
       receive {
         case command:Command => {
-          commandMap(command.name).handle(command)
+          commandMap(command.getName()).handle(command)
         }
       }
     }

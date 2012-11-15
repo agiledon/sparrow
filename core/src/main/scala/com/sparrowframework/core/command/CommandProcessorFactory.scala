@@ -9,7 +9,9 @@ package com.sparrowframework.core.command
 object CommandProcessorFactory {
   def create[T <: CommandHandler](commandMap: Map[String, T]): CommandProcessor[T] = {
     val commandProcessor = new CommandProcessor[T]()
-    commandMap.foreach {case(key, value) => commandProcessor.register(key, value)}
+    commandMap.foreach {
+      case (key, value) => commandProcessor.register(key, value)
+    }
     commandProcessor
   }
 
