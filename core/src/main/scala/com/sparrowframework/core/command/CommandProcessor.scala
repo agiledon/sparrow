@@ -8,12 +8,20 @@
 package com.sparrowframework.core.command
 import actors.Actor
 
-class CommandProcessor() extends Actor {
+class CommandProcessor[THandler <: CommandHandler]() extends Actor {
+  var commandMap = Map[String, THandler]()
   def act() {
     while (true) {
       receive {
-        case msg => println(msg)
+        case command:Command => {
+          commandMap(command.name).handle(command)
+        }
       }
     }
   }
+
+  def register(commandName: String, commandHandler: THandler) {
+        commandMap += (commandName -> commandHandler)
+  }
+
 }

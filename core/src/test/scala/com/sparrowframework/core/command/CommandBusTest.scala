@@ -10,7 +10,7 @@ import org.scalatest.FunSuite
  */
 class CommandBusTest extends FunSuite {
   test("send message via actor"){
-    CommandBus.send("hello")
+    CommandBus.send(new Command("commandName"))
   }
 
 }
