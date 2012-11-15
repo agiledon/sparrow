@@ -11,6 +11,7 @@ object CommandBus {
   def send[T <: Command](message: T) {
     val commandProcessor = new CommandProcessor[CommandHandler]()
     commandProcessor.register("commandName", new CommandHandler())
+    commandProcessor.start()
     commandProcessor ! message
   }
 }
