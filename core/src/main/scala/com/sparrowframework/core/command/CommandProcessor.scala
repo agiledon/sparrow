@@ -8,8 +8,8 @@
 package com.sparrowframework.core.command
 import actors.Actor
 
-class CommandProcessor[THandler <: CommandHandler]() extends Actor {
-  var commandMap = Map[String, THandler]()
+class CommandProcessor() extends Actor {
+  var commandMap = Map[String, CommandHandler]()
   override def act() = process()
 
   def process() {
@@ -22,7 +22,7 @@ class CommandProcessor[THandler <: CommandHandler]() extends Actor {
     }
   }
 
-  def register(commandName: String, commandHandler: THandler) {
+  def register(commandName: String, commandHandler: CommandHandler) {
         commandMap += (commandName -> commandHandler)
   }
 
