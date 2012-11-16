@@ -12,8 +12,9 @@ import com.sparrowframework.core.command.{CommandBus, CustomCommand}
 class EventBusTest extends FunSuite {
   test("send event via actor once"){
     val message: Event = new CustomEvent("eventName1")
+    message.publish(new CustomEventHandler)
     EventBus.send(message)
-    Thread.sleep(3000)
+    Thread.sleep(1000)
     assert(message.isTriggered == true)
   }
 }

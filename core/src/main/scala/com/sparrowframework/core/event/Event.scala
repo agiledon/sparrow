@@ -12,4 +12,5 @@ trait Event extends Message{
   def getHandlers: Set[EventHandler]
   def isTriggered: Boolean
   def trigger
+  def publish(eventHandler: EventHandler)
 }

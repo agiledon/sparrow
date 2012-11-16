@@ -12,7 +12,7 @@ class CommandBusTest extends FunSuite {
   test("send command via actor once"){
     val message: CustomCommand = new CustomCommand("commandName1")
     CommandBus.send(message)
-    Thread.sleep(3000)
+    Thread.sleep(1000)
     assert(message.isReceived() == true)
   }
 
@@ -21,7 +21,7 @@ class CommandBusTest extends FunSuite {
     val message2: CustomCommand = new CustomCommand("commandName2")
     CommandBus.send(message1)
     CommandBus.send(message2)
-    Thread.sleep(3000)
+    Thread.sleep(1000)
     assert(message1.isReceived() == true)
     assert(message2.isReceived() == true)
   }
