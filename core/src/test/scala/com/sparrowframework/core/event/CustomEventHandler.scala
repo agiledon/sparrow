@@ -1,0 +1,13 @@
+package com.sparrowframework.core.event
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: Zhang Yi
+ * Date: 11/16/12
+ * Time: 3:19 PM
+ */
+class CustomEventHandler extends EventHandler{
+  def handle(event: Event) {
+    event.trigger()
+  }
+}

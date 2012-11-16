@@ -5,11 +5,15 @@
  * Time: 10:31 PM
  */
 
-package com.sparrowframework.core.command
-import actors.Actor
+package com.sparrowframework.core
 
-class CommandProcessor() extends Actor {
+import actors.Actor
+import command.{Command, CommandHandler}
+import event.{Event}
+
+class MessageProcessor() extends Actor {
   var commandMap = Map[String, CommandHandler]()
+
   override def act() {
     process
   }
@@ -18,7 +22,11 @@ class CommandProcessor() extends Actor {
     while (true) {
       receive {
         case command: Command =>
-          commandMap(command.getName()).handle(command)
+          commandMap(command.getName).handle(command)
+        case event: Event =>
+          event.getHandlers().foreach {
+            handler => handler.handle(event)
+          }
       }
     }
   }

@@ -9,14 +9,14 @@ import org.scalatest.FunSuite
  * Time: 9:40 AM
  */
 class CommandBusTest extends FunSuite {
-  test("send message via actor once"){
+  test("send command via actor once"){
     val message: CustomCommand = new CustomCommand("commandName1")
     CommandBus.send(message)
     Thread.sleep(3000)
     assert(message.isReceived() == true)
   }
 
-  test("send message via actor twice"){
+  test("send command via actor twice"){
     val message1: CustomCommand = new CustomCommand("commandName1")
     val message2: CustomCommand = new CustomCommand("commandName2")
     CommandBus.send(message1)

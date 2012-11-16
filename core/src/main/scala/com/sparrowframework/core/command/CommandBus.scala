@@ -7,13 +7,15 @@
 
 package com.sparrowframework.core.command
 
+import com.sparrowframework.core.{MessageProcessorFactory, MessageProcessor}
+
 object CommandBus {
   def send(message: Command) {
-    val commandProcessor: CommandProcessor = {
-      CommandProcessorFactory.create
+    val messageProcessor: MessageProcessor = {
+      MessageProcessorFactory.create
     }
-    commandProcessor.start
-    commandProcessor ! message
+    messageProcessor.start
+    messageProcessor ! message
   }
 
 

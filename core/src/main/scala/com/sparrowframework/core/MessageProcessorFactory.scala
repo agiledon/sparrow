@@ -1,5 +1,6 @@
-package com.sparrowframework.core.command
+package com.sparrowframework.core
 
+import command.CommandHandler
 import xml.XML
 import java.net.URL
 
@@ -9,16 +10,16 @@ import java.net.URL
  * Date: 11/15/12
  * Time: 1:02 PM
  */
-object CommandProcessorFactory {
-  def create(commandMap: Map[String, CommandHandler]): CommandProcessor = {
-    val commandProcessor = new CommandProcessor()
+object MessageProcessorFactory {
+  def create(commandMap: Map[String, CommandHandler]): MessageProcessor = {
+    val commandProcessor = new MessageProcessor()
     commandMap.foreach {
       case (key, value) => commandProcessor.register(key, value)
     }
     commandProcessor
   }
 
-  def create(): CommandProcessor = {
+  def create(): MessageProcessor = {
     create(readCommandMap())
   }
 
