@@ -9,5 +9,6 @@ package com.sparrowframework.core.command
 class CustomCommandHandler extends CommandHandler{
   def handle(command: Command) {
     println("receive message")
+    command.receive()
   }
 }

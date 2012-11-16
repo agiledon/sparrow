@@ -10,14 +10,15 @@ import actors.Actor
 
 class CommandProcessor() extends Actor {
   var commandMap = Map[String, CommandHandler]()
-  override def act() = process()
+  override def act() {
+    process
+  }
 
   def process() {
     while (true) {
       receive {
-        case command:Command => {
+        case command: Command =>
           commandMap(command.getName()).handle(command)
-        }
       }
     }
   }

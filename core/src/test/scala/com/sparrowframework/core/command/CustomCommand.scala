@@ -7,5 +7,12 @@ package com.sparrowframework.core.command
  * Time: 1:25 PM
  */
 class CustomCommand(commandName: String) extends Command{
+  private var isReceivedFlag:Boolean = false
   def getName() = commandName
+
+  def isReceived() = isReceivedFlag
+
+  def receive() {
+    isReceivedFlag = true
+  }
 }

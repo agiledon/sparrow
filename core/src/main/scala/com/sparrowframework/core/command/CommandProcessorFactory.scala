@@ -22,7 +22,6 @@ object CommandProcessorFactory {
     create(readCommandMap())
   }
 
-
   private def readCommandMap(): Map[String, CommandHandler] = {
     val commandsXml = XML.load(getResourceUrl("commands.xml"))
     (for {x <- commandsXml \ "command"}

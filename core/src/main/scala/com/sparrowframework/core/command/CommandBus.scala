@@ -10,9 +10,9 @@ package com.sparrowframework.core.command
 object CommandBus {
   def send(message: Command) {
     val commandProcessor: CommandProcessor = {
-      CommandProcessorFactory.create()
+      CommandProcessorFactory.create
     }
-    commandProcessor.start()
+    commandProcessor.start
     commandProcessor ! message
   }
 

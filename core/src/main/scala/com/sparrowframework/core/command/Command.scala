@@ -8,4 +8,6 @@ package com.sparrowframework.core.command
  */
 trait Command {
   def getName(): String
+  def isReceived(): Boolean
+  def receive()
 }
