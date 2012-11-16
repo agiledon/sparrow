@@ -1,6 +1,6 @@
 package com.sparrowframework.core.event
 
-import com.sparrowframework.core.{MessageProcessorFactory, MessageProcessor}
+import com.sparrowframework.core.{MessageBus, MessageProcessorFactory, MessageProcessor}
 
 /**
  * Created with IntelliJ IDEA.
@@ -8,12 +8,8 @@ import com.sparrowframework.core.{MessageProcessorFactory, MessageProcessor}
  * Date: 11/16/12
  * Time: 2:02 PM
  */
-object EventBus {
+object EventBus extends MessageBus {
   def send(message: Event) {
-    val messageProcessor: MessageProcessor = {
-      MessageProcessorFactory.create
-    }
-    messageProcessor.start
-    messageProcessor ! message
+    sendMessage(message)
   }
 }

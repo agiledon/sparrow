@@ -19,11 +19,11 @@ object MessageProcessorFactory {
     commandProcessor
   }
 
-  def create(): MessageProcessor = {
-    create(readCommandMap())
+  def create: MessageProcessor = {
+    create(readCommandMap)
   }
 
-  private def readCommandMap(): Map[String, CommandHandler] = {
+  private def readCommandMap: Map[String, CommandHandler] = {
     val commandsXml = XML.load(getResourceUrl("commands.xml"))
     (for {x <- commandsXml \ "command"}
     yield ((x \ "@name").toString, createCommandHandler((x \ "@handler").toString))).toMap

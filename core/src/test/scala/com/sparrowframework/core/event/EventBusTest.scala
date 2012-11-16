@@ -14,6 +14,6 @@ class EventBusTest extends FunSuite {
     val message: Event = new CustomEvent("eventName1")
     EventBus.send(message)
     Thread.sleep(3000)
-    assert(message.isTriggered() == true)
+    assert(message.isTriggered == true)
   }
 }

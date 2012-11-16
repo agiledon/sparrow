@@ -8,6 +8,6 @@ package com.sparrowframework.core.event
  */
 class CustomEventHandler extends EventHandler{
   def handle(event: Event) {
-    event.trigger()
+    event.trigger
   }
 }
