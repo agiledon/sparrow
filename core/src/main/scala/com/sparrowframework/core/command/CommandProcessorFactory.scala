@@ -1,7 +1,6 @@
 package com.sparrowframework.core.command
 
 import xml.XML
-import java.io.File
 import java.net.URL
 
 /**
@@ -24,10 +23,14 @@ object CommandProcessorFactory {
   }
 
 
-  private def readCommandMap(): Map[String, CustomCommandHandler] = {
+  private def readCommandMap(): Map[String, CommandHandler] = {
     val commandsXml = XML.load(getResourceUrl("commands.xml"))
     (for {x <- commandsXml \ "command"}
-    yield ((x \ "@name").toString, new CustomCommandHandler)).toMap
+    yield ((x \ "@name").toString, createCommandHandler((x \ "@handler").toString))).toMap
+  }
+
+  private def createCommandHandler(handlerType: String): CommandHandler = {
+    Class.forName(handlerType).newInstance.asInstanceOf[CommandHandler]
   }
 
   private def getResourceUrl(xmlFileName: String): URL = {
