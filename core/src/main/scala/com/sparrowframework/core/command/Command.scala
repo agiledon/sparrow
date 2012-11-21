@@ -8,7 +8,14 @@ import com.sparrowframework.core.Message
  * Date: 11/15/12
  * Time: 10:02 AM
  */
-trait Command extends Message{
-  def isReceived: Boolean
-  def receive
+class Command(commandName: String) extends Message {
+  private var isReceivedFlag:Boolean = false
+
+  def getName() = commandName
+
+  def isReceived() = isReceivedFlag
+
+  def receive() {
+    isReceivedFlag = true
+  }
 }

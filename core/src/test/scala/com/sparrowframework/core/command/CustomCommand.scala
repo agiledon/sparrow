@@ -6,13 +6,6 @@ package com.sparrowframework.core.command
  * Date: 11/15/12
  * Time: 1:25 PM
  */
-class CustomCommand(commandName: String) extends Command{
-  private var isReceivedFlag:Boolean = false
-  def getName() = commandName
+class CustomCommand(commandName: String) extends Command(commandName){
 
-  def isReceived() = isReceivedFlag
-
-  def receive() {
-    isReceivedFlag = true
-  }
 }
