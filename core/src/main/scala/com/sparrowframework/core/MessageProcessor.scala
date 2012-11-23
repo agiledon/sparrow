@@ -55,7 +55,7 @@ object MessageProcessor {
     (
       for {x <- commandsXml \ "command"}
       yield ((x \ "@name").toString, createCommandHandler((x \ "@handler").toString))
-      ).toMap
+    ).toMap
   }
 
   private def createCommandHandler(handlerType: String): CommandHandler = {
