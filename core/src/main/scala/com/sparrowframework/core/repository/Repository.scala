@@ -6,6 +6,6 @@ package com.sparrowframework.core.repository
  * Date: 11/21/12
  * Time: 1:56 PM
  */
-trait Repository[T] {
+abstract class Repository[T] {
   def save(entity: T)
 }

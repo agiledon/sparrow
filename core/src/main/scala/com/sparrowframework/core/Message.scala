@@ -6,5 +6,4 @@ package com.sparrowframework.core
  * Date: 11/16/12
  * Time: 3:37 PM
  */
-trait Message {
-}
+abstract class Message

@@ -10,7 +10,7 @@ import event.Event
  * Date: 11/16/12
  * Time: 3:34 PM
  */
-trait MessageBus {
+abstract class MessageBus {
   def sendMessage(message: Message) {
     val messageProcessor = MessageProcessor()
     messageProcessor.start

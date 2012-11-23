@@ -6,6 +6,6 @@ package com.sparrowframework.core.event
  * Date: 11/16/12
  * Time: 2:58 PM
  */
-trait EventHandler {
+abstract class EventHandler {
   def handle(event: Event)
 }

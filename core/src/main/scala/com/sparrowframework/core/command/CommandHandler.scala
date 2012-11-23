@@ -6,6 +6,6 @@ package com.sparrowframework.core.command
  * Date: 11/15/12
  * Time: 10:01 AM
  */
-trait CommandHandler {
+abstract class CommandHandler {
   def handle(command: Command)
 }
