@@ -20,7 +20,7 @@ class MessageProcessor private extends Actor {
     process
   }
 
-  def process {
+  private def process {
     while (true) {
       receive {
         case command: Command =>
@@ -33,7 +33,7 @@ class MessageProcessor private extends Actor {
     }
   }
 
-  def register(commandName: String, commandHandler: CommandHandler) {
+  private def register(commandName: String, commandHandler: CommandHandler) {
     commandMap += (commandName -> commandHandler)
   }
 
