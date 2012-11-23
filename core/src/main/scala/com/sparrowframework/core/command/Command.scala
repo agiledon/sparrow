@@ -11,9 +11,9 @@ import com.sparrowframework.core.Message
 class Command(val commandName: String) extends Message {
   private var isReceivedFlag = false
 
-  def isReceived() = isReceivedFlag
+  def isReceived = isReceivedFlag
 
-  def receive() {
+  def receive {
     isReceivedFlag = true
   }
 }

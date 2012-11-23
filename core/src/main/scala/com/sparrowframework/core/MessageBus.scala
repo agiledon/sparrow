@@ -12,9 +12,7 @@ import event.Event
  */
 trait MessageBus {
   def sendMessage(message: Message) {
-    val messageProcessor: MessageProcessor = {
-      MessageProcessor()
-    }
+    val messageProcessor = MessageProcessor()
     messageProcessor.start
     messageProcessor ! message
   }

@@ -10,20 +10,20 @@ import org.scalatest.FunSuite
  */
 class CommandBusTest extends FunSuite {
   test("send command via actor once"){
-    val message: CustomCommand = new CustomCommand("commandName1")
-    CommandBus.send(message)
+    val command: CustomCommand = new CustomCommand("commandName1")
+    CommandBus send command
     Thread.sleep(1000)
-    assert(message.isReceived() == true)
+    assert(command.isReceived == true)
   }
 
   test("send command via actor twice"){
-    val message1: CustomCommand = new CustomCommand("commandName1")
-    val message2: CustomCommand = new CustomCommand("commandName2")
-    CommandBus.send(message1)
-    CommandBus.send(message2)
+    val command1: CustomCommand = new CustomCommand("commandName1")
+    val command2: CustomCommand = new CustomCommand("commandName2")
+    CommandBus send command1
+    CommandBus send command2
     Thread.sleep(1000)
-    assert(message1.isReceived() == true)
-    assert(message2.isReceived() == true)
+    assert(command1.isReceived == true)
+    assert(command2.isReceived == true)
   }
 
 }
