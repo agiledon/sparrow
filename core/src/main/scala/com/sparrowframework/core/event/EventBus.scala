@@ -1,6 +1,6 @@
 package com.sparrowframework.core.event
 
-import com.sparrowframework.core.{MessageBus, MessageProcessorFactory, MessageProcessor}
+import com.sparrowframework.core.{MessageBus, MessageProcessor}
 
 /**
  * Created with IntelliJ IDEA.

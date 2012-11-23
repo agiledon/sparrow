@@ -1,7 +1,6 @@
 package com.sparrowframework.core.event
 
 import com.sparrowframework.core.Message
-import com.sparrowframework.core.event.Event
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,20 +8,15 @@ import com.sparrowframework.core.event.Event
  * Date: 11/16/12
  * Time: 2:59 PM
  */
-class Event(name: String) extends Message{
-  var subscribers = Set[EventHandler]()
-
-  var isTriggeredFlag: Boolean = false
-
-  def getName = name
+class Event(val eventName: String) extends Message{
+  private var subscribers = Set[EventHandler]()
+  private var isTriggeredFlag = false
 
   def publish(eventHandler: EventHandler) {
     subscribers += eventHandler
   }
 
-  def getHandlers = {
-    subscribers
-  }
+  def getHandlers = subscribers
 
   def isTriggered = isTriggeredFlag
 

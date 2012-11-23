@@ -6,6 +6,4 @@ package com.sparrowframework.core.event
  * Date: 11/16/12
  * Time: 3:18 PM
  */
-class CustomEvent(eventName: String) extends Event(eventName){
-
-}
+class CustomEvent(eventName: String) extends Event(eventName)

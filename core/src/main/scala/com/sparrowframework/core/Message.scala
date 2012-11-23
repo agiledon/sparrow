@@ -7,5 +7,4 @@ package com.sparrowframework.core
  * Time: 3:37 PM
  */
 trait Message {
-  def getName: String
 }
