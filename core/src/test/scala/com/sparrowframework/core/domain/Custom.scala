@@ -13,11 +13,14 @@ import java.util.UUID
  */
 class Custom extends AggregateRoot {
   val id = UUID.randomUUID()
-  def save(command: CustomCommand) {
-    val event = new CustomEvent("custom event")
-    val eventHandler = new CustomEventHandler with LoggingInterceptor
-    event publish eventHandler
-    EventBus send event
+
+  def save(customCommand: CustomCommand) {
+    sendEvent() { void =>
+      val event = new CustomEvent("custom event")
+      val eventHandler = new CustomEventHandler with LoggingInterceptor
+      event publish eventHandler
+      event
+    }
   }
 
 
