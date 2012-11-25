@@ -21,7 +21,7 @@ class EventBusTest extends FunSuite {
 
   test("handle event with logging") {
     val event: Event = new CustomEvent("eventName1")
-    val handler = new CustomEventHandler with LoggingInterceptor
+    val handler = new CustomEventHandler with LoggingInterceptor, TransactionInterceptor
     event publish handler
     EventBus send event
     Thread.sleep(1000)

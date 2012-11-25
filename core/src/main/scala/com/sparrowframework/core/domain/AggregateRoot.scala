@@ -1,5 +1,7 @@
 package com.sparrowframework.core.domain
 
+import java.util.UUID
+
 /**
  * Created with IntelliJ IDEA.
  * User: Zhang Yi
@@ -7,5 +9,5 @@ package com.sparrowframework.core.domain
  * Time: 7:38 PM
  */
 abstract class AggregateRoot {
-    val id: String
+    val id: UUID
 }
