@@ -1,8 +1,8 @@
 package com.sparrowframework.core.domain
 
-import com.sparrowframework.core.event.{CustomEventHandler, CustomEvent, EventBus}
+import com.sparrowframework.core.event.{Event, CustomEventHandler, CustomEvent, EventBus}
 import com.sparrowframework.core.event.interceptor.LoggingInterceptor
-import com.sparrowframework.core.command.CustomCommand
+import com.sparrowframework.core.command.{Command, CustomCommand}
 import java.util.UUID
 
 /**
@@ -12,16 +12,13 @@ import java.util.UUID
  * Time: 5:36 PM
  */
 class Custom extends AggregateRoot {
-  val id = UUID.randomUUID()
 
-  def save(customCommand: CustomCommand) {
-    sendEvent() { void =>
-      val event = new CustomEvent("custom event")
-      val eventHandler = new CustomEventHandler with LoggingInterceptor
-      event publish eventHandler
-      event
-    }
+  addEvent() { void =>
+    val event = new CustomEvent("event name")
+    val eventHandler = new CustomEventHandler with LoggingInterceptor
+    event publish eventHandler
+    event
   }
 
-
+  override protected def saveCommand(command: Command) {}
 }

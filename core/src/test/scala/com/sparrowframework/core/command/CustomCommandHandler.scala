@@ -1,6 +1,8 @@
 package com.sparrowframework.core.command
 
 import com.sparrowframework.core.domain.Custom
+import com.sparrowframework.core.event.{CustomEventHandler, CustomEvent}
+import com.sparrowframework.core.event.interceptor.LoggingInterceptor
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,6 +17,7 @@ class CustomCommandHandler extends CommandHandler {
     command match {
       case customCommand: CustomCommand =>
         val custom = new Custom
+
         custom.save(customCommand)
         command.receive
       case _ => println("Not supported command")
