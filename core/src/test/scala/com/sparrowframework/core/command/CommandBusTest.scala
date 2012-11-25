@@ -26,4 +26,18 @@ class CommandBusTest extends FunSuite {
     assert(command2.isReceived == true)
   }
 
+  test("send command and trigger event") {
+    val command = new CustomCommand("commandName1")
+    CommandBus send command
+    Thread.sleep(1000)
+    assert(command.isReceived == true)
+  }
+
+  test("send wrong command and not trigger event") {
+    val command = new WrongCommand("commandName1")
+    CommandBus send command
+    Thread.sleep(1000)
+    assert(command.isReceived != true)
+  }
+
 }
