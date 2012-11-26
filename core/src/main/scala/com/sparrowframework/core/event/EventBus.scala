@@ -9,7 +9,7 @@ import com.sparrowframework.core.{MessageBus, MessageProcessor}
  * Time: 2:02 PM
  */
 object EventBus extends MessageBus {
-  def send(message: Event) {
-    sendMessage(message)
+  def publish(message: Event) {
+    send(message)
   }
 }

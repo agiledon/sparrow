@@ -11,7 +11,7 @@ import event.Event
  * Time: 3:34 PM
  */
 abstract class MessageBus {
-  def sendMessage(message: Message) {
+  def send(message: Message) {
     val messageProcessor = MessageProcessor()
     messageProcessor.start
     messageProcessor ! message

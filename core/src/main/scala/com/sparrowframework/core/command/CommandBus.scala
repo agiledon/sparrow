@@ -10,8 +10,8 @@ package com.sparrowframework.core.command
 import com.sparrowframework.core.{MessageBus, MessageProcessor}
 
 object CommandBus extends MessageBus {
-  def send(message: Command) {
-    sendMessage(message)
+  def dispatch(message: Command) {
+    send(message)
   }
 
 
