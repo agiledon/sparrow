@@ -5,3 +5,4 @@
 project/*
 target/*
 core/target/*
+core/project/*
