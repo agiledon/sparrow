@@ -27,7 +27,7 @@ abstract class AggregateRoot {
 
   private def raiseEvents {
     events.foreach {
-      EventBus send _
+      EventBus publish _
     }
   }
 }
