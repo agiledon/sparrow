@@ -14,7 +14,7 @@ abstract class AggregateRoot {
   val id: UUID = UUID.randomUUID()
   var events = Set[Event]()
 
-  def addEvent()(event :Unit => Event) {
+  def addEvent(event :Unit => Event) {
     events += event()
   }
 

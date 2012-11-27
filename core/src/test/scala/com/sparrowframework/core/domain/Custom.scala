@@ -13,7 +13,7 @@ import java.util.UUID
  */
 class Custom extends AggregateRoot {
 
-  addEvent() { void =>
+  addEvent { void =>
     val event = new CustomEvent("event name")
     val eventHandler = new CustomEventHandler with LoggingInterceptor
     event publish eventHandler

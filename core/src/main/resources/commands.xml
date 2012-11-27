@@ -1,4 +1,0 @@
-<commands>
-    <command name="commandName1" handler="com.sparrowframework.core.command.CustomCommandHandler"/>
-    <command name="commandName2" handler="com.sparrowframework.core.command.CustomCommandHandler"/>
-</commands>
