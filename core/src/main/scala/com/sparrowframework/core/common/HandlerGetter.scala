@@ -12,6 +12,7 @@ trait HandlerGetter {
   def get(target: Object): Set[CommandHandler] = {
     var handlers = Set[CommandHandler]()
 
+    try {
     target.getClass.getAnnotations filter {
       a =>
         a.annotationType == classOf[TargetHandler]
@@ -19,6 +20,11 @@ trait HandlerGetter {
       a =>
         handlers += a.asInstanceOf[TargetHandler].target.newInstance.asInstanceOf[CommandHandler]
     }
+    }catch {
+      case ex:RuntimeException => println("Not set right handler." + ex.getMessage)
+      case _ => println("Not set right handler.")
+    }
     handlers
   }
+
 }
