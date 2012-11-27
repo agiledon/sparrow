@@ -13,8 +13,6 @@ import common.HandlerGetter
 import event.{EventHandler, Event}
 
 class MessageProcessor private extends Actor with HandlerGetter {
-  var commandMap = Map[String, CommandHandler]()
-
   override def act() {
     process
   }

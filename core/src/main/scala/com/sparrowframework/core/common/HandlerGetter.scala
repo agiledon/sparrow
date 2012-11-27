@@ -1,6 +1,6 @@
 package com.sparrowframework.core.common
 
-import com.sparrowframework.core.command.CommandHandler
+import java.lang.annotation.Annotation
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,11 +14,9 @@ trait HandlerGetter {
 
     try {
     target.getClass.getAnnotations filter {
-      a =>
-        a.annotationType == classOf[TargetHandler]
+      a => a.annotationType == classOf[TargetHandler]
     } foreach {
-      a =>
-        handlers += a.asInstanceOf[TargetHandler].target.newInstance.asInstanceOf[T]
+      a => handlers += createHandler(a)
     }
     }catch {
       case ex:RuntimeException => println("Not set right handler." + ex.getMessage)
@@ -27,4 +25,7 @@ trait HandlerGetter {
     handlers
   }
 
+  def createHandler[T](a: Annotation) = {
+    a.asInstanceOf[TargetHandler].target.newInstance.asInstanceOf[T]
+  }
 }

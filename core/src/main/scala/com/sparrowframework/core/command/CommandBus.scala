@@ -7,7 +7,7 @@
 
 package com.sparrowframework.core.command
 
-import com.sparrowframework.core.{MessageBus, MessageProcessor}
+import com.sparrowframework.core.{MessageBus}
 
 object CommandBus extends MessageBus {
   def dispatch(message: Command) {
