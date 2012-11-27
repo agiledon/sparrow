@@ -11,8 +11,6 @@ import actors.Actor
 import command.{Command, CommandHandler}
 import common.HandlerGetter
 import event.{EventHandler, Event}
-import xml.XML
-import java.net.URL
 
 class MessageProcessor private extends Actor with HandlerGetter {
   var commandMap = Map[String, CommandHandler]()
@@ -25,12 +23,12 @@ class MessageProcessor private extends Actor with HandlerGetter {
     while (true) {
       receive {
         case command: Command =>
-          get(command).foreach {
+          get[CommandHandler](command).foreach {
             handler => handler.handle(command)
           }
         case event: Event =>
-          event.getHandlers.foreach {
-            handler: EventHandler => handler.handle(event)
+          get[EventHandler](event).foreach {
+            handler => handler.handle(event)
           }
       }
     }

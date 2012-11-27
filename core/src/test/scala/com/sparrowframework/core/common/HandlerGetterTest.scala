@@ -13,8 +13,9 @@ class HandlerGetterTest extends FunSuite {
   test("should get instance with annotation") {
     val getter = new FakeHandlerGetter
     val command = new CustomCommand("name")
-    assert(getter.get(command).size == 1)
-    getter.get(command).foreach { handler =>
+    val handlers: Set[CommandHandler] = getter.get[CommandHandler](command)
+    assert(handlers.size == 1)
+    handlers.foreach { handler =>
       assert(handler.isInstanceOf[CustomCommandHandler] == true)
     }
   }

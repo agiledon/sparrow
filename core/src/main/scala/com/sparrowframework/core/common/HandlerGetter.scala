@@ -9,8 +9,8 @@ import com.sparrowframework.core.command.CommandHandler
  * Time: 8:33 PM
  */
 trait HandlerGetter {
-  def get(target: Object): Set[CommandHandler] = {
-    var handlers = Set[CommandHandler]()
+  def get[T](target: Object): Set[T] = {
+    var handlers = Set[T]()
 
     try {
     target.getClass.getAnnotations filter {
@@ -18,7 +18,7 @@ trait HandlerGetter {
         a.annotationType == classOf[TargetHandler]
     } foreach {
       a =>
-        handlers += a.asInstanceOf[TargetHandler].target.newInstance.asInstanceOf[CommandHandler]
+        handlers += a.asInstanceOf[TargetHandler].target.newInstance.asInstanceOf[T]
     }
     }catch {
       case ex:RuntimeException => println("Not set right handler." + ex.getMessage)
