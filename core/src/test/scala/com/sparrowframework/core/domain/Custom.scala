@@ -12,12 +12,8 @@ import java.util.UUID
  * Time: 5:36 PM
  */
 class Custom extends AggregateRoot {
-
   addEvent { void =>
-    val event = new CustomEvent("event name")
-    val eventHandler = new CustomEventHandler with LoggingInterceptor
-    event publish eventHandler
-    event
+    new CustomEvent("event name")
   }
 
   override protected def saveCommand(command: Command) {}

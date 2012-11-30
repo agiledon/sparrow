@@ -9,14 +9,7 @@ import com.sparrowframework.core.Message
  * Time: 2:59 PM
  */
 class Event(val eventName: String) extends Message{
-  private var subscribers = Set[EventHandler]()
   private var isTriggeredFlag = false
-
-  def publish(eventHandler: EventHandler) {
-    subscribers += eventHandler
-  }
-
-  def getHandlers = subscribers
 
   def isTriggered = isTriggeredFlag
 
