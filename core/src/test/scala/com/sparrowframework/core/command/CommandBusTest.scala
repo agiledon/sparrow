@@ -23,7 +23,7 @@ class CommandBusTest extends FunSuite {
     assert(command.isReceived == true)
   }
 
-  test("should dispatch wrong command without command handler, can not trigger event") {
+  test("should dispatch wrong command without command handler, does not trigger event") {
     val command = new WrongCommand("commandName1")
     CommandBus dispatch command
     Thread.sleep(1000)

@@ -1,16 +1,14 @@
 package com.sparrowframework.core.event
 
-import interceptor.LoggingInterceptor
-
 /**
  * Created with IntelliJ IDEA.
  * User: Zhang Yi
- * Date: 11/16/12
- * Time: 3:19 PM
+ * Date: 11/30/12
+ * Time: 8:41 PM
  */
-class CustomEventHandler extends EventHandler {
+class SuccessfulEventHandler extends EventHandler{
   def handle(event: Event) {
-    println("receive event")
+    println("handle event, set successful status")
     event.trigger
   }
 }

@@ -17,4 +17,11 @@ class EventBusTest extends FunSuite {
     Thread.sleep(1000)
     assert(event.isTriggered == true)
   }
+
+//  test("should publish event and two registered handlers should handle it") {
+//    val event: Event = new CreateOrderEvent("order created")
+//    EventBus publish event
+//    Thread.sleep(1000)
+//    assert(event.isTriggered == true)
+//  }
 }

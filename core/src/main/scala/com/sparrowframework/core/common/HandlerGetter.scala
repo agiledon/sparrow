@@ -1,6 +1,6 @@
 package com.sparrowframework.core.common
 
-import java.lang.annotation.Annotation
+import java.lang.annotation.{AnnotationFormatError, Annotation}
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,13 +19,14 @@ trait HandlerGetter {
       a => handlers += createHandler(a)
     }
     }catch {
-      case ex:RuntimeException => println("Not set right handler." + ex.getMessage)
-      case _ => println("Not set right handler.")
+      case ex:AnnotationFormatError => println("Exception: " + ex.getMessage)
+      case _ => println("Exception: Not set right handler.")
     }
     handlers
   }
 
   def createHandler[T](a: Annotation) = {
+    println("**** handler: " + a.asInstanceOf[TargetHandler].target().getCanonicalName)
     a.asInstanceOf[TargetHandler].target.newInstance.asInstanceOf[T]
   }
 }

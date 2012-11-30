@@ -5,8 +5,9 @@ import com.sparrowframework.core.common.TargetHandler
 /**
  * Created with IntelliJ IDEA.
  * User: Zhang Yi
- * Date: 11/16/12
- * Time: 3:18 PM
+ * Date: 11/30/12
+ * Time: 8:43 PM
  */
 @TargetHandler(target = classOf[CompletedEventHandler])
-class CustomEvent(eventName: String) extends Event(eventName)
+@TargetHandler(target = classOf[SuccessfulEventHandler])
+class CreateOrderEvent(eventName: String) extends Event(eventName)

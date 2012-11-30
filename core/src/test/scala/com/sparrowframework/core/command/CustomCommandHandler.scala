@@ -1,8 +1,6 @@
 package com.sparrowframework.core.command
 
 import com.sparrowframework.core.domain.Custom
-import com.sparrowframework.core.event.{CustomEventHandler, CustomEvent}
-import com.sparrowframework.core.event.interceptor.LoggingInterceptor
 
 /**
  * Created with IntelliJ IDEA.

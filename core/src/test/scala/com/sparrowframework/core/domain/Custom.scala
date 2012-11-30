@@ -1,9 +1,7 @@
 package com.sparrowframework.core.domain
 
-import com.sparrowframework.core.event.{Event, CustomEventHandler, CustomEvent, EventBus}
-import com.sparrowframework.core.event.interceptor.LoggingInterceptor
-import com.sparrowframework.core.command.{Command, CustomCommand}
-import java.util.UUID
+import com.sparrowframework.core.event.CustomEvent
+import com.sparrowframework.core.command.Command
 
 /**
  * Created with IntelliJ IDEA.
