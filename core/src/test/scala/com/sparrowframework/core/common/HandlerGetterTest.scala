@@ -10,7 +10,7 @@ import com.sparrowframework.core.command.{CommandHandler, CustomCommandHandler, 
  * Time: 8:47 PM
  */
 class HandlerGetterTest extends FunSuite {
-  test("should get instance with annotation") {
+  test("should get annotated command handler") {
     val getter = new FakeHandlerGetter
     val command = new CustomCommand("name")
     val handlers: Set[CommandHandler] = getter.get[CommandHandler](command)

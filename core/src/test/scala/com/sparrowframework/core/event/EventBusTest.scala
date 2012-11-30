@@ -11,7 +11,7 @@ import com.sparrowframework.core.command.{CommandBus, CustomCommand}
  * Time: 3:16 PM
  */
 class EventBusTest extends FunSuite {
-  test("publish event via actor once") {
+  test("should publish event") {
     val event: Event = new CustomEvent("eventName1")
     EventBus publish event
     Thread.sleep(1000)
