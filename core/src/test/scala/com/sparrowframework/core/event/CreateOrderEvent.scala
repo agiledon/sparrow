@@ -8,6 +8,5 @@ import com.sparrowframework.core.common.TargetHandler
  * Date: 11/30/12
  * Time: 8:43 PM
  */
-@TargetHandler(target = classOf[CompletedEventHandler])
-@TargetHandler(target = classOf[SuccessfulEventHandler])
+@TargetHandler(target = Array(classOf[SuccessfulEventHandler], classOf[CompletedEventHandler]))
 class CreateOrderEvent(eventName: String) extends Event(eventName)

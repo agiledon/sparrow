@@ -8,7 +8,8 @@ import java.lang.annotation.*;
  * Date: 11/27/12
  * Time: 1:44 PM
  */
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TargetHandler {
-    public Class target();
+    Class[] target();
 }

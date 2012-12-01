@@ -31,15 +31,15 @@ class HandlerGetterTest extends FunSuite {
     }
   }
 
-//  test("should get two annotated event handlers") {
-//    val getter = new FakeHandlerGetter
-//    val event = new CreateOrderEvent("name")
-//    val handlers: Set[EventHandler] = getter.get[EventHandler](event)
-//    assert(handlers.size == 2)
-//    handlers.foreach { handler =>
-//      assert(handler.isInstanceOf[EventHandler] == true)
-//    }
-//  }
+  test("should get two annotated event handlers") {
+    val getter = new FakeHandlerGetter
+    val event = new CreateOrderEvent("name")
+    val handlers: Set[EventHandler] = getter.get[EventHandler](event)
+    assert(handlers.size == 2)
+    handlers.foreach { handler =>
+      assert(handler.isInstanceOf[EventHandler] == true)
+    }
+  }
 }
 
 class FakeHandlerGetter extends HandlerGetter
