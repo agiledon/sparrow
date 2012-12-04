@@ -2,7 +2,9 @@
 .idea/*.*
 .idea/*
 *.iml
-project/*
-target/*
-core/target/*
-core/project/*
+.gradle/*.*
+*.ipr
+*.iws
+build
+build/*.*
+target/*.*
