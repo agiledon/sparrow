@@ -20,5 +20,8 @@ class MongoDBRepository[T <: AggregateRoot] extends Repository[T] {
 
     mongoConnection.close
   }
+}
 
+object MongoDBRepository {
+  def apply[T <: AggregateRoot]() = new MongoDBRepository[T]
 }

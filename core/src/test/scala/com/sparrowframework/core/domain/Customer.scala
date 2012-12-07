@@ -11,7 +11,7 @@ import com.sparrowframework.core.repository.{Repository, MongoDBRepository}
  * Time: 5:36 PM
  */
 class Customer() extends AggregateRoot {
-  val repository = new MongoDBRepository[Customer]
+  val repository = MongoDBRepository[Customer]
 
   addEvent { void =>
     new CustomerEvent("event name")
