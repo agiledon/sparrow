@@ -2,7 +2,7 @@ package com.sparrowframework.core.event
 
 import interceptor.LoggingInterceptor
 import org.scalatest.FunSuite
-import com.sparrowframework.core.command.{CommandBus, CustomCommand}
+import com.sparrowframework.core.command.{CommandBus, CustomerCommand}
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,7 +12,7 @@ import com.sparrowframework.core.command.{CommandBus, CustomCommand}
  */
 class EventBusTest extends FunSuite {
   test("should publish event") {
-    val event: Event = new CustomEvent("eventName1")
+    val event: Event = new CustomerEvent("eventName1")
     EventBus publish event
     Thread.sleep(1000)
     assert(event.isTriggered == true)

@@ -8,5 +8,5 @@ import com.sparrowframework.core.common.TargetHandler
  * Date: 11/15/12
  * Time: 1:25 PM
  */
-@TargetHandler(target = Array(classOf[CustomCommandHandler]))
-class CustomCommand(commandName: String) extends Command(commandName)
+@TargetHandler(target = Array(classOf[CustomerCommandHandler]))
+class CustomerCommand(commandName: String) extends Command(commandName)

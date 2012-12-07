@@ -1,6 +1,6 @@
 package com.sparrowframework.core.command
 
-import com.sparrowframework.core.domain.Custom
+import com.sparrowframework.core.domain.Customer
 
 /**
  * Created with IntelliJ IDEA.
@@ -8,15 +8,15 @@ import com.sparrowframework.core.domain.Custom
  * Date: 11/15/12
  * Time: 1:23 PM
  */
-class CustomCommandHandler extends CommandHandler {
+class CustomerCommandHandler extends CommandHandler {
   def handle(command: Command) {
     println("receive command")
 
     command match {
-      case customCommand: CustomCommand =>
-        val custom = new Custom
+      case customCommand: CustomerCommand =>
+        val custom = new Customer
 
-        custom.save(customCommand)
+        custom.save
         command.receive
       case _ => println("Not supported command")
     }

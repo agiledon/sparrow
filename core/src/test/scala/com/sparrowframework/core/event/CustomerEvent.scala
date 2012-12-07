@@ -9,4 +9,4 @@ import com.sparrowframework.core.common.TargetHandler
  * Time: 3:18 PM
  */
 @TargetHandler(target = Array(classOf[CompletedEventHandler]))
-class CustomEvent(eventName: String) extends Event(eventName)
+class CustomerEvent(eventName: String) extends Event(eventName)

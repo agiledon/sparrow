@@ -2,7 +2,6 @@ package com.sparrowframework.core.domain
 
 import java.util.UUID
 import com.sparrowframework.core.event.{EventBus, Event}
-import com.sparrowframework.core.command.Command
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,12 +17,14 @@ abstract class AggregateRoot {
     events += event()
   }
 
-  def save(command: Command) {
-    saveCommand(command)
+  def save {
+    saveEntity()
     raiseEvents
   }
 
-  protected def saveCommand(command: Command)
+  def toJsonList:List[(String, String)]
+
+  protected def saveEntity()
 
   private def raiseEvents {
     events.foreach {

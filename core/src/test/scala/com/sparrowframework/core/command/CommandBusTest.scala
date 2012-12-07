@@ -10,14 +10,14 @@ import org.scalatest.FunSuite
  */
 class CommandBusTest extends FunSuite {
   test("should dispatch command"){
-    val command: CustomCommand = new CustomCommand("commandName1")
+    val command: CustomerCommand = new CustomerCommand("commandName1")
     CommandBus dispatch command
     Thread.sleep(1000)
     assert(command.isReceived == true)
   }
 
   test("should dispatch command, then command handler will trigger event via aggregate root") {
-    val command = new CustomCommand("commandName1")
+    val command = new CustomerCommand("commandName1")
     CommandBus dispatch command
     Thread.sleep(1000)
     assert(command.isReceived == true)
