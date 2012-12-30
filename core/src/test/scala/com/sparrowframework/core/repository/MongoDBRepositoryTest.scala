@@ -11,7 +11,7 @@ import com.sparrowframework.core.domain.Customer
  */
 class MongoDBRepositoryTest extends FunSuite {
   test("should save data to mongodb") {
-    val repository = new MongoDBRepository[Customer]
+    val repository = MongoDBRepository[Customer]
     repository.save(new Customer)
   }
 }
