@@ -1,10 +1,7 @@
 .idea
 .idea/*.*
 .idea/*
-*.iml
-*.ipr
-*.iws
-build/*
-out/*
-sparrow-core/build/*
-.gradle/
+sparrow-core/project/*
+sparrow-core/target/*
+target/
+.idea_modules/*
