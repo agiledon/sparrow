@@ -1,4 +1,4 @@
-package com.sparrowframework.core
+package com.sparrowframework.core.message
 
 /**
  * Created with IntelliJ IDEA.

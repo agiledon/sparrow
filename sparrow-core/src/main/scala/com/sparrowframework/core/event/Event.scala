@@ -1,6 +1,6 @@
 package com.sparrowframework.core.event
 
-import com.sparrowframework.core.Message
+import com.sparrowframework.core.message.Message
 
 /**
  * Created with IntelliJ IDEA.

@@ -2,6 +2,7 @@ package com.sparrowframework.core
 
 import command.Command
 import event.Event
+import message.Message
 
 
 /**
@@ -12,8 +13,7 @@ import event.Event
  */
 abstract class MessageBus {
   def send(message: Message) {
-    val messageProcessor = MessageProcessor()
-    messageProcessor.start
-    messageProcessor ! message
+    val messageProcessor = AdhocMessageProcessor()
+    messageProcessor.send(message)
   }
 }

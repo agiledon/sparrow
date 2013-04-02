@@ -1,6 +1,6 @@
 package com.sparrowframework.core.command
 
-import com.sparrowframework.core.Message
+import com.sparrowframework.core.message.Message
 
 /**
  * Created with IntelliJ IDEA.

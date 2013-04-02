@@ -11,8 +11,14 @@ import actors.Actor
 import command.{Command, CommandHandler}
 import common.HandlerGetter
 import event.{EventHandler, Event}
+import message.{Message, MessageProcessor}
 
-class MessageProcessor private extends Actor with HandlerGetter {
+class AdhocMessageProcessor private extends Actor with HandlerGetter with MessageProcessor {
+  def send(message: Message) {
+    this.start
+    this ! message
+  }
+
   override def act() {
     process
   }
@@ -33,6 +39,6 @@ class MessageProcessor private extends Actor with HandlerGetter {
   }
 }
 
-object MessageProcessor {
-  def apply() = new MessageProcessor
+object AdhocMessageProcessor {
+  def apply() = new AdhocMessageProcessor
 }
