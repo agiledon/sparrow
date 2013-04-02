@@ -1,6 +1,8 @@
 name := "sparrow"
 
-version := "0.1"
+organization := "www.sparrowframework.com"
+
+version := "0.0.1-SNAPSHOT"
 
 scalaVersion := "2.9.2"
 
