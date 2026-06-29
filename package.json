@@ -1,0 +1,53 @@
+{
+  "name": "sparrow-dev",
+  "version": "0.1.0",
+  "description": "Sparrow — spec-driven DDD framework for AI coding assistants. Generate structured skills that guide AI agents through domain-driven design, from business requirements to production code.",
+  "type": "module",
+  "bin": {
+    "sparrow": "./bin/sparrow.js"
+  },
+  "files": [
+    "bin/",
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node --import tsx src/cli/index.ts",
+    "clean": "rm -rf dist bin/sparrow.js",
+    "prepublishOnly": "npm run build",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "ddd",
+    "domain-driven-design",
+    "spec-driven-development",
+    "ai-coding",
+    "claude-code",
+    "opencode",
+    "cursor",
+    "architecture",
+    "code-generation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/agiledon/sparrow"
+  },
+  "author": "agiledon",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "commander": "^13.1.0",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/js-yaml": "^4.0.9",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
