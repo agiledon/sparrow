@@ -54,7 +54,45 @@ const APPLY_BODY = `# Sparrow Apply — 按实现计划执行代码生成
 - \`docs/sparrow/design/{slug}/spec.md\` — 场景与验收
 - \`docs/sparrow/design/{slug}/api.md\` — 对外契约
 - \`docs/sparrow/design/{slug}/tech.md\` — 技术栈与工具链
-- \`docs/sparrow/design/{slug}/model.md\` — 领域模型
+- \`docs/sparrow/design/{slug}/model.md\` — 领域模型（静态 + 动态）
+
+---
+
+## 代码与模型一致性（核心约束）
+
+代码实现**必须**与 \`docs/sparrow/design/{slug}/model.md\` 中定义的领域模型保持严格一致。
+
+### 领域层一致性
+
+| model.md 元素 | 代码实现 | 一致性要求 |
+|--------------|---------|-----------|
+| 聚合根 | domain/aggregate/ | 属性名、方法名、类型必须与类图中的定义一致 |
+| 实体 | domain/entity/ | 属性名、方法名、类型必须与类图中的定义一致 |
+| 值对象 | domain/valueobject/ | 属性名、不可变性必须与类图中的定义一致 |
+| 领域服务 | domain/service/ | 方法签名必须与序列图中的调用一致 |
+
+### 非领域层一致性
+
+| model.md 中的角色 | 代码实现 | 一致性要求 |
+|------------------|---------|-----------|
+| 远程服务 (Command/Query) | api/command/ 或 api/query/ | 方法签名与任务树根节点一致 |
+| 应用服务 (AppService) | application/ | 方法签名与任务树第二层一致 |
+| 端口 (Repository/Client) | infrastructure/port/ | 接口方法签名与序列图中的端口调用一致 |
+| 适配器 | infrastructure/adapter/ | 实现 port 接口，方法签名一致 |
+
+### 命名风格转换
+
+**model.md 使用 UML 命名风格**（PascalCase 类名 + camelCase 方法名）。代码实现时，需要按照选定语言的编码规范进行转换：
+
+| 元素 | UML (model.md) | Java | Python | TypeScript | Go | Rust | C++ |
+|------|---------------|------|--------|------------|-----|------|-----|
+| 类/接口名 | PascalCase | PascalCase | PascalCase | PascalCase | PascalCase | PascalCase | PascalCase |
+| 方法/函数名 | camelCase | camelCase | snake_case | camelCase | PascalCase | snake_case | snake_case |
+| 属性/字段名 | camelCase | camelCase | snake_case | camelCase | PascalCase | snake_case | snake_case |
+| 文件名 | (无) | PascalCase | snake_case | kebab-case | snake_case | snake_case | snake_case |
+| 包/模块名 | (无) | 全小写 | snake_case | kebab-case | 全小写 | snake_case | 全小写 |
+
+> **关键**：命名风格可以不同，但**语义必须一致**。例如 model.md 中的 \`placeOrder()\` 在 Python 中应写为 \`place_order()\`，在 Go 中应写为 \`PlaceOrder()\`。
 
 ---
 
@@ -222,12 +260,16 @@ docs/sparrow/design/{slug}/code_review.md
 - [ ] 代码符合对应语言编码规范
 - [ ] DDD 四层依赖方向正确（外层依赖内层）
 - [ ] 领域层不依赖框架/数据库具体类型
+- [ ] **代码的属性/方法/类型与 model.md 中的定义一致**（语义相同，命名风格按语言转换）
 
 全部任务完成后：
 - [ ] 完整构建通过
 - [ ] 所有测试通过
 - [ ] Code Review 完成
 - [ ] plan.md 所有步骤标记为 \`- [x]\`
+- [ ] **领域层代码与 model.md 静态模型完全对齐**（聚合、实体、值对象、领域服务）
+- [ ] **非领域层代码与 model.md 动态模型完全对齐**（Command/Query、AppService、Port、Adapter）
+- [ ] **API 层接口与 api.md 中定义的契约一致**
 
 ---
 

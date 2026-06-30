@@ -55,7 +55,12 @@ const DESIGN_BODY = `# Sparrow Design — API 契约与技术选型
 1. 如果 \`project.md\` 不存在，根据当前项目信息创建它
 2. 在"限界上下文设计"部分，找到当前 \`{slug}\` 的子章节
 3. 更新 \`api.md\` 和 \`tech.md\` 的状态从 \`_待生成_\` 改为 \`_v{version}_\`
-4. 更新文件头部的"最后更新"时间戳
+4. 确保 project.md 的"API 目录"部分引用了 \`docs/sparrow/api.md\`：
+   \`\`\`markdown
+   ### 5. API 目录
+   - [API 总目录](./api.md) — 所有限界上下文的公开 API 汇总
+   \`\`\`
+5. 更新文件头部的"最后更新"时间戳
 
 **project.md 路径**: \`docs/sparrow/project.md\`
 
@@ -91,8 +96,20 @@ const DESIGN_BODY = `# Sparrow Design — API 契约与技术选型
 ## 角色定义
 
 你是一名**应用系统架构师与技术负责人**，负责为当前限界上下文生成：
-1. **服务契约文档（api.md）**：包含序列图和 API 定义
+1. **服务契约文档（api.md）**：包含跨上下文协作序列图、API 定义和组件图
 2. **技术选型文档（tech.md）**：技术栈选择与实现约束
+
+## 核心原则：聚焦跨上下文协作
+
+**本阶段的关注点是限界上下文之间的关系，而非上下文内部的实现细节。**
+
+- ✅ 序列图仅体现**限界上下文之间**以及**限界上下文与外部系统（第三方）之间**的协作
+- ✅ API 定义是当前限界上下文**对外公开**的服务契约
+- ✅ 跨上下文的消息交互（同步调用 + 异步事件）
+- ❌ **不要**涉及限界上下文内部的实现（如领域服务、聚合、数据库操作等）
+- ❌ **不要**设计内部架构的分层细节
+
+> 限界上下文内部的领域建模由后续的 **sparrow-model** 阶段完成。API 定义将作为 model 阶段动态领域模型任务树的第一级入口。
 
 ## 输入文档要求
 
@@ -173,34 +190,40 @@ const DESIGN_BODY = `# Sparrow Design — API 契约与技术选型
 
 ### 步骤1: 分析业务服务分配
 1. 从当前限界上下文的 spec.md 中提取业务服务列表
-2. 确定服务契约的调用方式 (HTTP/Event)
+2. 确定服务契约的调用方式 (HTTP/RPC/Event)
+3. 区分哪些是当前 BC 对外提供的服务，哪些依赖其他 BC
 
 ### 步骤2: 分析上下文映射关系
 1. 从 application.md 中识别当前上下文与其他上下文的关系
 2. 确定调用模式 (Customer/Supplier, ACL, OHS 等)
-3. 设计跨上下文的消息交互
+3. 设计跨上下文的消息交互（同步调用 + 异步事件）
 
-### 步骤3: 绘制序列图
-1. 确定参与者（限界上下文级别，不涉及内部实现）
-2. 设计消息交互流程
-3. 添加业务逻辑注释
-4. 处理异常流程
+### 步骤3: 绘制序列图（仅限界上下文级别）
+1. 确定参与者：仅包含限界上下文和外部系统，**不包含 BC 内部的组件**
+2. 设计跨 BC 的消息交互流程
+3. 标注消息的通信协议（HTTP REST / gRPC / 消息队列等）
+4. 添加业务逻辑注释
+5. 处理异常流程
 
 ### 步骤4: 定义 API
-1. 确定 HTTP 方法和资源路径
-2. 设计请求/响应模型
-3. 定义错误处理
+1. 根据序列图中的消息交互，提取当前 BC 对外公开的 API
+2. 确定通信协议（HTTP 方法 + 资源路径，或 RPC 方法签名，或事件定义）
+3. 设计请求/响应模型（DTO 格式）
+4. 定义错误处理
 
 ## 序列图绘制规则
 
 ### 参与者定义
-- 只包含限界上下文作为整体参与者
-- 不包含限界上下文内部的消息交互
-- 外部系统作为独立参与者
+- **只包含限界上下文作为整体参与者**，每个 BC 是一个 participant
+- **外部系统**（第三方支付、短信网关等）作为独立参与者
+- **绝不包含** BC 内部组件（如 Command、AppService、聚合、Repository 等）
+- 序列图的粒度是"限界上下文对限界上下文"，不是"类对类"
 
 ### 消息交互类型
-1. **HTTP RESTful 调用**: 使用 \`->>\` 表示同步调用
-2. **事件发布/订阅**: 使用 \`->>\` 和 \`-->>\` 表示异步事件
+1. **HTTP RESTful 调用**: 使用 \`->>\` 表示同步请求，\`-->>\` 表示同步响应
+2. **RPC 调用 (gRPC等)**: 使用 \`->>\` 表示同步调用
+3. **事件发布**: 使用 \`->>\` 发往消息队列，标注事件名称
+4. **事件订阅**: 使用 \`-->>\` 从消息队列接收，标注事件名称
 
 ### 序列图模板
 \`\`\`mermaid
@@ -250,31 +273,150 @@ sequenceDiagram
 
 ### 3.1 {服务名称}
 #### 序列图
-[Mermaid 序列图]
+[Mermaid 序列图 — 仅限界上下文级别]
 
 #### API 定义
 - **API名称**:
-- **API定义**:
-- **Swagger协议**:
+- **API定义**: operationName(RequestType): ResponseType
+- **通信协议**: HTTP_METHOD /api/v1/resource（或 gRPC 方法签名 / 事件定义）
 
 #### Request Format
+{ "field1": "type", "field2": "type" }
+
 #### Response Format
+{ "status": "success|error", "data": {}, "message": "Optional message" }
+
+---
+
+## 4. 组件图（PlantUML）
+
+使用 PlantUML 绘制当前限界上下文及其协作上下文的**组件图**。组件图放置在所有服务契约定义之后、版本元数据之前。
+
+### 组件图绘制规则
+
+**组件表示**：
+- 当前限界上下文用 \`[当前上下文名称]\` 表示
+- 协作的其他限界上下文用 \`[协作上下文名称]\` 表示
+- 外部系统用 \`[外部系统名称]\` 表示
+
+**接口表示**：
+- **provided interface**（当前 BC 对外公开的 API）：使用 \`()\` 圆圈接口符号
+- **required interface**（当前 BC 调用其他 BC 的 API）：使用 \`()\` 半圆接口符号
+
+**事件表示**：
+- 事件发布：使用 \`-->>\` 箭头，标注事件名称
+- 事件订阅：使用 \`<<--\` 箭头，标注事件名称
+
+### 组件图模板
+
+\`\`\`plantuml
+@startuml
+!theme plain
+
+' 当前限界上下文
+component "{当前BC中文名}" as CurrentBC
+
+' 协作的限界上下文
+component "{协作BC1中文名}" as BC1
+component "{协作BC2中文名}" as BC2
+
+' 外部系统
+component "{外部系统名}" as ExtSys
+
+' 当前 BC 对外提供的 API (provided interface)
+() "POST /api/v1/orders" as API_PlaceOrder
+() "GET /api/v1/orders/{id}" as API_GetOrder
+
+' 当前 BC 依赖的 API (required interface)
+() "GET /api/v1/users/{id}" as API_GetUser
+() "POST /api/v1/payments" as API_CreatePayment
+() "OrderPlaced" as EVT_OrderPlaced
+
+' provided interfaces 连接到当前 BC
+CurrentBC -- API_PlaceOrder
+CurrentBC -- API_GetOrder
+
+' required interfaces 连接到协作 BC
+API_GetUser -- BC1
+API_CreatePayment -- BC2
+
+' 事件发布/订阅
+CurrentBC -->> EVT_OrderPlaced : publishes
+ExtSys <<-- EVT_OrderPlaced : subscribes
+
+@enduml
 \`\`\`
+
+> **提示**：以上模板中的 API 和事件应与"服务契约详细定义"章节中的定义一一对应。
+\`\`\`
+
+---
+
+## 项目级 API 目录更新
+
+完成当前限界上下文的 api.md 后，**必须**更新 \`docs/sparrow/api.md\`（项目级 API 总目录）。
+
+### api.md 目录结构（项目级）
+
+\`\`\`markdown
+# API 目录 — {项目名称}
+
+> 本文件由 Sparrow 自动维护，汇总所有限界上下文的公开 API。
+> 每完成一个限界上下文的 sparrow-design 操作后更新。
+
+## {限界上下文1中文名} (\`{slug1}\`)
+
+### 对外提供的 API (Provided)
+
+| API 名称 | 通信协议 | 定义 | 说明 |
+|---------|---------|------|------|
+| 提交订单 | HTTP POST | /api/v1/orders | 创建新订单 |
+| 查询订单 | HTTP GET | /api/v1/orders/{id} | 按ID查询订单 |
+
+### 对外发布的事件
+
+| 事件名称 | 事件类型 | 说明 |
+|---------|---------|------|
+| OrderPlaced | 领域事件 | 订单已提交 |
+
+### 依赖的 API (Required)
+
+| API 名称 | 提供方上下文 | 通信协议 | 说明 |
+|---------|------------|---------|------|
+| 查询用户 | user-identity | HTTP GET | 获取用户信息 |
+
+---
+
+## {限界上下文2中文名} (\`{slug2}\`)
+
+...
+\`\`\`
+
+### 更新操作
+
+1. 如果 \`docs/sparrow/api.md\` 不存在，根据上述模板创建
+2. 在文件中找到当前限界上下文的章节（如不存在则新增）
+3. 更新"对外提供的 API"表格（与 api.md 中的 API 定义保持一致）
+4. 更新"对外发布的事件"表格
+5. 更新"依赖的 API"表格（列出当前 BC 调用的其他 BC 的 API）
+6. 更新文件头部的"最后更新"时间戳
 
 ## 质量检查清单
 
-- [ ] 每个限界上下文都有对应的 api.md 和 tech.md
-- [ ] 序列图只包含限界上下文级别的交互
-- [ ] API 定义遵循 RESTful 设计原则
-- [ ] 请求/响应模型完整
-- [ ] 错误处理机制完善
+- [ ] 序列图只包含限界上下文级别和外部系统的交互（无内部组件）
+- [ ] 序列图中每个跨 BC 消息都明确了通信协议（HTTP/RPC/Event）
+- [ ] API 定义完整，包含请求/响应模型和错误处理
 - [ ] 事件驱动的服务契约有明确的事件定义
-- [ ] 跨上下文调用关系清晰
+- [ ] **组件图已绘制**：provided interface 与 API 定义一一对应
+- [ ] **组件图已绘制**：required interface 体现了所有跨 BC 调用
+- [ ] 事件发布/订阅在组件图中正确表示
 - [ ] tech.md 包含所有 8 个必要章节
+- [ ] **项目级 \`docs/sparrow/api.md\` 已更新**，当前 BC 的 API 已录入
+- [ ] 跨上下文调用关系和通信协议清晰
 
 ## 完成后的下一步
 
-✅ 完成 sparrow-design @{slug} 后，请执行 **sparrow-model @{slug}**（团队级）—— 为当前限界上下文进行领域建模。
+✅ 完成 sparrow-design @{slug} 后，请执行 **sparrow-model @{slug}**（团队级）—— 基于 api.md 中的 API 定义，将每个 API 作为动态领域模型任务树的第一级入口，进行领域建模。
 `;
 
 export function register(): void {

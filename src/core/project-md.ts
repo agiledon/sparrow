@@ -62,7 +62,15 @@ export function generateProjectMdContent(
 
 ---
 
-### 4. 产品代码
+### 4. API 目录
+
+- [ ] [API 总目录](./api.md) — *待生成 (sparrow-design)*
+
+> 每完成一个限界上下文的 sparrow-design 后更新此文件。
+
+---
+
+### 5. 产品代码
 
 - [\`backend/\`](../backend/) — 产品代码根目录
 

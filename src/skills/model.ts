@@ -91,9 +91,22 @@ const MODEL_BODY = `# Sparrow Model — 领域建模
 ## 建模目标
 
 1. **静态领域模型**：以聚合为基本单位的领域模型（聚合根、实体、值对象）
-2. **动态领域模型**：通过任务分解和角色构造型，为每个业务服务绘制序列图
+2. **动态领域模型**：以 api.md 的 API 定义为入口，通过任务分解和角色构造型，为每个 API 绘制内部序列图
 
 输出文件：**\`docs/sparrow/design/{slug}/model.md\`**
+
+## 核心原则：API 驱动的动态建模
+
+**动态领域模型以 design 阶段产出的 api.md 为起点，逐层向内部展开。**
+
+- 从 \`docs/sparrow/design/{slug}/api.md\` 中提取当前 BC 的每个**对外公开的 API**
+- 每个 API 作为动态领域模型**任务树的第一级入口**（根节点）
+- 任务树从 API 入口出发，逐步分解到应用服务 → 领域服务 → 聚合 → 端口，直到原子任务
+- **远程服务（Command/Query）的接口必须与 api.md 中的 API 定义保持一致**
+- **应用服务的方法签名必须与远程服务的接口保持一致**
+- 静态领域模型（类图）与动态领域模型（序列图）必须保持一致
+
+> design 阶段定义的是"限界上下文之间"的协作契约；model 阶段建模的是"限界上下文内部"如何实现这些契约。
 
 ---
 
@@ -172,13 +185,31 @@ Meeting ||--|| MeetingTime : has
 
 ## 阶段二：动态建模阶段
 
+### 步骤〇：API 入口提取（必须在任务分解之前执行）
+
+1. 读取 \`docs/sparrow/design/{slug}/api.md\`，提取当前 BC 的**所有对外公开的 API**
+2. 对每个 API，确认其通信协议（HTTP/RPC/Event）和操作签名
+3. 这些 API 将作为动态领域模型**任务树的第一级入口**
+
+**API 到任务树入口的映射规则**：
+
+| API 类型 | 任务树入口 | 对应角色 |
+|---------|-----------|---------|
+| HTTP POST /api/v1/xxx | 命令任务（根任务） | Command |
+| HTTP GET /api/v1/xxx | 查询任务（根任务） | Query |
+| HTTP PUT/PATCH /api/v1/xxx | 命令任务（根任务） | Command |
+| HTTP DELETE /api/v1/xxx | 命令任务（根任务） | Command |
+| gRPC Method(param): result | 命令/查询任务 | Command/Query |
+| 领域事件订阅 | 事件处理任务 | Command |
+
 ### 步骤一：任务分解
-将每个业务服务分解为任务树：
+以每个 API 入口为根节点，将任务逐层分解为任务树：
 
 **任务树结构**：
-- **根**：业务服务作为根节点
-- **枝**：组合任务作为枝节点
-- **叶**：原子任务作为叶节点
+- **根**：API 入口（远程服务 Command/Query）
+- **枝**：应用服务编排（AppService）
+- **枝**：领域服务逻辑（DomainService）
+- **叶**：聚合操作 / 端口调用（Repository/Client）→ 原子任务
 
 **原子任务判断条件**：
 1. 当前任务操作的领域知识属于一个聚合所完全拥有 → 原子任务
@@ -186,6 +217,15 @@ Meeting ||--|| MeetingTime : has
 3. 用户界面交互 → 忽略
 
 ### 步骤二：角色构造型分配
+
+**接口对齐约束（关键）**：
+- **远程服务（Command/Query）的方法签名必须与 api.md 中对应 API 的定义完全一致**
+  - 方法名 = api.md 中的 operationName
+  - 参数类型 = api.md 中的 RequestType
+  - 返回类型 = api.md 中的 ResponseType
+- **应用服务（AppService）的方法签名必须与远程服务（Command/Query）的接口保持一致**
+  - AppService 的方法名与 Command/Query 的方法名一致
+  - 参数和返回类型保持一致
 
 **角色构造型定义**：
 
@@ -276,38 +316,54 @@ deactivate APP
 - **值对象**：{VO1}, {VO2}
 
 ### 1.2 领域模型类图
-[PlantUML 类图]
+[PlantUML 类图 — UML 命名风格]
 
 ## 2. 动态领域模型
 
-### 2.1 业务服务：{服务名称}
+> 以下每个 API 入口来自 docs/sparrow/design/{slug}/api.md
+
+### 2.1 API：{API名称}（来自 api.md）
+
+**API 定义**：\`POST /api/v1/resource\`
 
 #### 任务树
 \`\`\`
-{根任务}
-├── {组合任务1}
-│   ├── {原子任务1.1}
-│   └── {原子任务1.2}
-└── {组合任务2}
-    ├── {原子任务2.1}
-    └── {原子任务2.2}
+{CommandName}.{method}(Request): Response         ← API 入口（与 api.md 一致）
+├── {AppService}.{method}(Request): Response      ← 应用服务（签名与 Command 一致）
+│   ├── {DomainService}.{method}(params): result  ← 领域服务
+│   │   ├── {Aggregate}.{method}(data): result    ← 聚合操作（原子任务）
+│   │   └── {Repository}.{save}(aggregate)        ← 端口调用（原子任务）
+│   └── {Client}.{call}(params): result           ← 外部调用（原子任务）
 \`\`\`
 
 #### 角色分配
 \`\`\`
-{根任务} → {Command}.{method}() + {AppService}.{method}()
-├── {组合任务1} → {DomainService}.{method}()
-│   ├── {原子任务1.1} → {Client}.{method}()
-│   └── {原子任务1.2} → {Aggregate}.{method}()
+{根任务} → {Command}.{method}(Request): Response
+├── {组合任务} → {AppService}.{method}(Request): Response
+│   ├── {原子任务1} → {DomainService}.{method}(params): result
+│   │   ├── {Aggregate}.{method}(data): result
+│   │   └── {Repository}.{save}(aggregate)
+│   └── {原子任务2} → {Client}.{call}(params): result
 ...
 \`\`\`
 
 #### 序列图
-[PlantUML 序列图]
+[PlantUML 序列图 — 展示 BC 内部各角色的协作]
+
+### 2.2 API：{下一个API名称}
+...
 
 ## 3. 角色职责定义
 [各角色及其职责的总结]
 \`\`\`
+
+**命名约定（UML 风格）**：
+- 类名：PascalCase（如 \`OrderCommand\`、\`OrderAppService\`）
+- 方法名：camelCase（如 \`placeOrder()\`、\`getOrderById()\`）
+- 属性名：camelCase（如 \`orderId\`、\`customerName\`）
+- 命名空间/包：dot.case（如 \`com.sparrow.order\`）
+
+> 代码实现时，命名将根据具体开发语言的习惯进行转换（参见 sparrow-apply 中的命名规范）。
 
 ## 质量检查清单
 
@@ -320,14 +376,22 @@ deactivate APP
 - [ ] PlantUML 类图语法正确
 
 ### 动态模型
-- [ ] 任务树结构清晰，层次合理
+- [ ] **每个 api.md 中的 API 都有对应的任务树入口**（不遗漏）
+- [ ] **远程服务（Command/Query）的接口签名与 api.md 的 API 定义一致**
+- [ ] **应用服务的方法签名与远程服务接口一致**
+- [ ] 任务树结构清晰，层次合理（API → AppService → DomainService → Aggregate/Port）
 - [ ] 原子任务判断准确
 - [ ] 角色分配符合构造型定义
-- [ ] 序列图完整，包含所有必要交互
+- [ ] 序列图完整，展示 BC 内部所有必要交互
 - [ ] 序列图颜色规范正确
 - [ ] PlantUML 序列图语法正确，使用 box 分组
 - [ ] 角色协作约束得到严格遵守
 - [ ] 序列图消息流与任务树执行流程完全对应
+
+### 模型一致性
+- [ ] 静态模型中的聚合、实体、值对象在动态模型的序列图中正确使用
+- [ ] 类图中的方法与序列图中的消息调用一致
+- [ ] UML 命名风格统一（PascalCase 类名，camelCase 方法/属性）
 
 ## 完成后的下一步
 
