@@ -25,6 +25,71 @@ const PLAN_BODY = `# Sparrow Plan — 实现计划制订
 **前置条件检查**：
 - 如果上述任一前置文件不存在，请提示用户缺少哪个文件，以及需要先执行什么步骤
 - 如果用户未指定限界上下文，请列出可用的限界上下文让用户选择
+- 如果目标文件已存在，请参考下方"输出文件存在性检查"章节处理
+
+---
+
+## 🛑 输出文件存在性检查（必须在生成前执行）
+
+在开始生成内容之前，请检查以下输出文件是否已经存在：
+
+- \`docs/sparrow/design/{slug}/plan.md\`
+
+如果文件已存在，请**让用户进行选择**：
+
+- **跳过 (skip)**：保留已有文件，不执行任何生成操作，停止执行
+- **覆盖 (overwrite)**：删除已有文件，重新生成全新的内容
+- **更新 (update)**：在已有文件基础上进行修改和完善
+
+> ⚠️ 一次命令只确认一次，用户的选择应用于所有输出文件。
+
+---
+
+## 📋 project.md 更新
+
+完成输出后，**必须**更新 \`docs/sparrow/project.md\`：
+
+1. 如果 \`project.md\` 不存在，根据当前项目信息创建它
+2. 在"限界上下文设计"部分，找到当前 \`{slug}\` 的子章节
+3. 更新 \`plan.md\` 的状态从 \`_待生成_\` 改为 \`_v{version}_\`
+4. 更新文件头部的"最后更新"时间戳
+
+**project.md 路径**: \`docs/sparrow/project.md\`
+
+---
+
+## 📌 版本元数据管理
+
+所有输出的文档文件**必须在文件开头**包含版本元数据块：
+
+\`\`\`markdown
+<!--
+  version: v1.0
+  last-updated: {ISO_8601_TIMESTAMP}
+  generated-by: sparrow-plan
+  sparrow-version: {从 .sparrow/sparrow.json 读取}
+-->
+\`\`\`
+
+**版本规则**:
+- **新文档**: 使用 \`v1.0\`
+- **更新已有文档**: 读取现有版本号，递增次版本号（\`v1.0\` → \`v1.1\`）
+- **重大重写**: 递增主版本号（\`v1.x\` → \`v2.0\`）
+- 每次修改都**必须变更**版本号
+
+**操作步骤**:
+1. 检查目标文件是否已存在
+2. 如果存在，读取文件开头 \`<!--\` 注释块中的 \`version:\` 字段并递增
+3. 在文件开头添加或更新版本元数据块
+4. 继续生成文档正文
+
+---
+
+## 代码目录
+
+产品代码根目录统一使用 **\`backend/\`**。多个限界上下文共享 \`backend/\` 目录，各上下文为该代码项目下的不同包/模块。
+
+> \`backend/\` 目录在首次执行 sparrow-apply 时自动创建。
 
 ---
 
@@ -92,7 +157,7 @@ const PLAN_BODY = `# Sparrow Plan — 实现计划制订
 
 ### 核心原则
 
-- **一个限界上下文 = 一个产品模块**，根目录为 **\`code/{slug}/\`**
+- **一个限界上下文 = 一个产品模块**，根目录为 **\`backend/\`**
 - 四层（api、application、domain、infrastructure）以包/目录划分
 - **集成/API 测试**在 **\`integration-tests/{slug}/\`** 下
 - **禁止**将各层拆为 Maven/npm/Cargo 子模块
@@ -103,7 +168,7 @@ const PLAN_BODY = `# Sparrow Plan — 实现计划制订
 
 **Java (Maven)**：
 \`\`\`
-code/{slug}/
+backend/
   src/main/java/{basePackage}/
     api/command/
     api/query/
@@ -123,7 +188,7 @@ code/{slug}/
 
 **Python (uv/pip)**：
 \`\`\`
-code/{slug}/
+backend/
   {package}/api/command/
   {package}/api/query/
   {package}/api/dto/
@@ -141,7 +206,7 @@ code/{slug}/
 
 **Node.js (TypeScript)**：
 \`\`\`
-code/{slug}/
+backend/
   src/api/command/
   src/api/query/
   src/api/dto/
@@ -159,7 +224,7 @@ code/{slug}/
 
 **Go**：
 \`\`\`
-code/{slug}/
+backend/
   cmd/
   internal/api/command/
   internal/api/query/
@@ -177,7 +242,7 @@ code/{slug}/
 
 **Rust**：
 \`\`\`
-code/{slug}/
+backend/
   src/api/command/
   src/api/query/
   src/api/dto/
@@ -192,6 +257,25 @@ code/{slug}/
   src/infrastructure/adapter/client/
   src/lib.rs
   tests/
+\`\`\`
+
+**C++ (CMake + Conan/vcpkg)**：
+\`\`\`
+backend/
+  src/api/command/
+  src/api/query/
+  src/api/dto/
+  src/application/
+  src/domain/aggregate/
+  src/domain/entity/
+  src/domain/valueobject/
+  src/domain/service/
+  src/infrastructure/port/repository/
+  src/infrastructure/port/client/
+  src/infrastructure/adapter/repository/
+  src/infrastructure/adapter/client/
+  tests/
+  CMakeLists.txt
 \`\`\`
 
 ---
@@ -236,7 +320,7 @@ code/{slug}/
 
 ### 步骤
 
-- [ ] 在 code/{slug}/ 创建项目脚手架
+- [ ] 在 backend/ 创建项目脚手架
 - [ ] 配置依赖管理文件，安装依赖
 
 ## 任务 2：{聚合名}领域模型落地

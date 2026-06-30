@@ -25,7 +25,73 @@ const ARCH_BODY = `# Sparrow Arch — 业务架构与应用架构定义
 
 **前置条件检查**：
 - 如果 \`docs/sparrow/requirement/spec.md\` 不存在，请提示用户先执行 **sparrow-explore**
-- 如果已存在 \`docs/sparrow/architecture/business.md\` 或 \`docs/sparrow/architecture/application.md\`，询问用户是修改完善还是重新生成
+- 如果已存在 \`docs/sparrow/architecture/business.md\` 或 \`docs/sparrow/architecture/application.md\`，请参考下方"输出文件存在性检查"章节处理
+
+---
+
+## 🛑 输出文件存在性检查（必须在生成前执行）
+
+在开始生成内容之前，请检查以下输出文件是否已经存在：
+
+- \`docs/sparrow/architecture/business.md\`
+- \`docs/sparrow/architecture/application.md\`
+- \`docs/sparrow/design/{slug}/spec.md\`（对每个限界上下文）
+
+如果任一文件已存在，请**让用户进行一次选择**（该选择将应用于所有已存在的文件）：
+
+- **跳过 (skip)**：保留已有文件，不执行任何生成操作，停止执行
+- **覆盖 (overwrite)**：删除已有文件，重新生成全新的内容
+- **更新 (update)**：在已有文件基础上进行修改和完善
+
+> ⚠️ 一次命令只确认一次，用户的选择应用于所有输出文件。
+
+---
+
+## 📋 project.md 更新
+
+完成输出后，**必须**更新 \`docs/sparrow/project.md\`：
+
+1. 如果 \`project.md\` 不存在，根据当前项目信息创建它
+2. 在"文档索引"部分，更新 \`architecture/business.md\` 和 \`architecture/application.md\` 的链接，状态改为版本号
+3. 在"限界上下文设计"部分，为每个新创建的限界上下文添加子章节：
+   \`\`\`markdown
+   #### {限界上下文名称} (\`{slug}\`)
+   - [spec](./design/{slug}/spec.md) — *v1.0*
+   - [api](./design/{slug}/api.md) — *待生成*
+   - [tech](./design/{slug}/tech.md) — *待生成*
+   - [model](./design/{slug}/model.md) — *待生成*
+   - [plan](./design/{slug}/plan.md) — *待生成*
+   \`\`\`
+4. 更新文件头部的"最后更新"时间戳
+
+**project.md 路径**: \`docs/sparrow/project.md\`
+
+---
+
+## 📌 版本元数据管理
+
+所有输出的文档文件**必须在文件开头**包含版本元数据块：
+
+\`\`\`markdown
+<!--
+  version: v1.0
+  last-updated: {ISO_8601_TIMESTAMP}
+  generated-by: sparrow-arch
+  sparrow-version: {从 .sparrow/sparrow.json 读取}
+-->
+\`\`\`
+
+**版本规则**:
+- **新文档**: 使用 \`v1.0\`
+- **更新已有文档**: 读取现有版本号，递增次版本号（\`v1.0\` → \`v1.1\`）
+- **重大重写**: 递增主版本号（\`v1.x\` → \`v2.0\`）
+- 每次修改都**必须变更**版本号
+
+**操作步骤**:
+1. 检查目标文件是否已存在
+2. 如果存在，读取文件开头 \`<!--\` 注释块中的 \`version:\` 字段并递增
+3. 在文件开头添加或更新版本元数据块
+4. 继续生成文档正文
 
 ---
 

@@ -7,11 +7,12 @@
  */
 
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
 import type { SkillDefinition } from './config.js';
 import { getOrderedSkills } from './config.js';
 import { getAdapter } from './adapters/index.js';
 import type { CommandContent } from './adapters/types.js';
+import { generateProjectMdContent } from './project-md.js';
 
 /**
  * Skill template function type.
@@ -100,22 +101,49 @@ export function generateSkillFiles(
 }
 
 /**
- * Generate a sparrow.json config file in the project root.
+ * Sparrow configuration directory (hidden).
+ * All framework config files live under .sparrow/ in the project root.
+ */
+export const SPARROW_DIR = '.sparrow';
+
+/**
+ * Generate a sparrow.json config file under .sparrow/ in the project root.
  */
 export function generateProjectConfig(
   projectRoot: string,
   toolIds: string[],
-  version: string
+  version: string,
+  projectName: string
 ): string {
   const config = {
     version,
     tools: toolIds,
+    projectName,
     createdAt: new Date().toISOString(),
     outputBase: 'docs/sparrow',
-    codeBase: 'code',
+    codeBase: 'backend',
   };
 
-  const configPath = join(projectRoot, 'sparrow.json');
+  const sparrowDir = join(projectRoot, SPARROW_DIR);
+  mkdirSync(sparrowDir, { recursive: true });
+  const configPath = join(sparrowDir, 'sparrow.json');
   writeFileSync(configPath, JSON.stringify(config, null, 2) + '\n', 'utf-8');
   return configPath;
+}
+
+/**
+ * Generate the project.md wizard file under docs/sparrow/.
+ * Returns the path to the created file.
+ */
+export function generateProjectMd(
+  projectRoot: string,
+  projectName: string,
+  sparrowVersion: string,
+  toolIds: string[]
+): string {
+  const mdPath = join(projectRoot, 'docs', 'sparrow', 'project.md');
+  mkdirSync(dirname(mdPath), { recursive: true });
+  const content = generateProjectMdContent(projectName, sparrowVersion, toolIds);
+  writeFileSync(mdPath, content, 'utf-8');
+  return mdPath;
 }

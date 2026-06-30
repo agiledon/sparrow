@@ -28,6 +28,7 @@ const mainResult = await esbuild.build({
   external: [
     'commander',
     'js-yaml',
+    '@inquirer/prompts',
   ],
   banner: {
     js: `import { createRequire } from 'module'; const require = createRequire(import.meta.url);`,
@@ -53,6 +54,7 @@ const cliResult = await esbuild.build({
   external: [
     'commander',
     'js-yaml',
+    '@inquirer/prompts',
   ],
   banner: {
     js: `import { createRequire } from 'module'; const require = createRequire(import.meta.url);`,

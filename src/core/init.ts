@@ -8,7 +8,7 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { SUPPORTED_TOOLS, type ToolDefinition } from './config.js';
-import { generateSkillFiles, generateProjectConfig } from './skill-generation.js';
+import { generateSkillFiles, generateProjectConfig, generateProjectMd } from './skill-generation.js';
 import { initializeSkills } from '../skills/index.js';
 
 const SPARROW_VERSION = '0.1.0';
@@ -18,12 +18,16 @@ export interface InitOptions {
   tools?: string;
   /** Skip confirmation prompts */
   force?: boolean;
+  /** Project name in English (used for code directory) */
+  projectName: string;
 }
 
 export interface InitResult {
   tools: string[];
+  projectName: string;
   createdFiles: { toolId: string; files: string[] }[];
   configPath: string;
+  projectMdPath: string;
 }
 
 /**
@@ -127,12 +131,17 @@ export function executeInit(projectRoot: string, options: InitOptions): InitResu
   const createdFiles = generateSkillFiles(projectRoot, selectedToolIds);
 
   // Step 5: Create project config
-  const configPath = generateProjectConfig(projectRoot, selectedToolIds, SPARROW_VERSION);
+  const configPath = generateProjectConfig(projectRoot, selectedToolIds, SPARROW_VERSION, options.projectName);
+
+  // Step 6: Create project.md wizard file
+  const projectMdPath = generateProjectMd(projectRoot, options.projectName, SPARROW_VERSION, selectedToolIds);
 
   return {
     tools: selectedToolIds,
+    projectName: options.projectName,
     createdFiles,
     configPath,
+    projectMdPath,
   };
 }
 
@@ -145,8 +154,11 @@ export function formatInitSummary(result: InitResult): string {
   lines.push('');
   lines.push('✨ Sparrow initialized successfully!');
   lines.push('');
+  lines.push(`📦 Project: ${result.projectName}`);
   lines.push(`📋 Tools configured: ${result.tools.join(', ')}`);
-  lines.push(`📄 Config: ${result.configPath}`);
+  lines.push(`📄 Config: .sparrow/sparrow.json`);
+  lines.push(`📑 Guide: ${result.projectMdPath}`);
+  lines.push(`📁 Backend dir: backend/`);
   lines.push('');
 
   for (const { toolId, files } of result.createdFiles) {

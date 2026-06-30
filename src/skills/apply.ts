@@ -26,6 +26,18 @@ const APPLY_BODY = `# Sparrow Apply — 按实现计划执行代码生成
 
 ---
 
+## 代码目录检查
+
+在开始执行之前：
+
+1. 检查 \`backend/\` 目录是否已存在：
+   - **如果已存在**：直接使用该目录，不重新创建项目脚手架
+   - **如果不存在**：创建该目录及项目脚手架
+
+> 所有产品代码统一放在 \`backend/\` 下。多个限界上下文共享该目录，各上下文为不同的包/模块。
+
+---
+
 ## 角色定义
 
 你驱动三个角色按 plan.md 执行任务：
@@ -75,7 +87,7 @@ infrastructure 层（南向网关）:
 ## 执行方映射
 
 ### dev 任务（Development Engineer）
-- 产品代码写入 \`code/{slug}/\` 模块
+- 产品代码写入 \`backend/\` 模块
 - **领域层须 TDD**：先写测试，再写实现
 - 同一步骤内完成测试 + 实现
 - 每生成完整文件内容，立即写入磁盘
@@ -153,6 +165,13 @@ infrastructure 层（南向网关）:
 - 领域层不要依赖 axum/sqlx 具体类型
 - 避免 unwrap()/expect() 处理可预期失败
 
+**C++**：
+- handler 中不要写核心业务规则
+- 领域层不依赖具体 HTTP 框架（drogon/pistache）或数据库驱动类型
+- 使用 RAII 管理资源，避免裸指针和手动 new/delete
+- 头文件使用 #pragma once 或 include guard
+- 优先使用智能指针（std::unique_ptr / std::shared_ptr）
+
 ### 包/模块命名规范
 
 - **Java**: UpperCamelCase 类名，lowerCamelCase 方法名，全小写包名
@@ -160,6 +179,7 @@ infrastructure 层（南向网关）:
 - **Node.js**: PascalCase 类名，camelCase 方法名，kebab-case 文件名
 - **Go**: PascalCase 导出，camelCase 未导出，全小写包名
 - **Rust**: snake_case 函数/模块/变量，PascalCase 类型/trait/enum
+- **C++**: PascalCase 类名，snake_case 函数/变量/文件名，全小写命名空间
 
 ---
 
@@ -177,7 +197,7 @@ infrastructure 层（南向网关）:
 
 ### 产品代码
 \`\`\`
-code/{slug}/
+backend/
   ... (DDD 四层目录结构)
 \`\`\`
 
@@ -218,7 +238,7 @@ docs/sparrow/design/{slug}/code_review.md
 如果有其他限界上下文需要实现，请对每个上下文执行：
 **sparrow-design → sparrow-model → sparrow-plan → sparrow-apply**
 
-全部限界上下文完成后，产品代码集中在 \`code/\` 目录下，共享项目根命名空间，各上下文为独立模块。
+全部限界上下文完成后，产品代码集中在 \`backend/\` 目录下，共享项目根命名空间，各上下文为独立模块。
 `;
 
 export function register(): void {
