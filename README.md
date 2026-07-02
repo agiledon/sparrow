@@ -1,5 +1,7 @@
 # 🪶 Sparrow
 
+![Sparrow Logo](docs/images/sparrow-logo.png)
+
 > Spec-driven DDD framework for AI coding assistants.
 
 Sparrow transforms raw business requirements into production-ready code through a structured 6-step Domain-Driven Design (DDD) pipeline. It generates **skills and commands** for AI coding assistants (Claude Code, OpenCode, Cursor), letting each host's native AI capabilities guide you from business analysis to code generation — no multi-agent framework required.

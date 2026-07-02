@@ -16,7 +16,6 @@ const GREEN = '\x1b[38;2;46;125;50m';
 const CYAN = '\x1b[36m';
 const YELLOW = '\x1b[33m';
 const RED = '\x1b[31m';
-const BOLD = '\x1b[1m';
 const DIM = '\x1b[2m';
 const RESET = '\x1b[0m';
 
@@ -27,22 +26,21 @@ const RESET = '\x1b[0m';
  * The logo features a small sparrow silhouette on the left side.
  */
 export function renderWelcomePage(): void {
-  const lines = [
+  const lines: string[] = [
     '',
     `${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}`,
     `${CYAN}║${RESET}                                                            ${CYAN}║${RESET}`,
-    `${CYAN}║${RESET}  ${GREEN}    .  .                          _                  ${RESET}  ${CYAN}║${RESET}`,
-    `${CYAN}║${RESET}  ${GREEN}   .' \\/ '.         ,-.       _//|                 ${RESET}  ${CYAN}║${RESET}`,
-    `${CYAN}║${RESET}  ${GREEN}  (  .,  ,)       ,'   '.   _'/  |                 ${RESET}  ${CYAN}║${RESET}`,
-    `${CYAN}║${RESET}  ${GREEN}   ) .-- (       (       ).'   ,-'                 ${RESET}  ${CYAN}║${RESET}`,
-    `${CYAN}║${RESET}  ${GREEN}  /      \\       '.____.' '._.'                   ${RESET}  ${CYAN}║${RESET}`,
-    `${CYAN}║${RESET}  ${GREEN} (   __   )                                          ${RESET}  ${CYAN}║${RESET}`,
-    `${CYAN}║${RESET}  ${GREEN}  ',_  ,'               ${BOLD}S P A R R O W${RESET}                ${CYAN}║${RESET}`,
     `${CYAN}║${RESET}                                                            ${CYAN}║${RESET}`,
-    `${CYAN}║${RESET}  ${BOLD}Spec-Driven DDD Framework for AI Coding Assistants${RESET}      ${CYAN}║${RESET}`,
-    `${CYAN}║${RESET}  ${DIM}From business requirements to production code${RESET}           ${CYAN}║${RESET}`,
+    `${CYAN}║${RESET}  ${GREEN}          ___ _ __   __ _ _ __ _ ____      _____  __    ${RESET}  ${CYAN}║${RESET}`,
+    `${CYAN}║${RESET}  ${GREEN}         / __| '_ \\ / _\` | '__| '_ \\ \\ /\\ / / _ \\/ _|   ${RESET}  ${CYAN}║${RESET}`,
+    `${CYAN}║${RESET}  ${GREEN}         \\__ \\ |_) | (_| | |  | | | \\ V  V /  __/ (_|   ${RESET}  ${CYAN}║${RESET}`,
+    `${CYAN}║${RESET}  ${GREEN}         |___/ .__/ \\__,_|_|  |_| |_|\\_/\\_/ \\___|\\__|   ${RESET}  ${CYAN}║${RESET}`,
+    `${CYAN}║${RESET}  ${GREEN}             |_|                                          ${RESET}  ${CYAN}║${RESET}`,
     `${CYAN}║${RESET}                                                            ${CYAN}║${RESET}`,
-    `${CYAN}║${RESET}  ${DIM}Pipeline:${RESET} explore → arch → design → model → plan → apply   ${CYAN}║${RESET}`,
+    `${CYAN}║${RESET}  ${GREEN}Spec-Driven DDD Framework for AI Coding Assistants${RESET}        ${CYAN}║${RESET}`,
+    `${CYAN}║${RESET}  ${DIM}From business requirements to production code${RESET}             ${CYAN}║${RESET}`,
+    `${CYAN}║${RESET}                                                            ${CYAN}║${RESET}`,
+    `${CYAN}║${RESET}  ${DIM}Pipeline:${RESET} explore → arch → design → model → plan → apply     ${CYAN}║${RESET}`,
     `${CYAN}║${RESET}                                                            ${CYAN}║${RESET}`,
     `${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}`,
     '',
