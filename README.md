@@ -1,6 +1,6 @@
 # 🪶 Sparrow
 
-![Sparrow Logo](docs/images/sparrow-logo.png)
+![Sparrow Logo](assets/sparrow-logo.png)
 
 > Spec-driven DDD framework for AI coding assistants.
 >
