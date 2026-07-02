@@ -1,6 +1,5 @@
 /**
  * Sparrow Plan skill template.
- * Adapted from sparrow-ddd/.sparrow/rules/06-devise-design-plan.mdc
  *
  * This skill creates an implementation plan based on spec, api, tech, and model documents.
  */

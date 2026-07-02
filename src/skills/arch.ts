@@ -1,7 +1,5 @@
 /**
  * Sparrow Arch skill template.
- * Adapted from sparrow-ddd/.sparrow/rules/02-determine-business-architecture.mdc
- * and 03-mapping-application-architecture.mdc
  *
  * This skill has two phases:
  *   Phase 1: Define business architecture (subdomains + business architecture diagram)

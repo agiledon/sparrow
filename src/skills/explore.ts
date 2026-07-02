@@ -1,6 +1,5 @@
 /**
  * Sparrow Explore skill template.
- * Adapted from sparrow-ddd/.sparrow/rules/01-identify-business-service.mdc
  *
  * This skill identifies business services from raw requirements and
  * produces a structured business service definition document.

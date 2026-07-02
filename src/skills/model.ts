@@ -1,6 +1,5 @@
 /**
  * Sparrow Model skill template.
- * Adapted from sparrow-ddd/.sparrow/rules/05-extract-domain-model.mdc
  *
  * This skill generates the domain model (static + dynamic) for a bounded context.
  */

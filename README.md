@@ -3,6 +3,8 @@
 ![Sparrow Logo](docs/images/sparrow-logo.png)
 
 > Spec-driven DDD framework for AI coding assistants.
+>
+> The npm package is published as **`sparrow-ddd`**.
 
 Sparrow transforms raw business requirements into production-ready code through a structured 6-step Domain-Driven Design (DDD) pipeline. It generates **skills and commands** for AI coding assistants (Claude Code, OpenCode, Cursor), letting each host's native AI capabilities guide you from business analysis to code generation — no multi-agent framework required.
 
@@ -20,40 +22,40 @@ Sparrow transforms raw business requirements into production-ready code through 
 
 ```bash
 # Global install
-npm install -g sparrow-dev
+npm install -g sparrow-ddd
 
 # Or use without installing
-npx sparrow-dev init
+npx sparrow-ddd init
 ```
 
 ### From local directory (development / offline)
 
-如果你在本地克隆了 Sparrow 仓库，可以通过以下方式直接从本地安装：
+If you have cloned the Sparrow repository locally, you can install directly from the local directory:
 
 ```bash
-# 方式一：使用 npm link（推荐，方便开发调试）
-cd /path/to/sparrow        # 进入 Sparrow 项目根目录
-npm install                # 安装依赖
-npm run build              # 构建项目
-npm link                   # 将 sparrow 链接到全局
+# Option 1: Use npm link (recommended for development)
+cd /path/to/sparrow        # Navigate to the Sparrow project root
+npm install                # Install dependencies
+npm run build              # Build the project
+npm link                   # Link sparrow globally
 
-# 之后可在任意目录使用
+# Then use it from any directory
 cd /path/to/your-project
 sparrow init --tools claude
 
-# 取消链接
-npm unlink -g sparrow-dev
+# To unlink
+npm unlink -g sparrow-ddd
 ```
 
 ```bash
-# 方式二：从本地路径全局安装
+# Option 2: Install globally from local path
 npm install -g /path/to/sparrow
 
-# 方式三：使用 npx 直接运行本地构建产物
+# Option 3: Run the local build artifact directly with npx
 node /path/to/sparrow/bin/sparrow.js init --tools claude
 ```
 
-> **提示**：本地安装主要用于 Sparrow 框架本身的开发和调试。日常使用请通过 npm 安装发布的版本。
+> **Note**: Local installation is primarily intended for developing and debugging the Sparrow framework itself. For everyday use, install the published version via npm.
 
 **Requirements**: Node.js >= 18
 
@@ -281,20 +283,6 @@ Each language has its own DDD directory layout, coding standards, and anti-patte
 5. After completing, each skill **hints at the next step**
 
 **No multi-agent framework needed.** The AI coding assistant itself provides intelligence, multi-agent capabilities, and LLM configuration. Sparrow only provides the structured knowledge and process guidance.
-
-## Comparison with sparrow-ddd
-
-Sparrow is the successor to [sparrow-ddd](https://github.com/agiledon/sparrow-ddd), a Python + CrewAI framework. Key differences:
-
-| | sparrow-ddd | Sparrow |
-|---|-------------|---------|
-| **Runtime** | Python + CrewAI | Skill files (no runtime) |
-| **Agent framework** | CrewAI multi-agent | Host AI's native capabilities |
-| **AI tools** | CLI-only | Claude Code, OpenCode, Cursor |
-| **Setup** | `pip install` + configure `.env` | `npx sparrow-dev init` |
-| **Process** | Same 6-step pipeline | Same 6-step pipeline |
-| **Output** | Same document structure | Same document structure |
-| **Prompt source** | Same `.sparrow/rules/` | Same content, adapted for host AI |
 
 ## Development
 

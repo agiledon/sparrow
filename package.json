@@ -1,5 +1,5 @@
 {
-  "name": "sparrow-dev",
+  "name": "sparrow-ddd",
   "version": "0.1.0",
   "description": "Sparrow — spec-driven DDD framework for AI coding assistants. Generate structured skills that guide AI agents through domain-driven design, from business requirements to production code.",
   "type": "module",

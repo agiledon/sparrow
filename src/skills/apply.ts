@@ -1,6 +1,5 @@
 /**
  * Sparrow Apply skill template.
- * Adapted from sparrow-ddd/.sparrow/rules/07-apply-design-plan.mdc
  *
  * This skill executes the implementation plan to generate DDD-structured code.
  * It drives three roles: QA Engineer, Development Engineer, and Code Review.

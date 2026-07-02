@@ -1,6 +1,5 @@
 /**
  * Sparrow Design skill template.
- * Adapted from sparrow-ddd/.sparrow/rules/04-define-service-contracts.mdc
  *
  * This skill generates API contracts (api.md) and technology stack selection (tech.md)
  * for a specific bounded context.
