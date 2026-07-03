@@ -228,6 +228,10 @@ All bounded contexts share the same project root namespace, but each is an indep
 | **Claude Code** | `.claude/skills/` | `.claude/commands/sparrow/` | `.claude/` directory |
 | **OpenCode** | `.opencode/skills/` | `.opencode/commands/` | `.opencode/` directory |
 | **Cursor** | `.cursor/skills/` | `.cursor/commands/` | `.cursor/` directory |
+| **Codex (OpenAI)** | `.codex/skills/` | `.codex/commands/` | `.codex/` directory |
+| **Kiro** | `.kiro/skills/` | *from skills* | `.kiro/` directory |
+| **Qoder** | `.qoder/skills/` | `.qoder/commands/` | `.qoder/` directory |
+| **Trae** | `.trae/skills/` | `.trae/commands/` | `.trae/` directory |
 
 ## Configuration
 

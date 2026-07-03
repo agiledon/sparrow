@@ -9,6 +9,10 @@ import type { ToolCommandAdapter } from './types.js';
 import { claudeAdapter } from './claude.js';
 import { opencodeAdapter } from './opencode.js';
 import { cursorAdapter } from './cursor.js';
+import { codexAdapter } from './codex.js';
+import { kiroAdapter } from './kiro.js';
+import { qoderAdapter } from './qoder.js';
+import { traeAdapter } from './trae.js';
 
 const _registry = new Map<string, ToolCommandAdapter>();
 
@@ -17,6 +21,10 @@ const _adapters: ToolCommandAdapter[] = [
   claudeAdapter,
   opencodeAdapter,
   cursorAdapter,
+  codexAdapter,
+  kiroAdapter,
+  qoderAdapter,
+  traeAdapter,
 ];
 
 for (const adapter of _adapters) {
@@ -55,4 +63,4 @@ export function hasAdapter(toolId: string): boolean {
   return _registry.has(toolId);
 }
 
-export { claudeAdapter, opencodeAdapter, cursorAdapter };
+export { claudeAdapter, opencodeAdapter, cursorAdapter, codexAdapter, kiroAdapter, qoderAdapter, traeAdapter };

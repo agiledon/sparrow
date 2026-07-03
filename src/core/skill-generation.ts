@@ -87,11 +87,14 @@ export function generateSkillFiles(
       writeFileSync(skillPath, adapter.formatSkill(content), 'utf-8');
       createdFiles.push(adapter.getSkillPath(skill.id));
 
-      // Generate command file
-      const commandPath = join(projectRoot, adapter.getCommandPath(skill.id));
-      mkdirSync(join(commandPath, '..'), { recursive: true });
-      writeFileSync(commandPath, adapter.formatCommand(content), 'utf-8');
-      createdFiles.push(adapter.getCommandPath(skill.id));
+      // Generate command file (skip if tool discovers commands from skills directory)
+      const commandRelPath = adapter.getCommandPath(skill.id);
+      if (commandRelPath !== null) {
+        const commandPath = join(projectRoot, commandRelPath);
+        mkdirSync(dirname(commandPath), { recursive: true });
+        writeFileSync(commandPath, adapter.formatCommand(content), 'utf-8');
+        createdFiles.push(commandRelPath);
+      }
     }
 
     results.push({ toolId, files: createdFiles });

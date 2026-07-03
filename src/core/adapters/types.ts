@@ -24,8 +24,8 @@ export interface ToolCommandAdapter {
   toolId: string;
   /** Get the file path for a skill SKILL.md */
   getSkillPath(skillId: string): string;
-  /** Get the file path for a slash command */
-  getCommandPath(skillId: string): string;
+  /** Get the file path for a slash command, or null if the tool discovers commands from skills */
+  getCommandPath(skillId: string): string | null;
   /** Format content as a SKILL.md file */
   formatSkill(content: CommandContent): string;
   /** Format content as a slash command file */

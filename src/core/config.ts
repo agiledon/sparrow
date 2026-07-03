@@ -44,6 +44,38 @@ export const SUPPORTED_TOOLS: ToolDefinition[] = [
     format: 'cursor-style',
     detectionPaths: ['.cursor', '.cursorrules', '.cursor/rules'],
   },
+  {
+    id: 'codex',
+    name: 'Codex (OpenAI)',
+    skillsDir: '.codex/skills',
+    commandsDir: '.codex/commands',
+    format: 'claude-style',
+    detectionPaths: ['.codex', '.codex/AGENTS.md'],
+  },
+  {
+    id: 'kiro',
+    name: 'Kiro',
+    skillsDir: '.kiro/skills',
+    commandsDir: '<from skills>',
+    format: 'claude-style',
+    detectionPaths: ['.kiro'],
+  },
+  {
+    id: 'qoder',
+    name: 'Qoder',
+    skillsDir: '.qoder/skills',
+    commandsDir: '.qoder/commands',
+    format: 'claude-style',
+    detectionPaths: ['.qoder'],
+  },
+  {
+    id: 'trae',
+    name: 'Trae',
+    skillsDir: '.trae/skills',
+    commandsDir: '.trae/commands',
+    format: 'claude-style',
+    detectionPaths: ['.trae'],
+  },
 ];
 
 /**
