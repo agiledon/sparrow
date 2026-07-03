@@ -11,7 +11,7 @@ import { SUPPORTED_TOOLS, type ToolDefinition } from './config.js';
 import { generateSkillFiles, generateProjectConfig, generateProjectMd } from './skill-generation.js';
 import { initializeSkills } from '../skills/index.js';
 
-const SPARROW_VERSION = '0.1.0';
+const SPARROW_VERSION = '0.1.1';
 
 export interface InitOptions {
   /** Comma-separated tool ids or 'all' */

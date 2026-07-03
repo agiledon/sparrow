@@ -12,7 +12,7 @@ export interface VersionInfo {
 }
 
 /** Current Sparrow framework version — keep in sync with package.json */
-export const SPARROW_VERSION = '0.1.0';
+export const SPARROW_VERSION = '0.1.1';
 
 /**
  * Parse a version string like "v1.0" or "1.0" into VersionInfo.
