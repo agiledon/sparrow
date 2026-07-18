@@ -174,6 +174,16 @@ export const SKILLS: SkillDefinition[] = [
     commandName: 'sparrow-apply',
     category: 'DDD',
   },
+  {
+    id: 'sparrow-archive',
+    name: 'Sparrow Archive',
+    description: 'Archive a completed change (revise workflow) into docs/sparrow/changes/archive/',
+    phase: 'team',
+    order: 7,
+    nextSkill: null,
+    commandName: 'sparrow-archive',
+    category: 'DDD',
+  },
 ];
 
 /**

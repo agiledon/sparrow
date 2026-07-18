@@ -83,6 +83,39 @@ const EXPLORE_BODY = `# Sparrow Explore — 业务服务识别
 
 你是一名专业的**业务架构师**，负责从需求规格说明书或调研需求中识别业务服务。业务服务是业务架构的核心组成部分，是连接业务需求与技术实现的重要桥梁。
 
+---
+
+## 变更模式（revise）— 活动变更下的需求 delta
+
+> **⚠️ 门控声明（向后兼容硬性约束）**：本节仅在**检测到活动变更**时进入。**若当前为首次需求、无活动变更，请忽略本节，完全按上文原始流程（输出文件存在性检查 skip/overwrite/update）执行，行为须与未引入本节前完全一致。**
+
+### 触发条件
+
+\`\`\`
+活动变更存在，当且仅当满足以下任一：
+  - docs/sparrow/changes/ 目录存在，且其中包含「未归档」的变更文件夹
+  - docs/sparrow/project.md 的「变更管理」块中「当前活动 change-id」非空
+\`\`\`
+
+- **不满足** → 普通模式，跳过本节，按原流程。
+- **满足** → 进入 revise 模式，加载 \`docs/sparrow/changes/{change-id}/proposal.md\`，对需求做**增量 delta** 而非全量重生成。
+
+> 完整约定（目录结构、delta 格式、BC 档位判定、决策框架）见 \`docs/prd/sparrow-change-management.md\` 与 **sparrow-arch 的「变更处理 / revise」章节**（权威定义）。
+
+### revise 模式行为
+
+1. 读取现有 \`docs/sparrow/requirement/spec.md\`（基线业务服务全集）。
+2. 将用户提供的「新原始需求」与现有业务服务逐项比对，识别：
+   - **ADDED**：新需求引入的、现有未覆盖的业务服务
+   - **MODIFIED**：现有业务服务因需求变化需调整（描述/流程/验收）
+   - **REMOVED**：现有业务服务因需求缺口或消失而不再需要
+3. 将 delta 写入 \`docs/sparrow/changes/{change-id}/deltas/requirement/spec.md\`，用 \`## ADDED Requirements\` / \`## MODIFIED Requirements\` / \`## REMOVED Requirements\` 分区（OpenSpec 格式）。
+4. **原地更新** \`docs/sparrow/requirement/spec.md\`：合并 ADDED、应用 MODIFIED、标注 REMOVED 为废弃，保持单一天然事实来源。
+5. 更新版本元数据：版本号递增（v1.0→v1.1），并在元数据块追加 \`change-id: {change-id}\`（基线不追加此字段）。
+6. 更新 \`docs/sparrow/project.md\`：同步 \`requirement/spec.md\` 的版本状态。
+
+> explore 在 revise 模式下**始终执行**（任何变更都从需求 delta 开始）；下游阶段按 BC 档位按需触发（见 sparrow-arch 变更处理章节）。
+
 ## 核心要求：全面覆盖原始需求
 
 - **必须全面覆盖用户提供的原始需求**：仔细分析原始需求文档中的每一个功能点、每一个业务场景、每一个用户需求，确保都被识别为相应的业务服务
@@ -323,8 +356,7 @@ const EXPLORE_BODY = `# Sparrow Explore — 业务服务识别
 
 ## 完成后的下一步
 
-✅ 完成 sparrow-explore 后，请执行 **sparrow-arch**（产品级）—— 基于业务服务定义文档，划分子领域并定义业务架构和应用架构。
-`;
+✅ 完成 sparrow-explore 后，请执行 **sparrow-arch**（产品级）—— 基于业务服务定义文档，划分子领域并定义业务架构和应用架构。`;
 
 export function register(): void {
   registerSkillTemplate('sparrow-explore', () => EXPLORE_BODY);

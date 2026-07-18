@@ -47,6 +47,47 @@ const APPLY_BODY = `# Sparrow Apply — 按实现计划执行代码生成
 
 ---
 
+## 变更模式（revise）— 重构迁移与边界回归
+
+> **⚠️ 门控声明（向后兼容硬性约束）**：本节仅在**检测到活动变更**时进入。**若当前为首次需求、无活动变更，请忽略本节，完全按上文原始流程执行（即按 plan.md 正向生成代码），行为须与未引入本节前完全一致。**
+
+**触发条件**（同 sparrow-arch「变更处理 / revise」章节）：\`docs/sparrow/changes/\` 含未归档变更文件夹，或 \`project.md\` 当前 change-id 非空。
+
+**revise 行为总览**：本阶段只处理**档位 == S4（代码已生成）且被本次变更影响**的 BC。BC↔\`backend/\` 模块 1:1，因此 arch 记录的重构动作直接映射为代码动作。执行前先读取 \`changes/{change-id}/\` 下 arch 写好的 ADR / 动作记录，确定每个受影响 slug 的目标拓扑。
+
+### 代码动作映射（仅 S4 执行）
+
+- **新增 BC（新建 slug）**：按正常正向流程跑 apply，在 \`backend/\` 下新建模块。
+- **合并 A+B→C（Strangler 式）**：
+  1. 保留 A、B 现有模块不动；新建吸收/目标模块 C（若 C 为新 slug，正向 apply；若 C 即 A 或 B 之一，则在原模块上扩展）。
+  2. 将待合并的行为与数据迁入 C；A、B 通过 facade / 协调层 / ACL 委派到 C（并存期）。
+  3. **cutover**（破坏性，需用户确认）：将调用方重定向到 C。
+  4. **退役**：移除 A、B 的 \`backend/\` 模块；若有外部调用方，先保留薄兼容 shim/ACL，确认无调用后再删。
+- **删除 BC**：行为已并入吸收方后，移除非空模块；外部调用方经薄 shim/ACL 过渡后退役。
+- **移动聚合（X 从 A→B）**：将 \`domain/aggregate|entity|valueobject/\` 与 \`infrastructure/port|adapter/\` 从 A 模块搬迁到 B 模块；同步 A、B 的 \`api/model\`；跨 BC 调用方经 ACL 保持聚合外部契约稳定。
+- **防腐层 ACL**：仅新增 \`infrastructure/adapter/acl/\`（或独立 ACL 模块），做上游模型→本地模型翻译，**不改动本地领域模型**。
+- **绞杀者 Strangler**：旧模块保留，新模块并行构建，经 facade / 特性开关路由；并存期双写或事件桥接；cutover 后退役旧模块。
+- **数据迁移**：若 \`tech.md\` 标明「每 BC 独立 schema」，合并/拆分即跨模块 schema 迁表，并存期双写/CDC，再 cutover。
+
+### 架构边界回归校验（fitness function）
+
+每次代码迁移后，执行轻量边界校验，确保新模块边界未退化（呼应演进式架构「恰当耦合」支柱）：
+1. 每个 BC 模块只 import 自身 \`domain/\`、\`application/\`、\`api/\`、\`infrastructure/\` 内部类型；不得直接 import 另一 BC 模块的领域类型（须经其公开 API / ACL）。
+2. 若 \`tech.md\` 声明「每 BC 独立 schema」，各模块不得直接访问他模块的数据表。
+3. 跨 BC 调用一律经 \`api/\` 或 \`infrastructure/adapter/\`（ACL）边界。
+4. 公开 API 契约（来自 \`api.md\`）在迁移前后保持一致（除非本次变更显式修改）。
+
+校验不通过则停下并报告，不得带病推进。
+
+### 收尾
+- 变更后重跑 **Code Review** 生成/更新 \`docs/sparrow/design/{slug}/code_review.md\`。
+- 受影响模块代码版本递增（在 \`project.md\` 或模块说明中记录），元数据块追加 \`change-id\`。
+- 全部受影响 S4 slug 完成后，提示用户执行 **sparrow-archive** 归档本次变更。
+
+> 完整 BC→代码映射与数据迁移策略见 \`docs/prd/sparrow-change-management.md\` 第 6 节。
+
+---
+
 ## 必读规约
 
 - \`docs/sparrow/design/{slug}/plan.md\` — 执行计划（以 plan 为准的执行顺序）
@@ -279,8 +320,7 @@ docs/sparrow/design/{slug}/code_review.md
 如果有其他限界上下文需要实现，请对每个上下文执行：
 **sparrow-design → sparrow-model → sparrow-plan → sparrow-apply**
 
-全部限界上下文完成后，产品代码集中在 \`backend/\` 目录下，共享项目根命名空间，各上下文为独立模块。
-`;
+全部限界上下文完成后，产品代码集中在 \`backend/\` 目录下，共享项目根命名空间，各上下文为独立模块。`;
 
 export function register(): void {
   registerSkillTemplate('sparrow-apply', () => APPLY_BODY);

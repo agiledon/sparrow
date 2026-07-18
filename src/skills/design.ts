@@ -47,6 +47,24 @@ const DESIGN_BODY = `# Sparrow Design — API 契约与技术选型
 
 ---
 
+## 变更模式（revise）— 按 BC 档位按需重生成
+
+> **⚠️ 门控声明（向后兼容硬性约束）**：本节仅在**检测到活动变更**时进入。**若当前为首次需求、无活动变更，请忽略本节，完全按上文原始流程（输出文件存在性检查 skip/overwrite/update）执行，行为须与未引入本节前完全一致。**
+
+**触发条件**（同 sparrow-arch「变更处理 / revise」章节）：\`docs/sparrow/changes/\` 含未归档变更文件夹，或 \`project.md\` 当前 change-id 非空。
+
+**revise 行为**：
+1. 从 \`project.md\`「变更管理」块（或 \`changes/{change-id}/proposal.md\`）读取本次变更的**受影响 slug 列表**及 arch 记录的重构动作。
+2. 对每个受影响 slug，依据其档位（S0–S4，见 sparrow-arch）判断是否在本阶段处理：
+   - **design 阶段处理条件**：slug 为新建（无 api.md/tech.md 产物）**或** 档位 ≥ S1
+   - 不满足则跳过该 slug
+3. 满足条件的 slug：在现有 \`api.md\`/\`tech.md\` 基础上，按 \`changes/{change-id}/deltas/design/{slug}/\` 做增量更新或重生成（沿用存在性检查的 update 语义），版本号递增并追加 \`change-id\` 到元数据块；同步更新项目级 \`api.md\`。
+4. 未受影响的 slug 不处理。
+
+> 仅 S0 档位的 BC 不会到达 design，由 arch 直接记录原因，本阶段不参与。完整 BC→代码映射见 sparrow-apply 与 \`docs/prd/sparrow-change-management.md\`。
+
+---
+
 ## 📋 project.md 更新
 
 完成输出后，**必须**更新 \`docs/sparrow/project.md\`：
@@ -89,6 +107,8 @@ const DESIGN_BODY = `# Sparrow Design — API 契约与技术选型
 2. 如果存在，读取文件开头 \`<!--\` 注释块中的 \`version:\` 字段并递增
 3. 在文件开头添加或更新版本元数据块
 4. 继续生成文档正文
+
+> **revise 模式扩展（仅活动变更时）**：当处于 revise 模式（判定见 sparrow-arch「变更处理 / revise」章节）更新已有文档时，在元数据块**追加可选字段** \`change-id: {change-id}\`（必要时加 \`supersedes: {被取代版本}\`）。基线（无活动变更）**不追加**这些字段，输出与未引入前一致。
 
 ---
 
@@ -439,8 +459,7 @@ ExtSys <<-- EVT_OrderPlaced : subscribes
 
 ## 完成后的下一步
 
-✅ 完成 sparrow-design @{slug} 后，请执行 **sparrow-model @{slug}**（团队级）—— 基于 api.md 中的 API 定义，将每个 API 作为动态领域模型任务树的第一级入口，进行领域建模。
-`;
+✅ 完成 sparrow-design @{slug} 后，请执行 **sparrow-model @{slug}**（团队级）—— 基于 api.md 中的 API 定义，将每个 API 作为动态领域模型任务树的第一级入口，进行领域建模。`;
 
 export function register(): void {
   registerSkillTemplate('sparrow-design', () => DESIGN_BODY);
