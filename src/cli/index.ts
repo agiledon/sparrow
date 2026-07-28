@@ -23,7 +23,7 @@ program
     'Generate structured skills that guide AI agents through domain-driven design,\n' +
     'from business requirements to production code.'
   )
-  .version('0.1.1')
+  .version('0.2.0')
   .addHelpText(
     'after',
     `
