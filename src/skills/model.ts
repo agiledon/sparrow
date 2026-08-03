@@ -131,6 +131,36 @@ const MODEL_BODY = `# Sparrow Model — 领域建模
 
 ## 阶段一：静态建模阶段
 
+### 领域建模设计原则（面向对象）
+
+在进行静态领域建模时，**必须遵循以下面向对象设计原则**，确保领域模型富含行为而非贫血：
+
+**1. 信息专家模式（Information Expert）**
+- 将操作分配给拥有该操作所需数据的对象
+- 例如：计算订单总额的操作应分配给 `Order` 聚合根，而非外部服务
+- 自问：哪个对象拥有完成这个操作所需的数据？答案就是该操作的归属
+
+**2. 迪米特法则（Law of Demeter）**
+- 每个对象只与它的直接朋友通信，避免"链式调用"
+- 聚合内部实体之间的交互应通过聚合根协调，不应跨过聚合根直接访问内部实体
+- 聚合之间通过聚合根 ID 引用，而非直接持有对象引用
+- 反模式：`order.getCustomer().getAddress().getCity()`（穿越多个对象边界）
+- 正例：`order.getCustomerCity()` 或 `customerService.getCityForOrder(orderId)`
+
+**3. 避免贫血模型（Anti-Anemic Domain Model）**
+- 领域对象应包含业务行为，而非仅作为数据容器
+- **禁止**为每个属性都定义 `getXxx()` / `setXxx()` 操作
+- 只定义代表真实业务含义的操作（如 `approve()`、`cancel()`、`addLineItem()`）
+- 属性暴露以**最小必要**为原则：领域建模时不暴露 get/set，实现阶段只在真正需要外部读取时才提供最小访问器
+- 反模式：为 `name`、`age`、`address` 等每个字段都生成 get/set
+- 正例：只暴露 `changeAddress()`、`updateProfile()` 等体现业务意图的操作
+
+**4. 封装原则（Encapsulation）**
+- 对象的内部状态（属性）不应随意对外暴露
+- 状态变更必须通过业务操作进行，确保不变量始终得到保护
+- 值对象必须不可变（所有字段在构造时初始化，无 setter）
+- 聚合根对外提供行为方法，隐藏内部实体结构和状态细节
+
 ### 步骤一：统一语言提炼
 结合行业术语，明确统一语言，提炼所有业务服务中的核心概念及概念之间的关系。
 
@@ -152,14 +182,26 @@ const MODEL_BODY = `# Sparrow Model — 领域建模
 - 聚合边界外的对象通过聚合根进行访问
 
 ### 步骤五：聚合根实体操作定义
-针对每个聚合根，结合业务语义，初步定义其可能承担的操作方法：
+针对每个聚合根，结合业务语义，初步定义其可能承担的操作方法。
 
-- **构造/工厂操作**：创建聚合实例的方法（如 `createXxx()`）
-- **状态变更操作**：修改聚合内部状态的方法（如 `startXxx()`、`cancelXxx()`、`approveXxx()`）
-- **实体管理操作**：管理聚合内子实体的方法（如 `addXxx()`、`removeXxx()`）
-- **查询操作**：获取聚合内部状态的方法（如 `getStatus()`、`isActive()`）
+**合法的业务操作类型**（体现信息专家模式，避免贫血模型）：
 
-> 注意：阶段一的操作定义为**初步定义**，最终的方法分配将在阶段三中根据动态建模结果进行调整和确认。
+- **构造/工厂操作**：创建聚合实例的静态工厂方法（如 `placeOrder()`、`scheduleMeeting()`）
+- **状态变更操作**：体现业务意图的状态转换（如 `start()`、`cancel()`、`approve()`、`reject()`）
+- **实体管理操作**：管理聚合内子实体（如 `addParticipant()`、`removeLineItem()`）
+- **计算/查询操作**：基于聚合内部状态的计算（如 `calculateTotal()`、`isOverdue()`）
+- **业务规则校验**：聚合级别的业务规则检查（如 `canBeModified()`、`isValidForSubmission()`）
+
+**反模式 — 以下操作禁止定义**：
+
+- ❌ 裸露的 getter/setter：`getName()`、`setName()`、`getStatus()`、`setStatus()` → 破坏封装，导致贫血模型
+- ❌ 纯数据存取方法：为每个属性生成成对的 get/set → 等同于把聚合当数据容器
+- ❌ 跨聚合访问方法：`getOtherAggregate()` → 违反迪米特法则
+- ❌ 无业务含义的 CRUD：`update()`、`save()`、`delete()` → 动态建模阶段由领域服务和端口承担
+
+> ⚠️ **重要**：即使某个属性需要在外部被读取（如列表展示），也不要在此阶段定义 getter。只有在经过阶段二动态建模、确认该属性确实需要被外部使用时，才在终版类图中以最小可见性暴露。阶段一仅定义**业务行为操作**。
+
+> 注意：阶段一的操作定义为**初步定义**，最终的操作分配将在阶段三中根据动态建模结果进行调整和确认。
 
 ### 步骤六：类图绘制（PlantUML）
 
@@ -169,31 +211,37 @@ const MODEL_BODY = `# Sparrow Model — 领域建模
 @startuml
 !theme plain
 
-' 聚合根 - 浅红色背景
+' 聚合根 - 浅红色背景（属性用 - 表示私有，操作用 + 表示公开）
 class Meeting <<AggregateRoot>> #FFE6E6 {
-    +MeetingId id
-    +String title
-    +MeetingStatus status
+    - MeetingId id
+    - String title
+    - MeetingStatus status
     --
-    +createMeeting()
-    +addParticipant()
-    +startMeeting()
+    + scheduleMeeting()
+    + addParticipant(Participant)
+    + startMeeting()
+    + calculateDuration()
+    + isInProgress()
 }
 
 ' 实体 - 黄色背景
 class Participant #FFFFCC {
-    +ParticipantId id
-    +String email
-    +ParticipantRole role
+    - ParticipantId id
+    - String email
+    - ParticipantRole role
     --
-    +joinMeeting()
+    + assignRole(ParticipantRole)
+    + changeEmail(String)
 }
 
-' 值对象 - 蓝色背景
+' 值对象 - 蓝色背景（全量构造，无操作区）
 class MeetingTime #E6F3FF {
-    +LocalDateTime startTime
-    +LocalDateTime endTime
-    +TimeZone timeZone
+    + LocalDateTime startTime {readonly}
+    + LocalDateTime endTime {readonly}
+    + TimeZone timeZone {readonly}
+    --
+    + overlap(MeetingTime): boolean
+    + duration(): Duration
 }
 
 ' 关系定义
@@ -209,6 +257,8 @@ Meeting ||--|| MeetingTime : has
 - Composite: `*-->` ，由整体指向部分
 - Aggregate: `o-->` ，由整体指向部分
 - 值对象关联：`||--||` 表示 has 关系
+- **属性可见性**：领域对象的属性统一使用 `-`（私有），操作使用 `+`（公开），以体现封装原则
+- **值对象属性**：标记 `{readonly}` 表示不可变
 
 ---
 
@@ -468,6 +518,11 @@ deactivate APP
 - [ ] 类图颜色规范正确（聚合根=浅红，实体=黄，值对象=蓝）
 - [ ] PlantUML 类图语法正确
 - [ ] 聚合根实体已初步定义操作方法（构造、状态变更、实体管理、查询）
+- [ ] **聚合根/实体的操作遵循信息专家模式**（操作分配给拥有该操作所需数据的对象）
+- [ ] **无裸露的 getter/setter 操作**（没有为每个属性定义 getXxx() / setXxx()）
+- [ ] **类图属性可见性**：属性使用 `-` 私有，而非 `+` 公开
+- [ ] **聚合之间仅通过 ID 引用**，不跨聚合直接持有对象引用（迪米特法则）
+- [ ] **值对象不可变**，所有字段在构造时初始化，无修改方法
 
 ### 动态模型（阶段二）
 - [ ] **每个 api.md 中的 API 都有对应的任务树入口**（不遗漏）

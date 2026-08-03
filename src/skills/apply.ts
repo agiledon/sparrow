@@ -132,7 +132,20 @@ const APPLY_BODY = `# Sparrow Apply — 按实现计划执行代码生成
 | 文件名 | (无) | PascalCase | snake_case | kebab-case | snake_case | snake_case | snake_case |
 | 包/模块名 | (无) | 全小写 | snake_case | kebab-case | 全小写 | snake_case | 全小写 |
 
-> **关键**：命名风格可以不同，但**语义必须一致**。例如 model.md 中的 \`placeOrder()\` 在 Python 中应写为 \`place_order()\`，在 Go 中应写为 \`PlaceOrder()\`。
+> **关键**：命名风格可以不同，但**语义必须一致**。例如 model.md 中的 `placeOrder()` 在 Python 中应写为 `place_order()`，在 Go 中应写为 `PlaceOrder()`。
+
+### 领域对象封装规则
+
+代码实现时，**必须确保**以下封装约束：
+
+| 规则 | 说明 | 反模式 |
+|------|------|--------|
+| 不生成默认 get/set | 不默认为每个属性生成访问器 | 为 `name`、`age` 等字段生成 `getName()` / `setName()` |
+| 聚合根字段 private | 使用最严格的可见性修饰符 | public 字段允许外部直接赋值，绕过业务规则 |
+| 聚合间 ID 引用 | 跨聚合引用时只用 ID，不直接持有对象引用 | `order.getCustomer().getAddress()` |
+| 值对象不可变 | 构造时初始化所有字段，无修改方法 | 值对象包含 setter 或 mutable 字段 |
+| 业务操作为主 | 聚合根暴露体现业务意图的方法 | `setStatus(Status.APPROVED)` 代替 `approve()` |
+| 不暴露内部集合 | 不直接返回聚合内的 List/Map 引用 | `getItems()` 返回内部 ArrayList 引用，外部可直接 add/remove |
 
 ---
 
@@ -213,6 +226,11 @@ infrastructure 层（南向网关）:
 - 领域层不依赖框架/数据库具体类型
 - api 层不写领域规则
 - infrastructure 层 port 为接口，adapter 为实现
+- **领域对象必须富含行为**：聚合根和实体应包含业务操作，而非仅为数据容器（反贫血模型）
+- **禁止生成不必要的 getter/setter**：不默认为每个属性生成 getXxx() / setXxx() 方法，仅在外部确实需要读取或修改时、通过明确的业务操作暴露
+- **封装内部状态**：使用语言支持的最严格访问修饰符（private/protected），属性不直接对外暴露
+- **信息专家模式**：操作分配给拥有该操作所需数据的对象，而非将所有逻辑集中在领域服务中
+- **迪米特法则**：聚合间通过 ID 引用，不跨聚合直接持有对象引用；避免链式调用 `a.getB().getC().doX()`
 
 ### 语言特定反模式
 
@@ -220,28 +238,43 @@ infrastructure 层（南向网关）:
 - 领域层不要依赖 Spring Data / HTTP 具体类型
 - 不要在 handler 中写核心业务规则
 - 禁止 application/command、application/query 目录
+- **禁止为每个字段生成 getXxx() / setXxx()**，仅通过业务方法暴露行为
+- **领域对象不要使用 Lombok @Data / @Getter / @Setter**，避免退化为贫血模型
+- **聚合根字段使用 private**，不暴露内部集合引用
 
 **Python**：
 - router 中不要写领域规则
 - 领域层不要依赖 FastAPI/SQLAlchemy 具体类型
 - 使用 logging 而非 print
 - 优先 uv + pyproject.toml
+- **禁止为每个字段生成 @property getter/setter**，仅通过业务方法暴露行为
+- **领域对象不要使用 dataclass 的自动生成 getter/setter**，避免退化为贫血模型
+- **聚合根使用双下划线前缀 `__field` 保护内部状态**
 
 **Node.js/TypeScript**：
 - controller 中不要写领域规则
 - 领域层不要依赖 Express/NestJS 具体类型
-- 严格模式 \`"strict": true\`
+- 严格模式 `"strict": true`
 - 使用 pino/winston 而非 console.log
+- **禁止为每个字段生成 getter/setter 或直接暴露 public 字段**，仅通过业务方法暴露行为
+- **领域对象避免使用 class-validator / class-transformer 装饰器污染领域模型**
+- **聚合根字段使用 private / readonly**，不暴露内部集合引用
 
 **Go**：
 - handler 中不要写核心业务规则
 - 领域层不导入 database/sql 具体驱动
 - 使用 go modules
+- **禁止为每个字段生成 GetXxx() / SetXxx() 方法**，仅通过业务方法暴露行为
+- **领域结构体字段使用小写（unexported）**，不暴露内部切片/映射（防止外部直接修改）
+- **不要为领域实体生成自动的 ORM tag（json/gorm）**，避免泄漏持久化关注点
 
 **Rust**：
 - handler 闭包不要堆叠领域规则
 - 领域层不要依赖 axum/sqlx 具体类型
 - 避免 unwrap()/expect() 处理可预期失败
+- **禁止为每个字段生成 pub getter/setter**，仅通过业务方法暴露行为
+- **领域结构体字段不设 pub**，不暴露内部 Vec / HashMap 的可变引用
+- **不要为领域实体 derive Serialize/Deserialize**，避免泄漏序列化关注点到领域层
 
 **C++**：
 - handler 中不要写核心业务规则
@@ -249,6 +282,9 @@ infrastructure 层（南向网关）:
 - 使用 RAII 管理资源，避免裸指针和手动 new/delete
 - 头文件使用 #pragma once 或 include guard
 - 优先使用智能指针（std::unique_ptr / std::shared_ptr）
+- **禁止为每个字段生成 getXxx() / setXxx() 平凡访问器**，仅通过业务方法暴露行为
+- **领域类成员变量使用 private**，不暴露内部容器（避免返回 `const std::vector<T>&` 引用来绕过封装）
+- **禁止为领域实体提供 JSON 序列化/反序列化**，避免泄漏持久化关注点到领域层
 
 ### 包/模块命名规范
 
@@ -300,16 +336,21 @@ docs/sparrow/design/{slug}/code_review.md
 - [ ] 代码符合对应语言编码规范
 - [ ] DDD 四层依赖方向正确（外层依赖内层）
 - [ ] 领域层不依赖框架/数据库具体类型
-- [ ] **代码的属性/方法/类型与 model.md 中的定义一致**（语义相同，命名风格按语言转换）
+- [ ] **代码的属性/操作/类型与 model.md 中的定义一致**（语义相同，命名风格按语言转换）
+- [ ] **领域对象不包含不必要的 getter/setter**（无 `getXxx()` / `setXxx()` 便利方法，仅暴露业务操作）
+- [ ] **聚合根字段封装**（使用 private/protected 或语言等效修饰符，不直接暴露 public 字段）
+- [ ] **聚合间通过 ID 引用**（不跨聚合直接持有对象引用，迪米特法则）
 
 全部任务完成后：
 - [ ] 完整构建通过
 - [ ] 所有测试通过
 - [ ] Code Review 完成
-- [ ] plan.md 所有步骤标记为 \`- [x]\`
+- [ ] plan.md 所有步骤标记为 `- [x]`
 - [ ] **领域层代码与 model.md 静态模型完全对齐**（聚合、实体、值对象、领域服务）
 - [ ] **非领域层代码与 model.md 动态模型完全对齐**（Command/Query、AppService、Port、Adapter）
 - [ ] **API 层接口与 api.md 中定义的契约一致**
+- [ ] **领域对象富含行为，非贫血模型**（业务逻辑在聚合根/实体内部，不在领域服务中集中处理本应由聚合承担的逻辑）
+- [ ] **无跨聚合的链式调用**（如 `a.getB().getC().doX()`，迪米特法则）
 
 ---
 
