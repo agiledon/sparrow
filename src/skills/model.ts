@@ -137,23 +137,23 @@ const MODEL_BODY = `# Sparrow Model — 领域建模
 
 **1. 信息专家模式（Information Expert）**
 - 将操作分配给拥有该操作所需数据的对象
-- 例如：计算订单总额的操作应分配给 `Order` 聚合根，而非外部服务
+- 例如：计算订单总额的操作应分配给 \`Order\` 聚合根，而非外部服务
 - 自问：哪个对象拥有完成这个操作所需的数据？答案就是该操作的归属
 
 **2. 迪米特法则（Law of Demeter）**
 - 每个对象只与它的直接朋友通信，避免"链式调用"
 - 聚合内部实体之间的交互应通过聚合根协调，不应跨过聚合根直接访问内部实体
 - 聚合之间通过聚合根 ID 引用，而非直接持有对象引用
-- 反模式：`order.getCustomer().getAddress().getCity()`（穿越多个对象边界）
-- 正例：`order.getCustomerCity()` 或 `customerService.getCityForOrder(orderId)`
+- 反模式：\`order.getCustomer().getAddress().getCity()\`（穿越多个对象边界）
+- 正例：\`order.getCustomerCity()\` 或 \`customerService.getCityForOrder(orderId)\`
 
 **3. 避免贫血模型（Anti-Anemic Domain Model）**
 - 领域对象应包含业务行为，而非仅作为数据容器
-- **禁止**为每个属性都定义 `getXxx()` / `setXxx()` 操作
-- 只定义代表真实业务含义的操作（如 `approve()`、`cancel()`、`addLineItem()`）
+- **禁止**为每个属性都定义 \`getXxx()\` / \`setXxx()\` 操作
+- 只定义代表真实业务含义的操作（如 \`approve()\`、\`cancel()\`、\`addLineItem()\`）
 - 属性暴露以**最小必要**为原则：领域建模时不暴露 get/set，实现阶段只在真正需要外部读取时才提供最小访问器
-- 反模式：为 `name`、`age`、`address` 等每个字段都生成 get/set
-- 正例：只暴露 `changeAddress()`、`updateProfile()` 等体现业务意图的操作
+- 反模式：为 \`name\`、\`age\`、\`address\` 等每个字段都生成 get/set
+- 正例：只暴露 \`changeAddress()\`、\`updateProfile()\` 等体现业务意图的操作
 
 **4. 封装原则（Encapsulation）**
 - 对象的内部状态（属性）不应随意对外暴露
@@ -169,15 +169,15 @@ const MODEL_BODY = `# Sparrow Model — 领域建模
 - **值对象 (Value Object)**：不可变的对象，类图用**蓝色** (#E6F3FF) 表示
 
 ### 步骤三：关系建模
-- **Composite 关系**：整体-部分，生命周期完全一致，使用 `*-->` 符号
-- **Aggregation 关系**：整体-部分，生命周期可独立，使用 `o-->` 符号
+- **Composite 关系**：整体-部分，生命周期完全一致，使用 \`*-->\` 符号
+- **Aggregation 关系**：整体-部分，生命周期可独立，使用 \`o-->\` 符号
 - **关联关系**：普通关联
-- **值对象关联**：使用 `||--||` (一对一) 或 `||--o{` (一对多)
+- **值对象关联**：使用 \`||--||\` (一对一) 或 \`||--o{\` (一对多)
 
 ### 步骤四：聚合识别
 - 两个具有 Composite 关系的实体应该位于同一聚合中
 - 具有 Aggregation 关系或普通关联关系的实体，位于不同的聚合
-- 聚合根实体用**浅红色** (#FFE6E6) 表示，标注 `<<AggregateRoot>>`
+- 聚合根实体用**浅红色** (#FFE6E6) 表示，标注 \`<<AggregateRoot>>\`
 - 聚合边界内的对象具有强一致性
 - 聚合边界外的对象通过聚合根进行访问
 
@@ -186,18 +186,18 @@ const MODEL_BODY = `# Sparrow Model — 领域建模
 
 **合法的业务操作类型**（体现信息专家模式，避免贫血模型）：
 
-- **构造/工厂操作**：创建聚合实例的静态工厂方法（如 `placeOrder()`、`scheduleMeeting()`）
-- **状态变更操作**：体现业务意图的状态转换（如 `start()`、`cancel()`、`approve()`、`reject()`）
-- **实体管理操作**：管理聚合内子实体（如 `addParticipant()`、`removeLineItem()`）
-- **计算/查询操作**：基于聚合内部状态的计算（如 `calculateTotal()`、`isOverdue()`）
-- **业务规则校验**：聚合级别的业务规则检查（如 `canBeModified()`、`isValidForSubmission()`）
+- **构造/工厂操作**：创建聚合实例的静态工厂方法（如 \`placeOrder()\`、\`scheduleMeeting()\`）
+- **状态变更操作**：体现业务意图的状态转换（如 \`start()\`、\`cancel()\`、\`approve()\`、\`reject()\`）
+- **实体管理操作**：管理聚合内子实体（如 \`addParticipant()\`、\`removeLineItem()\`）
+- **计算/查询操作**：基于聚合内部状态的计算（如 \`calculateTotal()\`、\`isOverdue()\`）
+- **业务规则校验**：聚合级别的业务规则检查（如 \`canBeModified()\`、\`isValidForSubmission()\`）
 
 **反模式 — 以下操作禁止定义**：
 
-- ❌ 裸露的 getter/setter：`getName()`、`setName()`、`getStatus()`、`setStatus()` → 破坏封装，导致贫血模型
+- ❌ 裸露的 getter/setter：\`getName()\`、\`setName()\`、\`getStatus()\`、\`setStatus()\` → 破坏封装，导致贫血模型
 - ❌ 纯数据存取方法：为每个属性生成成对的 get/set → 等同于把聚合当数据容器
-- ❌ 跨聚合访问方法：`getOtherAggregate()` → 违反迪米特法则
-- ❌ 无业务含义的 CRUD：`update()`、`save()`、`delete()` → 动态建模阶段由领域服务和端口承担
+- ❌ 跨聚合访问方法：\`getOtherAggregate()\` → 违反迪米特法则
+- ❌ 无业务含义的 CRUD：\`update()\`、\`save()\`、\`delete()\` → 动态建模阶段由领域服务和端口承担
 
 > ⚠️ **重要**：即使某个属性需要在外部被读取（如列表展示），也不要在此阶段定义 getter。只有在经过阶段二动态建模、确认该属性确实需要被外部使用时，才在终版类图中以最小可见性暴露。阶段一仅定义**业务行为操作**。
 
@@ -207,7 +207,7 @@ const MODEL_BODY = `# Sparrow Model — 领域建模
 
 使用 PlantUML 语法绘制 UML 类图：
 
-```plantuml
+\`\`\`plantuml
 @startuml
 !theme plain
 
@@ -249,16 +249,16 @@ Meeting o--> Participant : aggregates
 Meeting ||--|| MeetingTime : has
 
 @enduml
-```
+\`\`\`
 
 **PlantUML 语法规范**：
-- 使用 `@startuml` 和 `@enduml` 标记
-- 关系符号：`||--o{` (一对多), `||--||` (一对一)
-- Composite: `*-->` ，由整体指向部分
-- Aggregate: `o-->` ，由整体指向部分
-- 值对象关联：`||--||` 表示 has 关系
-- **属性可见性**：领域对象的属性统一使用 `-`（私有），操作使用 `+`（公开），以体现封装原则
-- **值对象属性**：标记 `{readonly}` 表示不可变
+- 使用 \`@startuml\` 和 \`@enduml\` 标记
+- 关系符号：\`||--o{\` (一对多), \`||--||\` (一对一)
+- Composite: \`*-->\` ，由整体指向部分
+- Aggregate: \`o-->\` ，由整体指向部分
+- 值对象关联：\`||--||\` 表示 has 关系
+- **属性可见性**：领域对象的属性统一使用 \`-\`（私有），操作使用 \`+\`（公开），以体现封装原则
+- **值对象属性**：标记 \`{readonly}\` 表示不可变
 
 ---
 
@@ -375,7 +375,7 @@ APP --> CMD: Response
 deactivate APP
 
 @enduml
-```
+\`\`\`
 
 ---
 
@@ -395,9 +395,9 @@ deactivate APP
 
 | 序列图中的消息 | 所分配给的静态模型对象 | 说明 |
 |--------------|-------------------|------|
-| `AR -> AR: aggregateOperation(data)` | 聚合根 / 实体 | 聚合内部的操作 |
-| `DS -> AR: aggregateOperation(data)` | 聚合根 | 领域服务调用的聚合根操作 |
-| `APP -> DS: domainOperation(params)` | 领域服务 | 应用服务调用的领域服务操作 |
+| \`AR -> AR: aggregateOperation(data)\` | 聚合根 / 实体 | 聚合内部的操作 |
+| \`DS -> AR: aggregateOperation(data)\` | 聚合根 | 领域服务调用的聚合根操作 |
+| \`APP -> DS: domainOperation(params)\` | 领域服务 | 应用服务调用的领域服务操作 |
 
 ### 步骤二：将职责操作映射到静态模型
 
@@ -439,7 +439,7 @@ deactivate APP
 写入 **\`docs/sparrow/design/{slug}/model.md\`**：
 
 
-```markdown
+\`\`\`markdown
 # {限界上下文中文名} - 领域模型定义
 
 ## 1. 静态领域模型（阶段一输出）
@@ -459,20 +459,20 @@ deactivate APP
 
 ### 2.1 API：{API名称}（来自 api.md）
 
-**API 定义**：`POST /api/v1/resource`
+**API 定义**：\`POST /api/v1/resource\`
 
 #### 任务树
-```
+\`\`\`
 {CommandName}.{method}(Request): Response         ← API 入口（与 api.md 一致）
 ├── {AppService}.{method}(Request): Response      ← 应用服务（签名与 Command 一致）
 │   ├── {DomainService}.{method}(params): result  ← 领域服务
 │   │   ├── {Aggregate}.{method}(data): result    ← 聚合操作（原子任务）
 │   │   └── {Repository}.{save}(aggregate)        ← 端口调用（原子任务）
 │   └── {Client}.{call}(params): result           ← 外部调用（原子任务）
-```
+\`\`\`
 
 #### 角色分配
-```
+\`\`\`
 {根任务} → {Command}.{method}(Request): Response
 ├── {组合任务} → {AppService}.{method}(Request): Response
 │   ├── {原子任务1} → {DomainService}.{method}(params): result
@@ -480,7 +480,7 @@ deactivate APP
 │   │   └── {Repository}.{save}(aggregate)
 │   └── {原子任务2} → {Client}.{call}(params): result
 ...
-```
+\`\`\`
 
 #### 序列图
 [PlantUML 序列图 — 展示 BC 内部各角色的协作]
@@ -498,7 +498,7 @@ deactivate APP
 
 ## 4. 角色职责定义
 [各角色及其最终职责的总结]
-```
+\`\`\`
 
 **命名约定（UML 风格）**：
 - 类名：PascalCase（如 \`OrderCommand\`、\`OrderAppService\`）
@@ -520,7 +520,7 @@ deactivate APP
 - [ ] 聚合根实体已初步定义操作方法（构造、状态变更、实体管理、查询）
 - [ ] **聚合根/实体的操作遵循信息专家模式**（操作分配给拥有该操作所需数据的对象）
 - [ ] **无裸露的 getter/setter 操作**（没有为每个属性定义 getXxx() / setXxx()）
-- [ ] **类图属性可见性**：属性使用 `-` 私有，而非 `+` 公开
+- [ ] **类图属性可见性**：属性使用 \`-\` 私有，而非 \`+\` 公开
 - [ ] **聚合之间仅通过 ID 引用**，不跨聚合直接持有对象引用（迪米特法则）
 - [ ] **值对象不可变**，所有字段在构造时初始化，无修改方法
 

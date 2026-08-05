@@ -47,9 +47,15 @@ export function generateProjectMdContent(
 
 ## 文档索引
 
-### 1. 业务需求
+### 1. 产品需求
 
-- [ ] [业务服务定义](./requirement/spec.md) — *待生成 (sparrow-explore)*
+#### 1.1 业务需求
+
+- [ ] [功能需求文档](./requirement/prd-business.md) — *待生成 (sparrow-explore)*
+
+#### 1.2 质量属性
+
+- [ ] [系统质量属性](./requirement/prd-quanlity.md) — *待生成 (sparrow-explore)*
 
 ### 2. 业务架构
 
@@ -97,7 +103,7 @@ export function getProjectMdPath(outputBase: string): string {
  */
 export function getProjectMdUpdateBlock(skillId: string): string {
   const skillDocMap: Record<string, string> = {
-    'sparrow-explore': 'requirement/spec.md',
+    'sparrow-explore': 'requirement/prd-business.md 和 requirement/prd-quanlity.md',
     'sparrow-arch': 'architecture/business.md 和 architecture/application.md',
     'sparrow-design': 'design/{slug}/api.md 和 design/{slug}/tech.md',
     'sparrow-model': 'design/{slug}/model.md',

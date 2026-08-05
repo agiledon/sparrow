@@ -17,12 +17,14 @@ const ARCH_BODY = `# Sparrow Arch — 业务架构与应用架构定义
 \`\`\`
 当前步骤：sparrow-arch（第 2 步 / 共 6 步）
 所属层级：产品级（product-level）
-前置条件：docs/sparrow/requirement/spec.md 必须存在
+前置条件：
+  1. docs/sparrow/requirement/prd-business.md 必须存在
+  2. docs/sparrow/requirement/prd-quanlity.md （若存在则必须读取）
 下一步骤：sparrow-design（团队级，按限界上下文执行）
 \`\`\`
 
 **前置条件检查**：
-- 如果 \`docs/sparrow/requirement/spec.md\` 不存在，请提示用户先执行 **sparrow-explore**
+- 如果 \`docs/sparrow/requirement/prd-business.md\` 不存在，请提示用户先执行 **sparrow-explore**
 - 如果已存在 \`docs/sparrow/architecture/business.md\` 或 \`docs/sparrow/architecture/application.md\`，请参考下方"输出文件存在性检查"章节处理
 
 ---
@@ -109,6 +111,20 @@ const ARCH_BODY = `# Sparrow Arch — 业务架构与应用架构定义
 
 # 阶段一：业务架构定义
 
+## 📖 输入文档
+
+在执行业务架构定义之前，必须读取以下输入文档：
+
+| 文档 | 路径 | 用途 |
+|------|------|------|
+| 功能需求文档 | \`docs/sparrow/requirement/prd-business.md\` | 提取全部业务服务，作为子领域分类的输入 |
+| 质量属性文档 | \`docs/sparrow/requirement/prd-quanlity.md\` | 了解系统的非功能约束，在定义子领域和后续应用架构映射时作为重要参考 |
+
+> 质量属性文档**若存在则必须读取**。在划分子领域和映射限界上下文时，需要结合质量属性（如安全隔离要求、高并发独立部署需求、数据一致性要求等）综合判断。例如：
+> - 高安全要求的功能可能需要独立的限界上下文进行隔离
+> - 高并发场景可能需要独立的限界上下文以便独立扩缩容
+> - 不同数据一致性要求可能影响聚合边界和跨 BC 通信模式的选择
+
 ## 第一性原理
 
 ### 1. 价值导向原则
@@ -158,8 +174,8 @@ const ARCH_BODY = `# Sparrow Arch — 业务架构与应用架构定义
 
 **归纳要求**：
 - 归纳出的共同特征需满足**子领域命名规则**：名称必须为**名词**，必须**精简抽象**，体现子领域的核心目标
-  - ✅ 正确示例：`库存`、`支付`、`用户`、`订单`、`内容`、`计费`
-  - ❌ 错误示例：`订单管理`（含动词"管理"）、`用户系统`（含"系统"后缀）、`数据统计分析`（含动词）、`订单处理与派发`（过于具体且含动词）
+  - ✅ 正确示例：\`库存\`、\`支付\`、\`用户\`、\`订单\`、\`内容\`、\`计费\`
+  - ❌ 错误示例：\`订单管理\`（含动词"管理"）、\`用户系统\`（含"系统"后缀）、\`数据统计分析\`（含动词）、\`订单处理与派发\`（过于具体且含动词）
 
 ### 步骤4：调整子领域
 对步骤3归纳出的子领域进行检查和调整。
@@ -550,7 +566,7 @@ Thought（思考）→ Action（行动）→ Observation（观察）→ Next Act
 
 1. 从 application.md 中提取所有限界上下文的英文 slug
 2. 在 \`docs/sparrow/design/{english-slug}/\` 下创建目录
-3. 将 \`requirement/spec.md\` 中的业务服务按映射关系切片，写入对应的 \`design/{english-slug}/spec.md\`
+3. 将 \`requirement/prd-business.md\` 中的业务服务按映射关系切片，写入对应的 \`design/{english-slug}/spec.md\`
 
 ---
 
