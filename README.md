@@ -104,18 +104,26 @@ your-project/
 └── sparrow.json        # Project config
 ```
 
+After initialization, you can check for updates at any time:
+
+```bash
+sparrow update
+```
+
+This compares your local version against the npm registry and prompts you to upgrade if a newer version is available.
+
 ### 2. Run the pipeline
 
 Invoke each skill in order as a slash command in your AI tool:
 
 | Step | Command | Level | What it does |
 |------|---------|-------|--------------|
-| 1 | `/sparrow-explore` | Product | Identify business services from raw requirements |
-| 2 | `/sparrow-arch` | Product | Define business architecture + application architecture with bounded contexts |
+| 1 | `/sparrow-explore` | Product | Interactive requirement exploration (Grill Me) + generate functional & quality requirement docs |
+| 2 | `/sparrow-arch` | Product | Define business architecture (subdomains) + application architecture (bounded contexts) |
 | 3 | `/sparrow-design @{slug}` | Team | Define API contracts and select tech stack for a bounded context |
-| 4 | `/sparrow-model @{slug}` | Team | Extract static + dynamic domain model |
+| 4 | `/sparrow-model @{slug}` | Team | Three-stage domain modeling: static (class diagram + OOP principles) + dynamic (sequence diagram) + integration |
 | 5 | `/sparrow-plan @{slug}` | Team | Devise implementation plan with task checklist |
-| 6 | `/sparrow-apply @{slug}` | Team | Generate DDD-structured code with TDD |
+| 6 | `/sparrow-apply @{slug}` | Team | Generate DDD-structured code with TDD + OOP encapsulation rules |
 
 > **Important**: Steps must run in order. Each skill checks that prerequisites exist and will tell you which step to run first if the order is wrong.
 
@@ -132,23 +140,15 @@ After any step, you can:
 ### Step 1: sparrow-explore (Product-level)
 
 **Input**: Raw requirements document or description  
-**Output**: `docs/sparrow/requirement/spec.md` — structured business service definitions
+**Output**:
+- `docs/sparrow/requirement/prd-business.md` — structured business service definitions
+- `docs/sparrow/requirement/prd-quanlity.md` — system quality attributes (performance, security, high availability, etc.)
 
-Identifies business services with: service number, name, description (as a user story), trigger event, basic flow, alternative flows, and acceptance criteria.
-
-```
-Service ID：I-001
-Service Name：Submit Order
-Description: As a buyer, I want to submit an order to purchase products.
-Trigger: Buyer clicks "Submit Order"
-Basic Flow: 1. Validate order; 2. Check inventory; 3. Insert order; ...
-Alternative Flow: 1a. If order is invalid, show error...
-Acceptance Criteria: ...
-```
+sparrow-explore now uses a **Grill Me** interactive exploration pattern: the AI asks one question at a time with a recommended answer, and you confirm (yes/no/modify). Questions cover six dimensions: actors, core flows, business rules, boundary conditions, exception scenarios, and quality attributes. After exploration, a quick summary is provided, and two spec documents are generated — functional requirements as business services, and quality attributes covering only the dimensions actually required.
 
 ### Step 2: sparrow-arch (Product-level)
 
-**Input**: `requirement/spec.md`  
+**Input**: `requirement/prd-business.md` + `requirement/prd-quanlity.md`  
 **Output**:
 - `docs/sparrow/architecture/business.md` — subdomains (core/supporting/generic) + Mermaid business architecture diagram
 - `docs/sparrow/architecture/application.md` — bounded contexts, context mapping, four-layer application architecture diagram
@@ -168,10 +168,11 @@ Interactive tech stack selection: choose from Java (Spring Boot), Python (FastAP
 ### Step 4: sparrow-model (Team-level)
 
 **Input**: `spec.md` + `api.md` + `tech.md`  
-**Output**: `docs/sparrow/design/{slug}/model.md` — complete domain model
+**Output**: `docs/sparrow/design/{slug}/model.md` — complete domain model with three stages
 
-- **Static model**: Unified language glossary, entities (yellow) and value objects (blue), aggregate identification (aggregate root in light red), PlantUML class diagram with relationship modeling (Composite/Aggregation/Association)
-- **Dynamic model**: Task decomposition trees, role stereotype assignment (Command/Query/AppService/DomainService/Aggregate/Port), PlantUML sequence diagrams with color-coded participants and strict collaboration constraints
+- **Stage 1 — Static Modeling**: Unified language glossary, entity/value object identification, aggregate root operation definitions guided by OOP principles (Information Expert, Law of Demeter, anti-anemic model, encapsulation). PlantUML class diagram with private fields and business-focused operations, no unnecessary getters/setters.
+- **Stage 2 — Dynamic Modeling**: API-driven task decomposition trees, role stereotype assignment (Command/Query/AppService/DomainService/Aggregate/Port), PlantUML sequence diagrams with color-coded participants and strict collaboration constraints.
+- **Stage 3 — Static-Dynamic Integration**: Cross-verify operations extracted from sequence diagrams against the static model. Sequence diagram operations take precedence — update the class diagram to ensure complete consistency between structure and behavior.
 
 ### Step 5: sparrow-plan (Team-level)
 
@@ -188,7 +189,7 @@ Creates tasks with `[ ]` checkboxes, sorted by DDD layer dependency (domain → 
 - `integration-tests/{slug}/` — isolated integration/API tests
 - `docs/sparrow/design/{slug}/code_review.md` — review report
 
-Drives three roles: Development Engineer (DDD code + domain TDD), QA Engineer (integration/API tests), and Code Review. Follows language-specific coding standards and directory layouts. Checks off completed steps in `plan.md`.
+Drives three roles: Development Engineer (DDD code + domain TDD), QA Engineer (integration/API tests), and Code Review. Follows language-specific coding standards, directory layouts, and OOP encapsulation rules (no unnecessary getters/setters, rich domain model, Law of Demeter). Checks off completed steps in `plan.md`.
 
 ## Output Structure
 
@@ -198,25 +199,26 @@ After running the full pipeline, your project will have:
 your-project/
 ├── docs/sparrow/
 │   ├── requirement/
-│   │   └── spec.md                     # sparrow-explore
+│   │   ├── prd-business.md               # sparrow-explore (functional requirements)
+│   │   └── prd-quanlity.md               # sparrow-explore (quality attributes)
 │   ├── architecture/
-│   │   ├── business.md                 # sparrow-arch (phase 1)
-│   │   └── application.md              # sparrow-arch (phase 2)
-│   ├── project.md                      # Project catalog index
+│   │   ├── business.md                   # sparrow-arch (phase 1)
+│   │   └── application.md                # sparrow-arch (phase 2)
+│   ├── project.md                        # Project catalog index
 │   └── design/{english-slug}/
-│       ├── spec.md                     # Per-context sliced spec
-│       ├── api.md                      # sparrow-design
-│       ├── tech.md                     # sparrow-design
-│       ├── model.md                    # sparrow-model
-│       ├── plan.md                     # sparrow-plan
-│       └── code_review.md              # sparrow-apply
-├── code/{slug}/                        # sparrow-apply
+│       ├── spec.md                       # Per-context sliced spec
+│       ├── api.md                        # sparrow-design
+│       ├── tech.md                       # sparrow-design
+│       ├── model.md                      # sparrow-model
+│       ├── plan.md                       # sparrow-plan
+│       └── code_review.md                # sparrow-apply
+├── backend/{slug}/                       # sparrow-apply
 │   ├── api/command/, query/, dto/
 │   ├── application/
 │   ├── domain/aggregate/, entity/, valueobject/, service/
 │   └── infrastructure/port/, adapter/
-├── integration-tests/{slug}/           # sparrow-apply (qa tasks)
-└── sparrow.json                        # Project config
+├── integration-tests/{slug}/             # sparrow-apply (qa tasks)
+└── sparrow.json                          # Project config
 ```
 
 All bounded contexts share the same project root namespace, but each is an independent module with its own language-specific scaffold and dependency management.
@@ -241,7 +243,7 @@ Generated by `sparrow init` in your project root:
 
 ```json
 {
-  "version": "0.1.1",
+  "version": "0.2.1",
   "tools": ["claude", "opencode"],
   "createdAt": "2026-06-29T04:05:45.650Z",
   "outputBase": "docs/sparrow",

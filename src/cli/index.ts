@@ -10,6 +10,9 @@
 
 import { Command } from 'commander';
 import { resolve, basename } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { execSync } from 'node:child_process';
 import { detectInstalledTools, executeInit, formatInitSummary, formatToolDetectionSummary } from '../core/init.js';
 import { getSupportedToolIds } from '../core/config.js';
 import { renderWelcomePage, promptInput, promptToolSelection } from '../core/prompts.js';
@@ -23,7 +26,7 @@ program
     'Generate structured skills that guide AI agents through domain-driven design,\n' +
     'from business requirements to production code.'
   )
-  .version('0.2.0')
+  .version('0.2.1')
   .addHelpText(
     'after',
     `
@@ -32,7 +35,8 @@ Examples:
   $ sparrow init --tools claude     Set up for Claude Code only
   $ sparrow init --tools claude,opencode,cursor  Set up for multiple tools
   $ sparrow init --tools all --force  Set up for all tools, no prompts
-  $ sparrow --version               Show version
+  $ sparrow update                   Check and update to the latest version
+  $ sparrow --version                Show version
 
 Supported tools: ${getSupportedToolIds().join(', ')}
 `
@@ -117,6 +121,83 @@ program
       console.log(formatInitSummary(result));
     } catch (error) {
       console.error('❌ Error:', error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('update')
+  .description('Check and update Sparrow to the latest version from npm')
+  .action(async () => {
+    const __dirname = fileURLToPath(import.meta.url);
+    const pkgPath = resolve(__dirname, '..', '..', 'package.json');
+
+    let localVersion: string;
+    try {
+      const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+      localVersion = pkg.version;
+    } catch {
+      console.error('❌ Could not read local package.json.');
+      process.exit(1);
+    }
+
+    console.log(`🪶  Sparrow local version: v${localVersion}`);
+    console.log('🔍 Checking latest version from npm registry...');
+
+    let latestVersion: string;
+    try {
+      const result = execSync(`npm view sparrow-ddd version`, {
+        encoding: 'utf-8',
+        stdio: ['pipe', 'pipe', 'pipe'],
+        timeout: 15000,
+      });
+      latestVersion = result.trim();
+    } catch {
+      console.error('❌ Could not fetch latest version from npm. Check your network connection.');
+      process.exit(1);
+    }
+
+    console.log(`🌐 Latest version on npm: v${latestVersion}`);
+
+    if (localVersion === latestVersion) {
+      console.log('✅ Your Sparrow is already up to date. No update needed.');
+      process.exit(0);
+    }
+
+    // Compare versions
+    const parseVersion = (v: string) => v.split('.').map(Number);
+    const localParts = parseVersion(localVersion);
+    const latestParts = parseVersion(latestVersion);
+    const isNewer =
+      latestParts[0] > localParts[0] ||
+      (latestParts[0] === localParts[0] && latestParts[1] > localParts[1]) ||
+      (latestParts[0] === localParts[0] && latestParts[1] === localParts[1] && latestParts[2] > localParts[2]);
+
+    if (!isNewer) {
+      console.log('✅ Local version is current. No update needed.');
+      process.exit(0);
+    }
+
+    // Ask user
+    const answer = await promptInput(
+      `A new version v${latestVersion} is available. Update now? (y/N):`,
+      ''
+    );
+
+    if (answer.toLowerCase() !== 'y' && answer.toLowerCase() !== 'yes') {
+      console.log('⏭️  Update skipped. You can update later with \`sparrow update\`.');
+      process.exit(0);
+    }
+
+    console.log('📦 Updating Sparrow to the latest version...');
+    try {
+      execSync('npm install -g sparrow-ddd@latest', {
+        stdio: 'inherit',
+        timeout: 60000,
+      });
+      console.log(`🎉 Sparrow updated to v${latestVersion} successfully.`);
+    } catch {
+      console.error('❌ Update failed. Try running: npm install -g sparrow-ddd@latest');
       process.exit(1);
     }
   });
