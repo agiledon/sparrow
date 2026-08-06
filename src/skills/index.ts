@@ -10,6 +10,7 @@ import { register as registerModel } from './model.js';
 import { register as registerPlan } from './plan.js';
 import { register as registerApply } from './apply.js';
 import { register as registerArchive } from './archive.js';
+import { register as registerHarness } from './harness.js';
 
 /**
  * Initialize all skill templates. Must be called before generating skill files.
@@ -22,4 +23,5 @@ export function initializeSkills(): void {
   registerPlan();
   registerApply();
   registerArchive();
+  registerHarness();
 }

@@ -115,6 +115,16 @@ export interface SkillDefinition {
 
 export const SKILLS: SkillDefinition[] = [
   {
+    id: 'sparrow-harness',
+    name: 'Sparrow Harness',
+    description: 'View, add, and maintain constraint assets (harness) for the project',
+    phase: 'product',
+    order: 0,
+    nextSkill: 'sparrow-explore',
+    commandName: 'sparrow-harness',
+    category: 'DDD',
+  },
+  {
     id: 'sparrow-explore',
     name: 'Sparrow Explore',
     description: 'Identify and define business services from raw requirements',

@@ -9,6 +9,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { SUPPORTED_TOOLS, type ToolDefinition } from './config.js';
 import { generateSkillFiles, generateProjectConfig, generateProjectMd } from './skill-generation.js';
+import { initializeGlobalHarness, initializeProjectHarness } from './harness-init.js';
 import { initializeSkills } from '../skills/index.js';
 
 const SPARROW_VERSION = '0.2.0';
@@ -28,6 +29,10 @@ export interface InitResult {
   createdFiles: { toolId: string; files: string[] }[];
   configPath: string;
   projectMdPath: string;
+  /** Global harness files written during init */
+  globalHarnessFiles: string[];
+  /** Project harness files created during init */
+  projectHarnessFiles: string[];
 }
 
 /**
@@ -136,12 +141,20 @@ export function executeInit(projectRoot: string, options: InitOptions): InitResu
   // Step 6: Create project.md wizard file
   const projectMdPath = generateProjectMd(projectRoot, options.projectName, SPARROW_VERSION, selectedToolIds);
 
+  // Step 7: Initialize constraint assets (harness)
+  // Global: DDD-universal discipline, written to the global config dir.
+  // Project: placeholder files for project-specific constraints.
+  const globalHarnessFiles = initializeGlobalHarness();
+  const projectHarnessFiles = initializeProjectHarness(projectRoot);
+
   return {
     tools: selectedToolIds,
     projectName: options.projectName,
     createdFiles,
     configPath,
     projectMdPath,
+    globalHarnessFiles,
+    projectHarnessFiles,
   };
 }
 
@@ -159,6 +172,10 @@ export function formatInitSummary(result: InitResult): string {
   lines.push(`📄 Config: .sparrow/sparrow.json`);
   lines.push(`📑 Guide: ${result.projectMdPath}`);
   lines.push(`📁 Backend dir: backend/`);
+  lines.push('');
+  lines.push(`📐 Constraint assets (harness):`);
+  lines.push(`   Global (${result.globalHarnessFiles.length}): ~/.config/sparrow/harness/`);
+  lines.push(`   Project (${result.projectHarnessFiles.length}): docs/sparrow/harness/`);
   lines.push('');
 
   for (const { toolId, files } of result.createdFiles) {

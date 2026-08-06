@@ -9,6 +9,17 @@
  */
 
 import type { CommandContent, ToolCommandAdapter } from './types.js';
+import { formatHarnessReference } from '../harness-init.js';
+
+/**
+ * Format a reference line to a constraint asset for a given scope.
+ */
+function formatHarnessRef(harnessRelPath: string, scope: 'global' | 'project'): string {
+  const path = formatHarnessReference(harnessRelPath, scope);
+  return scope === 'project'
+    ? `- **项目级**（优先）：\`${path}\``
+    : `- **全局级**：\`${path}\``;
+}
 
 export const cursorAdapter: ToolCommandAdapter = {
   toolId: 'cursor',
@@ -46,4 +57,6 @@ export const cursorAdapter: ToolCommandAdapter = {
 
     return `${frontmatter}\n\n${content.body}`;
   },
+
+  formatHarnessRef,
 };

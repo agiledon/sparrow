@@ -87,6 +87,7 @@ This creates skill and command files for each selected tool:
 your-project/
 ├── .claude/
 │   ├── skills/
+│   │   ├── sparrow-harness/SKILL.md
 │   │   ├── sparrow-explore/SKILL.md
 │   │   ├── sparrow-arch/SKILL.md
 │   │   ├── sparrow-design/SKILL.md
@@ -94,6 +95,7 @@ your-project/
 │   │   ├── sparrow-plan/SKILL.md
 │   │   └── sparrow-apply/SKILL.md
 │   └── commands/sparrow/
+│       ├── sparrow-harness.md
 │       ├── sparrow-explore.md
 │       ├── sparrow-arch.md
 │       └── ...
@@ -101,8 +103,11 @@ your-project/
 │   └── ...
 ├── .cursor/            # (if Cursor selected)
 │   └── ...
+├── docs/sparrow/harness/  # Project-level constraint assets (placeholders)
 └── sparrow.json        # Project config
 ```
+
+`sparrow init` also writes the **global constraint assets** (DDD-universal discipline) to the global config directory (`~/.config/sparrow/harness` on macOS/Linux, `%APPDATA%\sparrow\harness` on Windows).
 
 After initialization, you can check for updates at any time:
 
@@ -110,14 +115,15 @@ After initialization, you can check for updates at any time:
 sparrow update
 ```
 
-This compares your local version against the npm registry and prompts you to upgrade if a newer version is available.
+This compares your local version against the npm registry and prompts you to upgrade if a newer version is available. It also syncs global constraint assets (creating or refreshing managed templates) whenever you run it.
 
-### 2. Run the pipeline
+### 3. Run the pipeline
 
 Invoke each skill in order as a slash command in your AI tool:
 
 | Step | Command | Level | What it does |
 |------|---------|-------|--------------|
+| 0 | `/sparrow-harness` | Helper | View, add, and maintain constraint assets (harness) — available at any time |
 | 1 | `/sparrow-explore` | Product | Interactive requirement exploration (Grill Me) + generate functional & quality requirement docs |
 | 2 | `/sparrow-arch` | Product | Define business architecture (subdomains) + application architecture (bounded contexts) |
 | 3 | `/sparrow-design @{slug}` | Team | Define API contracts and select tech stack for a bounded context |
@@ -127,7 +133,7 @@ Invoke each skill in order as a slash command in your AI tool:
 
 > **Important**: Steps must run in order. Each skill checks that prerequisites exist and will tell you which step to run first if the order is wrong.
 
-### 3. Iterate and refine
+### 4. Iterate and refine
 
 After any step, you can:
 - Review the generated Markdown artifacts
@@ -154,7 +160,7 @@ sparrow-explore now uses a **Grill Me** interactive exploration pattern: the AI 
 - `docs/sparrow/architecture/application.md` — bounded contexts, context mapping, four-layer application architecture diagram
 - `docs/sparrow/design/{slug}/spec.md` — per-context sliced business specs
 
-Classifies subdomains into core (competitive advantage), supporting (business-essential), and generic (buy vs build). Maps them to bounded contexts with relationship patterns (ACL, OHS, Conformist, Customer-Supplier, Shared Kernel).
+Classifies subdomains into core (competitive advantage), supporting (business-essential), and generic (buy vs build). Maps them to bounded contexts with relationship patterns (ACL, OHS, Conformist, Customer-Supplier, Shared Kernel, Publisher-Subscriber, Separate Ways). Enforces the autonomy principle (minimally complete, self-fulfilling domain knowledge with logical — not necessarily microservice — isolation) and cross-BC communication discipline (same-process: southbound Client → northbound local service; cross-process: public API / domain events; never direct access to another BC's domain objects).
 
 ### Step 3: sparrow-design (Team-level, per bounded context)
 
@@ -223,6 +229,37 @@ your-project/
 
 All bounded contexts share the same project root namespace, but each is an independent module with its own language-specific scaffold and dependency management.
 
+## Constraint Assets (Harness)
+
+Sparrow ships **constraint assets** (harness) — the "must / must not" DDD discipline that each stage enforces. They live in two places:
+
+| Scope | Location | Contents |
+|-------|----------|----------|
+| **Global** | `~/.config/sparrow/harness/` (macOS/Linux), `%APPDATA%\sparrow\harness` (Windows) | DDD-universal discipline, written by `sparrow init` and synced by `sparrow update` |
+| **Project** | `docs/sparrow/harness/` | Project-specific constraints; placeholder files created by `sparrow init`, free to edit |
+
+**Precedence**: project-level constraints > global constraints. On conflict the project level wins; if a project file is empty/missing, the global level is used directly.
+
+The global harness contains one file per stage plus a constitution:
+
+```
+harness/
+├── constitution.md            # Aggregate index: stage → file → description
+├── explore/requirements.md    # Business service identification discipline
+├── arch/business.md           # Subdomain classification discipline
+├── arch/application.md        # Bounded context, autonomy & communication discipline
+├── design/api-design.md       # Service contract & API discipline
+├── model/architecture.md      # Four layers, stereotypes, PO & call rules
+├── model/domain-modeling.md   # Aggregates & OOP discipline
+└── apply/implementation.md    # Code generation & encapsulation discipline
+```
+
+How it works:
+
+- Each stage skill references the harness in a `📐 约束资产（Harness）` section telling the AI to load the relevant constraint files **before** executing.
+- **`/sparrow-harness`** is an auxiliary command (available anytime, independent of the pipeline) to view the index, and to add/update/delete project-level constraints. New constraints are auto-classified into the right stage file — you don't need to pick a stage.
+- Managed global templates are refreshed on version upgrade, but **user-edited files are never overwritten** (project files are always yours).
+
 ## Supported AI Tools
 
 | Tool | Skills Directory | Commands Directory | Detection |
@@ -277,16 +314,17 @@ Each language has its own DDD directory layout, coding standards, and anti-patte
 
 ## How It Works
 
-1. **`sparrow init`** generates skill/command files into each AI tool's directory
+1. **`sparrow init`** generates skill/command files into each AI tool's directory, plus global and project-level constraint assets (harness)
 2. Each **skill** is a Markdown file with YAML frontmatter containing:
    - Role definition (business architect, application architect, DDD expert, etc.)
    - First principles and design rules
    - Step-by-step instructions
    - Output templates with Mermaid/PlantUML examples
    - Quality checklists
-3. The **AI assistant** reads the skill and executes it, reading input files and writing output files
-4. Each skill **checks prerequisites** — if something is missing, it tells you which skill to run first
-5. After completing, each skill **hints at the next step**
+3. Each stage skill **loads its constraint assets** (`📐 约束资产（Harness）`) — project-level and global rules — before executing
+4. The **AI assistant** reads the skill and executes it, reading input files and writing output files
+5. Each skill **checks prerequisites** — if something is missing, it tells you which skill to run first
+6. After completing, each skill **hints at the next step**
 
 **No multi-agent framework needed.** The AI coding assistant itself provides intelligence, multi-agent capabilities, and LLM configuration. Sparrow only provides the structured knowledge and process guidance.
 

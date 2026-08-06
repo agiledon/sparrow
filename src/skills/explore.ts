@@ -21,6 +21,8 @@ const EXPLORE_BODY = `# Sparrow Explore — 需求探索与业务服务识别
   - 如果当前目录下不存在 \`docs/sparrow/requirement/prd-business.md\`，可以继续执行
   - 如果已经存在，请参考下方"输出文件存在性检查"章节处理
 
+{{HARNESS}}
+
 ---
 
 ## 🛑 输出文件存在性检查（必须在生成前执行）

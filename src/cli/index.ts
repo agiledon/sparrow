@@ -15,6 +15,7 @@ import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
 import { detectInstalledTools, executeInit, formatInitSummary, formatToolDetectionSummary } from '../core/init.js';
 import { getSupportedToolIds } from '../core/config.js';
+import { initializeGlobalHarness, getGlobalHarnessDir } from '../core/harness-init.js';
 import { renderWelcomePage, promptInput, promptToolSelection } from '../core/prompts.js';
 
 const program = new Command();
@@ -159,6 +160,13 @@ program
 
     console.log(`🌐 Latest version on npm: v${latestVersion}`);
 
+    // Sync global constraint assets (create missing/outdated managed templates).
+    // Runs on every check so older installs pick up the harness.
+    const synced = initializeGlobalHarness();
+    if (synced.length > 0) {
+      console.log(`📐 Synced ${synced.length} global constraint asset(s) to ${getGlobalHarnessDir()}.`);
+    }
+
     if (localVersion === latestVersion) {
       console.log('✅ Your Sparrow is already up to date. No update needed.');
       process.exit(0);
@@ -196,6 +204,9 @@ program
         timeout: 60000,
       });
       console.log(`🎉 Sparrow updated to v${latestVersion} successfully.`);
+      console.log(
+        `📐 全局约束资产将随新版本在下次运行 \`sparrow init\` / \`sparrow update\` 时自动同步到 ${getGlobalHarnessDir()}。`
+      );
     } catch {
       console.error('❌ Update failed. Try running: npm install -g sparrow-ddd@latest');
       process.exit(1);

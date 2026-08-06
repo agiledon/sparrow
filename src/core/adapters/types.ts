@@ -30,4 +30,6 @@ export interface ToolCommandAdapter {
   formatSkill(content: CommandContent): string;
   /** Format content as a slash command file */
   formatCommand(content: CommandContent): string;
+  /** Format a reference line to a constraint asset (harness) for a given scope */
+  formatHarnessRef(harnessRelPath: string, scope: 'global' | 'project'): string;
 }
