@@ -8,6 +8,8 @@
 
 Sparrow transforms raw business requirements into production-ready code through a structured 6-step Domain-Driven Design (DDD) pipeline. It generates **skills and commands** for AI coding assistants (Claude Code, OpenCode, Cursor), letting each host's native AI capabilities guide you from business analysis to code generation — no multi-agent framework required.
 
+> 📜 Version history and highlights: see the [CHANGELOG](./CHANGELOG.md) and [GitHub Releases](https://github.com/agiledon/sparrow/releases).
+
 ## Why Sparrow?
 
 - **No lock-in**: Works with Claude Code, OpenCode, and Cursor out of the box. Uses each tool's native AI — no CrewAI, LangChain, or other agent frameworks.

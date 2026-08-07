@@ -10,6 +10,7 @@
     "bin/",
     "dist/",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "scripts": {
@@ -33,6 +34,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/agiledon/sparrow"
+  },
+  "homepage": "https://github.com/agiledon/sparrow",
+  "bugs": {
+    "url": "https://github.com/agiledon/sparrow/issues"
   },
   "author": "agiledon",
   "license": "MIT",
