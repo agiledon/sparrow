@@ -16,3 +16,8 @@ bin/
 docs/
 backend/
 integration-tests/
+
+# >>> openmole (managed by openmole init/update — do not edit) >>>
+# Machine-local OpenMole plugin symlinks (absolute paths differ per developer)
+/.gemini/extensions/openmole
+# <<< openmole <<<
