@@ -30,7 +30,7 @@ const EXPLORE_BODY = `# Sparrow Explore — 需求探索与业务服务识别
 在开始生成内容之前，请检查以下输出文件是否已经存在：
 
 - \`docs/sparrow/requirement/prd-business.md\`
-- \`docs/sparrow/requirement/prd-quanlity.md\`
+- \`docs/sparrow/requirement/prd-quality.md\`
 
 如果任一文件已存在，请**让用户进行一次选择**（该选择将应用于所有已存在的文件）：
 
@@ -47,7 +47,7 @@ const EXPLORE_BODY = `# Sparrow Explore — 需求探索与业务服务识别
 完成输出后，**必须**更新 \`docs/sparrow/project.md\`：
 
 1. 如果 \`project.md\` 不存在，根据当前项目信息创建它
-2. 在"文档索引"部分，更新 \`requirement/prd-business.md\` 和 \`requirement/prd-quanlity.md\` 的链接
+2. 在"文档索引"部分，更新 \`requirement/prd-business.md\` 和 \`requirement/prd-quality.md\` 的链接
 3. 将对应条目的状态从 \`_待生成 (sparrow-explore)_\` 更新为 \`_v{version}_\`（使用实际版本号）
 4. 更新文件头部的"最后更新"时间戳
 
@@ -87,7 +87,7 @@ const EXPLORE_BODY = `# Sparrow Explore — 需求探索与业务服务识别
 sparrow-explore 分为两个阶段：
 
 1. **阶段一：互动式需求探索（Grill Me）** — 通过一问一答的方式，深度挖掘用户需求
-2. **阶段二：需求文档生成** — 将探索结果整理为功能需求文档（prd-business.md）和系统质量属性文档（prd-quanlity.md）
+2. **阶段二：需求文档生成** — 将探索结果整理为功能需求文档（prd-business.md）和系统质量属性文档（prd-quality.md）
 
 ---
 
@@ -149,7 +149,7 @@ sparrow-explore 分为两个阶段：
 | 文档 | 路径 | 内容 |
 |------|------|------|
 | 功能需求文档 | \`docs/sparrow/requirement/prd-business.md\` | 功能性需求，按照业务服务规范编写 |
-| 系统质量属性文档 | \`docs/sparrow/requirement/prd-quanlity.md\` | 非功能性需求，从性能、安全、高可用等角度描述 |
+| 系统质量属性文档 | \`docs/sparrow/requirement/prd-quality.md\` | 非功能性需求，从性能、安全、高可用等角度描述 |
 
 ---
 
@@ -187,9 +187,9 @@ sparrow-explore 分为两个阶段：
    - **REMOVED**：现有业务服务因需求缺口或消失而不再需要
 3. 将 delta 写入 \`docs/sparrow/changes/{change-id}/deltas/requirement/prd-business.md\`，用 \`## ADDED Requirements\` / \`## MODIFIED Requirements\` / \`## REMOVED Requirements\` 分区（OpenSpec 格式）。
 4. **原地更新** \`docs/sparrow/requirement/prd-business.md\`：合并 ADDED、应用 MODIFIED、标注 REMOVED 为废弃，保持单一天然事实来源。
-5. 同样的 delta 流程应用于 \`docs/sparrow/requirement/prd-quanlity.md\`。
+5. 同样的 delta 流程应用于 \`docs/sparrow/requirement/prd-quality.md\`。
 6. 更新版本元数据：版本号递增（v1.0→v1.1），并在元数据块追加 \`change-id: {change-id}\`（基线不追加此字段）。
-7. 更新 \`docs/sparrow/project.md\`：同步 \`requirement/prd-business.md\` 和 \`requirement/prd-quanlity.md\` 的版本状态。
+7. 更新 \`docs/sparrow/project.md\`：同步 \`requirement/prd-business.md\` 和 \`requirement/prd-quality.md\` 的版本状态。
 
 > explore 在 revise 模式下**始终执行**（任何变更都从需求 delta 开始）；下游阶段按 BC 档位按需触发（见 sparrow-arch 变更处理章节）。
 
@@ -415,7 +415,7 @@ sparrow-explore 分为两个阶段：
 
 ### 文档二：系统质量属性文档
 
-写入 **\`docs/sparrow/requirement/prd-quanlity.md\`**。
+写入 **\`docs/sparrow/requirement/prd-quality.md\`**。
 
 根据需求探索中涉及的质量属性要求，从以下角度（**仅覆盖需求中明确涉及的维度**，未涉及的维度不提供）：
 
@@ -494,7 +494,7 @@ sparrow-explore 分为两个阶段：
 - [ ] **非用例检查**：没有将"模块"或"用例"误识别为业务服务（如将增删改查合并为一个服务）
 - [ ] 对于同一领域对象的不同操作（查询、新增、修改、删除），已识别为独立的业务服务
 
-### 阶段二：质量属性文档（prd-quanlity.md）
+### 阶段二：质量属性文档（prd-quality.md）
 - [ ] 仅覆盖了需求探索中实际涉及的质量属性维度
 - [ ] 未涉及的维度已省略（无空章节或占位文字）
 - [ ] 每个质量属性都有具体的指标或要求描述
@@ -609,7 +609,7 @@ UI 探索完成后，生成以下文档到 **\`docs/sparrow/requirement/ui/\`**�
 
 ## 完成后的下一步
 
-✅ 完成 sparrow-explore 后（含可选的 UI 设计探索），请执行 **/sparrow-arch**（产品级）—— 基于 prd-business.md 和 prd-quanlity.md，划分子领域并映射限界上下文，定义系统的业务架构和应用架构。若有 UI 需求产出，sparrow-arch 将同时生成前端架构文档 \`docs/sparrow/architecture/frontend.md\`。`;
+✅ 完成 sparrow-explore 后（含可选的 UI 设计探索），请执行 **/sparrow-arch**（产品级）—— 基于 prd-business.md 和 prd-quality.md，划分子领域并映射限界上下文，定义系统的业务架构和应用架构。若有 UI 需求产出，sparrow-arch 将同时生成前端架构文档 \`docs/sparrow/architecture/frontend.md\`。`;
 
 export function register(): void {
   registerSkillTemplate('sparrow-explore', () => EXPLORE_BODY);

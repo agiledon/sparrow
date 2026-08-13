@@ -1,6 +1,6 @@
 # 坏味道驱动重构任务（OpenMole Tasks）
 
-**版本**：0.1.0
+**版本**：0.3.0
 **状态**：草案
 **依据**：[badsmells.md](./badsmells.md)
 **修订日期**：2026-08-13
@@ -50,7 +50,7 @@
 
 ### B-T01：消除 `catch (e: any)` 类型逃逸（消除 IMPL-TS-001）
 
-- [ ] **B-T01.** 用 `unknown` + 类型守卫替换 `update` 命令中的 `catch (e: any)`
+- [x] **B-T01.** 用 `unknown` + 类型守卫替换 `update` 命令中的 `catch (e: any)`
   - **依赖**：无。
   - **级别**：IMPL
   - **坏味道**：`badsmells.md` §2 / `IMPL-TS-001`。
@@ -76,7 +76,7 @@
 
 ### B-T02：修正 `prd-quanlity.md` 拼写并抽取路径常量（消除 IMPL-GEN-001）
 
-- [ ] **B-T02.** 将 `prd-quanlity.md` 统一修正为 `prd-quality.md`，并抽取为常量避免字符串散落
+- [x] **B-T02.** 将 `prd-quanlity.md` 统一修正为 `prd-quality.md`，并抽取为常量避免字符串散落
   - **依赖**：无。
   - **级别**：IMPL
   - **坏味道**：`badsmells.md` §2 / `IMPL-GEN-001`。
@@ -175,3 +175,5 @@ B-T04 (拆分 update) ── 依赖 B-T03
 | 版本 | 日期 | 提交版本 | 摘要 |
 |------|------|----------|------|
 | 0.1.0 | 2026-08-13 | `3f33e66` | 初版：4 个任务 B-T01 ~ B-T04，覆盖 impl/badsmells.md 全部未清除条目。 |
+| 0.2.0 | 2026-08-13 | `—` | B-T01 完成：新增 isExecSyncTimeoutError 类型守卫 + 3 单测；IMPL-TS-001 → 已消除。 |
+| 0.3.0 | 2026-08-13 | `—` | B-T02 完成：12 处 quanlity→quality + PRD_QUALITY_PATH 常量；IMPL-GEN-001 → 已消除。 |

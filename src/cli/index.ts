@@ -18,6 +18,7 @@ import { getSupportedToolIds } from '../core/config.js';
 import { initializeGlobalHarness, getGlobalHarnessDir } from '../core/harness-init.js';
 import { initializePluginRuntimes } from '../core/plugin-init.js';
 import { renderWelcomePage, promptInput, promptToolSelection } from '../core/prompts.js';
+import { isExecSyncTimeoutError } from '../core/exec-errors.js';
 
 const program = new Command();
 
@@ -154,9 +155,8 @@ program
         timeout: 30000,
       });
       latestVersion = result.trim();
-    } catch (e: any) {
-      const isTimeout = e?.status === null && e?.signal === 'SIGTERM';
-      if (isTimeout) {
+    } catch (e) {
+      if (isExecSyncTimeoutError(e)) {
         console.error('❌ Request to npm registry timed out (30s).');
         console.error('   Try setting a closer registry mirror:');
         console.error('   npm config set registry https://registry.npmmirror.com');

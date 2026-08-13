@@ -12,6 +12,9 @@ export interface ProjectMdSection {
   entries: { label: string; path: string; status: 'pending' | 'generated'; version?: string }[];
 }
 
+/** Canonical path to the quality-attribute document (relative to docs/sparrow/). */
+export const PRD_QUALITY_PATH = 'requirement/prd-quality.md';
+
 /**
  * Generate the initial project.md content for a new project.
  */
@@ -55,7 +58,7 @@ export function generateProjectMdContent(
 
 #### 1.2 质量属性
 
-- [ ] [系统质量属性](./requirement/prd-quanlity.md) — *待生成 (sparrow-explore)*
+- [ ] [系统质量属性](./${PRD_QUALITY_PATH}) — *待生成 (sparrow-explore)*
 
 #### 1.3 UI 需求（可选）
 

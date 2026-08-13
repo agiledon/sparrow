@@ -19,7 +19,7 @@ const ARCH_BODY = `# Sparrow Arch — 业务架构与应用架构定义
 所属层级：产品级（product-level）
 前置条件：
   1. docs/sparrow/requirement/prd-business.md 必须存在
-  2. docs/sparrow/requirement/prd-quanlity.md （若存在则必须读取）
+  2. docs/sparrow/requirement/prd-quality.md （若存在则必须读取）
 下一步骤：sparrow-design（团队级，按限界上下文执行）
 \`\`\`
 
@@ -129,7 +129,7 @@ const ARCH_BODY = `# Sparrow Arch — 业务架构与应用架构定义
 | 文档 | 路径 | 用途 |
 |------|------|------|
 | 功能需求文档 | \`docs/sparrow/requirement/prd-business.md\` | 提取全部业务服务，作为子领域分类的输入 |
-| 质量属性文档 | \`docs/sparrow/requirement/prd-quanlity.md\` | 了解系统的非功能约束，在定义子领域和后续应用架构映射时作为重要参考 |
+| 质量属性文档 | \`docs/sparrow/requirement/prd-quality.md\` | 了解系统的非功能约束，在定义子领域和后续应用架构映射时作为重要参考 |
 
 > 质量属性文档**若存在则必须读取**。在划分子领域和映射限界上下文时，需要结合质量属性（如安全隔离要求、高并发独立部署需求、数据一致性要求等）综合判断。例如：
 > - 高安全要求的功能可能需要独立的限界上下文进行隔离
