@@ -35,7 +35,7 @@ program
 Examples:
   $ sparrow init                    Initialize with detected tools
   $ sparrow init --tools claude     Set up for Claude Code only
-  $ sparrow init --tools claude,opencode,cursor  Set up for multiple tools
+  $ sparrow init --tools claude,opencode,cursor,pi  Set up for multiple tools
   $ sparrow init --tools all --force  Set up for all tools, no prompts
   $ sparrow update                   Check and update to the latest version
   $ sparrow --version                Show version
@@ -60,7 +60,7 @@ program
   .description('Initialize Sparrow in the current project')
   .option(
     '--tools <ids>',
-    'Comma-separated tool ids to set up (claude, opencode, cursor), or "all"'
+    'Comma-separated tool ids to set up (claude, opencode, cursor, pi), or "all"'
   )
   .option('--project-name <name>', 'Project name in English (used for code directory)')
   .option('--force', 'Skip confirmation prompts')

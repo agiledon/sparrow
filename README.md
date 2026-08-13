@@ -12,7 +12,7 @@ Sparrow transforms raw business requirements into production-ready code through 
 
 ## Why Sparrow?
 
-- **No lock-in**: Works with Claude Code, OpenCode, and Cursor out of the box. Uses each tool's native AI — no CrewAI, LangChain, or other agent frameworks.
+- **No lock-in**: Works with Claude Code, OpenCode, Cursor, and Pi out of the box. Uses each tool's native AI — no CrewAI, LangChain, or other agent frameworks.
 - **Spec-driven**: Every step produces concrete, version-controlled Markdown artifacts. You always know what was decided and why.
 - **DDD-native**: Follows Domain-Driven Design principles end-to-end: business services → subdomains → bounded contexts → domain models → code.
 - **Multi-language**: Supports Java, Python, Node.js/TypeScript, Go, and Rust. Each bounded context can use a different tech stack.
@@ -77,7 +77,7 @@ Sparrow detects which AI tools you have installed and asks which to configure. Y
 sparrow init --tools claude
 
 # Set up for multiple tools
-sparrow init --tools claude,opencode,cursor
+sparrow init --tools claude,opencode,cursor,pi
 
 # Set up for all supported tools, no prompts
 sparrow init --tools all --force
@@ -104,6 +104,8 @@ your-project/
 ├── .opencode/          # (if OpenCode selected)
 │   └── ...
 ├── .cursor/            # (if Cursor selected)
+│   └── ...
+├── .pi/                # (if Pi selected)
 │   └── ...
 ├── docs/sparrow/harness/  # Project-level constraint assets (placeholders)
 └── sparrow.json        # Project config
@@ -285,6 +287,7 @@ How it works:
 | **Kiro** | `.kiro/skills/` | *from skills* | `.kiro/` directory |
 | **Qoder** | `.qoder/skills/` | `.qoder/commands/` | `.qoder/` directory |
 | **Trae** | `.trae/skills/` | `.trae/commands/` | `.trae/` directory |
+| **Pi** | `.pi/skills/` | `.pi/prompts/` (prompt templates) | `.pi/` directory |
 
 ## Configuration
 

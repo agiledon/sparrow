@@ -13,6 +13,7 @@ import { codexAdapter } from './codex.js';
 import { kiroAdapter } from './kiro.js';
 import { qoderAdapter } from './qoder.js';
 import { traeAdapter } from './trae.js';
+import { piAdapter } from './pi.js';
 
 const _registry = new Map<string, ToolCommandAdapter>();
 
@@ -25,6 +26,7 @@ const _adapters: ToolCommandAdapter[] = [
   kiroAdapter,
   qoderAdapter,
   traeAdapter,
+  piAdapter,
 ];
 
 for (const adapter of _adapters) {
@@ -63,4 +65,4 @@ export function hasAdapter(toolId: string): boolean {
   return _registry.has(toolId);
 }
 
-export { claudeAdapter, opencodeAdapter, cursorAdapter, codexAdapter, kiroAdapter, qoderAdapter, traeAdapter };
+export { claudeAdapter, opencodeAdapter, cursorAdapter, codexAdapter, kiroAdapter, qoderAdapter, traeAdapter, piAdapter };

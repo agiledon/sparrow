@@ -76,6 +76,14 @@ export const SUPPORTED_TOOLS: ToolDefinition[] = [
     format: 'claude-style',
     detectionPaths: ['.trae'],
   },
+  {
+    id: 'pi',
+    name: 'Pi',
+    skillsDir: '.pi/skills',
+    commandsDir: '.pi/prompts',
+    format: 'opencode-style',
+    detectionPaths: ['.pi', '.pi/settings.json'],
+  },
 ];
 
 /**
