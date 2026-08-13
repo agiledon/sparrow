@@ -22,7 +22,7 @@ import { APPLY_IMPLEMENTATION_BODY } from './apply-implementation.js';
  * Harness asset version. Bump when constraint content changes so that
  * `sparrow update` can sync managed template files.
  */
-export const HARNESS_VERSION = '1.0.0';
+export const HARNESS_VERSION = '1.0.1';
 
 /**
  * Marker embedded at the top of managed (tool-written) template files.
