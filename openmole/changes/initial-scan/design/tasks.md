@@ -1,6 +1,6 @@
 # 坏味道驱动重构任务（OpenMole Tasks）
 
-**版本**：0.5.0
+**版本**：0.6.0
 **状态**：草案
 **依据**：[badsmells.md](./badsmells.md)
 **修订日期**：2026-08-13
@@ -133,7 +133,7 @@
 
 ### B-T04：拆分 config.ts 职责（消除 DESIGN-DF-001）
 
-- [ ] **B-T04.** 将 config.ts 的工具注册表、技能注册表、插件技能状态拆分到独立模块
+- [x] **B-T04.** 将 config.ts 的工具注册表、技能注册表、插件技能状态拆分到独立模块
   - **依赖**：建议先完成 B-T02（移除 `getToolById`/`getSkillById` 死导出，减少拆分面）。
   - **级别**：DESIGN
   - **坏味道**：`badsmells.md` §2 / `DESIGN-DF-001`。
@@ -213,3 +213,4 @@ B-T05 (插件版本)   ── 可独立执行
 | 0.3.0 | 2026-08-13 | `—` | B-T01 完成：新建 shared.ts 工厂 + 单一 formatHarnessRef；8 适配器退化为配置声明；DESIGN-RD-001 → 已消除。 |
 | 0.4.0 | 2026-08-13 | `—` | B-T03 完成：引入 ProjectContext 参数对象；generateProjectConfig/Md 收敛单参数；DESIGN-BS-001 → 已消除。 |
 | 0.5.0 | 2026-08-13 | `—` | B-T05 完成：删除 BUNDLED_PLUGIN_VERSIONS，load.ts 循环去重 + 移除 as Plugin；DESIGN-RD-003 → 已消除。 |
+| 0.6.0 | 2026-08-13 | `—` | B-T04 完成：拆分 tools.ts/skills.ts，config.ts 改为 barrel，移除 _pluginSkillsRegistered 标志；DESIGN-DF-001 → 已消除。 |

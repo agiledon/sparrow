@@ -1,6 +1,6 @@
 # 坏味道规约文档（OpenMole Bad Smells）
 
-**版本**：0.5.0
+**版本**：0.6.0
 **状态**：草案
 **依据**：OpenMole 规约摘要（见 Skill 内嵌）；change 内 [tasks.md](./tasks.md)
 **修订日期**：2026-08-13
@@ -32,7 +32,7 @@
 | DESIGN-RD-001 | 冗余 | 已消除 | 8 个工具适配器重复实现 formatHarnessRef/formatSkill/formatCommand（RD-01） |
 | DESIGN-RD-002 | 冗余 | 已消除 | version.ts 整体死代码 + 6 个未使用导出（RD-02） |
 | DESIGN-BS-001 | 膨胀 | 已消除 | generateProjectConfig/Md 共享 4 参数团 + 长参数列表（BS-04/BS-02） |
-| DESIGN-DF-001 | 设计缺陷 | 未清除 | config.ts 混合两注册表 + 模块级可变状态（DF-01/MO-01） |
+| DESIGN-DF-001 | 设计缺陷 | 已消除 | config.ts 混合两注册表 + 模块级可变状态（DF-01/MO-01） |
 | DESIGN-RD-003 | 冗余 | 已消除 | 插件版本号双真相源 + 重复注册（RD-01） |
 
 ---
@@ -111,3 +111,4 @@
 | 0.3.0 | 2026-08-13 | `—` | B-T01 完成：shared.ts 工厂 + 单一 formatHarnessRef；DESIGN-RD-001 → 已消除。 |
 | 0.4.0 | 2026-08-13 | `—` | B-T03 完成：ProjectContext 参数对象；DESIGN-BS-001 → 已消除。 |
 | 0.5.0 | 2026-08-13 | `—` | B-T05 完成：删除 BUNDLED_PLUGIN_VERSIONS + load.ts 循环去重；DESIGN-RD-003 → 已消除。 |
+| 0.6.0 | 2026-08-13 | `—` | B-T04 完成：拆分 tools.ts/skills.ts + 移除幂等标志；DESIGN-DF-001 → 已消除。 |
