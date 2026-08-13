@@ -195,15 +195,18 @@ export function generateSkillFiles(
  */
 export const SPARROW_DIR = '.sparrow';
 
+export interface ProjectContext {
+  projectRoot: string;
+  projectName: string;
+  version: string;
+  toolIds: string[];
+}
+
 /**
  * Generate a sparrow.json config file under .sparrow/ in the project root.
  */
-export function generateProjectConfig(
-  projectRoot: string,
-  toolIds: string[],
-  version: string,
-  projectName: string
-): string {
+export function generateProjectConfig(ctx: ProjectContext): string {
+  const { projectRoot, projectName, version, toolIds } = ctx;
   let existingPlugins: unknown[] = [];
   try {
     const existing = JSON.parse(readFileSync(join(projectRoot, SPARROW_DIR, 'sparrow.json'), 'utf-8'));
@@ -236,15 +239,11 @@ export function generateProjectConfig(
  * Generate the project.md wizard file under docs/sparrow/.
  * Returns the path to the created file.
  */
-export function generateProjectMd(
-  projectRoot: string,
-  projectName: string,
-  sparrowVersion: string,
-  toolIds: string[]
-): string {
+export function generateProjectMd(ctx: ProjectContext): string {
+  const { projectRoot, projectName, version, toolIds } = ctx;
   const mdPath = join(projectRoot, 'docs', 'sparrow', 'project.md');
   mkdirSync(dirname(mdPath), { recursive: true });
-  const content = generateProjectMdContent(projectName, sparrowVersion, toolIds);
+  const content = generateProjectMdContent(projectName, version, toolIds);
   writeFileSync(mdPath, content, 'utf-8');
   return mdPath;
 }

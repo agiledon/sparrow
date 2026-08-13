@@ -1,6 +1,6 @@
 # 坏味道驱动重构任务（OpenMole Tasks）
 
-**版本**：0.3.0
+**版本**：0.4.0
 **状态**：草案
 **依据**：[badsmells.md](./badsmells.md)
 **修订日期**：2026-08-13
@@ -105,7 +105,7 @@
 
 ### B-T03：引入参数对象消除 Data Clump（消除 DESIGN-BS-001）
 
-- [ ] **B-T03.** 用参数对象统一 `generateProjectConfig`/`generateProjectMd` 的 4 参数团
+- [x] **B-T03.** 用参数对象统一 `generateProjectConfig`/`generateProjectMd` 的 4 参数团
   - **依赖**：无。
   - **级别**：DESIGN
   - **坏味道**：`badsmells.md` §2 / `DESIGN-BS-001`。
@@ -211,3 +211,4 @@ B-T05 (插件版本)   ── 可独立执行
 | 0.1.0 | 2026-08-13 | `3f33e66` | 初版：5 个任务 B-T01 ~ B-T05，覆盖 design/badsmells.md 全部未清除条目。 |
 | 0.2.0 | 2026-08-13 | `—` | B-T02 完成：删除 version.ts 死代码 + 6 个零引用导出；DESIGN-RD-002 → 已消除。 |
 | 0.3.0 | 2026-08-13 | `—` | B-T01 完成：新建 shared.ts 工厂 + 单一 formatHarnessRef；8 适配器退化为配置声明；DESIGN-RD-001 → 已消除。 |
+| 0.4.0 | 2026-08-13 | `—` | B-T03 完成：引入 ProjectContext 参数对象；generateProjectConfig/Md 收敛单参数；DESIGN-BS-001 → 已消除。 |

@@ -1,6 +1,6 @@
 # 坏味道驱动重构分析（OpenMole Analysis）
 
-**版本**：0.3.0
+**版本**：0.4.0
 **状态**：草案
 **依据**：[badsmells.md](./badsmells.md)
 
@@ -80,3 +80,4 @@ B-T05 (插件版本)   ── 独立
 | 0.1.0 | 2026-08-13 | `3f33e66` | 初始版本：差分验证通过，design badsmells/tasks 5:5 全覆盖。 |
 | 0.2.0 | 2026-08-13 | `—` | B-T02 完成：删除 version.ts + 6 零引用导出；DESIGN-RD-002 → 已消除。 |
 | 0.3.0 | 2026-08-13 | `—` | B-T01 完成：shared.ts 工厂 + 单一 formatHarnessRef；DESIGN-RD-001 → 已消除。 |
+| 0.4.0 | 2026-08-13 | `—` | B-T03 完成：ProjectContext 参数对象；DESIGN-BS-001 → 已消除。 |

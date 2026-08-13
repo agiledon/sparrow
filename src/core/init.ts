@@ -8,7 +8,7 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { SUPPORTED_TOOLS, type ToolDefinition } from './config.js';
-import { generateSkillFiles, generateProjectConfig, generateProjectMd } from './skill-generation.js';
+import { generateSkillFiles, generateProjectConfig, generateProjectMd, type ProjectContext } from './skill-generation.js';
 import { initializeGlobalHarness, initializeProjectHarness } from './harness-init.js';
 import { initializePluginRuntimes } from './plugin-init.js';
 import { initializeSkills } from '../skills/index.js';
@@ -139,10 +139,16 @@ export function executeInit(projectRoot: string, options: InitOptions): InitResu
   const createdFiles = generateSkillFiles(projectRoot, selectedToolIds);
 
   // Step 5: Create project config
-  const configPath = generateProjectConfig(projectRoot, selectedToolIds, SPARROW_VERSION, options.projectName);
+  const projectContext: ProjectContext = {
+    projectRoot,
+    projectName: options.projectName,
+    version: SPARROW_VERSION,
+    toolIds: selectedToolIds,
+  };
+  const configPath = generateProjectConfig(projectContext);
 
   // Step 6: Create project.md wizard file
-  const projectMdPath = generateProjectMd(projectRoot, options.projectName, SPARROW_VERSION, selectedToolIds);
+  const projectMdPath = generateProjectMd(projectContext);
 
   // Step 7: Initialize constraint assets (harness)
   // Global: DDD-universal discipline, written to the global config dir.
