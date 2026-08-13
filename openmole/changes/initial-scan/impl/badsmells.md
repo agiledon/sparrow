@@ -1,6 +1,6 @@
 # 坏味道规约文档（OpenMole Bad Smells）
 
-**版本**：0.3.0
+**版本**：0.5.0
 **状态**：草案
 **依据**：OpenMole 规约摘要（见 Skill 内嵌）；change 内 [tasks.md](./tasks.md)
 **修订日期**：2026-08-13
@@ -34,8 +34,8 @@
 |-------|------|------|------|
 | IMPL-TS-001 | TypeScript 语言特定 | 已消除 | `catch (e: any)` 用 any 逃逸类型检查（TS-01） |
 | IMPL-GEN-001 | 命名 | 已消除 | `prd-quanlity.md` 拼写错误散落 10+ 处（IMPL-01） |
-| IMPL-GEN-002 | 一致性 / 魔法值 | 未清除 | 框架版本号三处魔法值漂移，version.ts 死代码（IMPL-01） |
-| IMPL-GEN-003 | 函数 | 未清除 | `update` 命令处理器约 95 行、六类职责混杂（IMPL-02） |
+| IMPL-GEN-002 | 一致性 / 魔法值 | 已消除 | 框架版本号三处魔法值漂移，version.ts 死代码（IMPL-01） |
+| IMPL-GEN-003 | 函数 | 已消除 | `update` 命令处理器约 95 行、六类职责混杂（IMPL-02） |
 
 ---
 
@@ -98,3 +98,5 @@
 | 0.1.0 | 2026-08-13 | `3f33e66` | 初版：识别 4 个 IMPL 级坏味道（IMPL-TS-001 ~ IMPL-GEN-003）。 |
 | 0.2.0 | 2026-08-13 | `—` | B-T01 完成：isExecSyncTimeoutError 类型守卫；IMPL-TS-001 → 已消除。 |
 | 0.3.0 | 2026-08-13 | `—` | B-T02 完成：12 处 quanlity→quality + PRD_QUALITY_PATH 常量；IMPL-GEN-001 → 已消除。 |
+| 0.4.0 | 2026-08-13 | `—` | B-T03 完成：getSparrowVersion 单一真相源；IMPL-GEN-002 → 已消除。 |
+| 0.5.0 | 2026-08-13 | `—` | B-T04 完成：拆分 update action + compareVersions 纯函数；IMPL-GEN-003 → 已消除。 |

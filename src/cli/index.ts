@@ -10,8 +10,6 @@
 
 import { Command } from 'commander';
 import { resolve, basename } from 'node:path';
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
 import { detectInstalledTools, executeInit, formatInitSummary, formatToolDetectionSummary } from '../core/init.js';
 import { getSupportedToolIds } from '../core/config.js';
@@ -19,6 +17,8 @@ import { initializeGlobalHarness, getGlobalHarnessDir } from '../core/harness-in
 import { initializePluginRuntimes } from '../core/plugin-init.js';
 import { renderWelcomePage, promptInput, promptToolSelection } from '../core/prompts.js';
 import { isExecSyncTimeoutError } from '../core/exec-errors.js';
+import { getSparrowVersion } from '../core/package-version.js';
+import { compareVersions } from '../core/version-compare.js';
 
 const program = new Command();
 
@@ -29,7 +29,7 @@ program
     'Generate structured skills that guide AI agents through domain-driven design,\n' +
     'from business requirements to production code.'
   )
-  .version('0.3.1')
+  .version(getSparrowVersion())
   .addHelpText(
     'after',
     `
@@ -128,79 +128,99 @@ program
     }
   });
 
+/**
+ * Read the local Sparrow version, exiting on failure.
+ */
+function readLocalVersion(): string {
+  try {
+    return getSparrowVersion();
+  } catch {
+    console.error('❌ Could not read local package.json.');
+    process.exit(1);
+  }
+}
+
+/**
+ * Query the latest Sparrow version from the npm registry, exiting on failure.
+ */
+function fetchLatestVersion(): string {
+  try {
+    const result = execSync(`npm view sparrow-ddd version`, {
+      encoding: 'utf-8',
+      stdio: ['pipe', 'pipe', 'pipe'],
+      timeout: 30000,
+    });
+    return result.trim();
+  } catch (e) {
+    if (isExecSyncTimeoutError(e)) {
+      console.error('❌ Request to npm registry timed out (30s).');
+      console.error('   Try setting a closer registry mirror:');
+      console.error('   npm config set registry https://registry.npmmirror.com');
+    } else {
+      console.error('❌ Could not fetch latest version from npm. Check your network connection.');
+    }
+    process.exit(1);
+  }
+}
+
+/**
+ * Sync global constraint assets and plugin runtimes.
+ */
+function syncAssets(): void {
+  const synced = initializeGlobalHarness();
+  if (synced.length > 0) {
+    console.log('📐 Synced ' + synced.length + ' global constraint asset(s) to ' + getGlobalHarnessDir() + '.');
+  }
+
+  const pluginSynced = initializePluginRuntimes(process.cwd());
+  if (pluginSynced.length > 0) {
+    console.log('🔌 Synced ' + pluginSynced.length + ' plugin runtime(s).');
+  }
+}
+
+/**
+ * Install the latest Sparrow version globally.
+ */
+function installUpdate(latestVersion: string): void {
+  console.log('📦 Updating Sparrow to the latest version...');
+  try {
+    execSync('npm install -g sparrow-ddd@latest', {
+      stdio: 'inherit',
+      timeout: 60000,
+    });
+    console.log(`🎉 Sparrow updated to v${latestVersion} successfully.`);
+    console.log(
+      `📐 全局约束资产将随新版本在下次运行 \`sparrow init\` / \`sparrow update\` 时自动同步到 ${getGlobalHarnessDir()}。`
+    );
+  } catch {
+    console.error('❌ Update failed. Try running: npm install -g sparrow-ddd@latest');
+    process.exit(1);
+  }
+}
+
 program
   .command('update')
   .description('Check and update Sparrow to the latest version from npm')
   .action(async () => {
-    const __dirname = fileURLToPath(import.meta.url);
-    const pkgPath = resolve(__dirname, '..', '..', 'package.json');
-
-    let localVersion: string;
-    try {
-      const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
-      localVersion = pkg.version;
-    } catch {
-      console.error('❌ Could not read local package.json.');
-      process.exit(1);
-    }
-
+    const localVersion = readLocalVersion();
     console.log(`🪶  Sparrow local version: v${localVersion}`);
     console.log('🔍 Checking latest version from npm registry...');
 
-    let latestVersion: string;
-    try {
-      const result = execSync(`npm view sparrow-ddd version`, {
-        encoding: 'utf-8',
-        stdio: ['pipe', 'pipe', 'pipe'],
-        timeout: 30000,
-      });
-      latestVersion = result.trim();
-    } catch (e) {
-      if (isExecSyncTimeoutError(e)) {
-        console.error('❌ Request to npm registry timed out (30s).');
-        console.error('   Try setting a closer registry mirror:');
-        console.error('   npm config set registry https://registry.npmmirror.com');
-      } else {
-        console.error('❌ Could not fetch latest version from npm. Check your network connection.');
-      }
-      process.exit(1);
-    }
-
+    const latestVersion = fetchLatestVersion();
     console.log(`🌐 Latest version on npm: v${latestVersion}`);
 
-    // Sync global constraint assets (create missing/outdated managed templates).
-    // Runs on every check so older installs pick up the harness.
-    const synced = initializeGlobalHarness();
-    if (synced.length > 0) {
-      console.log('📐 Synced ' + synced.length + ' global constraint asset(s) to ' + getGlobalHarnessDir() + '.');
-    }
-
-    // Sync plugin runtimes (check and install missing plugins).
-    const pluginSynced = initializePluginRuntimes(process.cwd());
-    if (pluginSynced.length > 0) {
-      console.log('🔌 Synced ' + pluginSynced.length + ' plugin runtime(s).');
-    }
+    syncAssets();
 
     if (localVersion === latestVersion) {
       console.log('✅ Your Sparrow is already up to date. No update needed.');
       process.exit(0);
     }
 
-    // Compare versions
-    const parseVersion = (v: string) => v.split('.').map(Number);
-    const localParts = parseVersion(localVersion);
-    const latestParts = parseVersion(latestVersion);
-    const isNewer =
-      latestParts[0] > localParts[0] ||
-      (latestParts[0] === localParts[0] && latestParts[1] > localParts[1]) ||
-      (latestParts[0] === localParts[0] && latestParts[1] === localParts[1] && latestParts[2] > localParts[2]);
-
-    if (!isNewer) {
+    if (!compareVersions(localVersion, latestVersion)) {
       console.log('✅ Local version is current. No update needed.');
       process.exit(0);
     }
 
-    // Ask user
     const answer = await promptInput(
       `A new version v${latestVersion} is available. Update now? (y/N):`,
       ''
@@ -211,20 +231,7 @@ program
       process.exit(0);
     }
 
-    console.log('📦 Updating Sparrow to the latest version...');
-    try {
-      execSync('npm install -g sparrow-ddd@latest', {
-        stdio: 'inherit',
-        timeout: 60000,
-      });
-      console.log(`🎉 Sparrow updated to v${latestVersion} successfully.`);
-      console.log(
-        `📐 全局约束资产将随新版本在下次运行 \`sparrow init\` / \`sparrow update\` 时自动同步到 ${getGlobalHarnessDir()}。`
-      );
-    } catch {
-      console.error('❌ Update failed. Try running: npm install -g sparrow-ddd@latest');
-      process.exit(1);
-    }
+    installUpdate(latestVersion);
   });
 
 // Default command: show help if no command given

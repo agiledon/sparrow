@@ -12,8 +12,7 @@ import { generateSkillFiles, generateProjectConfig, generateProjectMd, type Proj
 import { initializeGlobalHarness, initializeProjectHarness } from './harness-init.js';
 import { initializePluginRuntimes } from './plugin-init.js';
 import { initializeSkills } from '../skills/index.js';
-
-const SPARROW_VERSION = '0.3.0';
+import { getSparrowVersion } from './package-version.js';
 
 export interface InitOptions {
   /** Comma-separated tool ids or 'all' */
@@ -142,7 +141,7 @@ export function executeInit(projectRoot: string, options: InitOptions): InitResu
   const projectContext: ProjectContext = {
     projectRoot,
     projectName: options.projectName,
-    version: SPARROW_VERSION,
+    version: getSparrowVersion(),
     toolIds: selectedToolIds,
   };
   const configPath = generateProjectConfig(projectContext);

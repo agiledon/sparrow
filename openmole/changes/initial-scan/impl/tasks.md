@@ -1,6 +1,6 @@
 # 坏味道驱动重构任务（OpenMole Tasks）
 
-**版本**：0.3.0
+**版本**：0.5.0
 **状态**：草案
 **依据**：[badsmells.md](./badsmells.md)
 **修订日期**：2026-08-13
@@ -104,7 +104,7 @@
 
 ### B-T03：建立版本号单一真相源（消除 IMPL-GEN-002）
 
-- [ ] **B-T03.** 收敛三处框架版本魔法值，从 `package.json` 读取单一版本
+- [x] **B-T03.** 收敛三处框架版本魔法值，从 `package.json` 读取单一版本
   - **依赖**：建议先完成 **design/B-T02**（删除 `version.ts` 死代码，见 design/tasks.md），避免重复触碰 `version.ts`。
   - **级别**：IMPL
   - **坏味道**：`badsmells.md` §2 / `IMPL-GEN-002`。
@@ -133,7 +133,7 @@
 
 ### B-T04：拆分 `update` 命令处理器（消除 IMPL-GEN-003）
 
-- [ ] **B-T04.** 将约 95 行的 `update` action 拆分为命名小函数，版本比较提取为纯函数
+- [x] **B-T04.** 将约 95 行的 `update` action 拆分为命名小函数，版本比较提取为纯函数
   - **依赖**：B-T03（版本真相源收敛后，拆分出的 `compareVersions` 复用统一版本工具）。
   - **级别**：IMPL
   - **坏味道**：`badsmells.md` §2 / `IMPL-GEN-003`。
@@ -177,3 +177,5 @@ B-T04 (拆分 update) ── 依赖 B-T03
 | 0.1.0 | 2026-08-13 | `3f33e66` | 初版：4 个任务 B-T01 ~ B-T04，覆盖 impl/badsmells.md 全部未清除条目。 |
 | 0.2.0 | 2026-08-13 | `—` | B-T01 完成：新增 isExecSyncTimeoutError 类型守卫 + 3 单测；IMPL-TS-001 → 已消除。 |
 | 0.3.0 | 2026-08-13 | `—` | B-T02 完成：12 处 quanlity→quality + PRD_QUALITY_PATH 常量；IMPL-GEN-001 → 已消除。 |
+| 0.4.0 | 2026-08-13 | `—` | B-T03 完成：getSparrowVersion 单一真相源 + 2 单测；IMPL-GEN-002 → 已消除。 |
+| 0.5.0 | 2026-08-13 | `—` | B-T04 完成：拆分 update action + compareVersions 纯函数 + 5 单测；IMPL-GEN-003 → 已消除。 |

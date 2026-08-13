@@ -1,6 +1,6 @@
 # 坏味道驱动重构分析（OpenMole Analysis）
 
-**版本**：0.3.0
+**版本**：0.5.0
 **状态**：草案
 **依据**：[badsmells.md](./badsmells.md)
 
@@ -78,3 +78,5 @@ B-T04 (拆分 update) ── 依赖 B-T03
 | 0.1.0 | 2026-08-13 | `3f33e66` | 初始版本：差分验证通过，impl badsmells/tasks 4:4 全覆盖。 |
 | 0.2.0 | 2026-08-13 | `—` | B-T01 完成：isExecSyncTimeoutError 类型守卫 + 3 单测；IMPL-TS-001 → 已消除。 |
 | 0.3.0 | 2026-08-13 | `—` | B-T02 完成：12 处 quanlity→quality + PRD_QUALITY_PATH 常量；IMPL-GEN-001 → 已消除。 |
+| 0.4.0 | 2026-08-13 | `—` | B-T03 完成：getSparrowVersion 单一真相源 + 2 单测；IMPL-GEN-002 → 已消除。 |
+| 0.5.0 | 2026-08-13 | `—` | B-T04 完成：拆分 update action + compareVersions 纯函数 + 5 单测；IMPL-GEN-003 → 已消除。 |
