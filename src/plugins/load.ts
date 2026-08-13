@@ -1,18 +1,15 @@
 import * as archify from './bundled/archify/index.js';
 import * as sparrowUi from './bundled/sparrow-ui/index.js';
 import { registerBundledPlugin } from './registry.js';
-import type { Plugin } from './types.js';
+
+const bundledPlugins = [archify, sparrowUi];
 
 export function loadBundledPlugins(): void {
-  registerBundledPlugin({
-    manifest: archify.manifest,
-    skillContent: archify.skillContent,
-    augmentContents: { 'SKILL.md': archify.skillContent },
-  } as Plugin);
-
-  registerBundledPlugin({
-    manifest: sparrowUi.manifest,
-    skillContent: sparrowUi.skillContent,
-    augmentContents: { 'SKILL.md': sparrowUi.skillContent },
-  } as Plugin);
+  for (const plugin of bundledPlugins) {
+    registerBundledPlugin({
+      manifest: plugin.manifest,
+      skillContent: plugin.skillContent,
+      augmentContents: { 'SKILL.md': plugin.skillContent },
+    });
+  }
 }

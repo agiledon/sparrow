@@ -2,7 +2,6 @@ export {
   getBundledPlugins,
   getAugmentPlugins,
   getSkillPlugins,
-  BUNDLED_PLUGIN_VERSIONS,
   registerBundledPlugin,
 } from './registry.js';
 

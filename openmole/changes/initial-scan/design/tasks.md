@@ -1,6 +1,6 @@
 # 坏味道驱动重构任务（OpenMole Tasks）
 
-**版本**：0.4.0
+**版本**：0.5.0
 **状态**：草案
 **依据**：[badsmells.md](./badsmells.md)
 **修订日期**：2026-08-13
@@ -162,7 +162,7 @@
 
 ### B-T05：插件版本号收敛为单一真相源（消除 DESIGN-RD-003）
 
-- [ ] **B-T05.** 删除 `BUNDLED_PLUGIN_VERSIONS`，插件版本从 `plugin.json` 单一读取，并去重 `load.ts` 注册块
+- [x] **B-T05.** 删除 `BUNDLED_PLUGIN_VERSIONS`，插件版本从 `plugin.json` 单一读取，并去重 `load.ts` 注册块
   - **依赖**：无。
   - **级别**：DESIGN
   - **坏味道**：`badsmells.md` §2 / `DESIGN-RD-003`。
@@ -212,3 +212,4 @@ B-T05 (插件版本)   ── 可独立执行
 | 0.2.0 | 2026-08-13 | `—` | B-T02 完成：删除 version.ts 死代码 + 6 个零引用导出；DESIGN-RD-002 → 已消除。 |
 | 0.3.0 | 2026-08-13 | `—` | B-T01 完成：新建 shared.ts 工厂 + 单一 formatHarnessRef；8 适配器退化为配置声明；DESIGN-RD-001 → 已消除。 |
 | 0.4.0 | 2026-08-13 | `—` | B-T03 完成：引入 ProjectContext 参数对象；generateProjectConfig/Md 收敛单参数；DESIGN-BS-001 → 已消除。 |
+| 0.5.0 | 2026-08-13 | `—` | B-T05 完成：删除 BUNDLED_PLUGIN_VERSIONS，load.ts 循环去重 + 移除 as Plugin；DESIGN-RD-003 → 已消除。 |
