@@ -51,18 +51,4 @@ export function getAdapter(toolId: string): ToolCommandAdapter {
   return adapter;
 }
 
-/**
- * Get all registered adapter tool ids.
- */
-export function getRegisteredToolIds(): string[] {
-  return Array.from(_registry.keys());
-}
-
-/**
- * Check if a tool id has a registered adapter.
- */
-export function hasAdapter(toolId: string): boolean {
-  return _registry.has(toolId);
-}
-
 export { claudeAdapter, opencodeAdapter, cursorAdapter, codexAdapter, kiroAdapter, qoderAdapter, traeAdapter, piAdapter };

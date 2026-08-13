@@ -87,13 +87,6 @@ export const SUPPORTED_TOOLS: ToolDefinition[] = [
 ];
 
 /**
- * Look up a tool definition by its id.
- */
-export function getToolById(id: string): ToolDefinition | undefined {
-  return SUPPORTED_TOOLS.find((t) => t.id === id);
-}
-
-/**
  * Get all supported tool ids.
  */
 export function getSupportedToolIds(): string[] {
@@ -211,13 +204,6 @@ export function registerPluginSkills(skills: SkillDefinition[]): void {
   if (_pluginSkillsRegistered) return;
   _pluginSkills.push(...skills);
   _pluginSkillsRegistered = true;
-}
-
-/**
- * Get a skill definition by id.
- */
-export function getSkillById(id: string): SkillDefinition | undefined {
-  return [...SKILLS, ..._pluginSkills].find((s) => s.id === id);
 }
 
 /**
