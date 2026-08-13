@@ -172,7 +172,7 @@ const PLAN_BODY = `# Sparrow Plan — 实现计划制订
 |------|------|------|
 | 1 | **脚手架 + 依赖** | 项目初始化、构建脚本、依赖声明 |
 | 2 | **领域层** | domain/aggregate、entity、valueobject、service |
-| 3 | **基础设施层** | infrastructure/port/ + adapter/ |
+| 3 | **基础设施层** | infrastructure/port/ + adapter/，以及数据库 / schema / 迁移脚本（见「持久化与数据库迁移纪律」） |
 | 4 | **应用层** | application/（AppService） |
 | 5 | **api 层** | api/dto、api/command、api/query |
 
@@ -185,6 +185,7 @@ const PLAN_BODY = `# Sparrow Plan — 实现计划制订
 - **一个限界上下文 = 一个产品模块**，根目录为 **\`backend/\`**
 - 四层（api、application、domain、infrastructure）以包/目录划分
 - **集成/API 测试**在 **\`integration-tests/{slug}/\`** 下
+- **数据库迁移脚本**置于版本化迁移目录（由所选迁移工具约定，如 JVM 项目 \`src/main/resources/db/migration/\`）
 - **禁止**将各层拆为 Maven/npm/Cargo 子模块
 
 ### 跨语言 DDD 四层布局
@@ -305,6 +306,18 @@ backend/
 
 ---
 
+## 持久化与数据库迁移纪律
+
+> 数据库 / schema / 迁移脚本属于**基础设施层**，必须在领域层（聚合、实体、值对象）建模完成后开展。
+
+1. **领域模型先行**：先有领域模型，才有数据模型。数据库（database）、schema 与表结构必须**由领域模型（聚合、实体、值对象）推导而来**，并与之一致；禁止脱离领域模型凭空设计表结构。
+2. **数据库与 schema 创建**：plan 必须包含创建数据库（\`CREATE DATABASE\`）与 schema（\`CREATE SCHEMA\`）的任务；数据库名、schema 名及隔离策略须与 \`tech.md\` 的技术选型一致（如「每 BC 独立 schema」）。
+3. **版本化迁移工具**：数据库结构变更必须使用**版本化迁移工具**（如 Flyway / Liquibase），**禁止手写 DDL 直接执行**；plan 中需明确选用哪个工具及其配置位置。
+4. **SQL 脚本版本管理**：迁移脚本按版本命名并递增（如 Flyway 的 \`V1__xxx.sql\`）；每个 schema 变更对应一个新版本脚本，**禁止修改已发布的迁移脚本**。
+5. **提供给 apply 的足够信息**：plan 的数据库任务必须写明——数据库名、schema 名、每张表与领域模型（聚合 / 实体 / 值对象）的映射关系、迁移工具与脚本目录、版本命名规则，使 apply 阶段能够据此**正确创建 schema 并正确持久化领域模型**。
+
+---
+
 ## 任务完整性检查表
 
 从下列角度自检，避免遗漏：
@@ -314,6 +327,7 @@ backend/
 | spec | 与关键场景对应的实现与验证 |
 | api | 契约测试、控制器形状与错误码 |
 | model | 聚合/实体/值对象/领域服务与序列图约束 |
+| 数据库 / schema / 迁移 | 数据库与 schema 创建、版本化迁移工具与 SQL 脚本版本管理（由领域模型推导） |
 | tech | 脚手架、选定测试与构建命令 |
 | 集成/API 测试 | 在集成测试目录创建测试工程 |
 | 产品代码 | 按聚合合并的领域 TDD、应用层与基础设施 |
@@ -328,6 +342,7 @@ backend/
 - **禁止**创建按层拆分的 Maven/npm/Cargo 子模块
 - **禁止**将集成测试作为产品代码子模块
 - **禁止**出现 \`application/command\`、\`application/query\`、\`interfaces/\` 等目录结构
+- **禁止**脱离领域模型设计数据库表结构（先有领域模型，才有数据模型）
 
 ---
 
@@ -365,6 +380,9 @@ backend/
 
 ### 步骤
 
+- [ ] 创建数据库与 schema（数据库名 / schema 名与 tech.md 技术选型一致）
+- [ ] 配置版本化迁移工具（如 Flyway / Liquibase），建立迁移脚本目录与版本命名约定
+- [ ] 依据领域模型编写版本化迁移脚本（如 \`V1__init_schema.sql\`），确保表结构与聚合 / 实体 / 值对象一致
 - [ ] 实现 Repository 端口与适配器
 - [ ] 实现外部服务 Client 端口与适配器
 
