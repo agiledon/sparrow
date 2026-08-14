@@ -19,6 +19,7 @@ import { renderWelcomePage, promptInput, promptToolSelection } from '../core/pro
 import { isExecSyncTimeoutError } from '../core/exec-errors.js';
 import { getSparrowVersion } from '../core/package-version.js';
 import { compareVersions } from '../core/version-compare.js';
+import { initializeSkills } from '../skills/index.js';
 
 const program = new Command();
 
@@ -115,6 +116,7 @@ program
     }
 
     try {
+      initializeSkills();
       const result = executeInit(projectRoot, {
         tools: options.tools || selectedToolIds.join(','),
         force: options.force,

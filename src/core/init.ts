@@ -11,7 +11,6 @@ import { SUPPORTED_TOOLS, type ToolDefinition } from './config.js';
 import { generateSkillFiles, generateProjectConfig, generateProjectMd, type ProjectContext } from './skill-generation.js';
 import { initializeGlobalHarness, initializeProjectHarness } from './harness-init.js';
 import { initializePluginRuntimes } from './plugin-init.js';
-import { initializeSkills } from '../skills/index.js';
 import { getSparrowVersion } from './package-version.js';
 
 export interface InitOptions {
@@ -131,13 +130,10 @@ export function executeInit(projectRoot: string, options: InitOptions): InitResu
     throw new Error('No tools selected. Use --tools to specify which tools to set up.');
   }
 
-  // Step 3: Initialize skill templates (triggers all registrations)
-  initializeSkills();
-
-  // Step 4: Generate skill and command files
+  // Step 3: Generate skill and command files
   const createdFiles = generateSkillFiles(projectRoot, selectedToolIds);
 
-  // Step 5: Create project config
+  // Step 4: Create project config
   const projectContext: ProjectContext = {
     projectRoot,
     projectName: options.projectName,
@@ -146,16 +142,16 @@ export function executeInit(projectRoot: string, options: InitOptions): InitResu
   };
   const configPath = generateProjectConfig(projectContext);
 
-  // Step 6: Create project.md wizard file
+  // Step 5: Create project.md wizard file
   const projectMdPath = generateProjectMd(projectContext);
 
-  // Step 7: Initialize constraint assets (harness)
+  // Step 6: Initialize constraint assets (harness)
   // Global: DDD-universal discipline, written to the global config dir.
   // Project: placeholder files for project-specific constraints.
   const globalHarnessFiles = initializeGlobalHarness();
   const projectHarnessFiles = initializeProjectHarness(projectRoot);
 
-  // Step 8: Install plugin runtimes (archify CLI etc.)
+  // Step 7: Install plugin runtimes (archify CLI etc.)
   const pluginRuntimeFiles = initializePluginRuntimes(projectRoot);
 
   return {
