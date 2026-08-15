@@ -1,6 +1,6 @@
 # 坏味道规约文档（OpenMole Bad Smells）
 
-**版本**：0.3.0
+**版本**：0.4.0
 **状态**：草案
 **依据**：OpenMole 规约摘要（见 Skill 内嵌）；change 内 [tasks.md](./tasks.md)
 **修订日期**：2026-08-13
@@ -31,7 +31,7 @@
 |-------|------|------|------|
 | ARCH-CP-001 | 耦合性 | 已消除 | core ↔ skills 目录级循环依赖（CP-02） |
 | ARCH-CP-002 | 耦合性 | 未清除 | 4 个模块级可变注册表构成隐式耦合（CP-07） |
-| ARCH-LY-001 | 层次性 | 未清除 | CLI 层包含 update 业务逻辑（LY-01） |
+| ARCH-LY-001 | 层次性 | 已消除 | CLI 层包含 update 业务逻辑（LY-01） |
 | ARCH-CH-001 | 内聚性 | 未清除 | core/init.ts 混合检测/解析/编排/展示四类职责（CH-01） |
 | ARCH-EV-001 | 演进性 | 已消除 | 新增 skill 需同步修改 4 处（EV-02） |
 
@@ -109,3 +109,4 @@
 | 0.1.0 | 2026-08-13 | `5a9c623` | 初版：识别 5 个 ARCH 级坏味道（ARCH-CP-001 ~ ARCH-EV-001）。 |
 | 0.2.0 | 2026-08-13 | `—` | B-T01 完成：initializeSkills 上移 cli 装配根；ARCH-CP-001 → 已消除。 |
 | 0.3.0 | 2026-08-13 | `—` | B-T05 完成：自描述 SkillSpec + 注册表收集；ARCH-EV-001 → 已消除。 |
+| 0.4.0 | 2026-08-13 | `—` | B-T03 完成：update 业务下沉 core/update.ts + UpdateError；ARCH-LY-001 → 已消除。 |

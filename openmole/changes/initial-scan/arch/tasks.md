@@ -1,6 +1,6 @@
 # 坏味道驱动重构任务（OpenMole Tasks）
 
-**版本**：0.3.0
+**版本**：0.4.0
 **状态**：草案
 **依据**：[badsmells.md](./badsmells.md)
 **修订日期**：2026-08-13
@@ -106,7 +106,7 @@
 
 ### B-T03：update 业务逻辑下沉 core 层（消除 ARCH-LY-001）
 
-- [ ] **B-T03.** 提取 `core/update.ts` 承载 update 命令业务逻辑，cli 层仅编排
+- [x] **B-T03.** 提取 `core/update.ts` 承载 update 命令业务逻辑，cli 层仅编排
   - **依赖**：无。
   - **级别**：ARCH
   - **坏味道**：`badsmells.md` §2 / `ARCH-LY-001`。
@@ -206,3 +206,4 @@ B-T03 (update 下沉 core) — 可独立执行
 | 0.1.0 | 2026-08-13 | `5a9c623` | 初版：5 个任务 B-T01 ~ B-T05，覆盖 arch/badsmells.md 全部未清除条目。 |
 | 0.2.0 | 2026-08-13 | `—` | B-T01 完成：initializeSkills 上移 cli 装配根；core→skills 循环消除；ARCH-CP-001 → 已消除。 |
 | 0.3.0 | 2026-08-13 | `—` | B-T05 完成：自描述 SkillSpec + 注册表收集，消除 SKILL_HARNESS_MAP 与 registerXxx 列表；ARCH-EV-001 → 已消除。 |
+| 0.4.0 | 2026-08-13 | `—` | B-T03 完成：update 业务下沉 core/update.ts + UpdateError；cli 层仅编排；ARCH-LY-001 → 已消除。 |
