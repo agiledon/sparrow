@@ -1,6 +1,6 @@
 # 坏味道驱动重构分析（OpenMole Analysis）
 
-**版本**：0.5.0
+**版本**：0.6.0
 **状态**：草案
 **依据**：[badsmells.md](./badsmells.md)
 
@@ -81,3 +81,4 @@ B-T03 (update 下沉 core) — 可独立执行
 | 0.3.0 | 2026-08-13 | `—` | B-T05 完成：自描述 SkillSpec + 注册表收集；ARCH-EV-001 → 已消除。 |
 | 0.4.0 | 2026-08-13 | `—` | B-T03 完成：update 业务下沉 core/update.ts + UpdateError；ARCH-LY-001 → 已消除。 |
 | 0.5.0 | 2026-08-13 | `—` | B-T04 完成：展示迁至 cli/summary.ts，检测/解析迁至 tools.ts；ARCH-CH-001 → 已消除。 |
+| 0.6.0 | 2026-08-13 | `—` | B-T02 完成：SkillRegistry 显式注入 + 插件去重；ARCH-CP-002 → 已消除。 |

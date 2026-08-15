@@ -6,9 +6,9 @@ import { spec as planSpec } from './plan.js';
 import { spec as applySpec } from './apply.js';
 import { spec as archiveSpec } from './archive.js';
 import { spec as harnessSpec } from './harness.js';
-import { registerPluginSkills, registerCoreSkills } from '../core/skills.js';
+import type { SkillRegistry } from '../core/skills.js';
 import { getSkillPlugins } from '../plugins/index.js';
-import { registerPluginSkillTemplates, registerSkillTemplate, registerSkillHarness } from '../core/skill-generation.js';
+import { registerPluginSkillTemplates } from '../core/skill-generation.js';
 import { loadBundledPlugins } from '../plugins/load.js';
 
 const CORE_SKILL_SPECS = [
@@ -22,14 +22,14 @@ const CORE_SKILL_SPECS = [
   archiveSpec,
 ];
 
-export function initializeSkills(): void {
+export function initializeSkills(registry: SkillRegistry): void {
   loadBundledPlugins();
 
   for (const spec of CORE_SKILL_SPECS) {
-    registerSkillTemplate(spec.id, () => spec.body);
-    registerSkillHarness(spec.id, spec.harness);
+    registry.registerTemplate(spec.id, () => spec.body);
+    registry.registerHarness(spec.id, spec.harness);
   }
-  registerCoreSkills(CORE_SKILL_SPECS);
+  registry.registerCoreSkills(CORE_SKILL_SPECS);
 
   const skillPlugins = getSkillPlugins();
   const pluginSkillDefs = skillPlugins.flatMap((p) =>
@@ -44,6 +44,6 @@ export function initializeSkills(): void {
       category: s.category,
     }))
   );
-  registerPluginSkills(pluginSkillDefs);
-  registerPluginSkillTemplates(skillPlugins);
+  registry.registerPluginSkills(pluginSkillDefs);
+  registerPluginSkillTemplates(skillPlugins, registry);
 }

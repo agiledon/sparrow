@@ -1,6 +1,5 @@
 /**
- * Skill definitions and ordering.
- * Defines the core skill registry and plugin skill registration.
+ * Skill definitions, specs, and the skill registry.
  */
 
 export interface SkillDefinition {
@@ -33,27 +32,44 @@ export interface SkillSpec extends SkillDefinition {
   body: string;
 }
 
-let _coreSkills: SkillDefinition[] = [];
-let _pluginSkills: SkillDefinition[] = [];
+export type SkillTemplateFn = () => string;
 
 /**
- * Register core skill specs (idempotent by replacement).
+ * Skill registry — owns all skill-related state (templates, harness assets,
+ * core and plugin skill metadata). Created by the composition root and passed
+ * explicitly, so no module-level mutable singletons.
  */
-export function registerCoreSkills(specs: SkillSpec[]): void {
-  _coreSkills = [...specs];
-}
+export class SkillRegistry {
+  private readonly templates = new Map<string, SkillTemplateFn>();
+  private readonly harness = new Map<string, string[]>();
+  private coreSkills: SkillDefinition[] = [];
+  private pluginSkills: SkillDefinition[] = [];
 
-/**
- * Replace the set of plugin skills. Idempotent by replacement: repeated calls
- * with the same input do not accumulate duplicates.
- */
-export function registerPluginSkills(skills: SkillDefinition[]): void {
-  _pluginSkills = [...skills];
-}
+  registerTemplate(id: string, fn: SkillTemplateFn): void {
+    this.templates.set(id, fn);
+  }
 
-/**
- * Get all skills (core + plugin) in execution order.
- */
-export function getOrderedSkills(): SkillDefinition[] {
-  return [..._coreSkills, ..._pluginSkills].sort((a, b) => a.order - b.order);
+  registerHarness(id: string, paths: string[]): void {
+    this.harness.set(id, paths);
+  }
+
+  registerCoreSkills(specs: SkillSpec[]): void {
+    this.coreSkills = [...specs];
+  }
+
+  registerPluginSkills(skills: SkillDefinition[]): void {
+    this.pluginSkills = [...skills];
+  }
+
+  getTemplate(id: string): SkillTemplateFn | undefined {
+    return this.templates.get(id);
+  }
+
+  getHarness(id: string): string[] {
+    return this.harness.get(id) || [];
+  }
+
+  getOrderedSkills(): SkillDefinition[] {
+    return [...this.coreSkills, ...this.pluginSkills].sort((a, b) => a.order - b.order);
+  }
 }

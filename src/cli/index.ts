@@ -19,6 +19,7 @@ import { compareVersions } from '../core/version-compare.js';
 import { initializeSkills } from '../skills/index.js';
 import { readLocalVersion, fetchLatestVersion, syncAssets, installUpdate, UpdateError } from '../core/update.js';
 import { getSparrowVersion } from '../core/package-version.js';
+import { SkillRegistry } from '../core/skills.js';
 
 const program = new Command();
 
@@ -115,12 +116,13 @@ program
     }
 
     try {
-      initializeSkills();
+      const registry = new SkillRegistry();
+      initializeSkills(registry);
       const result = executeInit(projectRoot, {
         tools: options.tools || selectedToolIds.join(','),
         force: options.force,
         projectName,
-      });
+      }, registry);
 
       console.log(formatInitSummary(result));
     } catch (error) {

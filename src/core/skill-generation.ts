@@ -8,25 +8,10 @@
 
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
-import type { SkillDefinition } from './config.js';
-import { getOrderedSkills } from './config.js';
+import type { SkillDefinition, SkillRegistry } from './skills.js';
 import { getAdapter } from './adapters/index.js';
 import type { CommandContent, ToolCommandAdapter } from './adapters/types.js';
 import { generateProjectMdContent } from './project-md.js';
-
-/**
- * Harness asset registry. Each skill registers its harness asset paths when
- * it is initialized (co-located with its metadata via SkillSpec).
- */
-const skillHarnessRegistry = new Map<string, string[]>();
-
-export function registerSkillHarness(skillId: string, harness: string[]): void {
-  skillHarnessRegistry.set(skillId, harness);
-}
-
-export function getSkillHarness(skillId: string): string[] {
-  return skillHarnessRegistry.get(skillId) || [];
-}
 
 import { getBundledPlugins } from '../plugins/index.js';
 import type { Plugin } from '../plugins/types.js';
@@ -58,8 +43,8 @@ function injectAugmentPlugins(body: string, skillId: string): string {
  * Build the harness reference section for a skill.
  * Project-level constraints take precedence over global ones.
  */
-function buildHarnessSection(adapter: ToolCommandAdapter, skillId: string): string {
-  const relPaths = getSkillHarness(skillId);
+function buildHarnessSection(adapter: ToolCommandAdapter, skillId: string, registry: SkillRegistry): string {
+  const relPaths = registry.getHarness(skillId);
   if (relPaths.length === 0) return '';
 
   const lines = [
@@ -81,35 +66,10 @@ function buildHarnessSection(adapter: ToolCommandAdapter, skillId: string): stri
 }
 
 /**
- * Skill template function type.
- * Each skill module exports a function that returns the full markdown body.
- */
-export type SkillTemplateFn = () => string;
-
-/**
- * Registry mapping skill ids to their template functions.
- */
-const skillTemplateRegistry = new Map<string, SkillTemplateFn>();
-
-/**
- * Register a skill template.
- */
-export function registerSkillTemplate(skillId: string, templateFn: SkillTemplateFn): void {
-  skillTemplateRegistry.set(skillId, templateFn);
-}
-
-/**
- * Get a registered skill template.
- */
-export function getSkillTemplate(skillId: string): SkillTemplateFn | undefined {
-  return skillTemplateRegistry.get(skillId);
-}
-
-/**
  * Assemble the complete CommandContent for a skill.
  */
-export function assembleSkillContent(skill: SkillDefinition): CommandContent {
-  const templateFn = skillTemplateRegistry.get(skill.id);
+export function assembleSkillContent(skill: SkillDefinition, registry: SkillRegistry): CommandContent {
+  const templateFn = registry.getTemplate(skill.id);
   if (!templateFn) {
     throw new Error(`No template registered for skill: ${skill.id}`);
   }
@@ -126,11 +86,11 @@ export function assembleSkillContent(skill: SkillDefinition): CommandContent {
   };
 }
 
-export function registerPluginSkillTemplates(plugins: Plugin[]): void {
+export function registerPluginSkillTemplates(plugins: Plugin[], registry: SkillRegistry): void {
   for (const p of plugins) {
     const skills = p.manifest.contributes.skills || [];
     for (const skill of skills) {
-      registerSkillTemplate(skill.id, () => buildPluginSkillBody(skill, p));
+      registry.registerTemplate(skill.id, () => buildPluginSkillBody(skill, p));
     }
   }
 }
@@ -144,9 +104,10 @@ export function registerPluginSkillTemplates(plugins: Plugin[]): void {
  */
 export function generateSkillFiles(
   projectRoot: string,
-  toolIds: string[]
+  toolIds: string[],
+  registry: SkillRegistry
 ): { toolId: string; files: string[] }[] {
-  const skills = getOrderedSkills();
+  const skills = registry.getOrderedSkills();
   const results: { toolId: string; files: string[] }[] = [];
 
   for (const toolId of toolIds) {
@@ -154,10 +115,10 @@ export function generateSkillFiles(
     const createdFiles: string[] = [];
 
     for (const skill of skills) {
-      const content = assembleSkillContent(skill);
+      const content = assembleSkillContent(skill, registry);
 
       // Inject the harness reference section (project + global constraint assets)
-      const harnessSection = buildHarnessSection(adapter, skill.id);
+      const harnessSection = buildHarnessSection(adapter, skill.id, registry);
       if (harnessSection) {
         content.body = content.body.includes(HARNESS_TOKEN)
           ? content.body.replace(HARNESS_TOKEN, harnessSection)

@@ -10,6 +10,7 @@ import { initializeGlobalHarness, initializeProjectHarness } from './harness-ini
 import { initializePluginRuntimes } from './plugin-init.js';
 import { getSparrowVersion } from './package-version.js';
 import { detectInstalledTools, parseToolSelection } from './tools.js';
+import type { SkillRegistry } from './skills.js';
 
 export interface InitOptions {
   /** Comma-separated tool ids or 'all' */
@@ -43,7 +44,7 @@ export interface InitResult {
  * 4. Generate skill/command files for each tool
  * 5. Create sparrow.json config
  */
-export function executeInit(projectRoot: string, options: InitOptions): InitResult {
+export function executeInit(projectRoot: string, options: InitOptions, registry: SkillRegistry): InitResult {
   // Step 1: Detect tools
   const detectedTools = detectInstalledTools(projectRoot);
 
@@ -55,7 +56,7 @@ export function executeInit(projectRoot: string, options: InitOptions): InitResu
   }
 
   // Step 3: Generate skill and command files
-  const createdFiles = generateSkillFiles(projectRoot, selectedToolIds);
+  const createdFiles = generateSkillFiles(projectRoot, selectedToolIds, registry);
 
   // Step 4: Create project config
   const projectContext: ProjectContext = {
