@@ -4,7 +4,7 @@
  * This skill creates an implementation plan based on spec, api, tech, and model documents.
  */
 
-import { registerSkillTemplate } from '../core/skill-generation.js';
+import type { SkillSpec } from '../core/skills.js';
 
 const PLAN_BODY = `# Sparrow Plan — 实现计划制订
 
@@ -510,6 +510,15 @@ backend/
 
 ✅ 完成 sparrow-plan @{slug} 后，请执行 **sparrow-apply @{slug}**（团队级）—— 按 plan.md 执行任务，生成代码。`;
 
-export function register(): void {
-  registerSkillTemplate('sparrow-plan', () => PLAN_BODY);
-}
+export const spec: SkillSpec = {
+  id: 'sparrow-plan',
+  name: 'Sparrow Plan',
+  description: 'Devise implementation plan based on spec, API, tech stack, and domain model',
+  phase: 'team',
+  order: 5,
+  nextSkill: 'sparrow-apply',
+  commandName: 'sparrow-plan',
+  category: 'DDD',
+  harness: [],
+  body: PLAN_BODY,
+};

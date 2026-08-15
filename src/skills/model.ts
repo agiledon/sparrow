@@ -4,7 +4,7 @@
  * This skill generates the domain model (static + dynamic) for a bounded context.
  */
 
-import { registerSkillTemplate } from '../core/skill-generation.js';
+import type { SkillSpec } from '../core/skills.js';
 
 const MODEL_BODY = `# Sparrow Model — 领域建模
 
@@ -670,6 +670,15 @@ graph LR
 
 {{PLUGIN:archify}}`;
 
-export function register(): void {
-  registerSkillTemplate('sparrow-model', () => MODEL_BODY);
-}
+export const spec: SkillSpec = {
+  id: 'sparrow-model',
+  name: 'Sparrow Model',
+  description: 'Extract domain model (static and dynamic) for a bounded context',
+  phase: 'team',
+  order: 4,
+  nextSkill: 'sparrow-plan',
+  commandName: 'sparrow-model',
+  category: 'DDD',
+  harness: ['model/architecture.md', 'model/domain-modeling.md', 'model/view-modeling.md'],
+  body: MODEL_BODY,
+};

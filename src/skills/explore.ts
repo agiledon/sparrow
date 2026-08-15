@@ -5,7 +5,7 @@
  * produces a structured business service definition document.
  */
 
-import { registerSkillTemplate } from '../core/skill-generation.js';
+import type { SkillSpec } from '../core/skills.js';
 
 const EXPLORE_BODY = `# Sparrow Explore — 需求探索与业务服务识别
 
@@ -611,6 +611,15 @@ UI 探索完成后，生成以下文档到 **\`docs/sparrow/requirement/ui/\`**�
 
 ✅ 完成 sparrow-explore 后（含可选的 UI 设计探索），请执行 **/sparrow-arch**（产品级）—— 基于 prd-business.md 和 prd-quality.md，划分子领域并映射限界上下文，定义系统的业务架构和应用架构。若有 UI 需求产出，sparrow-arch 将同时生成前端架构文档 \`docs/sparrow/architecture/frontend.md\`。`;
 
-export function register(): void {
-  registerSkillTemplate('sparrow-explore', () => EXPLORE_BODY);
-}
+export const spec: SkillSpec = {
+  id: 'sparrow-explore',
+  name: 'Sparrow Explore',
+  description: 'Identify business services and explore UI design from raw requirements',
+  phase: 'product',
+  order: 1,
+  nextSkill: 'sparrow-arch',
+  commandName: 'sparrow-explore',
+  category: 'DDD',
+  harness: ['explore/requirements.md'],
+  body: EXPLORE_BODY,
+};

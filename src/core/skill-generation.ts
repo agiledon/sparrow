@@ -15,18 +15,18 @@ import type { CommandContent, ToolCommandAdapter } from './adapters/types.js';
 import { generateProjectMdContent } from './project-md.js';
 
 /**
- * Harness asset mapped to each stage skill.
- * The harness defines the "must / must not" DDD discipline for the stage.
+ * Harness asset registry. Each skill registers its harness asset paths when
+ * it is initialized (co-located with its metadata via SkillSpec).
  */
-const SKILL_HARNESS_MAP: Record<string, string[]> = {
-  'sparrow-explore': ['explore/requirements.md'],
-  'sparrow-arch': ['arch/business.md', 'arch/application.md', 'arch/frontend.md'],
-  'sparrow-design': ['design/api-design.md'],
-  'sparrow-model': ['model/architecture.md', 'model/domain-modeling.md', 'model/view-modeling.md'],
-  'sparrow-plan': [],
-  'sparrow-apply': ['apply/implementation.md'],
-  'sparrow-archive': [],
-};
+const skillHarnessRegistry = new Map<string, string[]>();
+
+export function registerSkillHarness(skillId: string, harness: string[]): void {
+  skillHarnessRegistry.set(skillId, harness);
+}
+
+export function getSkillHarness(skillId: string): string[] {
+  return skillHarnessRegistry.get(skillId) || [];
+}
 
 import { getBundledPlugins } from '../plugins/index.js';
 import type { Plugin } from '../plugins/types.js';
@@ -59,7 +59,7 @@ function injectAugmentPlugins(body: string, skillId: string): string {
  * Project-level constraints take precedence over global ones.
  */
 function buildHarnessSection(adapter: ToolCommandAdapter, skillId: string): string {
-  const relPaths = SKILL_HARNESS_MAP[skillId] || [];
+  const relPaths = getSkillHarness(skillId);
   if (relPaths.length === 0) return '';
 
   const lines = [

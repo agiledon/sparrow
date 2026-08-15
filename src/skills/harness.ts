@@ -5,7 +5,7 @@
  * Independent of the DDD pipeline stages; can be invoked at any time.
  */
 
-import { registerSkillTemplate } from '../core/skill-generation.js';
+import type { SkillSpec } from '../core/skills.js';
 
 const HARNESS_BODY = `# Sparrow Harness — 约束资产管理
 
@@ -62,6 +62,15 @@ const HARNESS_BODY = `# Sparrow Harness — 约束资产管理
 - 新增 / 修改的约束对**后续**执行的阶段命令即时生效。
 - 各阶段 skill 会自动加载项目级 + 全局级约束（项目级优先）。`;
 
-export function register(): void {
-  registerSkillTemplate('sparrow-harness', () => HARNESS_BODY);
-}
+export const spec: SkillSpec = {
+  id: 'sparrow-harness',
+  name: 'Sparrow Harness',
+  description: 'View, add, and maintain constraint assets (harness) for the project',
+  phase: 'product',
+  order: 0,
+  nextSkill: 'sparrow-explore',
+  commandName: 'sparrow-harness',
+  category: 'DDD',
+  harness: [],
+  body: HARNESS_BODY,
+};

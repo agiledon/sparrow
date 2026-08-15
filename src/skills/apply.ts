@@ -5,7 +5,7 @@
  * It drives three roles: QA Engineer, Development Engineer, and Code Review.
  */
 
-import { registerSkillTemplate } from '../core/skill-generation.js';
+import type { SkillSpec } from '../core/skills.js';
 
 const APPLY_BODY = `# Sparrow Apply — 按实现计划执行代码生成
 
@@ -403,6 +403,15 @@ docs/sparrow/design/{ui-slug}/code_review.md
 
 > 所有上下文之间完全独立，可以任意顺序执行。`;
 
-export function register(): void {
-  registerSkillTemplate('sparrow-apply', () => APPLY_BODY);
-}
+export const spec: SkillSpec = {
+  id: 'sparrow-apply',
+  name: 'Sparrow Apply',
+  description: 'Execute the implementation plan and generate DDD-structured code',
+  phase: 'team',
+  order: 6,
+  nextSkill: null,
+  commandName: 'sparrow-apply',
+  category: 'DDD',
+  harness: ['apply/implementation.md'],
+  body: APPLY_BODY,
+};

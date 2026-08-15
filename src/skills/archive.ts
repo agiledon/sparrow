@@ -6,7 +6,7 @@
  * architecture refactoring) workflow.
  */
 
-import { registerSkillTemplate } from '../core/skill-generation.js';
+import type { SkillSpec } from '../core/skills.js';
 
 const ARCHIVE_BODY = `# Sparrow Archive — 变更归档
 
@@ -59,6 +59,15 @@ const ARCHIVE_BODY = `# Sparrow Archive — 变更归档
 
 🎉 变更 \`{change-id}\` 已归档。如发起新的需求变更，从 **sparrow-explore** 开始，系统将自动进入 revise 模式。`;
 
-export function register(): void {
-  registerSkillTemplate('sparrow-archive', () => ARCHIVE_BODY);
-}
+export const spec: SkillSpec = {
+  id: 'sparrow-archive',
+  name: 'Sparrow Archive',
+  description: 'Archive a completed change (revise workflow) into docs/sparrow/changes/archive/',
+  phase: 'team',
+  order: 7,
+  nextSkill: null,
+  commandName: 'sparrow-archive',
+  category: 'DDD',
+  harness: [],
+  body: ARCHIVE_BODY,
+};

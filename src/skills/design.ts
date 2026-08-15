@@ -5,7 +5,7 @@
  * for a specific bounded context.
  */
 
-import { registerSkillTemplate } from '../core/skill-generation.js';
+import type { SkillSpec } from '../core/skills.js';
 
 const DESIGN_BODY = `# Sparrow Design — API 契约与技术选型
 
@@ -610,6 +610,15 @@ sequenceDiagram
 
 {{PLUGIN:archify}}`;
 
-export function register(): void {
-  registerSkillTemplate('sparrow-design', () => DESIGN_BODY);
-}
+export const spec: SkillSpec = {
+  id: 'sparrow-design',
+  name: 'Sparrow Design',
+  description: 'Define API contracts and technology stack for a bounded context',
+  phase: 'team',
+  order: 3,
+  nextSkill: 'sparrow-model',
+  commandName: 'sparrow-design',
+  category: 'DDD',
+  harness: ['design/api-design.md'],
+  body: DESIGN_BODY,
+};

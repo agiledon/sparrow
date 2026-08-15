@@ -1,27 +1,35 @@
-import { register as registerExplore } from './explore.js';
-import { register as registerArch } from './arch.js';
-import { register as registerDesign } from './design.js';
-import { register as registerModel } from './model.js';
-import { register as registerPlan } from './plan.js';
-import { register as registerApply } from './apply.js';
-import { register as registerArchive } from './archive.js';
-import { register as registerHarness } from './harness.js';
-import { registerPluginSkills } from '../core/config.js';
+import { spec as exploreSpec } from './explore.js';
+import { spec as archSpec } from './arch.js';
+import { spec as designSpec } from './design.js';
+import { spec as modelSpec } from './model.js';
+import { spec as planSpec } from './plan.js';
+import { spec as applySpec } from './apply.js';
+import { spec as archiveSpec } from './archive.js';
+import { spec as harnessSpec } from './harness.js';
+import { registerPluginSkills, registerCoreSkills } from '../core/skills.js';
 import { getSkillPlugins } from '../plugins/index.js';
-import { registerPluginSkillTemplates } from '../core/skill-generation.js';
+import { registerPluginSkillTemplates, registerSkillTemplate, registerSkillHarness } from '../core/skill-generation.js';
 import { loadBundledPlugins } from '../plugins/load.js';
+
+const CORE_SKILL_SPECS = [
+  harnessSpec,
+  exploreSpec,
+  archSpec,
+  designSpec,
+  modelSpec,
+  planSpec,
+  applySpec,
+  archiveSpec,
+];
 
 export function initializeSkills(): void {
   loadBundledPlugins();
 
-  registerExplore();
-  registerArch();
-  registerDesign();
-  registerModel();
-  registerPlan();
-  registerApply();
-  registerArchive();
-  registerHarness();
+  for (const spec of CORE_SKILL_SPECS) {
+    registerSkillTemplate(spec.id, () => spec.body);
+    registerSkillHarness(spec.id, spec.harness);
+  }
+  registerCoreSkills(CORE_SKILL_SPECS);
 
   const skillPlugins = getSkillPlugins();
   const pluginSkillDefs = skillPlugins.flatMap((p) =>

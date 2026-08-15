@@ -6,7 +6,7 @@
  *   Phase 2: Map to application architecture (bounded contexts + application architecture diagram)
  */
 
-import { registerSkillTemplate } from '../core/skill-generation.js';
+import type { SkillSpec } from '../core/skills.js';
 
 const ARCH_BODY = `# Sparrow Arch — 业务架构与应用架构定义
 
@@ -922,6 +922,15 @@ edge/
 
 > 若处于 revise 模式且涉及 BC 为 S1–S4，请按对应档位继续 design/model/plan/apply 的 revise 分支；涉及 BC 为 S0 则无需继续下游。变更全部完成后，执行 **sparrow-archive** 归档本次变更。`;
 
-export function register(): void {
-  registerSkillTemplate('sparrow-arch', () => ARCH_BODY);
-}
+export const spec: SkillSpec = {
+  id: 'sparrow-arch',
+  name: 'Sparrow Arch',
+  description: 'Define business architecture and application architecture with bounded contexts',
+  phase: 'product',
+  order: 2,
+  nextSkill: 'sparrow-design',
+  commandName: 'sparrow-arch',
+  category: 'DDD',
+  harness: ['arch/business.md', 'arch/application.md', 'arch/frontend.md'],
+  body: ARCH_BODY,
+};
