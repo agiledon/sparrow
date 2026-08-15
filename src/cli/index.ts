@@ -10,7 +10,9 @@
 
 import { Command } from 'commander';
 import { resolve, basename } from 'node:path';
-import { detectInstalledTools, executeInit, formatInitSummary, formatToolDetectionSummary } from '../core/init.js';
+import { executeInit } from '../core/init.js';
+import { detectInstalledTools } from '../core/tools.js';
+import { formatInitSummary, formatToolDetectionSummary } from './summary.js';
 import { getSupportedToolIds } from '../core/config.js';
 import { renderWelcomePage, promptInput, promptToolSelection } from '../core/prompts.js';
 import { compareVersions } from '../core/version-compare.js';

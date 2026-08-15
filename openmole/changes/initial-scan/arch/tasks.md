@@ -1,6 +1,6 @@
 # 坏味道驱动重构任务（OpenMole Tasks）
 
-**版本**：0.4.0
+**版本**：0.5.0
 **状态**：草案
 **依据**：[badsmells.md](./badsmells.md)
 **修订日期**：2026-08-13
@@ -132,7 +132,7 @@
 
 ### B-T04：init.ts 职责拆分，展示与逻辑分离（消除 ARCH-CH-001）
 
-- [ ] **B-T04.** 将 `core/init.ts` 的展示格式化移出 core，检测/解析/编排按职责拆分
+- [x] **B-T04.** 将 `core/init.ts` 的展示格式化移出 core，检测/解析/编排按职责拆分
   - **依赖**：B-T01（init.ts 拆分与循环打破都触碰 init.ts）。
   - **级别**：ARCH
   - **坏味道**：`badsmells.md` §2 / `ARCH-CH-001`。
@@ -207,3 +207,4 @@ B-T03 (update 下沉 core) — 可独立执行
 | 0.2.0 | 2026-08-13 | `—` | B-T01 完成：initializeSkills 上移 cli 装配根；core→skills 循环消除；ARCH-CP-001 → 已消除。 |
 | 0.3.0 | 2026-08-13 | `—` | B-T05 完成：自描述 SkillSpec + 注册表收集，消除 SKILL_HARNESS_MAP 与 registerXxx 列表；ARCH-EV-001 → 已消除。 |
 | 0.4.0 | 2026-08-13 | `—` | B-T03 完成：update 业务下沉 core/update.ts + UpdateError；cli 层仅编排；ARCH-LY-001 → 已消除。 |
+| 0.5.0 | 2026-08-13 | `—` | B-T04 完成：展示迁至 cli/summary.ts，检测/解析迁至 tools.ts，init.ts 仅编排；ARCH-CH-001 → 已消除。 |

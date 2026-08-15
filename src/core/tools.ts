@@ -3,6 +3,9 @@
  * Defines the registry of supported AI coding assistants.
  */
 
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+
 export interface ToolDefinition {
   /** Unique tool identifier */
   id: string;
@@ -91,4 +94,51 @@ export const SUPPORTED_TOOLS: ToolDefinition[] = [
  */
 export function getSupportedToolIds(): string[] {
   return SUPPORTED_TOOLS.map((t) => t.id);
+}
+
+/**
+ * Detect which AI tools are installed in the project directory.
+ * Checks for the presence of each tool's detection paths.
+ */
+export function detectInstalledTools(projectRoot: string): ToolDefinition[] {
+  return SUPPORTED_TOOLS.filter((tool) => {
+    return tool.detectionPaths.some((p) => {
+      const fullPath = join(projectRoot, p);
+      return existsSync(fullPath);
+    });
+  });
+}
+
+/**
+ * Parse the --tools flag into a list of tool ids.
+ * Returns 'all' tools if 'all' is specified.
+ */
+export function parseToolSelection(
+  toolsFlag: string | undefined,
+  detectedTools: ToolDefinition[]
+): string[] {
+  if (!toolsFlag) {
+    // No flag: use detected tools, or default to all if none detected
+    if (detectedTools.length > 0) {
+      return detectedTools.map((t) => t.id);
+    }
+    return SUPPORTED_TOOLS.map((t) => t.id);
+  }
+
+  const selections = toolsFlag.toLowerCase().split(',').map((s) => s.trim());
+
+  if (selections.includes('all')) {
+    return SUPPORTED_TOOLS.map((t) => t.id);
+  }
+
+  // Validate each selection
+  const validIds = new Set(SUPPORTED_TOOLS.map((t) => t.id));
+  const invalid = selections.filter((s) => !validIds.has(s));
+  if (invalid.length > 0) {
+    throw new Error(
+      `Unknown tool(s): ${invalid.join(', ')}. Supported tools: ${Array.from(validIds).join(', ')}`
+    );
+  }
+
+  return selections;
 }
