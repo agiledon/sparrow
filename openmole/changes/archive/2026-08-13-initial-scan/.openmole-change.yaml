@@ -2,6 +2,6 @@ name: initial-scan
 created: 2026-08-13
 scan_scope: src/
 default_level: impl   # arch | design | impl（默认级别，用于未指定级别时）
-status: active   # active | archived
+status: archived   # active | archived
 detected_languages:
   - typescript

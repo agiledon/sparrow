@@ -1,5 +1,5 @@
 # OpenMole workspace config (managed by openmole init)
-current_change: initial-scan
+current_change: null
 installed_ides:
   - pi
 init_version: "0.9.0"
