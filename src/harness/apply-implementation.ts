@@ -109,4 +109,31 @@ export const APPLY_IMPLEMENTATION_BODY = `# 代码实现约束（apply / impleme
 
 1. api 层不写领域规则。
 2. 禁止跨聚合链式调用（\`a.getB().getC().doX()\`）。
-3. 领域对象必须富含行为，**禁止贫血模型**。`;
+3. 领域对象必须富含行为，**禁止贫血模型**。
+
+## 交互上下文实现约束（前端 + BFF）
+
+> 仅当当前 slug 为「交互上下文」时生效。
+
+1. **必须**结合 sparrow-explore 产出的全部 UI 规格实现页面：\`requirement/ui/ui-spec.md\`（页面结构、布局、交互方式）、\`design-tokens.md\`（色彩体系、字体层级、间距、圆角/阴影）、\`components/component-library.md\`（组件定义与变体）。
+2. **必须**确保前端与 edge 层的 API 调用正确：前端 services / adapters 调用的 BFF 端点路径、方法、请求/响应字段与 \`api.md\` 契约及契约绑定表一致。
+3. **Web 端**必须支持响应式布局，适配不同分辨率与终端（桌面 / 平板 / 移动）。
+4. **桌面窗体端**（如 QT / QML）：
+   - **部署方式由用户确定**：是否同进程部署（前后端同进程 vs 分离）不代用户决策，须给出多种选项并说明利弊（如同进程·进程内 BFF / 不同进程·本地 HTTP / 进程间通信），由用户确认后按选定方式实现。
+   - **无 CSS 时遵循 QT 最佳实践**：见下方「桌面窗体端（QT）最佳实践」。
+5. **禁止**将样式与 UI 页面、窗体及前端代码耦合：设计令牌 / 主题 / QSS / 样式表须与页面结构、组件逻辑解耦，便于主题切换与复用。
+6. **禁止**前端直接调用 BC API——必须经 \`edge/bff/\` 聚合层。
+
+### 桌面窗体端（QT）最佳实践
+
+> 来源：Qt 6 官方文档（doc.qt.io）。窗体端应用没有 CSS，以下最佳实践承担 CSS 的样式与解耦职责。
+
+1. **UI 与业务逻辑分离**：QML（声明式语言）写 UI，C++（强类型语言）写业务逻辑；尽量让 C++ 类型不感知 QML，通过 \`QQmlApplicationEngine::setInitialProperties\` / 单例把 C++ 数据「推送」进 QML。
+2. **样式集中管理、解耦**：Widgets 用 \`QApplication::setStyleSheet()\` 统一设置 QSS（支持级联，语法仿 CSS）；QML 用统一 Style（Basic / Fusion / Material / Universal 之一）承载主题。禁止把颜色、字体、间距硬编码进业务代码。
+3. **优先使用内置控件**：优先 Qt Quick Controls / Qt Widgets 内置控件，不满足需求时才自定义控件。
+4. **UI 声明与逻辑分离**：Widgets 用 Qt Designer 生成 \`.ui\` 文件（\`uic\` 编译，视觉与逻辑分离）；QML 用 \`.ui.qml\` 分离视觉部分与 \`.qml\` 逻辑部分。
+5. **响应式 / 可扩展布局**：使用 anchors 或 Qt Quick Layouts，禁止为控件写死宽高；图标用 SVG / 字体图标，支持高 DPI 缩放。
+6. **优先声明式绑定**：用声明式绑定而非命令式赋值，避免覆盖绑定、延迟错误到运行时。
+7. **状态存模型**：列表 delegate（项）中不存状态，状态存于 model。
+8. **用户可见文案可翻译**：用 \`tr()\` / \`qsTr()\` 包裹，从开发初期即支持国际化。
+9. **禁止自定义原生样式**：定制控件样式时基于跨平台 Style（如 Basic），避免依赖 Windows / macOS 原生样式（原生样式不支持定制）。`;

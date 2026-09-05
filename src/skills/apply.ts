@@ -361,12 +361,23 @@ edge/
         └── *Aggregator
 \`\`\`
 
+### 必读规约（交互上下文）
+
+除 \`design/{slug}/\` 下的 spec.md / api.md / tech.md / model.md / plan.md 外，还必须读取 sparrow-explore 产出的 UI 规格：
+
+- \`docs/sparrow/requirement/ui/ui-spec.md\` — 页面结构、布局、交互方式
+- \`docs/sparrow/requirement/ui/design-tokens.md\` — 色彩体系、字体层级、间距、圆角/阴影
+- \`docs/sparrow/requirement/ui/components/component-library.md\` — 组件定义与变体
+
 ### 前端代码生成规则
 
-1. **页面组件**按 ui-spec.md 中的页面定义和 model.md 中的组件树实现
-2. **服务层**调用 BFF 端点（不直接调用 BC API）
-3. **适配层**实现 ViewModel ↔ BFF 响应的转换
-4. **状态管理**按 model.md 的数据流模型配置
+1. **页面组件**按 ui-spec.md 的页面结构 / 布局 / 交互方式 + model.md 的组件树实现
+2. **视觉样式**必须遵循 design-tokens.md（色彩、字体、间距、圆角/阴影），组件复用 component-library.md 的定义与变体
+3. **服务层**调用 BFF 端点（不直接调用 BC API），端点路径、方法、请求/响应字段与 api.md 契约一致
+4. **适配层**实现 ViewModel ↔ BFF 响应的字段映射
+5. **状态管理**按 model.md 的数据流模型配置
+6. **Web 端响应式**：支持不同分辨率与终端（桌面 / 平板 / 移动），布局自适应
+7. **桌面窗体端（如 QT / QML）**：是否同进程部署由用户确定（给出选项并说明利弊，确认后实现）；窗体没有 CSS，遵循 QT 最佳实践（见约束资产 \`apply/implementation.md\`「桌面窗体端（QT）最佳实践」）
 
 ### BFF 代码生成规则
 
@@ -374,6 +385,13 @@ edge/
 2. 聚合器按 api.md 中定义的聚合 BC 调用和降级策略实现
 3. BFF 不包含业务逻辑——只做数据聚合和格式转换
 4. BFF 代码不放在 \`backend/{slug}/\` 下，放在 \`edge/bff/\` 下
+5. **同进程桌面方案**：BFF 退化为进程内聚合器（函数调用），不通过 HTTP
+
+### 样式解耦规则
+
+> 📐 完整约束见 \`apply/implementation.md\`「交互上下文实现约束」。核心要求：
+> - 样式（设计令牌 / 主题 / QSS / 样式表）与页面结构、组件逻辑、窗体及前端代码解耦
+> - Web 端用设计令牌驱动主题；桌面窗体端用 QSS / 主题表，禁止硬编码样式到业务代码
 
 ### 输出结构
 
@@ -399,6 +417,11 @@ docs/sparrow/design/{ui-slug}/code_review.md
 - [ ] BFF 端点调用的是 BC API（非直接操作 BC 数据库）
 - [ ] ViewModel 适配器正确实现了字段映射
 - [ ] 降级策略已实现
+- [ ] **页面视觉样式与 design-tokens.md 一致**（色彩、字体、间距、圆角/阴影）
+- [ ] **组件复用 component-library.md 定义**（无重复造轮子）
+- [ ] **前端调用的 BFF 端点路径/方法/字段与 api.md 契约一致**
+- [ ] **Web 端响应式**：适配不同分辨率与终端（桌面 / 平板 / 移动）
+- [ ] **桌面窗体端**：样式与页面/窗体/前端代码解耦，遵循对应框架（QT 等）最佳实践
 - [ ] Code Review 完成
 - [ ] plan.md 所有步骤标记为 \`- [x]\`
 
