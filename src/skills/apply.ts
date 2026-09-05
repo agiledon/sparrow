@@ -263,6 +263,13 @@ infrastructure 层（南向网关）:
 - **Rust**: snake_case 函数/模块/变量，PascalCase 类型/trait/enum
 - **C++**: PascalCase 类名，snake_case 函数/变量/文件名，全小写命名空间
 
+### 引用路径与命名空间正确性
+
+> 📐 完整约束见 \`apply/implementation.md\`「引用路径与命名空间正确性」。核心要求：
+> - \`import\` / \`#include\` / \`use\` / \`mod\` 路径与实际文件位置、包 / 模块结构精确一致
+> - 相对路径 \`../\` 层级从当前文件目录精确计算，禁止多一级或少一级
+> - 命名空间 / 包名与目标类 / 模块的实际声明一致
+
 ---
 
 ## 依赖安装规则
@@ -308,6 +315,7 @@ docs/sparrow/design/{slug}/code_review.md
 - [ ] **领域对象不包含不必要的 getter/setter**（无 \`getXxx()\` / \`setXxx()\` 便利方法，仅暴露业务操作）
 - [ ] **聚合根字段封装**（使用 private/protected 或语言等效修饰符，不直接暴露 public 字段）
 - [ ] **聚合间通过 ID 引用**（不跨聚合直接持有对象引用，迪米特法则）
+- [ ] **跨文件引用路径/命名空间正确**（import / #include / use 路径与实际文件位置一致，无层级缺失或命名空间错误）
 
 全部任务完成后：
 - [ ] 完整构建通过
