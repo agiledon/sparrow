@@ -79,12 +79,14 @@ export const APPLY_IMPLEMENTATION_BODY = `# 代码实现约束（apply / impleme
 - 领域层依赖具体 HTTP 框架（drogon / pistache）或数据库驱动类型
 - 领域类成员变量 public，暴露内部容器
 - 为领域实体提供 JSON 序列化 / 反序列化
+- include 目录暴露层级与 \`#include\` 路径不一致（\`target_include_directories\` / \`-I\` 设置过深或过浅，导致多一级 / 少一级）
 
 ## 引用路径与命名空间正确性
 
 1. 类 / 文件之间相互引用时，\`import\` / \`#include\` / \`use\` / \`mod\` 语句的路径与命名空间**必须**与实际文件位置、包 / 模块结构精确一致。
-2. 相对路径层级**必须**从当前文件所在目录精确计算：先回到模块根（如 \`backend/{slug}/\`），再拼目标子路径。禁止 \`../\` 层级多一级或少一级——这是最常见的引用错误，例如把 \`../../../domain/aggregate/valve.hpp\` 误写成 \`../../domain/aggregate/valve.hpp\`。
-3. 命名空间 / 包名**必须**与目标类 / 模块的实际声明一致，禁止包名、模块路径、命名空间与实际声明不符。
+2. 相对路径层级**必须**从引用解析的**根**精确计算，禁止多一级或少一级——这是最常见的引用错误，例如把 \`../../../domain/aggregate/valve.hpp\` 误写成 \`../../domain/aggregate/valve.hpp\`。
+3. **C++ \`#include\` 以编译期暴露的 include 目录为根**：\`#include <...>\` 只按 include 目录（\`target_include_directories\` / \`-I\`）搜索，\`#include "..."\` 先按当前文件目录、再按 include 目录搜索。\`#include\` 路径**必须**与暴露的 include 根一致——include 根设置过深或过浅都会导致多一级 / 少一级。例如模块暴露 \`backend/{slug}/\` 为 include 根时，应写 \`#include "domain/aggregate/valve.hpp"\`，而非 \`#include "aggregate/valve.hpp"\` 或 \`#include "../../domain/aggregate/valve.hpp"\`。
+4. 命名空间 / 包名**必须**与目标类 / 模块的实际声明一致，禁止包名、模块路径、命名空间与实际声明不符。
 
 | 语言 | 引用正确性要求 |
 |------|--------------|
@@ -93,7 +95,7 @@ export const APPLY_IMPLEMENTATION_BODY = `# 代码实现约束（apply / impleme
 | Node.js / TypeScript | \`import\` 相对路径与实际文件位置一致，禁止 \`../\` 层级错误或大小写不一致 |
 | Go | \`import\` 使用模块路径（module path + 包目录），包名与目录声明一致 |
 | Rust | \`use\` / \`mod\` 路径与模块树（\`crate::...\`）一致，禁止错误的模块路径 |
-| C++ | \`#include\` 相对路径层级从当前文件目录精确计算，\`namespace\` 与目标声明一致，头文件使用 include guard / \`#pragma once\` |
+| C++ | \`#include\` 路径与暴露的 include 根（\`target_include_directories\` / \`-I\`）一致，禁止层级多一级 / 少一级；\`namespace\` 与目标声明一致；头文件使用 include guard / \`#pragma once\` |
 
 ## 数据库迁移
 
