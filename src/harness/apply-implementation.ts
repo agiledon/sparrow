@@ -117,7 +117,7 @@ export const APPLY_IMPLEMENTATION_BODY = `# 代码实现约束（apply / impleme
 
 > 仅当当前 slug 为「交互上下文」时生效。
 
-1. **必须**结合 sparrow-explore 产出的全部 UI 规格实现页面：\`requirement/ui/ui-spec.md\`（页面结构、布局、交互方式）、\`design-tokens.md\`（色彩体系、字体层级、间距、圆角/阴影）、\`components/component-library.md\`（组件定义与变体）。
+1. **必须**结合 sparrow-explore 产出的全部 UI 规格实现页面：\`requirement/ui/ui-spec.md\`（页面结构、布局、交互方式）、\`design-tokens.md\`（色彩体系、字体层级、间距、圆角/阴影）、\`components/component-library.md\`（组件定义与变体）、\`prototypes/*.html\`（视觉与交互基准）。
 2. **必须**确保前端与 edge 层的 API 调用正确：前端 services / adapters 调用的 BFF 端点路径、方法、请求/响应字段与 \`api.md\` 契约及契约绑定表一致。
 3. **Web 端**必须支持响应式布局，适配不同分辨率与终端（桌面 / 平板 / 移动）。
 4. **桌面窗体端**（如 QT / QML）：
@@ -125,6 +125,18 @@ export const APPLY_IMPLEMENTATION_BODY = `# 代码实现约束（apply / impleme
    - **无 CSS 时遵循 QT 最佳实践**：见下方「桌面窗体端（QT）最佳实践」。
 5. **禁止**将样式与 UI 页面、窗体及前端代码耦合：设计令牌 / 主题 / QSS / 样式表须与页面结构、组件逻辑解耦，便于主题切换与复用。
 6. **禁止**前端直接调用 BC API——必须经 \`edge/bff/\` 聚合层。
+
+### UI 视觉保真（颜色 / 位置 / 大小 / 布局）
+
+> 原型页面（\`requirement/ui/prototypes/*.html\`）与设计令牌（\`design-tokens.md\`）是 UI 实现的视觉基准，实现必须 1:1 还原。
+
+1. **颜色**：所有前景 / 背景 / 边框 / 状态色（hover / active / disabled / error）必须取自 \`design-tokens.md\` 的色彩令牌，禁止使用近似色或未定义的魔数色值。
+2. **字体与排版**：字号、字重、行高、字距必须遵循字体层级令牌，禁止自定义偏离值。
+3. **间距与尺寸**：外边距 / 内边距 / 组件尺寸必须遵循间距系统与组件尺寸令牌，禁止硬编码魔数。
+4. **布局与位置**：页面结构与组件位置必须与 \`ui-spec.md\` 的页面结构（ASCII 布局图）及原型页面一致，禁止擅自调整区域划分或组件摆放。
+5. **圆角 / 阴影 / 边框**：遵循 \`design-tokens.md\` 的圆角 / 阴影规范。
+6. **组件复用**：优先使用 \`component-library.md\` 定义的组件及其变体，禁止为同一视觉重复造轮子。
+7. **禁止**使用框架默认样式或浏览器默认样式替代设计令牌；禁止以近似值替代设计令牌；禁止忽略间距系统；禁止布局与原型明显不符。
 
 ### 契约桩（BFF 南向网关）
 

@@ -368,16 +368,18 @@ edge/
 - \`docs/sparrow/requirement/ui/ui-spec.md\` — 页面结构、布局、交互方式
 - \`docs/sparrow/requirement/ui/design-tokens.md\` — 色彩体系、字体层级、间距、圆角/阴影
 - \`docs/sparrow/requirement/ui/components/component-library.md\` — 组件定义与变体
+- \`docs/sparrow/requirement/ui/prototypes/*.html\` — 视觉与交互基准（颜色 / 位置 / 大小 / 布局 1:1 还原）
 
 ### 前端代码生成规则
 
 1. **页面组件**按 ui-spec.md 的页面结构 / 布局 / 交互方式 + model.md 的组件树实现
-2. **视觉样式**必须遵循 design-tokens.md（色彩、字体、间距、圆角/阴影），组件复用 component-library.md 的定义与变体
-3. **服务层**调用 BFF 端点（不直接调用 BC API），端点路径、方法、请求/响应字段与 api.md 契约一致
-4. **适配层**实现 ViewModel ↔ BFF 响应的字段映射
-5. **状态管理**按 model.md 的数据流模型配置
-6. **Web 端响应式**：支持不同分辨率与终端（桌面 / 平板 / 移动），布局自适应
-7. **桌面窗体端（如 QT / QML）**：是否同进程部署由用户确定（给出选项并说明利弊，确认后实现）；窗体没有 CSS，遵循 QT 最佳实践（见约束资产 \`apply/implementation.md\`「桌面窗体端（QT）最佳实践」）
+2. **视觉样式**必须严格遵循 design-tokens.md（色彩、字体、间距、圆角/阴影），组件复用 component-library.md 的定义与变体，禁止近似色、魔数尺寸
+3. **视觉保真**：颜色、位置、大小、布局必须 1:1 还原 \`prototypes/*.html\` 原型，禁止明显偏差（见约束资产 \`apply/implementation.md\`「UI 视觉保真」）
+4. **服务层**调用 BFF 端点（不直接调用 BC API），端点路径、方法、请求/响应字段与 api.md 契约一致
+5. **适配层**实现 ViewModel ↔ BFF 响应的字段映射
+6. **状态管理**按 model.md 的数据流模型配置
+7. **Web 端响应式**：支持不同分辨率与终端（桌面 / 平板 / 移动），布局自适应
+8. **桌面窗体端（如 QT / QML）**：是否同进程部署由用户确定（给出选项并说明利弊，确认后实现）；窗体没有 CSS，遵循 QT 最佳实践（见约束资产 \`apply/implementation.md\`「桌面窗体端（QT）最佳实践」）
 
 ### BFF 代码生成规则
 
@@ -419,8 +421,9 @@ docs/sparrow/design/{ui-slug}/code_review.md
 - [ ] BFF 端点调用的是 BC API（非直接操作 BC 数据库）
 - [ ] ViewModel 适配器正确实现了字段映射
 - [ ] 降级策略已实现
-- [ ] **页面视觉样式与 design-tokens.md 一致**（色彩、字体、间距、圆角/阴影）
+- [ ] **页面视觉样式与 design-tokens.md 严格一致**（色彩、字体、间距、圆角/阴影，无近似色 / 魔数）
 - [ ] **组件复用 component-library.md 定义**（无重复造轮子）
+- [ ] **UI 视觉保真**：颜色、位置、大小、布局与原型页面 1:1 一致，无明显偏差
 - [ ] **前端调用的 BFF 端点路径/方法/字段与 api.md 契约一致**
 - [ ] **Web 端响应式**：适配不同分辨率与终端（桌面 / 平板 / 移动）
 - [ ] **桌面窗体端**：样式与页面/窗体/前端代码解耦，遵循对应框架（QT 等）最佳实践
