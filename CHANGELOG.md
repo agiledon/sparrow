@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.2] - 2026-09-05
+
+### Added
+
+- **引用路径与命名空间正确性约束**（`apply/implementation.md`）：明确类/文件相互引用时 `import` / `#include` / `use` / `mod` 的路径与命名空间必须与实际文件位置、包/模块结构精确一致；禁止相对路径层级多一级或少一级。按语言（Java / Python / TS / Go / Rust / C++）给出引用正确性要求。
+- **交互上下文实现约束**（`apply/implementation.md`）：桌面窗体端（QT/QML）同进程部署改为由用户确定（给出选项确认）；新增「桌面窗体端（QT）最佳实践」章节（UI 与业务逻辑分离、QSS/主题集中管理、响应式布局、声明式绑定等，替代 CSS 的样式与解耦职责）。
+
+### Changed
+
+- `sparrow-apply` 交互上下文代码生成：页面视觉样式须遵循 `design-tokens.md` 与 `component-library.md`；前端 ↔ edge 层 API 调用须与 `api.md` 契约一致；新增响应式 / 桌面窗体端 / 引用正确性等检查项。
+
+---
+
 ## [0.3.1] - 2026-08-11
 
 > **This release introduces Interaction Context**, solving the fundamental mismatch between DDD's bounded-context-driven pipeline and UI/frontend development. Frontend design and implementation are no longer fragmented by BC boundaries. Instead, the Interaction Context serves as a BC peer — sharing the same `design → model → plan → apply` pipeline — while remaining fully orthogonal, enabling UI+frontend and backend BCs to evolve independently and in parallel.
