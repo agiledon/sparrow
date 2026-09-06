@@ -487,6 +487,7 @@ ExtSys <<-- EVT_OrderPlaced : subscribes
 1. **不依赖 BC API**：交互上下文的 design 从自身 \`spec.md\` 和 \`frontend.md\` 出发，不读取任何 BC 的 \`api.md\`。契约一致性由 sparrow-arch 阶段的绑定表保证。
 2. **页面驱动**：BFF 端点设计以 UI 页面为粒度，一个页面一个 BFF 端点（或一组紧密关联的端点）。
 3. **纯聚合不侵入**：BFF 只做数据聚合和格式转换，不做业务逻辑。
+4. **契约桩与切换**：BFF 南向网关 port + MockClient / RealClient 由交互上下文设计；MockClient 依据契约绑定表做 fixture，RealClient 从项目级 \`docs/sparrow/api.md\` 取真实端点；切换以契约测试通过为门禁（详见 \`arch/frontend.md\`）。
 
 ### 输入文档
 
@@ -603,6 +604,7 @@ sequenceDiagram
 - [ ] BFF 聚合序列图正确展示了 UI → BFF → BC 的调用链
 - [ ] tech.md 覆盖了客户端和 BFF 两层技术栈
 - [ ] 未读取任何 BC 的 api.md（契约一致性由绑定表保证）
+- [ ] 每个 BFF 端点已标注下游 BC 契约桩来源（MockClient fixture / RealClient 端点取自项目级 api.md）
 
 ## 完成后的下一步
 

@@ -124,6 +124,15 @@ export const APPLY_IMPLEMENTATION_BODY = `# 代码实现约束（apply / impleme
 5. **禁止**将样式与 UI 页面、窗体及前端代码耦合：设计令牌 / 主题 / QSS / 样式表须与页面结构、组件逻辑解耦，便于主题切换与复用。
 6. **禁止**前端直接调用 BC API——必须经 \`edge/bff/\` 聚合层。
 
+### 契约桩（BFF 南向网关）
+
+1. BFF 南向网关 port 接口与 MockClient / RealClient **均由交互上下文定义与实现**；后端 BC 团队不写 BFF 代码。
+2. **MockClient**：不发出真实调用，返回契约形状的固定假数据（fixture），用于开发期与契约 / E2E 测试。
+3. **RealClient**：发出真实调用（HTTP / RPC / 进程内），对接真实 BC 公开端点（从项目级 \`docs/sparrow/api.md\` 读取），做 ACL 映射与序列化 / 超时 / 重试 / 错误处理。
+4. 切换在装配 / 配置层（如环境变量 \`BC_ADAPTER=mock|real\`），不改前端 / BFF 端点业务代码。
+5. **切换门禁**：目标 BC apply 完成 + 契约测试通过，方可切到 RealClient；切换是 plan 的终态联调任务。
+6. **禁止**桩残留：联调后必须确认 MockClient 未在生产启用。
+
 ### 桌面窗体端（QT）最佳实践
 
 > 来源：Qt 6 官方文档（doc.qt.io）。窗体端应用没有 CSS，以下最佳实践承担 CSS 的样式与解耦职责。

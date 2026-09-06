@@ -386,6 +386,8 @@ edge/
 3. BFF 不包含业务逻辑——只做数据聚合和格式转换
 4. BFF 代码不放在 \`backend/{slug}/\` 下，放在 \`edge/bff/\` 下
 5. **同进程桌面方案**：BFF 退化为进程内聚合器（函数调用），不通过 HTTP
+6. **契约桩**：BFF 南向网关 port + MockClient / RealClient 双实现；开发期装配 MockClient（桩），联调期经契约测试通过后切 RealClient（见约束资产 \`apply/implementation.md\`「契约桩」）
+7. **edge 语义**：\`edge/bff/\` 承载 BFF 聚合，微服务下可扩展 \`edge/gateway/\` 承担 API 网关职责；edge 属交互上下文独占，后端 BC 不感知 edge
 
 ### 样式解耦规则
 
@@ -422,6 +424,8 @@ docs/sparrow/design/{ui-slug}/code_review.md
 - [ ] **前端调用的 BFF 端点路径/方法/字段与 api.md 契约一致**
 - [ ] **Web 端响应式**：适配不同分辨率与终端（桌面 / 平板 / 移动）
 - [ ] **桌面窗体端**：样式与页面/窗体/前端代码解耦，遵循对应框架（QT 等）最佳实践
+- [ ] **BFF 契约桩已实现**（MockClient，fixture 形状与契约绑定表一致）
+- [ ] **联调后无残留桩**（MockClient 未在生产启用，已切 RealClient）
 - [ ] Code Review 完成
 - [ ] plan.md 所有步骤标记为 \`- [x]\`
 
