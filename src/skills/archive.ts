@@ -1,20 +1,28 @@
 /**
  * Sparrow Archive skill template.
  *
- * Explicitly archives a change under docs/sparrow/changes/ into
- * docs/sparrow/changes/archive/, finalizing the revise (evolutionary
- * architecture refactoring) workflow.
+ * Core pipeline step 8: archives a completed change under docs/sparrow/changes/
+ * into docs/sparrow/changes/archive/, finalizing the revise workflow.
  */
 
 import type { SkillSpec } from '../core/skills.js';
 
 const ARCHIVE_BODY = `# Sparrow Archive — 变更归档
 
+## 执行顺序检查
+
+\`\`\`
+当前步骤：sparrow-archive（第 8 步 / 共 8 步）
+所属层级：团队级（team-level）
+前置条件：revise 模式下存在活动变更；受影响 BC 已完成 sparrow-apply 且 sparrow-verify 无 P0/P1 阻塞问题
+后续步骤：无（归档完成后，新需求从 sparrow-explore 进入新一轮 revise）
+\`\`\`
+
 ## 用途
 
 将一次**已完成**的变更（revise 模式产生）正式归档。归档后该变更成为基线历史；若再有新需求，将新建 \`changes/{new}/\` 并从 explore 起进入新一轮 revise 模式。
 
-> 本技能**仅显式调用**，绝不自动触发（apply 完成后不会自动归档）。基线（首次需求、无活动变更）无需也不应调用本技能。
+> 本技能**仅显式调用**，绝不自动触发。基线（首次需求、无活动变更）无需也不应调用本技能。
 
 ## 前置检查
 
@@ -24,11 +32,14 @@ const ARCHIVE_BODY = `# Sparrow Archive — 变更归档
 
 ## 完整性校验（归档前必做）
 
-读取 \`changes/{change-id}/proposal.md\` 与 \`project.md」的「变更管理」块，确认本次变更**受影响 BC** 的实现状态：
+读取 \`changes/{change-id}/proposal.md\` 与 \`project.md\` 的「变更管理」块，确认本次变更**受影响 BC** 的状态：
 
-- 对每个档位 **S4（代码已生成）** 的 BC：其 \`docs/sparrow/design/{slug}/plan.md\` 所有步骤已标记 \`- [x]\`，且 \`code_review.md\` 已生成。
+- 对每个档位 **S4（代码已生成）** 的 BC：
+  - \`docs/sparrow/design/{slug}/plan.md\` 所有步骤已标记 \`- [x]\`
+  - \`code_review.md\` 已生成
+  - \`verify_report.md\` 已生成且**无 P0/P1 阻塞问题**（或用户确认忽略）
 - 对每个档位 **S1–S3** 的 BC：其对应设计文档（api/tech/model/plan）版本已更新且含 \`change-id\`。
-- 若任一受影响 BC 未完成 → 列出未完成项，**询问用户**：(a) 仍要归档（标记部分完成）；(b) 取消，先完成实现。
+- 若任一受影响 BC 未完成 → 列出未完成项，**询问用户**：(a) 仍要归档（标记部分完成）；(b) 取消，先完成 apply / verify。
 
 ## 归档步骤
 
@@ -50,7 +61,7 @@ const ARCHIVE_BODY = `# Sparrow Archive — 变更归档
 ## 质量检查清单
 
 - [ ] 已确认存在活动变更（否则提示并结束）
-- [ ] 受影响 BC 的完成状态已校验（或用户确认部分归档）
+- [ ] 受影响 BC 的 apply / verify 状态已校验（或用户确认部分归档）
 - [ ] \`changes/{change-id}/\` 已移至 \`changes/archive/YYYY-MM-DD-{change-id}/\`
 - [ ] \`project.md\`「变更管理」块：当前 change-id 已清空、已归档列表已追加
 - [ ] 时间戳与受影响文档版本已记录
@@ -60,14 +71,14 @@ const ARCHIVE_BODY = `# Sparrow Archive — 变更归档
 🎉 变更 \`{change-id}\` 已归档。如发起新的需求变更，从 **sparrow-explore** 开始，系统将自动进入 revise 模式。`;
 
 export const spec: SkillSpec = {
-  id: 'sparrow-supporting-archive',
+  id: 'sparrow-archive',
   name: 'Sparrow Archive',
   description: 'Archive a completed change (revise workflow) into docs/sparrow/changes/archive/',
   phase: 'team',
-  order: 103,
+  order: 8,
   nextSkill: null,
-  commandName: 'sparrow-supporting-archive',
-  kind: 'supporting',
+  commandName: 'sparrow-archive',
+  kind: 'core',
   category: 'DDD',
   harness: [],
   body: ARCHIVE_BODY,

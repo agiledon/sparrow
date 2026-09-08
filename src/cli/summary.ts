@@ -83,11 +83,11 @@ export function formatInitSummary(result: InitResult): string {
   lines.push('🚀 Next steps:');
   lines.push('   1. Start with /sparrow-explore to identify business services');
   lines.push('   2. Run /sparrow-arch to define architecture');
-  lines.push('   3. For each bounded context: /sparrow-design → /sparrow-model → /sparrow-plan → /sparrow-apply');
+  lines.push('   3. For each bounded context: /sparrow-design → /sparrow-model → /sparrow-plan → /sparrow-apply → /sparrow-verify');
   lines.push('');
-  lines.push('   Supporting: /sparrow-supporting-harness | /sparrow-supporting-reconcile | /sparrow-supporting-archive');
+  lines.push('   Supporting: /sparrow-supporting-harness | /sparrow-supporting-reconcile');
   lines.push('');
-  lines.push('   Full pipeline: explore → arch → design → model → plan → apply');
+  lines.push('   Full pipeline: explore → arch → design → model → plan → apply → verify → archive');
 
   return lines.join('\n');
 }

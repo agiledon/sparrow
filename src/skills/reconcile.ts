@@ -26,7 +26,7 @@ const RECONCILE_BODY = `# Sparrow Reconcile — 规格对账
    - **禁止**新建 \`design/{slug}/\` 目录、禁止新增 BC slug
 2. **不创建不存在的规格文档**：目标文件必须已存在于 \`docs/sparrow/\` 下；不存在则**跳过并在跳过清单中记录**，绝不生成新文件。
 3. **不修改 \`plan.md\`**：实现计划由 sparrow-plan 单独维护；本技能只读不写 plan.md。
-4. **不触发 revise 流程**：不自动创建 \`changes/{change-id}/\`、不自动触发 sparrow-supporting-archive。
+4. **不触发 revise 流程**：不自动创建 \`changes/{change-id}/\`、不自动触发 sparrow-archive。
 
 ### 允许事项
 
@@ -98,7 +98,7 @@ const RECONCILE_BODY = `# Sparrow Reconcile — 规格对账
 | 时机 | 事后（vibe coding / bugfix 后） | 事前（规划演进架构变更） |
 | 架构 | 不修改子领域 / BC 划分 | 可修改架构、新增 BC |
 | 入口 | 随时显式调用 | explore 检测到活动 change-id |
-| 归档 | 不触发 | 完成后 sparrow-supporting-archive |
+| 归档 | 不触发 | 完成后 sparrow-archive（core 流水线第 8 步） |
 
 若检测到活动 change-id（\`docs/sparrow/changes/\` 有未归档变更），提示用户：**架构级变更应走 revise 流程；reconcile 仅对齐已有规格，不替代 revise**。
 

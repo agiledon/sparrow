@@ -11,14 +11,14 @@ const PLAN_BODY = `# Sparrow Plan — 实现计划制订
 ## 执行顺序检查
 
 \`\`\`
-当前步骤：sparrow-plan（第 5 步 / 共 6 步）
+当前步骤：sparrow-plan（第 5 步 / 共 8 步）
 所属层级：团队级（team-level），针对特定限界上下文或交互上下文
 前置条件（必须全部存在）：
   1. docs/sparrow/design/{slug}/spec.md
   2. docs/sparrow/design/{slug}/api.md
   3. docs/sparrow/design/{slug}/tech.md
   4. docs/sparrow/design/{slug}/model.md
-下一步骤：sparrow-apply @{slug}（团队级）
+下一步骤：sparrow-apply @{slug}（第 6 步）→ sparrow-verify @{slug}（第 7 步）
 \`\`\`
 
 **前置条件检查**：
@@ -529,7 +529,7 @@ backend/
 
 ## 完成后的下一步
 
-✅ 完成 sparrow-plan @{slug} 后，请执行 **sparrow-apply @{slug}**（团队级）—— 按 plan.md 执行任务，生成代码。`;
+✅ 完成 sparrow-plan @{slug} 后，请执行 **sparrow-apply @{slug}**（第 6 步）—— 按 plan.md 执行任务，生成代码；apply 完成后执行 **sparrow-verify @{slug}**（第 7 步）。`;
 
 export const spec: SkillSpec = {
   id: 'sparrow-plan',

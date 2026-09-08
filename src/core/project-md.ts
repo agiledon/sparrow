@@ -102,6 +102,6 @@ export function generateProjectMdContent(
 
 1. 执行 **/sparrow-explore** — 从原始需求中识别业务服务（如有需要，在技能中继续 UI 设计探索）
 2. 执行 **/sparrow-arch** — 划分子领域，定义业务架构、应用架构（如有 UI 则同时生成前端架构）
-3. 对每个限界上下文（含交互上下文）依次执行：**design → model → plan → apply**
+3. 对每个限界上下文（含交互上下文）依次执行：**design → model → plan → apply → verify**；revise 模式变更完成后执行 **archive**
 `;
 }

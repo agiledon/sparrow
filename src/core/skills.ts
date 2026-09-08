@@ -11,7 +11,7 @@ export interface SkillDefinition {
   description: string;
   /** Execution phase for ordering */
   phase: 'product' | 'team';
-  /** Position in the execution order (1-6) */
+  /** Position in the execution order (1-8 for core, 101+ for supporting) */
   order: number;
   /** The next skill to run (null for the last skill) */
   nextSkill: string | null;

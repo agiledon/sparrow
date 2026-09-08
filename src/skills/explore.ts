@@ -13,7 +13,7 @@ const EXPLORE_BODY = `# Sparrow Explore — 需求探索与业务服务识别
 
 在执行之前，请检查当前阶段是否合适：
 
-- **本阶段**：sparrow-explore（第 1 步，共 6 步）
+- **本阶段**：sparrow-explore（第 1 步，共 8 步）
 - **所属层级**：产品级（product-level）
 - **前置条件**：无（这是整个 DDD 流程的第一步）
 - **输入要求**：用户需要提供原始需求文档或需求描述

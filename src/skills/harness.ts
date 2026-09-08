@@ -11,7 +11,7 @@ const HARNESS_BODY = `# Sparrow Harness — 约束资产管理
 
 ## 用途
 
-这是一个**辅助命令**，与 DDD 流水线阶段（explore → arch → design → model → plan → apply）**无关，可随时调用**。它用于：
+这是一个**辅助命令**，与 DDD 核心流水线（explore → arch → design → model → plan → apply → verify → archive）**无关，可随时调用**。它用于：
 
 1. **查看**当前项目的约束资产索引
 2. **添加**用户提供的新约束（自动分类到对应阶段文件）

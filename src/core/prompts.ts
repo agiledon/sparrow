@@ -40,7 +40,7 @@ export function renderWelcomePage(): void {
     `${CYAN}║${RESET}  ${GREEN}Spec-Driven DDD Framework for AI Coding Assistants${RESET}        ${CYAN}║${RESET}`,
     `${CYAN}║${RESET}  ${DIM}From business requirements to production code${RESET}             ${CYAN}║${RESET}`,
     `${CYAN}║${RESET}                                                            ${CYAN}║${RESET}`,
-    `${CYAN}║${RESET}  ${DIM}Pipeline:${RESET} explore → arch → design → model → plan → apply     ${CYAN}║${RESET}`,
+    `${CYAN}║${RESET}  ${DIM}Pipeline:${RESET} explore → arch → design → model → plan → apply → verify → archive ${CYAN}║${RESET}`,
     `${CYAN}║${RESET}                                                            ${CYAN}║${RESET}`,
     `${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}`,
     '',

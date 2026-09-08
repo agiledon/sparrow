@@ -14,7 +14,7 @@ const DESIGN_BODY = `# Sparrow Design — API 契约与技术选型
 在执行之前，请检查当前阶段是否合适：
 
 \`\`\`
-当前步骤：sparrow-design（第 3 步 / 共 6 步）
+当前步骤：sparrow-design（第 3 步 / 共 8 步）
 所属层级：团队级（team-level），针对特定限界上下文或交互上下文
 前置条件：
   1. docs/sparrow/architecture/application.md 必须存在（后端 BC）

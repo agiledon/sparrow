@@ -11,7 +11,7 @@ const MODEL_BODY = `# Sparrow Model — 领域建模
 ## 执行顺序检查
 
 \`\`\`
-当前步骤：sparrow-model（第 4 步 / 共 6 步）
+当前步骤：sparrow-model（第 4 步 / 共 8 步）
 所属层级：团队级（team-level），针对特定限界上下文或交互上下文
 前置条件：
   1. docs/sparrow/design/{slug}/spec.md 必须存在

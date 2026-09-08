@@ -95,9 +95,10 @@ your-project/
 │   │   ├── sparrow-model/SKILL.md
 │   │   ├── sparrow-plan/SKILL.md
 │   │   ├── sparrow-apply/SKILL.md
+│   │   ├── sparrow-verify/SKILL.md
+│   │   ├── sparrow-archive/SKILL.md
 │   │   ├── sparrow-supporting-harness/SKILL.md
-│   │   ├── sparrow-supporting-reconcile/SKILL.md
-│   │   └── sparrow-supporting-archive/SKILL.md
+│   │   └── sparrow-supporting-reconcile/SKILL.md
 │   └── commands/sparrow/
 │       ├── sparrow-explore.md
 │       ├── sparrow-arch.md
@@ -136,6 +137,8 @@ Invoke each skill in order as a slash command in your AI tool:
 | 4 | `/sparrow-model @{slug}` | Team | Domain modeling (backend BC) or ViewModel + component modeling (Interaction Context) |
 | 5 | `/sparrow-plan @{slug}` | Team | Devise implementation plan with task checklist |
 | 6 | `/sparrow-apply @{slug}` | Team | Generate DDD-structured code (backend) or frontend + BFF code (Interaction Context) |
+| 7 | `/sparrow-verify @{slug}` | Team | Verify code implementation against spec.md, api.md, tech.md, and model.md |
+| 8 | `/sparrow-archive` | Team | Archive a completed revise-mode change (after verify passes) |
 
 **Supporting skills** (`kind: supporting`) — available anytime, independent of the pipeline:
 
@@ -143,7 +146,6 @@ Invoke each skill in order as a slash command in your AI tool:
 |---------|--------------|
 | `/sparrow-supporting-harness` | View, add, and maintain constraint assets (harness) |
 | `/sparrow-supporting-reconcile` | Reconcile existing spec docs and harness constraints with current code after vibe coding or bugfixes |
-| `/sparrow-supporting-archive` | Archive a completed revise-mode change |
 
 > **Important**: Product-level steps (1-2) run once. Team-level steps (3-6) run per slug — all contexts (backend BCs + Interaction Context) share the same commands and are fully orthogonal. They can execute in any order, even in parallel.
 
@@ -155,7 +157,7 @@ After any step, you can:
 - Re-run the skill with modifications
 - Continue to the next step — it always reads the latest version
 
-## The 6-Step Pipeline
+## The 8-Step Pipeline
 
 ### Step 1: sparrow-explore (Product-level)
 
@@ -211,6 +213,20 @@ For **backend BCs**: tasks organized by DDD layer dependency. For **Interaction 
 
 For **Interaction Context**, generates frontend code to `frontend/features/` and BFF aggregation code to `edge/bff/`.
 
+### Step 7: sparrow-verify (Team-level, per context)
+
+**Input**: Applied code + `spec.md` + `api.md` + `tech.md` + `model.md`  
+**Output**: `docs/sparrow/design/{slug}/verify_report.md` — completeness, correctness, and consistency report with severity-classified findings
+
+Only runs after apply completes for the selected slug(s). Skips slugs that have not been applied yet.
+
+### Step 8: sparrow-archive (Team-level, revise workflow)
+
+**Input**: Completed change under `docs/sparrow/changes/{change-id}/`  
+**Output**: Archived change under `docs/sparrow/changes/archive/`
+
+Runs after verify passes (no P0/P1 blockers) when an active revise-mode change exists. Not needed for baseline projects without active changes.
+
 ## Output Structure
 
 After running the full pipeline, your project will have:
@@ -237,7 +253,8 @@ your-project/
 │       ├── tech.md                       # sparrow-design
 │       ├── model.md                      # sparrow-model
 │       ├── plan.md                       # sparrow-plan
-│       └── code_review.md                # sparrow-apply
+│       ├── code_review.md                # sparrow-apply
+│       └── verify_report.md              # sparrow-verify
 ├── backend/{slug}/                       # sparrow-apply (backend BC)
 │   ├── api/command/, query/, dto/
 │   ├── application/
@@ -286,7 +303,6 @@ How it works:
 - **Supporting skills** (`kind: supporting`) are auxiliary commands independent of the pipeline:
   - **`/sparrow-supporting-harness`** — view the index, and add/update/delete project-level constraints. New constraints are auto-classified into the right stage file.
   - **`/sparrow-supporting-reconcile`** — after vibe coding or bugfixes, reconcile **existing** spec docs and harness constraints with current code (does not change architecture or create new spec files).
-  - **`/sparrow-supporting-archive`** — archive a completed revise-mode change.
 - Managed global templates are refreshed on version upgrade, but **user-edited files are never overwritten** (project files are always yours).
 
 ## Supported AI Tools

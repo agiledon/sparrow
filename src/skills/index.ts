@@ -4,6 +4,7 @@ import { spec as designSpec } from './design.js';
 import { spec as modelSpec } from './model.js';
 import { spec as planSpec } from './plan.js';
 import { spec as applySpec } from './apply.js';
+import { spec as verifySpec } from './verify.js';
 import { spec as archiveSpec } from './archive.js';
 import { spec as harnessSpec } from './harness.js';
 import { spec as reconcileSpec } from './reconcile.js';
@@ -19,9 +20,10 @@ const CORE_SKILL_SPECS = [
   modelSpec,
   planSpec,
   applySpec,
+  verifySpec,
+  archiveSpec,
   harnessSpec,
   reconcileSpec,
-  archiveSpec,
 ];
 
 export function initializeSkills(registry: SkillRegistry): void {

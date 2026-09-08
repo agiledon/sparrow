@@ -15,26 +15,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 新增 skill 分类字段 `kind`：`core`（核心工作流）与 `supporting`（辅助工作流）；辅助 skill 统一使用 `sparrow-supporting-` 前缀。
 - **`/sparrow-supporting-reconcile`** — reconcile existing spec docs and harness constraints with current code and conversation history after vibe coding or bugfixes. Does not change architecture or create new spec files.
   - 新增 **`/sparrow-supporting-reconcile`**（规格对账）：vibe coding 或 bugfix 后，将已有规格文档与 harness 约束对齐到代码实现；不修改架构、不创建新规格文件。
+- **`/sparrow-verify`** (core step 7) — verify bounded context code against spec.md, api.md, tech.md, and model.md; outputs `verify_report.md` with severity-classified findings.
+  - 新增 **`/sparrow-verify`**（核心流程第 7 步）：验证代码与规格文档的一致性，输出分级问题报告。
+- Core pipeline expanded from 6 to **8 steps**: explore → arch → design → model → plan → apply → **verify** → **archive**.
+  - 核心流程由 6 步扩展为 **8 步**，apply 之后新增 verify，verify 通过后进入 archive。
 
 ### Changed
 
-- **Breaking**: `/sparrow-harness` → `/sparrow-supporting-harness`; `/sparrow-archive` → `/sparrow-supporting-archive`. Re-run `sparrow init` to regenerate skill files; deprecated skill directories are cleaned up automatically.
-  - **破坏性变更**：辅助命令更名；重新执行 `sparrow init` 以更新 skill 文件，旧 skill 目录自动清理。
+- **Breaking**: `/sparrow-harness` → `/sparrow-supporting-harness`. Re-run `sparrow init` to regenerate skill files; deprecated skill directories are cleaned up automatically.
+  - **破坏性变更**：harness 辅助命令更名；重新执行 `sparrow init` 以更新 skill 文件。
+- **`sparrow-archive`** is now a **core** pipeline step (step 8). Command is `/sparrow-archive` (replaces `sparrow-supporting-archive`).
+  - **`sparrow-archive`** 移入 **core** 第 8 步，命令名为 `/sparrow-archive`。
+- `sparrow-apply` next step is now **sparrow-verify**; after verify passes, next is **sparrow-archive** (revise mode).
+  - apply 完成后提示执行 verify；verify 通过后提示 archive。
 
 ---
 
 ## [0.3.2] - 2026-09-05
-
-### Added
-
-- **引用路径与命名空间正确性约束**（`apply/implementation.md`）：明确类/文件相互引用时 `import` / `#include` / `use` / `mod` 的路径与命名空间必须与实际文件位置、包/模块结构精确一致；禁止相对路径层级多一级或少一级。按语言（Java / Python / TS / Go / Rust / C++）给出引用正确性要求。
-- **交互上下文实现约束**（`apply/implementation.md`）：桌面窗体端（QT/QML）同进程部署改为由用户确定（给出选项确认）；新增「桌面窗体端（QT）最佳实践」章节（UI 与业务逻辑分离、QSS/主题集中管理、响应式布局、声明式绑定等，替代 CSS 的样式与解耦职责）。
-
-### Changed
-
-- `sparrow-apply` 交互上下文代码生成：页面视觉样式须遵循 `design-tokens.md` 与 `component-library.md`；前端 ↔ edge 层 API 调用须与 `api.md` 契约一致；新增响应式 / 桌面窗体端 / 引用正确性等检查项。
-
----
 
 ## [0.3.1] - 2026-08-11
 

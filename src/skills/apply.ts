@@ -12,16 +12,16 @@ const APPLY_BODY = `# Sparrow Apply — 按实现计划执行代码生成
 ## 执行顺序检查
 
 \`\`\`
-当前步骤：sparrow-apply（第 6 步 / 共 6 步）
+当前步骤：sparrow-apply（第 6 步 / 共 8 步）
 所属层级：团队级（team-level），针对特定限界上下文或交互上下文
 前置条件：docs/sparrow/design/{slug}/plan.md 必须存在
-后续步骤：无（这是最后一步，但可以对其他 slug 继续执行 sparrow-design → sparrow-model → sparrow-plan → sparrow-apply）
+后续步骤：sparrow-verify @{slug}（第 7 步）；全部 slug verify 通过后，若处于 revise 模式可执行 sparrow-archive
 \`\`\`
 
 **前置条件检查**：
 - 如果 \`docs/sparrow/design/{slug}/plan.md\` 不存在，请提示用户先执行 **sparrow-plan @{slug}**
 - 如果用户未指定 slug，请列出可用的 slug 让用户选择（从 project.md 中读取）
-- 如果 plan.md 中的所有步骤都已标记为 \`- [x]\`，说明当前上下文已执行完毕
+- 如果 plan.md 中的所有步骤都已标记为 \`- [x]\`，说明当前上下文 apply 已执行完毕，应提示执行 **sparrow-verify @{slug}**
 
 ### Slug 类型判定
 
@@ -90,7 +90,7 @@ const APPLY_BODY = `# Sparrow Apply — 按实现计划执行代码生成
 ### 收尾
 - 变更后重跑 **Code Review** 生成/更新 \`docs/sparrow/design/{slug}/code_review.md\`。
 - 受影响模块代码版本递增（在 \`project.md\` 或模块说明中记录），元数据块追加 \`change-id\`。
-- 全部受影响 S4 slug 完成后，提示用户执行 **sparrow-supporting-archive** 归档本次变更。
+- 全部受影响 S4 slug 完成后，提示用户依次执行 **sparrow-verify** 验证，验证通过后执行 **sparrow-archive** 归档本次变更。
 
 > 完整 BC→代码映射与数据迁移策略见 \`docs/prd/sparrow-change-management.md\` 第 6 节。
 
@@ -434,12 +434,14 @@ docs/sparrow/design/{ui-slug}/code_review.md
 
 ## 完成后的下一步
 
-🎉 当前上下文 \`{slug}\` 已全部完成！
+🎉 当前上下文 \`{slug}\` 的 apply 已完成！
 
-如果有其他限界上下文（含交互上下文）需要实现，请选择对应的 slug 执行：
-**sparrow-design → sparrow-model → sparrow-plan → sparrow-apply**
+**下一步请执行：sparrow-verify @{slug}** — 验证代码实现与 spec.md / api.md / tech.md / model.md 的一致性。
 
-> 所有上下文之间完全独立，可以任意顺序执行。`;
+如果有其他限界上下文（含交互上下文）尚未 apply，请选择对应 slug 继续：
+**sparrow-design → sparrow-model → sparrow-plan → sparrow-apply → sparrow-verify**
+
+> 所有上下文之间完全独立，可以任意顺序执行。全部 slug 均 apply 且 verify 通过后，若处于 revise 模式，执行 **sparrow-archive**。`;
 
 export const spec: SkillSpec = {
   id: 'sparrow-apply',
@@ -447,7 +449,7 @@ export const spec: SkillSpec = {
   description: 'Execute the implementation plan and generate DDD-structured code',
   phase: 'team',
   order: 6,
-  nextSkill: null,
+  nextSkill: 'sparrow-verify',
   commandName: 'sparrow-apply',
   kind: 'core',
   category: 'DDD',
