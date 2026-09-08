@@ -678,6 +678,7 @@ export const spec: SkillSpec = {
   order: 4,
   nextSkill: 'sparrow-plan',
   commandName: 'sparrow-model',
+  kind: 'core',
   category: 'DDD',
   harness: ['model/architecture.md', 'model/domain-modeling.md', 'model/view-modeling.md'],
   body: MODEL_BODY,

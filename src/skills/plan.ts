@@ -539,6 +539,7 @@ export const spec: SkillSpec = {
   order: 5,
   nextSkill: 'sparrow-apply',
   commandName: 'sparrow-plan',
+  kind: 'core',
   category: 'DDD',
   harness: [],
   body: PLAN_BODY,

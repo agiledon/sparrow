@@ -620,6 +620,7 @@ export const spec: SkillSpec = {
   order: 3,
   nextSkill: 'sparrow-model',
   commandName: 'sparrow-design',
+  kind: 'core',
   category: 'DDD',
   harness: ['design/api-design.md'],
   body: DESIGN_BODY,

@@ -6,19 +6,21 @@ import { spec as planSpec } from './plan.js';
 import { spec as applySpec } from './apply.js';
 import { spec as archiveSpec } from './archive.js';
 import { spec as harnessSpec } from './harness.js';
+import { spec as reconcileSpec } from './reconcile.js';
 import type { SkillRegistry } from '../core/skills.js';
 import { getSkillPlugins } from '../plugins/index.js';
 import { registerPluginSkillTemplates } from '../core/skill-generation.js';
 import { loadBundledPlugins } from '../plugins/load.js';
 
 const CORE_SKILL_SPECS = [
-  harnessSpec,
   exploreSpec,
   archSpec,
   designSpec,
   modelSpec,
   planSpec,
   applySpec,
+  harnessSpec,
+  reconcileSpec,
   archiveSpec,
 ];
 
@@ -41,6 +43,7 @@ export function initializeSkills(registry: SkillRegistry): void {
       order: s.order,
       nextSkill: s.nextSkill,
       commandName: s.commandName,
+      kind: s.kind ?? 'core',
       category: s.category,
     }))
   );

@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.4.0] - 2026-09-08
+
+### Added
+
+- **`kind` field** on skills: `core` (DDD pipeline) and `supporting` (auxiliary). Supporting skills use the `sparrow-supporting-` prefix.
+  - 新增 skill 分类字段 `kind`：`core`（核心工作流）与 `supporting`（辅助工作流）；辅助 skill 统一使用 `sparrow-supporting-` 前缀。
+- **`/sparrow-supporting-reconcile`** — reconcile existing spec docs and harness constraints with current code and conversation history after vibe coding or bugfixes. Does not change architecture or create new spec files.
+  - 新增 **`/sparrow-supporting-reconcile`**（规格对账）：vibe coding 或 bugfix 后，将已有规格文档与 harness 约束对齐到代码实现；不修改架构、不创建新规格文件。
+
+### Changed
+
+- **Breaking**: `/sparrow-harness` → `/sparrow-supporting-harness`; `/sparrow-archive` → `/sparrow-supporting-archive`. Re-run `sparrow init` to regenerate skill files; deprecated skill directories are cleaned up automatically.
+  - **破坏性变更**：辅助命令更名；重新执行 `sparrow init` 以更新 skill 文件，旧 skill 目录自动清理。
+
+---
+
 ## [0.3.2] - 2026-09-05
 
 ### Added

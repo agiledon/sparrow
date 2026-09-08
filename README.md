@@ -89,15 +89,16 @@ This creates skill and command files for each selected tool:
 your-project/
 ├── .claude/
 │   ├── skills/
-│   │   ├── sparrow-harness/SKILL.md
 │   │   ├── sparrow-explore/SKILL.md
 │   │   ├── sparrow-arch/SKILL.md
 │   │   ├── sparrow-design/SKILL.md
 │   │   ├── sparrow-model/SKILL.md
 │   │   ├── sparrow-plan/SKILL.md
-│   │   └── sparrow-apply/SKILL.md
+│   │   ├── sparrow-apply/SKILL.md
+│   │   ├── sparrow-supporting-harness/SKILL.md
+│   │   ├── sparrow-supporting-reconcile/SKILL.md
+│   │   └── sparrow-supporting-archive/SKILL.md
 │   └── commands/sparrow/
-│       ├── sparrow-harness.md
 │       ├── sparrow-explore.md
 │       ├── sparrow-arch.md
 │       └── ...
@@ -125,15 +126,24 @@ This compares your local version against the npm registry and prompts you to upg
 
 Invoke each skill in order as a slash command in your AI tool:
 
+**Core skills** (`kind: core`) — the DDD pipeline:
+
 | Step | Command | Level | What it does |
 |------|---------|-------|--------------|
-| 0 | `/sparrow-harness` | Helper | View, add, and maintain constraint assets (harness) — available at any time |
 | 1 | `/sparrow-explore` | Product | Interactive requirement exploration (Grill Me) + generate functional & quality requirement docs + [optional] UI design exploration |
 | 2 | `/sparrow-arch` | Product | Define business architecture (subdomains) + application architecture (bounded contexts) + [if UI exists] frontend architecture with Interaction Context |
 | 3 | `/sparrow-design @{slug}` | Team | Define API contracts and tech stack for a bounded context or Interaction Context |
 | 4 | `/sparrow-model @{slug}` | Team | Domain modeling (backend BC) or ViewModel + component modeling (Interaction Context) |
 | 5 | `/sparrow-plan @{slug}` | Team | Devise implementation plan with task checklist |
 | 6 | `/sparrow-apply @{slug}` | Team | Generate DDD-structured code (backend) or frontend + BFF code (Interaction Context) |
+
+**Supporting skills** (`kind: supporting`) — available anytime, independent of the pipeline:
+
+| Command | What it does |
+|---------|--------------|
+| `/sparrow-supporting-harness` | View, add, and maintain constraint assets (harness) |
+| `/sparrow-supporting-reconcile` | Reconcile existing spec docs and harness constraints with current code after vibe coding or bugfixes |
+| `/sparrow-supporting-archive` | Archive a completed revise-mode change |
 
 > **Important**: Product-level steps (1-2) run once. Team-level steps (3-6) run per slug — all contexts (backend BCs + Interaction Context) share the same commands and are fully orthogonal. They can execute in any order, even in parallel.
 
@@ -273,7 +283,10 @@ harness/
 How it works:
 
 - Each stage skill references the harness in a `📐 约束资产（Harness）` section telling the AI to load the relevant constraint files **before** executing.
-- **`/sparrow-harness`** is an auxiliary command (available anytime, independent of the pipeline) to view the index, and to add/update/delete project-level constraints. New constraints are auto-classified into the right stage file — you don't need to pick a stage.
+- **Supporting skills** (`kind: supporting`) are auxiliary commands independent of the pipeline:
+  - **`/sparrow-supporting-harness`** — view the index, and add/update/delete project-level constraints. New constraints are auto-classified into the right stage file.
+  - **`/sparrow-supporting-reconcile`** — after vibe coding or bugfixes, reconcile **existing** spec docs and harness constraints with current code (does not change architecture or create new spec files).
+  - **`/sparrow-supporting-archive`** — archive a completed revise-mode change.
 - Managed global templates are refreshed on version upgrade, but **user-edited files are never overwritten** (project files are always yours).
 
 ## Supported AI Tools

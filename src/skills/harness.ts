@@ -63,13 +63,14 @@ const HARNESS_BODY = `# Sparrow Harness — 约束资产管理
 - 各阶段 skill 会自动加载项目级 + 全局级约束（项目级优先）。`;
 
 export const spec: SkillSpec = {
-  id: 'sparrow-harness',
+  id: 'sparrow-supporting-harness',
   name: 'Sparrow Harness',
   description: 'View, add, and maintain constraint assets (harness) for the project',
   phase: 'product',
-  order: 0,
-  nextSkill: 'sparrow-explore',
-  commandName: 'sparrow-harness',
+  order: 101,
+  nextSkill: null,
+  commandName: 'sparrow-supporting-harness',
+  kind: 'supporting',
   category: 'DDD',
   harness: [],
   body: HARNESS_BODY,

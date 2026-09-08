@@ -17,6 +17,8 @@ export interface SkillDefinition {
   nextSkill: string | null;
   /** Command name (same as id) */
   commandName: string;
+  /** Skill kind: core (DDD pipeline) or supporting (auxiliary) */
+  kind: 'core' | 'supporting';
   /** Category tag */
   category: string;
 }

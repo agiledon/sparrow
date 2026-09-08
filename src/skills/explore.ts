@@ -635,6 +635,7 @@ export const spec: SkillSpec = {
   order: 1,
   nextSkill: 'sparrow-arch',
   commandName: 'sparrow-explore',
+  kind: 'core',
   category: 'DDD',
   harness: ['explore/requirements.md'],
   body: EXPLORE_BODY,

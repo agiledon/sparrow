@@ -6,7 +6,7 @@
  * formatted files via the adapter registry.
  */
 
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync, existsSync, rmSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import type { SkillDefinition, SkillRegistry } from './skills.js';
 import { getAdapter } from './adapters/index.js';
@@ -65,6 +65,36 @@ function buildHarnessSection(adapter: ToolCommandAdapter, skillId: string, regis
   return lines.join('\n');
 }
 
+/** Skill ids removed in prior releases; cleaned up on regenerate. */
+const DEPRECATED_SKILL_IDS = [
+  'sparrow-harness',
+  'sparrow-archive',
+  'sparrow-helper-sync',
+  'sparrow-helper-harness',
+  'sparrow-helper-reconcile',
+  'sparrow-helper-archive',
+];
+
+function removeDeprecatedSkillFiles(projectRoot: string, toolIds: string[]): void {
+  for (const toolId of toolIds) {
+    const adapter = getAdapter(toolId);
+    for (const skillId of DEPRECATED_SKILL_IDS) {
+      const skillPath = join(projectRoot, adapter.getSkillPath(skillId));
+      const skillDir = dirname(skillPath);
+      if (existsSync(skillDir)) {
+        rmSync(skillDir, { recursive: true, force: true });
+      }
+      const commandRelPath = adapter.getCommandPath(skillId);
+      if (commandRelPath !== null) {
+        const commandPath = join(projectRoot, commandRelPath);
+        if (existsSync(commandPath)) {
+          rmSync(commandPath, { force: true });
+        }
+      }
+    }
+  }
+}
+
 /**
  * Assemble the complete CommandContent for a skill.
  */
@@ -81,7 +111,7 @@ export function assembleSkillContent(skill: SkillDefinition, registry: SkillRegi
     name: skill.name,
     description: skill.description,
     category: skill.category,
-    tags: ['sparrow', 'ddd', skill.phase === 'product' ? 'product-level' : 'team-level'],
+    tags: ['sparrow', 'ddd', skill.kind, skill.phase === 'product' ? 'product-level' : 'team-level'],
     body,
   };
 }
@@ -146,6 +176,8 @@ export function generateSkillFiles(
 
     results.push({ toolId, files: createdFiles });
   }
+
+  removeDeprecatedSkillFiles(projectRoot, toolIds);
 
   return results;
 }

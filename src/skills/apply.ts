@@ -90,7 +90,7 @@ const APPLY_BODY = `# Sparrow Apply — 按实现计划执行代码生成
 ### 收尾
 - 变更后重跑 **Code Review** 生成/更新 \`docs/sparrow/design/{slug}/code_review.md\`。
 - 受影响模块代码版本递增（在 \`project.md\` 或模块说明中记录），元数据块追加 \`change-id\`。
-- 全部受影响 S4 slug 完成后，提示用户执行 **sparrow-archive** 归档本次变更。
+- 全部受影响 S4 slug 完成后，提示用户执行 **sparrow-supporting-archive** 归档本次变更。
 
 > 完整 BC→代码映射与数据迁移策略见 \`docs/prd/sparrow-change-management.md\` 第 6 节。
 
@@ -449,6 +449,7 @@ export const spec: SkillSpec = {
   order: 6,
   nextSkill: null,
   commandName: 'sparrow-apply',
+  kind: 'core',
   category: 'DDD',
   harness: ['apply/implementation.md'],
   body: APPLY_BODY,

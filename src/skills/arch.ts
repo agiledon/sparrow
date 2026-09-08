@@ -920,7 +920,7 @@ edge/
 
 > 各 BC 和交互上下文的 design/model/plan/apply 步骤完全独立，无先后依赖，可以任意顺序执行，甚至可以并行执行。
 
-> 若处于 revise 模式且涉及 BC 为 S1–S4，请按对应档位继续 design/model/plan/apply 的 revise 分支；涉及 BC 为 S0 则无需继续下游。变更全部完成后，执行 **sparrow-archive** 归档本次变更。`;
+> 若处于 revise 模式且涉及 BC 为 S1–S4，请按对应档位继续 design/model/plan/apply 的 revise 分支；涉及 BC 为 S0 则无需继续下游。变更全部完成后，执行 **sparrow-supporting-archive** 归档本次变更。`;
 
 export const spec: SkillSpec = {
   id: 'sparrow-arch',
@@ -930,6 +930,7 @@ export const spec: SkillSpec = {
   order: 2,
   nextSkill: 'sparrow-design',
   commandName: 'sparrow-arch',
+  kind: 'core',
   category: 'DDD',
   harness: ['arch/business.md', 'arch/application.md', 'arch/frontend.md'],
   body: ARCH_BODY,

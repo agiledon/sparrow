@@ -85,6 +85,8 @@ export function formatInitSummary(result: InitResult): string {
   lines.push('   2. Run /sparrow-arch to define architecture');
   lines.push('   3. For each bounded context: /sparrow-design → /sparrow-model → /sparrow-plan → /sparrow-apply');
   lines.push('');
+  lines.push('   Supporting: /sparrow-supporting-harness | /sparrow-supporting-reconcile | /sparrow-supporting-archive');
+  lines.push('');
   lines.push('   Full pipeline: explore → arch → design → model → plan → apply');
 
   return lines.join('\n');
