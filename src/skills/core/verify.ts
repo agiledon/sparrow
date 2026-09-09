@@ -5,7 +5,7 @@
  * and consistent with its spec documents (spec.md, api.md, tech.md, model.md).
  */
 
-import type { SkillSpec } from '../core/skills.js';
+import type { SkillSpec } from '../../core/skills.js';
 
 const VERIFY_BODY = `# Sparrow Verify — 限界上下文实现验证
 

@@ -5,7 +5,7 @@
  * Independent of the DDD pipeline stages; can be invoked at any time.
  */
 
-import type { SkillSpec } from '../core/skills.js';
+import type { SkillSpec } from '../../core/skills.js';
 
 const HARNESS_BODY = `# Sparrow Harness — 约束资产管理
 

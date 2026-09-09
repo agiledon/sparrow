@@ -6,7 +6,7 @@
  *   Phase 2: Map to application architecture (bounded contexts + application architecture diagram)
  */
 
-import type { SkillSpec } from '../core/skills.js';
+import type { SkillSpec } from '../../core/skills.js';
 
 const ARCH_BODY = `# Sparrow Arch — 业务架构与应用架构定义
 

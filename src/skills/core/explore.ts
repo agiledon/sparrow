@@ -5,7 +5,7 @@
  * produces a structured business service definition document.
  */
 
-import type { SkillSpec } from '../core/skills.js';
+import type { SkillSpec } from '../../core/skills.js';
 
 const EXPLORE_BODY = `# Sparrow Explore — 需求探索与业务服务识别
 

@@ -5,7 +5,7 @@
  * for a specific bounded context.
  */
 
-import type { SkillSpec } from '../core/skills.js';
+import type { SkillSpec } from '../../core/skills.js';
 
 const DESIGN_BODY = `# Sparrow Design — API 契约与技术选型
 

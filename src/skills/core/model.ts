@@ -4,7 +4,7 @@
  * This skill generates the domain model (static + dynamic) for a bounded context.
  */
 
-import type { SkillSpec } from '../core/skills.js';
+import type { SkillSpec } from '../../core/skills.js';
 
 const MODEL_BODY = `# Sparrow Model — 领域建模
 

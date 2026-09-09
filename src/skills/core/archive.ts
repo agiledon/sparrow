@@ -5,7 +5,7 @@
  * into docs/sparrow/changes/archive/, finalizing the revise workflow.
  */
 
-import type { SkillSpec } from '../core/skills.js';
+import type { SkillSpec } from '../../core/skills.js';
 
 const ARCHIVE_BODY = `# Sparrow Archive — 变更归档
 

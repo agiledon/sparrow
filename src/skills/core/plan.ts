@@ -4,7 +4,7 @@
  * This skill creates an implementation plan based on spec, api, tech, and model documents.
  */
 
-import type { SkillSpec } from '../core/skills.js';
+import type { SkillSpec } from '../../core/skills.js';
 
 const PLAN_BODY = `# Sparrow Plan — 实现计划制订
 

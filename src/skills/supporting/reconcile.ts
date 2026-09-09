@@ -5,7 +5,7 @@
  * with current code and conversation history after vibe coding or bugfixes.
  */
 
-import type { SkillSpec } from '../core/skills.js';
+import type { SkillSpec } from '../../core/skills.js';
 
 const RECONCILE_BODY = `# Sparrow Reconcile — 规格对账
 

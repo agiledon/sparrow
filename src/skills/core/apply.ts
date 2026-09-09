@@ -5,7 +5,7 @@
  * It drives three roles: QA Engineer, Development Engineer, and Code Review.
  */
 
-import type { SkillSpec } from '../core/skills.js';
+import type { SkillSpec } from '../../core/skills.js';
 
 const APPLY_BODY = `# Sparrow Apply — 按实现计划执行代码生成
 
