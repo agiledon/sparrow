@@ -81,6 +81,7 @@ const RECONCILE_BODY = `# Sparrow Reconcile — 规格对账
 
 - 若变更可用「新增了 X 功能 / Y 接口 / Z 页面」描述 → **规格**
 - 若变更可用「实现时必须 / 禁止」描述 → **harness**
+- 若**各类规格均未变化**，但实现相对清晰规格出现漂移（规格含明确验证规则）→ **约束缺口**：约束资产未约束"实现须遵循规格"。更新对应**项目级**约束资产（\`docs/sparrow/harness/\`），补充 Must 规则要求实现遵循规格，**不改动规格**
 
 写入 harness 时使用 Must/Must Not 格式，按 sparrow-supporting-harness 的分类表路由到对应阶段文件。
 
@@ -110,6 +111,7 @@ const RECONCILE_BODY = `# Sparrow Reconcile — 规格对账
 - [ ] 未新建 BC slug 或 \`design/{slug}/\` 目录
 - [ ] 未修改 \`plan.md\`
 - [ ] 变更清单已获用户确认
+- [ ] 规格未变但实现漂移时，已识别约束缺口并更新项目级约束资产
 - [ ] 版本元数据已递增
 - [ ] \`project.md\` 时间戳已更新（BC 列表结构未变）`;
 
