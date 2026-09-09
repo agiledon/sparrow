@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.4.0] - 2026-09-08
+## [0.4.0] - 2026-09-09
 
 ### Added
 
@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 新增 skill 分类字段 `kind`：`core`（核心工作流）与 `supporting`（辅助工作流）；辅助 skill 统一使用 `sparrow-supporting-` 前缀。
 - **`/sparrow-supporting-reconcile`** — reconcile existing spec docs and harness constraints with current code and conversation history after vibe coding or bugfixes. Does not change architecture or create new spec files.
   - 新增 **`/sparrow-supporting-reconcile`**（规格对账）：vibe coding 或 bugfix 后，将已有规格文档与 harness 约束对齐到代码实现；不修改架构、不创建新规格文件。
+- **Reconcile constraint-gap heuristic** — when specs are unchanged but implementation drifts from a clear, verifiable spec, the gap is attributed to missing harness constraints (not spec ambiguity). Reconcile then updates project-level harness assets with Must rules requiring implementation to follow the spec, leaving specs untouched.
+  - reconcile 新增**约束缺口判定**：当各类规格均未变化、但实现相对清晰规格出现漂移时，判定为约束资产缺口（而非规格歧义），更新项目级约束资产补充 Must 规则，不改动规格。
 - **`/sparrow-verify`** (core step 7) — verify bounded context code against spec.md, api.md, tech.md, and model.md; outputs `verify_report.md` with severity-classified findings.
   - 新增 **`/sparrow-verify`**（核心流程第 7 步）：验证代码与规格文档的一致性，输出分级问题报告。
 - Core pipeline expanded from 6 to **8 steps**: explore → arch → design → model → plan → apply → **verify** → **archive**.
