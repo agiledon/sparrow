@@ -1,5 +1,5 @@
 /**
- * Sparrow Explore skill template.
+ * Sparrow Requirement skill template.
  *
  * This skill identifies business services from raw requirements and
  * produces a structured business service definition document.
@@ -7,13 +7,13 @@
 
 import type { SkillSpec } from '../../core/skills.js';
 
-const EXPLORE_BODY = `# Sparrow Explore — 需求探索与业务服务识别
+const REQUIREMENT_BODY = `# Sparrow Requirement — 需求探索与业务服务识别
 
 ## 执行顺序检查
 
 在执行之前，请检查当前阶段是否合适：
 
-- **本阶段**：sparrow-explore（第 1 步，共 8 步）
+- **本阶段**：sparrow-requirement（第 1 步，共 8 步）
 - **所属层级**：产品级（product-level）
 - **前置条件**：无（这是整个 DDD 流程的第一步）
 - **输入要求**：用户需要提供原始需求文档或需求描述
@@ -48,7 +48,7 @@ const EXPLORE_BODY = `# Sparrow Explore — 需求探索与业务服务识别
 
 1. 如果 \`project.md\` 不存在，根据当前项目信息创建它
 2. 在"文档索引"部分，更新 \`requirement/prd-business.md\` 和 \`requirement/prd-quality.md\` 的链接
-3. 将对应条目的状态从 \`_待生成 (sparrow-explore)_\` 更新为 \`_v{version}_\`（使用实际版本号）
+3. 将对应条目的状态从 \`_待生成 (sparrow-requirement)_\` 更新为 \`_v{version}_\`（使用实际版本号）
 4. 更新文件头部的"最后更新"时间戳
 
 **project.md 路径**: \`docs/sparrow/project.md\`
@@ -63,7 +63,7 @@ const EXPLORE_BODY = `# Sparrow Explore — 需求探索与业务服务识别
 <!--
   version: v1.0
   last-updated: {ISO_8601_TIMESTAMP}
-  generated-by: sparrow-explore
+  generated-by: sparrow-requirement
   sparrow-version: {从 .sparrow/sparrow.json 读取}
 -->
 \`\`\`
@@ -84,7 +84,7 @@ const EXPLORE_BODY = `# Sparrow Explore — 需求探索与业务服务识别
 
 ## 整体流程
 
-sparrow-explore 分为两个阶段：
+sparrow-requirement 分为两个阶段：
 
 1. **阶段一：互动式需求探索（Grill Me）** — 通过一问一答的方式，深度挖掘用户需求
 2. **阶段二：需求文档生成** — 将探索结果整理为功能需求文档（prd-business.md）和系统质量属性文档（prd-quality.md）
@@ -191,7 +191,7 @@ sparrow-explore 分为两个阶段：
 6. 更新版本元数据：版本号递增（v1.0→v1.1），并在元数据块追加 \`change-id: {change-id}\`（基线不追加此字段）。
 7. 更新 \`docs/sparrow/project.md\`：同步 \`requirement/prd-business.md\` 和 \`requirement/prd-quality.md\` 的版本状态。
 
-> explore 在 revise 模式下**始终执行**（任何变更都从需求 delta 开始）；下游阶段按 BC 档位按需触发（见 sparrow-arch 变更处理章节）。
+> requirement 在 revise 模式下**始终执行**（任何变更都从需求 delta 开始）；下游阶段按 BC 档位按需触发（见 sparrow-arch 变更处理章节）。
 
 ## 核心要求：全面覆盖原始需求
 
@@ -625,18 +625,18 @@ UI 探索完成后，生成以下文档到 **\`docs/sparrow/requirement/ui/\`**�
 
 ## 完成后的下一步
 
-✅ 完成 sparrow-explore 后（含可选的 UI 设计探索），请执行 **/sparrow-arch**（产品级）—— 基于 prd-business.md 和 prd-quality.md，划分子领域并映射限界上下文，定义系统的业务架构和应用架构。若有 UI 需求产出，sparrow-arch 将同时生成前端架构文档 \`docs/sparrow/architecture/frontend.md\`。`;
+✅ 完成 sparrow-requirement 后（含可选的 UI 设计探索），请执行 **/sparrow-arch**（产品级）—— 基于 prd-business.md 和 prd-quality.md，划分子领域并映射限界上下文，定义系统的业务架构和应用架构。若有 UI 需求产出，sparrow-arch 将同时生成前端架构文档 \`docs/sparrow/architecture/frontend.md\`。`;
 
 export const spec: SkillSpec = {
-  id: 'sparrow-explore',
-  name: 'Sparrow Explore',
+  id: 'sparrow-requirement',
+  name: 'Sparrow Requirement',
   description: 'Identify business services and explore UI design from raw requirements',
   phase: 'product',
   order: 1,
   nextSkill: 'sparrow-arch',
-  commandName: 'sparrow-explore',
+  commandName: 'sparrow-requirement',
   kind: 'core',
   category: 'DDD',
-  harness: ['explore/requirements.md'],
-  body: EXPLORE_BODY,
+  harness: ['requirement/requirements.md'],
+  body: REQUIREMENT_BODY,
 };

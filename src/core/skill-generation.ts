@@ -67,6 +67,7 @@ function buildHarnessSection(adapter: ToolCommandAdapter, skillId: string, regis
 
 /** Skill ids removed in prior releases; cleaned up on regenerate. */
 const DEPRECATED_SKILL_IDS = [
+  'sparrow-explore',
   'sparrow-harness',
   'sparrow-helper-sync',
   'sparrow-helper-harness',

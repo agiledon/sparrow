@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Changed
+
+- **Breaking**: `/sparrow-explore` renamed to **`/sparrow-requirement`**. Harness path `explore/requirements.md` → `requirement/requirements.md`. Re-run `sparrow init` to regenerate skill files; deprecated `sparrow-explore` assets are cleaned up automatically.
+  - **破坏性变更**：需求阶段命令更名为 **`/sparrow-requirement`**；约束资产路径同步调整。重新执行 `sparrow init` 以更新 skill 文件。
+
+---
+
 ## [0.4.0] - 2026-09-09
 
 ### Added

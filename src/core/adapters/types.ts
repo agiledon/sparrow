@@ -5,7 +5,7 @@
  */
 
 export interface CommandContent {
-  /** Skill/command id (e.g., 'sparrow-explore') */
+  /** Skill/command id (e.g., 'sparrow-requirement') */
   id: string;
   /** Display name */
   name: string;

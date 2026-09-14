@@ -1,4 +1,4 @@
-import { spec as exploreSpec } from './core/explore.js';
+import { spec as requirementSpec } from './core/requirement.js';
 import { spec as archSpec } from './core/arch.js';
 import { spec as designSpec } from './core/design.js';
 import { spec as modelSpec } from './core/model.js';
@@ -14,7 +14,7 @@ import { registerPluginSkillTemplates } from '../core/skill-generation.js';
 import { loadBundledPlugins } from '../plugins/load.js';
 
 const CORE_SKILL_SPECS = [
-  exploreSpec,
+  requirementSpec,
   archSpec,
   designSpec,
   modelSpec,

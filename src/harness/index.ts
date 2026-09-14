@@ -8,7 +8,7 @@
  */
 
 import { CONSTITUTION_BODY } from './constitution.js';
-import { EXPLORE_REQUIREMENTS_BODY } from './explore-requirements.js';
+import { REQUIREMENT_REQUIREMENTS_BODY } from './requirement-requirements.js';
 import { ARCH_BUSINESS_BODY } from './arch-business.js';
 import { ARCH_APPLICATION_BODY } from './arch-application.js';
 import { ARCH_FRONTEND_BODY } from './arch-frontend.js';
@@ -22,7 +22,7 @@ import { APPLY_IMPLEMENTATION_BODY } from './apply-implementation.js';
  * Harness asset version. Bump when constraint content changes so that
  * `sparrow update` can sync managed template files.
  */
-export const HARNESS_VERSION = '1.0.8';
+export const HARNESS_VERSION = '1.0.9';
 
 /**
  * Marker embedded at the top of managed (tool-written) template files.
@@ -42,7 +42,7 @@ export interface HarnessFile {
 
 export const HARNESS_FILES: HarnessFile[] = [
   { relPath: 'constitution.md', title: '约束资产宪法', body: CONSTITUTION_BODY },
-  { relPath: 'explore/requirements.md', title: '需求探索约束', body: EXPLORE_REQUIREMENTS_BODY },
+  { relPath: 'requirement/requirements.md', title: '需求约束', body: REQUIREMENT_REQUIREMENTS_BODY },
   { relPath: 'arch/business.md', title: '业务架构约束', body: ARCH_BUSINESS_BODY },
   { relPath: 'arch/application.md', title: '应用架构约束', body: ARCH_APPLICATION_BODY },
   { relPath: 'arch/frontend.md', title: '前端架构约束', body: ARCH_FRONTEND_BODY },

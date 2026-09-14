@@ -88,7 +88,7 @@ const RECONCILE_BODY = `# Sparrow Reconcile — 规格对账
 ### 阶段 5：用户确认与写入
 
 1. 输出**变更清单**（文件路径 + 变更摘要 + 分类 + 跳过项），请用户确认后再写入
-2. 遵循版本元数据规范（复用 explore/design 中的 \`<!-- version: ... -->\` 块；次版本递增）
+2. 遵循版本元数据规范（复用 requirement/design 中的 \`<!-- version: ... -->\` 块；次版本递增）
 3. 更新 \`docs/sparrow/project.md\` 的「最后更新」时间戳及已修改文档的版本状态
 4. **不改动** project.md 中的 BC 列表结构、slug 条目或架构文档链接
 
@@ -98,7 +98,7 @@ const RECONCILE_BODY = `# Sparrow Reconcile — 规格对账
 |--|--------------------------|---------------|
 | 时机 | 事后（vibe coding / bugfix 后） | 事前（规划演进架构变更） |
 | 架构 | 不修改子领域 / BC 划分 | 可修改架构、新增 BC |
-| 入口 | 随时显式调用 | explore 检测到活动 change-id |
+| 入口 | 随时显式调用 | requirement 检测到活动 change-id |
 | 归档 | 不触发 | 完成后 sparrow-archive（core 流水线第 8 步） |
 
 若检测到活动 change-id（\`docs/sparrow/changes/\` 有未归档变更），提示用户：**架构级变更应走 revise 流程；reconcile 仅对齐已有规格，不替代 revise**。

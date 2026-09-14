@@ -6,7 +6,7 @@
   "engines": { "sparrow": ">=0.3.0" },
   "contributes": {
     "augments": [
-      { "targetSkill": "sparrow-explore" }
+      { "targetSkill": "sparrow-requirement" }
     ]
   }
 }

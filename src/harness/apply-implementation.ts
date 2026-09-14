@@ -117,7 +117,7 @@ export const APPLY_IMPLEMENTATION_BODY = `# 代码实现约束（apply / impleme
 
 > 仅当当前 slug 为「交互上下文」时生效。
 
-1. **必须**结合 sparrow-explore 产出的全部 UI 规格实现页面：\`requirement/ui/ui-spec.md\`（页面结构、布局、交互方式）、\`design-tokens.md\`（色彩体系、字体层级、间距、圆角/阴影）、\`components/component-library.md\`（组件定义与变体）、\`prototypes/*.html\`（视觉与交互基准）。
+1. **必须**结合 sparrow-requirement 产出的全部 UI 规格实现页面：\`requirement/ui/ui-spec.md\`（页面结构、布局、交互方式）、\`design-tokens.md\`（色彩体系、字体层级、间距、圆角/阴影）、\`components/component-library.md\`（组件定义与变体）、\`prototypes/*.html\`（视觉与交互基准）。
 2. **必须**确保前端与 edge 层的 API 调用正确：前端 services / adapters 调用的 BFF 端点路径、方法、请求/响应字段与 \`api.md\` 契约及契约绑定表一致。
 3. **Web 端**必须支持响应式布局，适配不同分辨率与终端（桌面 / 平板 / 移动）。
 4. **桌面窗体端**（如 QT / QML）：

@@ -33,7 +33,7 @@ Sparrow 将所有 AI 辅助开发组织为两类工作流。每个 skill 都带�
 flowchart LR
   subgraph core ["核心工作流 (kind: core)"]
     direction LR
-    E[explore] --> A[arch] --> D[design] --> M[model] --> P[plan] --> AP[apply] --> V[verify] --> AR[archive]
+    R[requirement] --> A[arch] --> D[design] --> M[model] --> P[plan] --> AP[apply] --> V[verify] --> AR[archive]
   end
 
   subgraph supporting ["支持工作流 (kind: supporting)"]
@@ -52,7 +52,7 @@ flowchart LR
 
 | 步骤 | 命令 | 层级 | 作用 |
 |------|------|------|------|
-| 1 | `/sparrow-explore` | 产品级 | 交互式需求探索（Grill Me）+ 生成功能与质量需求文档 + [可选] UI 设计探索 |
+| 1 | `/sparrow-requirement` | 产品级 | 交互式需求探索（Grill Me）+ 生成功能与质量需求文档 + [可选] UI 设计探索 |
 | 2 | `/sparrow-arch` | 产品级 | 定义业务架构（子域）+ 应用架构（限界上下文）+ [若有 UI] 含交互上下文的前端架构 |
 | 3 | `/sparrow-design @{slug}` | 团队级 | 为限界上下文或交互上下文定义 API 契约与技术栈 |
 | 4 | `/sparrow-model @{slug}` | 团队级 | 领域建模（后端 BC）或 ViewModel + 组件建模（交互上下文） |
@@ -157,7 +157,7 @@ sparrow init --tools all --force
 your-project/
 ├── .claude/
 │   ├── skills/
-│   │   ├── sparrow-explore/SKILL.md
+│   │   ├── sparrow-requirement/SKILL.md
 │   │   ├── sparrow-arch/SKILL.md
 │   │   ├── sparrow-design/SKILL.md
 │   │   ├── sparrow-model/SKILL.md
@@ -168,7 +168,7 @@ your-project/
 │   │   ├── sparrow-supporting-harness/SKILL.md
 │   │   └── sparrow-supporting-reconcile/SKILL.md
 │   └── commands/sparrow/
-│       ├── sparrow-explore.md
+│       ├── sparrow-requirement.md
 │       ├── sparrow-arch.md
 │       └── ...
 ├── .opencode/          #（若选择了 OpenCode）
@@ -195,7 +195,7 @@ sparrow update
 
 在 AI 工具中以斜杠命令调用 skill。Sparrow 提供两类工作流——完整说明见 [开发工作流](#开发工作流)：
 
-- **核心工作流** — 按序运行八步流水线：`/sparrow-explore` → `/sparrow-arch` → `/sparrow-design @{slug}` → … → `/sparrow-verify @{slug}` → `/sparrow-archive`
+- **核心工作流** — 按序运行八步流水线：`/sparrow-requirement` → `/sparrow-arch` → `/sparrow-design @{slug}` → … → `/sparrow-verify @{slug}` → `/sparrow-archive`
 - **支持工作流** — 按需随时调用：`/sparrow-supporting-harness`、`/sparrow-supporting-reconcile`
 
 > **重要**：产品级核心步骤（1–2）运行一次。团队级核心步骤（3–8）按 slug 运行——所有上下文（后端 BC + 交互上下文）共用同一套命令且完全正交。
@@ -212,7 +212,7 @@ sparrow update
 
 [核心工作流](#核心工作流) 各步骤的输入、输出与行为细节。
 
-### 步骤 1：sparrow-explore（产品级）
+### 步骤 1：sparrow-requirement（产品级）
 
 **输入**：原始需求文档或描述  
 **输出**：
@@ -220,7 +220,7 @@ sparrow update
 - `docs/sparrow/requirement/prd-quanlity.md` — 系统质量属性（性能、安全、高可用等）
 - `docs/sparrow/requirement/ui/` — \[可选\] UI 设计规格、设计令牌、组件库与交互式 HTML 原型
 
-sparrow-explore 采用 **Grill Me** 交互探索模式，分两阶段。**阶段 1**：业务需求——覆盖参与者、核心流程、业务规则、边界条件、异常场景与质量属性。**阶段 2**：生成需求文档后，可选进入 **UI 设计探索**（同样为 Grill Me），产出用户画像、旅程、页面概念与视觉偏好——纯 UX，不限界上下文关联。
+sparrow-requirement 采用 **Grill Me** 交互探索模式，分两阶段。**阶段 1**：业务需求——覆盖参与者、核心流程、业务规则、边界条件、异常场景与质量属性。**阶段 2**：生成需求文档后，可选进入 **UI 设计探索**（同样为 Grill Me），产出用户画像、旅程、页面概念与视觉偏好——纯 UX，不限界上下文关联。
 
 ### 步骤 2：sparrow-arch（产品级）
 
@@ -288,9 +288,9 @@ sparrow-explore 采用 **Grill Me** 交互探索模式，分两阶段。**阶段
 your-project/
 ├── docs/sparrow/
 │   ├── requirement/
-│   │   ├── prd-business.md               # sparrow-explore（功能需求）
-│   │   ├── prd-quanlity.md               # sparrow-explore（质量属性）
-│   │   └── ui/                            # [可选] sparrow-explore（UI 设计探索）
+│   │   ├── prd-business.md               # sparrow-requirement（功能需求）
+│   │   ├── prd-quanlity.md               # sparrow-requirement（质量属性）
+│   │   └── ui/                            # [可选] sparrow-requirement（UI 设计探索）
 │   │       ├── ui-spec.md
 │   │       ├── design-tokens.md
 │   │       ├── components/
@@ -339,7 +339,7 @@ Sparrow 内置 **约束资产**（harness）——各阶段强制执行的「必
 ```
 harness/
 ├── constitution.md            # 聚合索引：阶段 → 文件 → 描述
-├── explore/requirements.md    # 业务服务识别 + UI 设计探索纪律
+├── requirement/requirements.md    # 业务服务识别 + UI 设计探索纪律
 ├── arch/business.md           # 子域分类纪律
 ├── arch/application.md        # 限界上下文、自治与通信纪律
 ├── arch/frontend.md           # 前端架构与交互上下文纪律

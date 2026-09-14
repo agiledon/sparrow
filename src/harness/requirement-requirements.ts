@@ -1,10 +1,10 @@
 /**
- * Explore stage constraints — business service identification discipline.
+ * Requirement stage constraints — business service identification discipline.
  */
 
-export const EXPLORE_REQUIREMENTS_BODY = `# 需求探索约束（explore / requirements）
+export const REQUIREMENT_REQUIREMENTS_BODY = `# 需求约束（requirement / requirements）
 
-本文件定义 sparrow-explore 阶段**必须遵守 / 禁止**的业务服务识别及 UI 设计探索纪律。
+本文件定义 sparrow-requirement 阶段**必须遵守 / 禁止**的业务服务识别及 UI 设计探索纪律。
 
 ## 必须（MUST）
 

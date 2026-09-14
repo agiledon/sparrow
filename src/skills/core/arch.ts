@@ -24,7 +24,7 @@ const ARCH_BODY = `# Sparrow Arch — 业务架构与应用架构定义
 \`\`\`
 
 **前置条件检查**：
-- 如果 \`docs/sparrow/requirement/prd-business.md\` 不存在，请提示用户先执行 **sparrow-explore**
+- 如果 \`docs/sparrow/requirement/prd-business.md\` 不存在，请提示用户先执行 **sparrow-requirement**
 - 如果已存在 \`docs/sparrow/architecture/business.md\` 或 \`docs/sparrow/architecture/application.md\`，请参考下方"输出文件存在性检查"章节处理
 
 {{HARNESS}}
@@ -597,11 +597,11 @@ Thought（思考）→ Action（行动）→ Observation（观察）→ Next Act
 - **不满足** → 普通模式，跳过本节，按原流程执行（**基线零副作用**）。
 - **满足** → 进入 revise 模式：加载 \`docs/sparrow/changes/{change-id}/proposal.md\` 与 \`deltas/\`，执行下方决策框架。
 
-> 完整约定（目录结构、delta 格式、版本元数据扩展、project.md 变更管理块、BC 档位判定）见 \`docs/prd/sparrow-change-management.md\`。各下游阶段（design/model/plan/apply/explore）的 revise 分支均引用本节作为权威定义。
+> 完整约定（目录结构、delta 格式、版本元数据扩展、project.md 变更管理块、BC 档位判定）见 \`docs/prd/sparrow-change-management.md\`。各下游阶段（design/model/plan/apply/requirement）的 revise 分支均引用本节作为权威定义。
 
 ## BC 档位判定（revise 范围精确定界）
 
-revise 模式下，对每个**受变更影响的 BC**，依据 \`project.md\` 的逐 BC 版本记录、\`plan.md\` 步骤是否全 \`[x]\`、\`code_review.md\` 是否存在，判定其进度档位，决定下游改到哪一层（explore 与 arch 始终重跑）：
+revise 模式下，对每个**受变更影响的 BC**，依据 \`project.md\` 的逐 BC 版本记录、\`plan.md\` 步骤是否全 \`[x]\`、\`code_review.md\` 是否存在，判定其进度档位，决定下游改到哪一层（requirement 与 arch 始终重跑）：
 
 | 档位 | 判定依据 | 含义 |
 |---|---|---|
@@ -692,8 +692,8 @@ revise 模式下，对每个**受变更影响的 BC**，依据 \`project.md\` �
 
 UI 规格尚未生成。询问用户：
 
-> 是否已在 sparrow-explore 阶段进行了 UI 设计探索？
-> - 如果用户尚未执行且希望执行，请提示用户先重新执行 **/sparrow-explore**（选择 update 模式，并选择继续 UI 设计探索），然后返回本阶段继续。
+> 是否已在 sparrow-requirement 阶段进行了 UI 设计探索？
+> - 如果用户尚未执行且希望执行，请提示用户先重新执行 **/sparrow-requirement**（选择 update 模式，并选择继续 UI 设计探索），然后返回本阶段继续。
 > - 如果用户不需要 UI 设计，则跳过本节，以无前端模式继续。
 
 ### 如果存在

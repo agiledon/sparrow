@@ -1,6 +1,6 @@
 # Sparrow UI Exploration — UI 设计探索引擎
 
-> 本引擎为 sparrow-explore 的阶段三（UI 设计探索）提供增强的 UI 设计能力。
+> 本引擎为 sparrow-requirement 的阶段三（UI 设计探索）提供增强的 UI 设计能力。
 
 ## 输出目录
 

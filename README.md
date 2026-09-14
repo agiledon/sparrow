@@ -33,7 +33,7 @@ Sparrow organizes all AI-assisted development into two workflow categories. Each
 flowchart LR
   subgraph core ["Core Workflows (kind: core)"]
     direction LR
-    E[explore] --> A[arch] --> D[design] --> M[model] --> P[plan] --> AP[apply] --> V[verify] --> AR[archive]
+    R[requirement] --> A[arch] --> D[design] --> M[model] --> P[plan] --> AP[apply] --> V[verify] --> AR[archive]
   end
 
   subgraph supporting ["Supporting Workflows (kind: supporting)"]
@@ -52,7 +52,7 @@ The **core workflow** is Sparrow's main spec-driven DDD pipeline — eight order
 
 | Step | Command | Level | What it does |
 |------|---------|-------|--------------|
-| 1 | `/sparrow-explore` | Product | Interactive requirement exploration (Grill Me) + generate functional & quality requirement docs + [optional] UI design exploration |
+| 1 | `/sparrow-requirement` | Product | Interactive requirement exploration (Grill Me) + generate functional & quality requirement docs + [optional] UI design exploration |
 | 2 | `/sparrow-arch` | Product | Define business architecture (subdomains) + application architecture (bounded contexts) + [if UI exists] frontend architecture with Interaction Context |
 | 3 | `/sparrow-design @{slug}` | Team | Define API contracts and tech stack for a bounded context or Interaction Context |
 | 4 | `/sparrow-model @{slug}` | Team | Domain modeling (backend BC) or ViewModel + component modeling (Interaction Context) |
@@ -157,7 +157,7 @@ This creates skill and command files for each selected tool:
 your-project/
 ├── .claude/
 │   ├── skills/
-│   │   ├── sparrow-explore/SKILL.md
+│   │   ├── sparrow-requirement/SKILL.md
 │   │   ├── sparrow-arch/SKILL.md
 │   │   ├── sparrow-design/SKILL.md
 │   │   ├── sparrow-model/SKILL.md
@@ -168,7 +168,7 @@ your-project/
 │   │   ├── sparrow-supporting-harness/SKILL.md
 │   │   └── sparrow-supporting-reconcile/SKILL.md
 │   └── commands/sparrow/
-│       ├── sparrow-explore.md
+│       ├── sparrow-requirement.md
 │       ├── sparrow-arch.md
 │       └── ...
 ├── .opencode/          # (if OpenCode selected)
@@ -195,7 +195,7 @@ This compares your local version against the npm registry and prompts you to upg
 
 Invoke skills as slash commands in your AI tool. Sparrow provides two workflow categories — see [Development Workflows](#development-workflows) for the full picture:
 
-- **Core workflows** — run the eight-step pipeline in order: `/sparrow-explore` → `/sparrow-arch` → `/sparrow-design @{slug}` → … → `/sparrow-verify @{slug}` → `/sparrow-archive`
+- **Core workflows** — run the eight-step pipeline in order: `/sparrow-requirement` → `/sparrow-arch` → `/sparrow-design @{slug}` → … → `/sparrow-verify @{slug}` → `/sparrow-archive`
 - **Supporting workflows** — invoke anytime as needed: `/sparrow-supporting-harness`, `/sparrow-supporting-reconcile`
 
 > **Important**: Product-level core steps (1–2) run once. Team-level core steps (3–8) run per slug — all contexts (backend BCs + Interaction Context) share the same commands and are fully orthogonal.
@@ -212,7 +212,7 @@ After any step, you can:
 
 Detailed inputs, outputs, and behavior for each step in the [core workflow](#core-workflows).
 
-### Step 1: sparrow-explore (Product-level)
+### Step 1: sparrow-requirement (Product-level)
 
 **Input**: Raw requirements document or description  
 **Output**:
@@ -220,7 +220,7 @@ Detailed inputs, outputs, and behavior for each step in the [core workflow](#cor
 - `docs/sparrow/requirement/prd-quanlity.md` — system quality attributes (performance, security, high availability, etc.)
 - `docs/sparrow/requirement/ui/` — \[optional\] UI design specs, design tokens, component library, and interactive HTML prototypes
 
-sparrow-explore uses a **Grill Me** interactive exploration pattern in two phases. **Phase 1**: Business requirements — covers actors, core flows, business rules, boundary conditions, exception scenarios, and quality attributes. **Phase 2**: After generating the requirement docs, optionally enters **UI design exploration** (also Grill Me), producing user personas, journeys, page concepts, and visual preferences — pure UX, no bounded context associations.
+sparrow-requirement uses a **Grill Me** interactive exploration pattern in two phases. **Phase 1**: Business requirements — covers actors, core flows, business rules, boundary conditions, exception scenarios, and quality attributes. **Phase 2**: After generating the requirement docs, optionally enters **UI design exploration** (also Grill Me), producing user personas, journeys, page concepts, and visual preferences — pure UX, no bounded context associations.
 
 ### Step 2: sparrow-arch (Product-level)
 
@@ -288,9 +288,9 @@ After running the full pipeline, your project will have:
 your-project/
 ├── docs/sparrow/
 │   ├── requirement/
-│   │   ├── prd-business.md               # sparrow-explore (functional requirements)
-│   │   ├── prd-quanlity.md               # sparrow-explore (quality attributes)
-│   │   └── ui/                            # [optional] sparrow-explore (UI design exploration)
+│   │   ├── prd-business.md               # sparrow-requirement (functional requirements)
+│   │   ├── prd-quanlity.md               # sparrow-requirement (quality attributes)
+│   │   └── ui/                            # [optional] sparrow-requirement (UI design exploration)
 │   │       ├── ui-spec.md
 │   │       ├── design-tokens.md
 │   │       ├── components/
@@ -339,7 +339,7 @@ The global harness contains one file per stage plus a constitution:
 ```
 harness/
 ├── constitution.md            # Aggregate index: stage → file → description
-├── explore/requirements.md    # Business service identification + UI design exploration discipline
+├── requirement/requirements.md    # Business service identification + UI design exploration discipline
 ├── arch/business.md           # Subdomain classification discipline
 ├── arch/application.md        # Bounded context, autonomy & communication discipline
 ├── arch/frontend.md           # Frontend architecture & Interaction Context discipline

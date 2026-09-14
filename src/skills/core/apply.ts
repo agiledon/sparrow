@@ -363,7 +363,7 @@ edge/
 
 ### 必读规约（交互上下文）
 
-除 \`design/{slug}/\` 下的 spec.md / api.md / tech.md / model.md / plan.md 外，还必须读取 sparrow-explore 产出的 UI 规格：
+除 \`design/{slug}/\` 下的 spec.md / api.md / tech.md / model.md / plan.md 外，还必须读取 sparrow-requirement 产出的 UI 规格：
 
 - \`docs/sparrow/requirement/ui/ui-spec.md\` — 页面结构、布局、交互方式
 - \`docs/sparrow/requirement/ui/design-tokens.md\` — 色彩体系、字体层级、间距、圆角/阴影

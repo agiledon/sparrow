@@ -15,12 +15,12 @@ const ARCHIVE_BODY = `# Sparrow Archive — 变更归档
 当前步骤：sparrow-archive（第 8 步 / 共 8 步）
 所属层级：团队级（team-level）
 前置条件：revise 模式下存在活动变更；受影响 BC 已完成 sparrow-apply 且 sparrow-verify 无 P0/P1 阻塞问题
-后续步骤：无（归档完成后，新需求从 sparrow-explore 进入新一轮 revise）
+后续步骤：无（归档完成后，新需求从 sparrow-requirement 进入新一轮 revise）
 \`\`\`
 
 ## 用途
 
-将一次**已完成**的变更（revise 模式产生）正式归档。归档后该变更成为基线历史；若再有新需求，将新建 \`changes/{new}/\` 并从 explore 起进入新一轮 revise 模式。
+将一次**已完成**的变更（revise 模式产生）正式归档。归档后该变更成为基线历史；若再有新需求，将新建 \`changes/{new}/\` 并从 requirement 起进入新一轮 revise 模式。
 
 > 本技能**仅显式调用**，绝不自动触发。基线（首次需求、无活动变更）无需也不应调用本技能。
 
@@ -68,7 +68,7 @@ const ARCHIVE_BODY = `# Sparrow Archive — 变更归档
 
 ## 完成后的下一步
 
-🎉 变更 \`{change-id}\` 已归档。如发起新的需求变更，从 **sparrow-explore** 开始，系统将自动进入 revise 模式。`;
+🎉 变更 \`{change-id}\` 已归档。如发起新的需求变更，从 **sparrow-requirement** 开始，系统将自动进入 revise 模式。`;
 
 export const spec: SkillSpec = {
   id: 'sparrow-archive',

@@ -147,8 +147,8 @@ const DESIGN_BODY = `# Sparrow Design — API 契约与技术选型
 
 **在 sequence diagram 中，actor 向当前限界上下文应只发起一次请求。**
 
-这是连接 explore 与 design 的关键约束：
-- explore 阶段识别的每个**业务服务**，对应 design 阶段 actor 向当前 BC 发起的**一次请求**
+这是连接 requirement 与 design 的关键约束：
+- requirement 阶段识别的每个**业务服务**，对应 design 阶段 actor 向当前 BC 发起的**一次请求**
 - 这一请求驱动出一个**序列图**，进而推导出一个 **API 定义**
 - 因此：**一个业务服务 → 一个序列图 → 一个 API**
 

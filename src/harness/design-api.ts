@@ -14,7 +14,7 @@ export const DESIGN_API_BODY = `# API 设计约束（design / api-design）
 
 ## 一个业务服务 = 一个 API
 
-1. explore 阶段识别的每个**业务服务**，对应 design 阶段 actor 向当前 BC 发起的**一次请求**，驱动出一个序列图，进而推导出一个 API 定义。
+1. requirement 阶段识别的每个**业务服务**，对应 design 阶段 actor 向当前 BC 发起的**一次请求**，驱动出一个序列图，进而推导出一个 API 定义。
 2. **每个序列图中，actor（参与者 / 其他 BC / 外部系统）向当前 BC 只发起一次请求**。
 3. 当前 BC 对外提供了 N 个业务服务（来自 spec.md），则应绘制 N 个独立序列图、定义 N 个 API。
 
