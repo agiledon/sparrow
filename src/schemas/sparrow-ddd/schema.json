@@ -1,0 +1,193 @@
+{
+  "name": "sparrow-ddd",
+  "version": 1,
+  "description": "Sparrow core DDD pipeline — requirement through archive",
+  "coreStepCount": 8,
+  "steps": [
+    {
+      "id": "requirement",
+      "skillId": "sparrow-requirement",
+      "name": "Sparrow Requirement",
+      "description": "Identify business services and explore UI design from raw requirements",
+      "phase": "product",
+      "order": 1,
+      "nextSkill": "sparrow-arch",
+      "kind": "core",
+      "category": "DDD",
+      "template": "sparrow-requirement.md",
+      "workflowBlock": "sparrow-requirement.md",
+      "harness": [
+        "requirement/requirements.md"
+      ],
+      "requires": []
+    },
+    {
+      "id": "arch",
+      "skillId": "sparrow-arch",
+      "name": "Sparrow Arch",
+      "description": "Define business architecture and application architecture with bounded contexts",
+      "phase": "product",
+      "order": 2,
+      "nextSkill": "sparrow-design",
+      "kind": "core",
+      "category": "DDD",
+      "template": "sparrow-arch.md",
+      "workflowBlock": "sparrow-arch.md",
+      "harness": [
+        "arch/business.md",
+        "arch/application.md",
+        "arch/frontend.md"
+      ],
+      "requires": [
+        "requirement"
+      ]
+    },
+    {
+      "id": "design",
+      "skillId": "sparrow-design",
+      "name": "Sparrow Design",
+      "description": "Define API contracts and technology stack for a bounded context",
+      "phase": "team",
+      "order": 3,
+      "nextSkill": "sparrow-model",
+      "kind": "core",
+      "category": "DDD",
+      "template": "sparrow-design.md",
+      "workflowBlock": "sparrow-design.md",
+      "scope": "slug",
+      "harness": [
+        "design/api-design.md"
+      ],
+      "requires": [
+        "arch"
+      ]
+    },
+    {
+      "id": "model",
+      "skillId": "sparrow-model",
+      "name": "Sparrow Model",
+      "description": "Extract domain model (static and dynamic) for a bounded context",
+      "phase": "team",
+      "order": 4,
+      "nextSkill": "sparrow-plan",
+      "kind": "core",
+      "category": "DDD",
+      "template": "sparrow-model.md",
+      "workflowBlock": "sparrow-model.md",
+      "scope": "slug",
+      "harness": [
+        "model/architecture.md",
+        "model/domain-modeling.md",
+        "model/view-modeling.md"
+      ],
+      "requires": [
+        "design"
+      ]
+    },
+    {
+      "id": "plan",
+      "skillId": "sparrow-plan",
+      "name": "Sparrow Plan",
+      "description": "Devise implementation plan based on spec, API, tech stack, and domain model",
+      "phase": "team",
+      "order": 5,
+      "nextSkill": "sparrow-apply",
+      "kind": "core",
+      "category": "DDD",
+      "template": "sparrow-plan.md",
+      "workflowBlock": "sparrow-plan.md",
+      "scope": "slug",
+      "harness": [],
+      "requires": [
+        "model"
+      ]
+    },
+    {
+      "id": "apply",
+      "skillId": "sparrow-apply",
+      "name": "Sparrow Apply",
+      "description": "Execute the implementation plan and generate DDD-structured code",
+      "phase": "team",
+      "order": 6,
+      "nextSkill": "sparrow-verify",
+      "kind": "core",
+      "category": "DDD",
+      "template": "sparrow-apply.md",
+      "workflowBlock": "sparrow-apply.md",
+      "scope": "slug",
+      "harness": [
+        "apply/implementation.md"
+      ],
+      "requires": [
+        "plan"
+      ]
+    },
+    {
+      "id": "verify",
+      "skillId": "sparrow-verify",
+      "name": "Sparrow Verify",
+      "description": "Verify bounded context code against spec.md, api.md, tech.md, and model.md",
+      "phase": "team",
+      "order": 7,
+      "nextSkill": "sparrow-archive",
+      "kind": "core",
+      "category": "DDD",
+      "template": "sparrow-verify.md",
+      "workflowBlock": "sparrow-verify.md",
+      "scope": "slug",
+      "harness": [
+        "apply/implementation.md"
+      ],
+      "requires": [
+        "apply"
+      ]
+    },
+    {
+      "id": "archive",
+      "skillId": "sparrow-archive",
+      "name": "Sparrow Archive",
+      "description": "Archive a completed change (revise workflow) into docs/sparrow/change/archive/",
+      "phase": "team",
+      "order": 8,
+      "nextSkill": null,
+      "kind": "core",
+      "category": "DDD",
+      "template": "sparrow-archive.md",
+      "workflowBlock": "sparrow-archive.md",
+      "harness": [],
+      "requires": [
+        "verify"
+      ]
+    },
+    {
+      "id": "supporting-harness",
+      "skillId": "sparrow-supporting-harness",
+      "name": "Sparrow Harness",
+      "description": "View, add, and maintain constraint assets (harness) for the project",
+      "phase": "product",
+      "order": 101,
+      "nextSkill": null,
+      "kind": "supporting",
+      "category": "DDD",
+      "template": "sparrow-supporting-harness.md",
+      "workflowBlock": null,
+      "harness": [],
+      "requires": []
+    },
+    {
+      "id": "supporting-reconcile",
+      "skillId": "sparrow-supporting-reconcile",
+      "name": "Sparrow Reconcile",
+      "description": "Reconcile existing spec docs and harness constraints with current code and conversation history",
+      "phase": "team",
+      "order": 102,
+      "nextSkill": null,
+      "kind": "supporting",
+      "category": "DDD",
+      "template": "sparrow-supporting-reconcile.md",
+      "workflowBlock": null,
+      "harness": [],
+      "requires": []
+    }
+  ]
+}

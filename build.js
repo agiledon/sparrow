@@ -23,6 +23,7 @@ const buildOpts = {
   sourcemap: true,
   loader: {
     '.md': 'text',
+    '.yaml': 'text',
   },
   external: [
     'commander',

@@ -1,39 +1,21 @@
-import { spec as requirementSpec } from './core/requirement.js';
-import { spec as archSpec } from './core/arch.js';
-import { spec as designSpec } from './core/design.js';
-import { spec as modelSpec } from './core/model.js';
-import { spec as planSpec } from './core/plan.js';
-import { spec as applySpec } from './core/apply.js';
-import { spec as verifySpec } from './core/verify.js';
-import { spec as archiveSpec } from './core/archive.js';
-import { spec as harnessSpec } from './supporting/harness.js';
-import { spec as reconcileSpec } from './supporting/reconcile.js';
 import type { SkillRegistry } from '../core/skills.js';
 import { getSkillPlugins } from '../plugins/index.js';
 import { registerPluginSkillTemplates } from '../core/skill-generation.js';
 import { loadBundledPlugins } from '../plugins/load.js';
-
-const CORE_SKILL_SPECS = [
-  requirementSpec,
-  archSpec,
-  designSpec,
-  modelSpec,
-  planSpec,
-  applySpec,
-  verifySpec,
-  archiveSpec,
-  harnessSpec,
-  reconcileSpec,
-];
+import {
+  composeSkillBodyFromWorkflow,
+  workflowStepsToSkillSpecs,
+} from '../core/workflow-schema/index.js';
 
 export function initializeSkills(registry: SkillRegistry): void {
   loadBundledPlugins();
 
-  for (const spec of CORE_SKILL_SPECS) {
-    registry.registerTemplate(spec.id, () => spec.body);
+  const coreSkillSpecs = workflowStepsToSkillSpecs();
+  for (const spec of coreSkillSpecs) {
+    registry.registerTemplate(spec.id, () => composeSkillBodyFromWorkflow(spec.id));
     registry.registerHarness(spec.id, spec.harness);
   }
-  registry.registerCoreSkills(CORE_SKILL_SPECS);
+  registry.registerCoreSkills(coreSkillSpecs);
 
   const skillPlugins = getSkillPlugins();
   const pluginSkillDefs = skillPlugins.flatMap((p) =>

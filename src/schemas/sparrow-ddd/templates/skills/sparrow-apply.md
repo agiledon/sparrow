@@ -1,0 +1,414 @@
+# Sparrow Apply — 按实现计划执行代码生成
+
+
+---
+
+## 代码目录检查
+
+在开始执行之前：
+
+1. 检查 \`backend/\` 目录是否已存在：
+   - **如果已存在**：直接使用该目录，不重新创建项目脚手架
+   - **如果不存在**：创建该目录及项目脚手架
+
+> 所有产品代码统一放在 \`backend/\` 下。多个限界上下文共享该目录，各上下文为不同的包/模块。
+
+---
+
+## 角色定义
+
+你驱动三个角色按 plan.md 执行任务：
+
+1. **Development Engineer** (\`dev\`)：产品代码（DDD 四层 + 领域 TDD）
+2. **QA Engineer** (\`qa\`)：集成测试、API/契约测试
+3. **Code Review**：代码评审，生成 code_review.md
+
+---
+
+## 变更模式（revise）— 重构迁移与边界回归
+
+> **⚠️ 门控声明（向后兼容硬性约束）**：本节仅在**检测到活动变更**时进入。**若当前为首次需求、无活动变更，请忽略本节，完全按上文原始流程执行（即按 plan.md 正向生成代码），行为须与未引入本节前完全一致。**
+
+**触发条件**（同 sparrow-arch「变更处理 / revise」章节）：\`docs/sparrow/change/current/\` 含未归档变更文件夹，或 \`project.md\` 当前 change-id 非空。
+
+**revise 行为总览**：本阶段只处理**档位 == S4（代码已生成）且被本次变更影响**的 BC。BC↔\`backend/\` 模块 1:1，因此 arch 记录的重构动作直接映射为代码动作。执行前先读取 \`change/current/{change-id}/\` 下 arch 写好的 ADR / 动作记录，确定每个受影响 slug 的目标拓扑。
+
+### 代码动作映射（仅 S4 执行）
+
+- **新增 BC（新建 slug）**：按正常正向流程跑 apply，在 \`backend/\` 下新建模块。
+- **合并 A+B→C（Strangler 式）**：
+  1. 保留 A、B 现有模块不动；新建吸收/目标模块 C（若 C 为新 slug，正向 apply；若 C 即 A 或 B 之一，则在原模块上扩展）。
+  2. 将待合并的行为与数据迁入 C；A、B 通过 facade / 协调层 / ACL 委派到 C（并存期）。
+  3. **cutover**（破坏性，需用户确认）：将调用方重定向到 C。
+  4. **退役**：移除 A、B 的 \`backend/\` 模块；若有外部调用方，先保留薄兼容 shim/ACL，确认无调用后再删。
+- **删除 BC**：行为已并入吸收方后，移除非空模块；外部调用方经薄 shim/ACL 过渡后退役。
+- **移动聚合（X 从 A→B）**：将 \`domain/aggregate|entity|valueobject/\` 与 \`infrastructure/port|adapter/\` 从 A 模块搬迁到 B 模块；同步 A、B 的 \`api/model\`；跨 BC 调用方经 ACL 保持聚合外部契约稳定。
+- **防腐层 ACL**：仅新增 \`infrastructure/adapter/acl/\`（或独立 ACL 模块），做上游模型→本地模型翻译，**不改动本地领域模型**。
+- **绞杀者 Strangler**：旧模块保留，新模块并行构建，经 facade / 特性开关路由；并存期双写或事件桥接；cutover 后退役旧模块。
+- **数据迁移**：若 \`tech.md\` 标明「每 BC 独立 schema」，合并/拆分即跨模块 schema 迁表，并存期双写/CDC，再 cutover。
+
+### 架构边界回归校验（fitness function）
+
+每次代码迁移后，执行轻量边界校验，确保新模块边界未退化（呼应演进式架构「恰当耦合」支柱）：
+1. 每个 BC 模块只 import 自身 \`domain/\`、\`application/\`、\`api/\`、\`infrastructure/\` 内部类型；不得直接 import 另一 BC 模块的领域类型（须经其公开 API / ACL）。
+2. 若 \`tech.md\` 声明「每 BC 独立 schema」，各模块不得直接访问他模块的数据表。
+3. 跨 BC 调用一律经 \`api/\` 或 \`infrastructure/adapter/\`（ACL）边界。
+4. 公开 API 契约（来自 \`api.md\`）在迁移前后保持一致（除非本次变更显式修改）。
+
+校验不通过则停下并报告，不得带病推进。
+
+### 收尾
+- 变更后重跑 **Code Review** 生成/更新 \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/code_review.md\`。
+- 受影响模块代码版本递增（在 \`project.md\` 或模块说明中记录），元数据块追加 \`change-id\`。
+- 全部受影响 S4 slug 完成后，提示用户依次执行 **sparrow-verify** 验证，验证通过后执行 **sparrow-archive** 归档本次变更。
+
+> 完整 BC→代码映射与数据迁移策略见 \`docs/prd/sparrow-change-management.md\` 第 6 节。
+
+---
+
+## 必读规约
+
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/plan.md\` — 执行计划（以 plan 为准的执行顺序）
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/spec.md\` — 场景与验收
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/api.md\` — 对外契约
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/tech.md\` — 技术栈与工具链
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/model.md\` — 领域模型（静态 + 动态）
+
+---
+
+## 代码与模型一致性（核心约束）
+
+代码实现**必须**与 \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/model.md\` 中定义的领域模型保持严格一致。
+
+### 领域层一致性
+
+| model.md 元素 | 代码实现 | 一致性要求 |
+|--------------|---------|-----------|
+| 聚合根 | domain/aggregate/ | 属性名、方法名、类型必须与类图中的定义一致 |
+| 实体 | domain/entity/ | 属性名、方法名、类型必须与类图中的定义一致 |
+| 值对象 | domain/valueobject/ | 属性名、不可变性必须与类图中的定义一致 |
+| 领域服务 | domain/service/ | 方法签名必须与序列图中的调用一致 |
+
+### 非领域层一致性
+
+| model.md 中的角色 | 代码实现 | 一致性要求 |
+|------------------|---------|-----------|
+| 远程服务 (Command/Query) | api/command/ 或 api/query/ | 方法签名与任务树根节点一致 |
+| 应用服务 (AppService) | application/ | 方法签名与任务树第二层一致 |
+| 端口 (Repository/Client) | infrastructure/port/ | 接口方法签名与序列图中的端口调用一致 |
+| 适配器 | infrastructure/adapter/ | 实现 port 接口，方法签名一致 |
+
+### 命名风格转换
+
+**model.md 使用 UML 命名风格**（PascalCase 类名 + camelCase 方法名）。代码实现时，需要按照选定语言的编码规范进行转换：
+
+| 元素 | UML (model.md) | Java | Python | TypeScript | Go | Rust | C++ |
+|------|---------------|------|--------|------------|-----|------|-----|
+| 类/接口名 | PascalCase | PascalCase | PascalCase | PascalCase | PascalCase | PascalCase | PascalCase |
+| 方法/函数名 | camelCase | camelCase | snake_case | camelCase | PascalCase | snake_case | snake_case |
+| 属性/字段名 | camelCase | camelCase | snake_case | camelCase | PascalCase | snake_case | snake_case |
+| 文件名 | (无) | PascalCase | snake_case | kebab-case | snake_case | snake_case | snake_case |
+| 包/模块名 | (无) | 全小写 | snake_case | kebab-case | 全小写 | snake_case | 全小写 |
+
+> **关键**：命名风格可以不同，但**语义必须一致**。例如 model.md 中的 \`placeOrder()\` 在 Python 中应写为 \`place_order()\`，在 Go 中应写为 \`PlaceOrder()\`。
+
+### 领域对象封装规则
+
+> 📐 封装纪律的完整表格见约束资产 \`apply/implementation.md\`。核心规则：
+> - **不生成默认 get/set**：不默认为每个属性生成访问器
+> - **聚合根字段 private**：使用最严格的可见性修饰符
+> - **聚合间 ID 引用**：跨聚合引用时只用 ID，不直接持有对象引用
+> - **值对象不可变**：构造时初始化所有字段，无修改方法
+> - **业务操作为主**：聚合根暴露体现业务意图的方法（\`approve()\` 而非 \`setStatus(APPROVED)\`）
+> - **不暴露内部集合**：不直接返回聚合内的 List/Map 引用
+
+---
+
+## 跨 BC 通信（与应用架构一致）
+
+> 📐 跨 BC 通信纪律与应用架构阶段（\`arch/application.md\`）完全一致：
+> - **同一进程**：通过下游 BC 的南向网关 Client 调用上游 BC 的北向网关本地服务
+> - **不同进程**：通过公开 API 或领域事件通信
+> - **无论是否同一进程，禁止直接跨 BC 访问领域对象**；跨 BC 调用一律经 \`api/\` 或 \`infrastructure/adapter/\`（ACL）边界
+> - 每个 BC 模块不得直接 import 另一 BC 模块的领域类型
+
+---
+
+## DDD 四层 + 菱形对称架构
+
+\`\`\`
+api 层（北向网关）:
+  api/command/  — 命令处理器（*Command）
+  api/query/    — 查询处理器（*Query）
+  api/dto/      — 消息契约（*Request/*Response/*Event）
+
+application 层（北向网关）:
+  application/  — 应用服务（*AppService），编排领域层与基础设施层
+
+domain 层（领域核心）:
+  domain/aggregate/    — 聚合根
+  domain/entity/       — 实体
+  domain/valueobject/  — 值对象
+  domain/service/      — 领域服务（*Service）
+
+infrastructure 层（南向网关）:
+  infrastructure/port/repository/    — 资源库端口（接口）
+  infrastructure/port/client/         — 客户端端口（接口）
+  infrastructure/adapter/repository/ — 资源库适配器（实现）
+  infrastructure/adapter/client/     — 客户端适配器（实现）
+\`\`\`
+
+---
+
+## 执行方映射
+
+### dev 任务（Development Engineer）
+- 产品代码写入 \`backend/\` 模块
+- **领域层须 TDD**：先写测试，再写实现
+- 同一步骤内完成测试 + 实现
+- 每生成完整文件内容，立即写入磁盘
+
+### qa 任务（QA Engineer）
+- 集成测试写入 \`integration-tests/{slug}/\`
+- 覆盖 API/契约/集成场景
+- **禁止**领域层单元测试（领域 TDD 属于 dev）
+
+### Code Review（全部 dev + qa 任务完成后）
+- 运行检查并生成 \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/code_review.md\`
+- 验证代码是否符合 tech.md 的技术栈要求
+- 验证是否符合对应语言的编码规范
+
+---
+
+## 领域 TDD 流程
+
+对每个 dev 任务中的领域层步骤：
+
+1. **先写测试文件**：根据 model.md 中的聚合定义和序列图，编写单元测试
+2. **再写实现文件**：实现聚合根、实体、值对象、领域服务，使其通过测试
+3. **同一步骤内完成**：禁止先写所有测试再写所有实现（必须在一个步骤内完成测试+实现对）
+
+---
+
+## 执行流程
+
+1. 读取 \`plan.md\`，按任务顺序解析
+2. 对每个 \`## 任务\`：
+   - 根据 \`执行方\` 确定由 dev 或 qa 执行
+   - 按顺序执行任务下的每个 \`- [ ]\` 步骤
+   - 每步完成后验证产物（检查文件是否生成）
+3. 全部任务完成后，将已完成的步骤标记为 \`- [x]\`
+4. 执行 Code Review，生成 code_review.md
+
+---
+
+## 语言级规则参考
+
+根据 tech.md 中选定的语言，遵循对应的编码规范。
+
+### 通用规则
+
+- 所有语言：遵循 DDD 四层目录结构
+- 领域层不依赖框架/数据库具体类型
+- api 层不写领域规则
+- infrastructure 层 port 为接口，adapter 为实现
+- **领域对象必须富含行为**（反贫血模型），禁止不必要的 getter/setter，封装内部状态，聚合间 ID 引用（信息专家、迪米特法则）
+
+### 语言特定反模式
+
+> 📐 各语言的完整反模式清单见约束资产 \`apply/implementation.md\`（必须禁止），要点包括：
+> - **Java**：禁止 Lombok @Data/@Getter/@Setter、禁止 \`application/command\`、\`application/query\` 目录
+> - **Python**：禁止 dataclass 自动生成 getter/setter，使用 logging 而非 print
+> - **Node.js/TypeScript**：禁止 class-validator / class-transformer 装饰器污染领域模型，聚合根字段 private/readonly
+> - **Go**：领域结构体字段小写（unexported），禁止自动 ORM tag（json/gorm）
+> - **Rust**：领域结构体字段不设 pub，禁止 derive Serialize/Deserialize
+> - **C++**：领域类成员 private，禁止为领域实体提供 JSON 序列化/反序列化
+
+### 包/模块命名规范
+
+- **Java**: UpperCamelCase 类名，lowerCamelCase 方法名，全小写包名
+- **Python**: snake_case 文件名和方法名，PascalCase 类名
+- **Node.js**: PascalCase 类名，camelCase 方法名，kebab-case 文件名
+- **Go**: PascalCase 导出，camelCase 未导出，全小写包名
+- **Rust**: snake_case 函数/模块/变量，PascalCase 类型/trait/enum
+- **C++**: PascalCase 类名，snake_case 函数/变量/文件名，全小写命名空间
+
+### 引用路径与命名空间正确性
+
+> 📐 完整约束见 \`apply/implementation.md\`「引用路径与命名空间正确性」。核心要求：
+> - \`import\` / \`#include\` / \`use\` / \`mod\` 路径与实际文件位置、包 / 模块结构精确一致
+> - 相对路径 \`../\` 层级从当前文件目录精确计算，禁止多一级或少一级
+> - 命名空间 / 包名与目标类 / 模块的实际声明一致
+
+---
+
+## 依赖安装规则
+
+- \`install_dependencies\` 仅在以下情况开放：
+  1. 步骤文字明确要求依赖安装
+  2. 当前为 dev 任务的最后一个未完成步骤（收尾构建）
+- 其余步骤只用脚手架 + 文件写入
+- Code Review 可以调用构建工具做校验
+
+---
+
+## 输出文件
+
+### 产品代码
+\`\`\`
+backend/
+  ... (DDD 四层目录结构)
+\`\`\`
+
+### 集成测试
+\`\`\`
+integration-tests/{slug}/
+  ... (集成测试工程)
+\`\`\`
+
+### 代码评审报告
+\`\`\`
+docs/sparrow/change/current/{activeChangeId}/design/{slug}/code_review.md
+\`\`\`
+
+---
+
+## 质量检查清单
+
+每个任务完成后：
+- [ ] 磁盘文件已生成
+- [ ] 测试可以通过
+- [ ] 代码符合对应语言编码规范
+- [ ] DDD 四层依赖方向正确（外层依赖内层）
+- [ ] 领域层不依赖框架/数据库具体类型
+- [ ] **代码的属性/操作/类型与 model.md 中的定义一致**（语义相同，命名风格按语言转换）
+- [ ] **领域对象不包含不必要的 getter/setter**（无 \`getXxx()\` / \`setXxx()\` 便利方法，仅暴露业务操作）
+- [ ] **聚合根字段封装**（使用 private/protected 或语言等效修饰符，不直接暴露 public 字段）
+- [ ] **聚合间通过 ID 引用**（不跨聚合直接持有对象引用，迪米特法则）
+- [ ] **跨文件引用路径/命名空间正确**（import / #include / use 路径与实际文件位置一致，无层级缺失或命名空间错误）
+
+全部任务完成后：
+- [ ] 完整构建通过
+- [ ] 所有测试通过
+- [ ] Code Review 完成
+- [ ] plan.md 所有步骤标记为 \`- [x]\`
+- [ ] **领域层代码与 model.md 静态模型完全对齐**（聚合、实体、值对象、领域服务）
+- [ ] **非领域层代码与 model.md 动态模型完全对齐**（Command/Query、AppService、Port、Adapter）
+- [ ] **API 层接口与 api.md 中定义的契约一致**
+- [ ] **领域对象富含行为，非贫血模型**（业务逻辑在聚合根/实体内部，不在领域服务中集中处理本应由聚合承担的逻辑）
+- [ ] **无跨聚合的链式调用**（如 \`a.getB().getC().doX()\`，迪米特法则）
+
+## 🖥️ 交互上下文代码生成
+
+> 以下内容适用于**交互上下文**。仅当当前 slug 在 project.md 中标注为「交互上下文」时执行。
+
+### 角色定义
+
+- **Development Engineer** (\`dev\`)：前端页面代码 + BFF 聚合层代码
+- **QA Engineer** (\`qa\`)：BFF 契约测试 + 页面组件测试 + E2E 测试
+- **Code Review**：代码评审，生成 code_review.md
+
+### 代码目录检查
+
+\`\`\`
+frontend/
+├── features/                     # 按交互上下文/特性组织
+│   └── {feature-name}/
+│       ├── pages/
+│       ├── components/
+│       ├── services/
+│       ├── adapters/
+│       └── stores/
+├── shared/
+│   ├── components/
+│   ├── styles/
+│   └── utils/
+└── shell/                        # 微前端基座（可选）
+
+edge/
+└── bff/
+    └── {page-or-feature}/
+        └── *Aggregator
+\`\`\`
+
+### 必读规约（交互上下文）
+
+除 \`design/{slug}/\` 下的 spec.md / api.md / tech.md / model.md / plan.md 外，还必须读取 sparrow-requirement 产出的 UI 规格：
+
+- \`docs/sparrow/change/current/{activeChangeId}/requirement/ui/ui-spec.md\` — 页面结构、布局、交互方式
+- \`docs/sparrow/change/current/{activeChangeId}/requirement/ui/design-tokens.md\` — 色彩体系、字体层级、间距、圆角/阴影
+- \`docs/sparrow/change/current/{activeChangeId}/requirement/ui/components/component-library.md\` — 组件定义与变体
+- \`docs/sparrow/change/current/{activeChangeId}/requirement/ui/prototypes/*.html\` — 视觉与交互基准（颜色 / 位置 / 大小 / 布局 1:1 还原）
+
+### 前端代码生成规则
+
+1. **页面组件**按 ui-spec.md 的页面结构 / 布局 / 交互方式 + model.md 的组件树实现
+2. **视觉样式**必须严格遵循 design-tokens.md（色彩、字体、间距、圆角/阴影），组件复用 component-library.md 的定义与变体，禁止近似色、魔数尺寸
+3. **视觉保真**：颜色、位置、大小、布局必须 1:1 还原 \`prototypes/*.html\` 原型，禁止明显偏差（见约束资产 \`apply/implementation.md\`「UI 视觉保真」）
+4. **服务层**调用 BFF 端点（不直接调用 BC API），端点路径、方法、请求/响应字段与 api.md 契约一致
+5. **适配层**实现 ViewModel ↔ BFF 响应的字段映射
+6. **状态管理**按 model.md 的数据流模型配置
+7. **Web 端响应式**：支持不同分辨率与终端（桌面 / 平板 / 移动），布局自适应
+8. **桌面窗体端（如 QT / QML）**：是否同进程部署由用户确定（给出选项并说明利弊，确认后实现）；窗体没有 CSS，遵循 QT 最佳实践（见约束资产 \`apply/implementation.md\`「桌面窗体端（QT）最佳实践」）
+
+### BFF 代码生成规则
+
+1. 每个 BFF 端点实现为一个聚合器（Aggregator）
+2. 聚合器按 api.md 中定义的聚合 BC 调用和降级策略实现
+3. BFF 不包含业务逻辑——只做数据聚合和格式转换
+4. BFF 代码不放在 \`backend/{slug}/\` 下，放在 \`edge/bff/\` 下
+5. **同进程桌面方案**：BFF 退化为进程内聚合器（函数调用），不通过 HTTP
+6. **契约桩**：BFF 南向网关 port + MockClient / RealClient 双实现；开发期装配 MockClient（桩），联调期经契约测试通过后切 RealClient（见约束资产 \`apply/implementation.md\`「契约桩」）
+7. **edge 语义**：\`edge/bff/\` 承载 BFF 聚合，微服务下可扩展 \`edge/gateway/\` 承担 API 网关职责；edge 属交互上下文独占，后端 BC 不感知 edge
+
+### 样式解耦规则
+
+> 📐 完整约束见 \`apply/implementation.md\`「交互上下文实现约束」。核心要求：
+> - 样式（设计令牌 / 主题 / QSS / 样式表）与页面结构、组件逻辑、窗体及前端代码解耦
+> - Web 端用设计令牌驱动主题；桌面窗体端用 QSS / 主题表，禁止硬编码样式到业务代码
+
+### 输出结构
+
+\`\`\`
+frontend/features/{feature}/
+  pages/{PageName}.{ext}
+  components/{ComponentName}.{ext}
+  services/{bff}Api.{ext}
+  adapters/{viewModel}Mapper.{ext}
+  stores/{storeName}.{ext}
+
+edge/bff/
+  {pageName}/
+    {PageName}Aggregator.{ext}
+
+docs/sparrow/change/current/{activeChangeId}/design/{ui-slug}/code_review.md
+\`\`\`
+
+### 质量检查清单（交互上下文）
+
+- [ ] 所有页面组件已生成
+- [ ] BFF 聚合端点全部实现
+- [ ] BFF 端点调用的是 BC API（非直接操作 BC 数据库）
+- [ ] ViewModel 适配器正确实现了字段映射
+- [ ] 降级策略已实现
+- [ ] **页面视觉样式与 design-tokens.md 严格一致**（色彩、字体、间距、圆角/阴影，无近似色 / 魔数）
+- [ ] **组件复用 component-library.md 定义**（无重复造轮子）
+- [ ] **UI 视觉保真**：颜色、位置、大小、布局与原型页面 1:1 一致，无明显偏差
+- [ ] **前端调用的 BFF 端点路径/方法/字段与 api.md 契约一致**
+- [ ] **Web 端响应式**：适配不同分辨率与终端（桌面 / 平板 / 移动）
+- [ ] **桌面窗体端**：样式与页面/窗体/前端代码解耦，遵循对应框架（QT 等）最佳实践
+- [ ] **BFF 契约桩已实现**（MockClient，fixture 形状与契约绑定表一致）
+- [ ] **联调后无残留桩**（MockClient 未在生产启用，已切 RealClient）
+- [ ] Code Review 完成
+- [ ] plan.md 所有步骤标记为 \`- [x]\`
+
+## 完成后的下一步
+
+🎉 当前上下文 \`{slug}\` 的 apply 已完成！
+
+**下一步请执行：sparrow-verify @{slug}** — 验证代码实现与 spec.md / api.md / tech.md / model.md 的一致性。
+
+如果有其他限界上下文（含交互上下文）尚未 apply，请选择对应 slug 继续：
+**sparrow-design → sparrow-model → sparrow-plan → sparrow-apply → sparrow-verify**
+
+> 所有上下文之间完全独立，可以任意顺序执行。全部 slug 均 apply 且 verify 通过后，若处于 revise 模式，执行 **sparrow-archive**。
