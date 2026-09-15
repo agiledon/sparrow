@@ -39,7 +39,9 @@
 | DDD 四层 / 角色构造型 / 调用规则 / PO 纪律 | model/architecture.md |
 | 聚合边界 / OOP 原则 / 静态动态建模 | model/domain-modeling.md |
 | 代码生成 / 封装 / 语言反模式 / 跨 BC 通信 | apply/implementation.md |
-| 跨阶段通用纪律 | constitution.md |
+| 跨阶段通用纪律 / 约束索引 | constitution.md |
+| 全局 always（逐题确认等） | global/always/*.md |
+| 全局 conditional（如棕地） | global/conditional/*.md |
 
 ## 格式要求
 

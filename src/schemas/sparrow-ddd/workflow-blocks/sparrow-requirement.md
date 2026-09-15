@@ -13,7 +13,7 @@
 
 ## 创建活动变更（requirement 开始时）
 
-1. 若 \`docs/sparrow/change/current/\` 无子目录：请用户命名 \`{change-id}\`，创建与 \`master/\` 同构的空目录树，并写入 \`proposal.md\`（Intent / Scope / Why / \`development-mode\`：greenfield | iteration | brownfield）。
+1. 若 \`docs/sparrow/change/current/\` 无子目录：按 \`requirement/requirements.md\`「活动变更 ID 确认纪律」及 \`global/always/interactive-interaction.md\` 向用户确认 \`{change-id}\`；**须先确认 change-id 后再**创建与 \`master/\` 同构的空目录树，并写入 \`proposal.md\`（Intent / Scope / Why / \`development-mode\`：greenfield | iteration | brownfield）。
 2. 更新 \`.sparrow/active-change.json\` 的 \`changeId\`。
 3. 若 \`master/\` 已有内容且 mode 为 iteration，进入 revise 增量；greenfield 首次可全量在 change 内编写。
 

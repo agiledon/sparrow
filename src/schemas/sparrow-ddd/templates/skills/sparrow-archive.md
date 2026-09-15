@@ -4,7 +4,7 @@
 ## 1. 选择变更
 
 1. 列出 \`docs/sparrow/change/current/\` 下所有子目录。
-2. 若多个，**请用户选择**要归档的 \`{change-id}\`；若仅一个，确认后继续。
+2. 若多个，**请用户选择**要归档的 \`{change-id}\`（遵守 \`global/always/interactive-interaction.md\`）；若仅一个，确认后继续。
 3. 读取 \`change/current/{change-id}/proposal.md\`（含 \`development-mode\`）。
 
 ## 2. 完整性校验

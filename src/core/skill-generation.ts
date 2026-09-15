@@ -12,6 +12,7 @@ import type { SkillDefinition, SkillRegistry } from './skills.js';
 import { getAdapter } from './adapters/index.js';
 import type { CommandContent, ToolCommandAdapter } from './adapters/types.js';
 import { generateProjectMdContent } from './project-md.js';
+import { getWorkflowSchema } from './workflow-schema/index.js';
 
 import { getBundledPlugins } from '../plugins/index.js';
 import type { Plugin } from '../plugins/types.js';
@@ -45,7 +46,8 @@ function injectAugmentPlugins(body: string, skillId: string): string {
  */
 function buildHarnessSection(adapter: ToolCommandAdapter, skillId: string, registry: SkillRegistry): string {
   const relPaths = registry.getHarness(skillId);
-  if (relPaths.length === 0) return '';
+  const conditional = getWorkflowSchema().globalHarness?.conditional ?? [];
+  if (relPaths.length === 0 && conditional.length === 0) return '';
 
   const lines = [
     '---',
@@ -57,11 +59,24 @@ function buildHarnessSection(adapter: ToolCommandAdapter, skillId: string, regis
     '**优先级**：项目级约束 > 全局级约束。内容冲突时以项目级为准；项目级文件不存在时直接使用全局级。',
     '',
   ];
-  for (const relPath of relPaths) {
-    lines.push(adapter.formatHarnessRef(relPath, 'project'));
-    lines.push(adapter.formatHarnessRef(relPath, 'global'));
+  if (relPaths.length > 0) {
+    lines.push('### 始终加载（always）', '');
+    for (const relPath of relPaths) {
+      lines.push(adapter.formatHarnessRef(relPath, 'project'));
+      lines.push(adapter.formatHarnessRef(relPath, 'global'));
+    }
+    lines.push('');
   }
-  lines.push('');
+  if (conditional.length > 0) {
+    lines.push('### 条件加载（conditional）', '');
+    lines.push('满足条件时**必须额外加载**：', '');
+    for (const entry of conditional) {
+      lines.push(`- \`${entry.path}\` — 当 ${entry.when}`);
+      lines.push(adapter.formatHarnessRef(entry.path, 'project'));
+      lines.push(adapter.formatHarnessRef(entry.path, 'global'));
+      lines.push('');
+    }
+  }
   return lines.join('\n');
 }
 

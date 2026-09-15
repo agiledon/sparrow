@@ -193,7 +193,7 @@ your-project/
     └── active-change.json   # Current change-id
 ```
 
-`sparrow init` also writes **global constraint assets** (including `brownfield.md`) to the global config directory (`~/.config/sparrow/harness` on macOS/Linux, `%APPDATA%\sparrow\harness` on Windows).
+`sparrow init` also writes **global constraint assets** (including the `global/` tree) to the global config directory (`~/.config/sparrow/harness` on macOS/Linux, `%APPDATA%\sparrow\harness` on Windows).
 
 After initialization, you can check for updates at any time:
 
@@ -365,34 +365,35 @@ Sparrow ships **constraint assets** (harness) — stage-specific "must / must no
 
 **Precedence**: project > global.
 
-Global harness layout:
+Global harness layout. Cross-cutting rules live under **`global/`**; **`globalHarness`** in the workflow schema merges `always` paths into every skill and declares `conditional` paths (e.g. brownfield).
 
 ```
 harness/
 ├── constitution.md
+├── global/
+│   ├── README.md
+│   ├── always/
+│   │   └── interactive-interaction.md
+│   └── conditional/
+│       └── brownfield.md
 ├── requirement/requirements.md
-├── arch/business.md
-├── arch/application.md
-├── arch/frontend.md
-├── design/api-design.md
-├── model/architecture.md
-├── model/domain-modeling.md
-├── model/view-modeling.md
-├── apply/implementation.md
-└── brownfield.md                # brownfield: as-is specs, plan solidify/refactor
+├── arch/…
+├── design/…
+├── model/…
+└── apply/implementation.md
 ```
 
 **Load by `development-mode`** (in `proposal.md`):
 
-| Mode | Extra harness |
-|------|----------------|
-| `greenfield` | Stage defaults only |
-| `iteration` | Same as greenfield; arch emphasizes BC assignment and topology confirmation |
-| `brownfield` | **`brownfield.md`** plus stage files; plan must use solidify or refactor |
+| Mode | Extra (conditional) harness |
+|------|-----------------------------|
+| `greenfield` | None |
+| `iteration` | None |
+| `brownfield` | **`global/conditional/brownfield.md`** |
 
 How it works:
 
-- Core skills load harness files **before** execution; when `development-mode` is `brownfield`, **`brownfield.md` is required**.
+- Core skills list **always** and **conditional** harness paths before execution; when `development-mode` is `brownfield`, load **`global/conditional/brownfield.md`**.
 - Use `/sparrow-supporting-harness` to manage project-level constraints.
 - Managed global templates refresh on upgrade; **user-edited files are never overwritten**.
 

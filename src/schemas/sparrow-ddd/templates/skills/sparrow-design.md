@@ -138,7 +138,7 @@
 
 ## 技术选型交互流程
 
-在执行 sparrow-design 时，你需要引导用户进行以下选择：
+在执行 sparrow-design 时，你需要引导用户进行以下选择（遵守 \`global/always/interactive-interaction.md\`；每次只问一步，确认后再进入下一步）：
 
 ### 第一步：选择后端实现语言
 请用户从以下选项中选择：

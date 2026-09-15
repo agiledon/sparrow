@@ -193,7 +193,7 @@ your-project/
     └── active-change.json   # 当前 change-id
 ```
 
-`sparrow init` 还会将**全局约束资产**（含 `brownfield.md`）写入全局配置目录（macOS/Linux 为 `~/.config/sparrow/harness`，Windows 为 `%APPDATA%\sparrow\harness`）。
+`sparrow init` 还会将**全局约束资产**（含 `global/` 目录）写入全局配置目录（macOS/Linux 为 `~/.config/sparrow/harness`，Windows 为 `%APPDATA%\sparrow\harness`）。
 
 初始化后，可随时检查更新：
 
@@ -381,34 +381,35 @@ Sparrow 内置 **约束资产**（harness）——各阶段强制执行的「必
 
 **优先级**：项目级 > 全局级。冲突时项目级优先；若项目文件为空或缺失，则直接使用全局级。
 
-全局 harness 含各阶段文件、**棕地项目**约束及 constitution 索引：
+全局 harness 含 **constitution 索引**、**global/**（跨阶段纪律）及各阶段专项文件。`schema.yaml` 的 **`globalHarness`** 定义 always（始终加载）与 conditional（按条件加载），并合并进各 skill 的约束章节。
 
 ```
 harness/
-├── constitution.md              # 阶段 → 约束文件 → 说明（含棕地行）
-├── requirement/requirements.md  # 绿地/迭代：业务服务识别 + UI 探索
-├── arch/business.md
-├── arch/application.md
-├── arch/frontend.md
-├── design/api-design.md
-├── model/architecture.md
-├── model/domain-modeling.md
-├── model/view-modeling.md
-├── apply/implementation.md
-└── brownfield.md                # 棕地：as-is 规格化、plan 的 solidify/refactor 分支
+├── constitution.md
+├── global/
+│   ├── README.md
+│   ├── always/                  # 每次执行命令必须加载
+│   │   └── interactive-interaction.md
+│   └── conditional/             # 满足条件时额外加载
+│       └── brownfield.md
+├── requirement/requirements.md
+├── arch/…
+├── design/…
+├── model/…
+└── apply/implementation.md
 ```
 
 **按项目类型加载**：
 
-| development-mode | 除阶段约束外额外加载 |
+| development-mode | conditional 额外加载 |
 |------------------|----------------------|
-| `greenfield`（绿地） | 各阶段默认 harness |
-| `iteration`（版本迭代） | 同绿地；arch 侧重 BC 归属与拓扑确认 |
-| `brownfield`（棕地） | **`brownfield.md`** + 各阶段约束；requirement/arch/model 以现有系统取证为主，plan 必须走 solidify 或 refactor |
+| `greenfield`（绿地） | 无 |
+| `iteration`（版本迭代） | 无（arch 侧重 BC 归属与拓扑确认） |
+| `brownfield`（棕地） | **`global/conditional/brownfield.md`**；requirement/arch/model 以现有系统取证为主，plan 必须走 solidify 或 refactor |
 
 工作机制：
 
-- 各核心 skill 在 `📐 约束资产（Harness）` 章节引用 harness，要求 AI **执行前**加载对应阶段文件；棕地项目在 `proposal.md` 标明 `brownfield` 时**必须**加载 `brownfield.md`。
+- 各核心 skill 在 `📐 约束资产（Harness）` 章节列出 **always** 与 **conditional** 路径；`development-mode` 为 `brownfield` 时**必须**加载 `global/conditional/brownfield.md`。
 - 通过 [**harness 支持工作流**](#支持工作流)（`/sparrow-supporting-harness`）查看索引，增删改项目级约束。
 - 受管全局模板在版本升级时会刷新，**用户编辑过的文件不会被覆盖**。
 

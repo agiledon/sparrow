@@ -2,6 +2,17 @@
 
 本文件定义 sparrow-requirement 阶段**必须遵守 / 禁止**的业务服务识别及 UI 设计探索纪律。
 
+> 逐题确认、Grill Me 等互动行为须遵守 **`global/always/interactive-interaction.md`（互动式交互纪律）**；本文件不重复该纪律全文。
+
+## 活动变更 ID 确认纪律
+
+当需要向用户确定活动变更 `{change-id}`（例如 `docs/sparrow/change/current/` 无子目录、或需新建变更工作区）时：
+
+1. **必须**根据用户已提供的原始需求或变更意图，给出 **1～3 个建议名称**（小写 kebab-case，简短且能概括变更主题，如 `add-order-refund`、`iteration-v2-checkout`）。
+2. **必须**明确说明用户可：**接受某一建议**（回复建议名或序号）、**输入自定义名称**（须符合 kebab-case，避免空格与特殊字符），或 **修改**某一建议后再确认。
+3. **每次只确认 change-id 这一项**（遵守 `global/always/interactive-interaction.md`）；在用户确认最终名称之前，**禁止**继续追问 development-mode、proposal 内容或进入 Grill Me 下一题。
+4. 确认后创建目录、写入 `proposal.md`，并更新 `.sparrow/active-change.json` 的 `changeId`。
+
 ## 必须（MUST）
 
 1. **必须全面覆盖原始需求**：原始需求中的每个功能点、每个业务场景、每个用户需求都必须被识别为对应的业务服务，不能有任何遗漏。
@@ -30,10 +41,15 @@
 
 ## Grill Me 提问纪律（阶段一）
 
-1. **每次只问一个问题**，给出推荐答案，并在问题末尾明确提示确认选项：是 / 否 / 修改。
+1. 遵守 **`global/always/interactive-interaction.md`**；本阶段每次只问一个问题，给出推荐答案，并在问题末尾明确提示确认选项：是 / 否 / 修改。
 2. 至少覆盖以下维度：参与者识别、核心流程、业务规则、边界条件、异常场景、质量属性。
 3. 按维度有序推进：先核心流程与参与者，再业务规则与边界条件，最后异常场景与质量属性。
 4. **不为了提问而提问**：某一维度已经清晰时不再追问。
+
+## Grill Me 提问纪律（阶段三 · UI 设计探索，可选）
+
+1. 遵守 **`global/always/interactive-interaction.md`** 与阶段一 Grill Me 纪律。
+2. 按维度有序推进：先用户画像（按 Actor 逐个），再旅程，再页面概念，最后视觉偏好与客户端类型。
 
 ## 质量属性文档纪律（阶段二）
 

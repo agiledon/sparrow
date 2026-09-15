@@ -1,3 +1,13 @@
+export interface ConditionalHarnessEntry {
+  path: string;
+  when: string;
+}
+
+export interface GlobalHarness {
+  always: string[];
+  conditional: ConditionalHarnessEntry[];
+}
+
 export interface WorkflowStep {
   id: string;
   skillId: string;
@@ -20,5 +30,6 @@ export interface SparrowWorkflowSchema {
   version: number;
   description: string;
   coreStepCount: number;
+  globalHarness: GlobalHarness;
   steps: WorkflowStep[];
 }

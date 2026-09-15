@@ -67,6 +67,8 @@ sparrow-requirement 分为两个阶段：
 1. **阶段一：互动式需求探索（Grill Me）** — 通过一问一答的方式，深度挖掘用户需求
 2. **阶段二：需求文档生成** — 将探索结果整理为功能需求文档（prd-business.md）和系统质量属性文档（prd-quality.md）
 
+> **活动变更**：若 \`docs/sparrow/change/current/\` 无子目录，须先按 \`requirement/requirements.md\`「活动变更 ID 确认纪律」及 \`global/always/interactive-interaction.md\` 确认 \`{change-id}\`；**change-id 确认完成前**不得进入 Grill Me 或 proposal 其它字段的追问。
+
 ---
 
 ## 阶段一：互动式需求探索（Grill Me）
@@ -98,7 +100,7 @@ sparrow-requirement 分为两个阶段：
 
 ### 提问规则
 
-1. **每次只问一个问题**：不要一次提出多个问题，确保用户能逐个思考和确认
+1. **互动式交互**：遵守 \`global/always/interactive-interaction.md\` 与 \`requirement/requirements.md\`「Grill Me 提问纪律（阶段一）」
 2. **给出推荐答案**：基于你对需求的理解，每次都要给出推荐的答案供用户确认
 3. **明确确认提示**：提出每个问题后，必须在问题末尾明确提示用户确认选项：
    \`\`\`
@@ -529,7 +531,7 @@ sparrow-requirement 分为两个阶段：
 
 #### 提问规则
 
-1. **每次只问一个问题**，给出推荐答案，并在末尾明确提示确认选项
+1. 遵守 \`global/always/interactive-interaction.md\` 与 \`requirement/requirements.md\`「Grill Me 提问纪律（阶段三）」；给出推荐答案，并在末尾明确提示确认选项
 2. **按维度有序推进**：先用户画像（按 Actor 逐个），再旅程，再页面概念，最后视觉偏好和客户端类型
 3. **从 prd-business.md 的 Actor 推导画像**：禁止凭空捏造用户画像，必须从需求文档中的参与者推导
 4. **不要问已回答的问题**：同一维度已经清晰时不再追问

@@ -1,6 +1,6 @@
 # 棕地项目约束（brownfield）
 
-> 当 \`proposal.md\` 的 \`development-mode\` 为 \`brownfield\` 时，与标准 harness 一并加载；冲突时以本文件对 as-is 探索的放宽规则为准。
+> 当活动变更 \`change/current/{activeChangeId}/proposal.md\` 的 \`development-mode\` 为 \`brownfield\` 时加载（见 \`globalHarness.conditional\`）；与标准 harness 一并适用；冲突时以本文件对 as-is 探索的放宽规则为准。
 
 ## 必须（MUST）
 
@@ -12,4 +12,3 @@
 
 1. **禁止**在未理解现有模块边界前强行拆 BC 或重写全栈。
 2. **禁止**在 \`solidify\` 模式下在 plan 中加入大规模重构任务。
-

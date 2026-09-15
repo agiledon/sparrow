@@ -49,6 +49,12 @@ export function composeSkillBodyFromWorkflow(skillId: string): string {
   return parts.join('\n\n');
 }
 
+export function resolveStepHarnessPaths(step: WorkflowStep): string[] {
+  const { globalHarness } = getWorkflowSchema();
+  const always = globalHarness?.always ?? [];
+  return [...always, ...step.harness];
+}
+
 export function workflowStepsToSkillSpecs(): import('../skills.js').SkillSpec[] {
   return getWorkflowSchema().steps.map((step) => ({
     id: step.skillId,
@@ -60,9 +66,9 @@ export function workflowStepsToSkillSpecs(): import('../skills.js').SkillSpec[] 
     commandName: step.skillId,
     kind: step.kind,
     category: step.category,
-    harness: step.harness,
+    harness: resolveStepHarnessPaths(step),
     body: '',
   }));
 }
 
-export type { SparrowWorkflowSchema, WorkflowStep };
+export type { SparrowWorkflowSchema, WorkflowStep, GlobalHarness, ConditionalHarnessEntry } from './types.js';

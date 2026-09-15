@@ -25,12 +25,12 @@
 
 > 仅当 \`change/current/{change-id}/proposal.md\` 的 \`development-mode\` 为 \`brownfield\` 时执行。
 
-**必须**请用户选择：
+**必须**请用户选择（遵守 \`global/always/interactive-interaction.md\`）：
 
 - **solidify**：\`plan.md\` 仅包含测试计划（特征/回归/契约/冒烟）；不得含重构任务。
 - **refactor**：\`plan.md\` 包含测试计划 + 重构计划（步骤、边界、迁移顺序），供 sparrow-apply 遵循。
 
-加载 \`docs/sparrow/harness/brownfield.md\` 约束。
+加载 \`docs/sparrow/harness/global/conditional/brownfield.md\` 约束。
 
 ## 变更模式（revise）— 按 BC 档位按需重生成
 

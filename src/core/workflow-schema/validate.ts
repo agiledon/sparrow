@@ -1,6 +1,14 @@
 import type { SparrowWorkflowSchema } from './types.js';
 
 export function validateWorkflowSchema(schema: SparrowWorkflowSchema): void {
+  if (!schema.globalHarness?.always?.length) {
+    throw new Error('globalHarness.always must include at least one path (typically constitution.md)');
+  }
+  for (const entry of schema.globalHarness?.conditional ?? []) {
+    if (!entry.path || !entry.when) {
+      throw new Error('globalHarness.conditional entries require path and when');
+    }
+  }
   const ids = new Set(schema.steps.map((s) => s.id));
   for (const step of schema.steps) {
     for (const req of step.requires) {

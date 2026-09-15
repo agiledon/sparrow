@@ -26,7 +26,7 @@ export const ARCHITECTURE_API_CATALOG_REL = 'architecture/api.md';
 /** Embedded in core skill templates for agents. */
 export const SPEC_LAYOUT_GUIDE = `## 规格路径（master / change）
 
-**活动变更 ID**：\`.sparrow/active-change.json\` 的 \`changeId\`；若为空且 \`change/current/\` 仅有一个子目录，则使用该目录名。
+**活动变更 ID**：\`.sparrow/active-change.json\` 的 \`changeId\`；若为空且 \`change/current/\` 仅有一个子目录，则使用该目录名。新建变更时须向用户确认 \`{change-id}\`：给出 1～3 个建议 kebab-case 名称，并允许自定义（详见 \`requirement/requirements.md\`「活动变更 ID 确认纪律」）。
 
 | 用途 | 路径 |
 |------|------|
