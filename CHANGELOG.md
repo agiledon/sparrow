@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+---
+
+## [0.5.0] - 2026-09-15
+
 ### Added
 
 - **Master / change spec layout**: `docs/sparrow/master/` (promoted baseline) and `docs/sparrow/change/current|archive/` (active and archived changes). Domain revision histories: `master/requirement/revision-history.md` and `master/design/revision-history.md` (each entry includes **synced-at**). See `docs/prd/sparrow-change-management.md`.
