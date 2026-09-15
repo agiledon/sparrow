@@ -6,26 +6,27 @@
  */
 
 import type { SkillSpec } from '../../core/skills.js';
+import { SPEC_LAYOUT_GUIDE } from '../../core/spec-paths.js';
 
-const APPLY_BODY = `# Sparrow Apply — 按实现计划执行代码生成
+const APPLY_BODY = SPEC_LAYOUT_GUIDE + `# Sparrow Apply — 按实现计划执行代码生成
 
 ## 执行顺序检查
 
 \`\`\`
 当前步骤：sparrow-apply（第 6 步 / 共 8 步）
 所属层级：团队级（team-level），针对特定限界上下文或交互上下文
-前置条件：docs/sparrow/design/{slug}/plan.md 必须存在
+前置条件：docs/sparrow/change/current/{activeChangeId}/design/{slug}/plan.md 必须存在
 后续步骤：sparrow-verify @{slug}（第 7 步）；全部 slug verify 通过后，若处于 revise 模式可执行 sparrow-archive
 \`\`\`
 
 **前置条件检查**：
-- 如果 \`docs/sparrow/design/{slug}/plan.md\` 不存在，请提示用户先执行 **sparrow-plan @{slug}**
+- 如果 \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/plan.md\` 不存在，请提示用户先执行 **sparrow-plan @{slug}**
 - 如果用户未指定 slug，请列出可用的 slug 让用户选择（从 project.md 中读取）
 - 如果 plan.md 中的所有步骤都已标记为 \`- [x]\`，说明当前上下文 apply 已执行完毕，应提示执行 **sparrow-verify @{slug}**
 
 ### Slug 类型判定
 
-1. 读取 \`docs/sparrow/project.md\` 的「限界上下文设计」部分
+1. 读取 \`docs/sparrow/change/current/{activeChangeId}/project.md\` 的「限界上下文设计」部分
 2. 如果当前 slug 标注了 **— *交互上下文*** 标记 → 执行下方「交互上下文代码生成」章节
 3. 否则 → 执行下方「后端限界上下文代码生成」章节（保持现有逻辑）
 
@@ -59,9 +60,9 @@ const APPLY_BODY = `# Sparrow Apply — 按实现计划执行代码生成
 
 > **⚠️ 门控声明（向后兼容硬性约束）**：本节仅在**检测到活动变更**时进入。**若当前为首次需求、无活动变更，请忽略本节，完全按上文原始流程执行（即按 plan.md 正向生成代码），行为须与未引入本节前完全一致。**
 
-**触发条件**（同 sparrow-arch「变更处理 / revise」章节）：\`docs/sparrow/changes/\` 含未归档变更文件夹，或 \`project.md\` 当前 change-id 非空。
+**触发条件**（同 sparrow-arch「变更处理 / revise」章节）：\`docs/sparrow/change/current/\` 含未归档变更文件夹，或 \`project.md\` 当前 change-id 非空。
 
-**revise 行为总览**：本阶段只处理**档位 == S4（代码已生成）且被本次变更影响**的 BC。BC↔\`backend/\` 模块 1:1，因此 arch 记录的重构动作直接映射为代码动作。执行前先读取 \`changes/{change-id}/\` 下 arch 写好的 ADR / 动作记录，确定每个受影响 slug 的目标拓扑。
+**revise 行为总览**：本阶段只处理**档位 == S4（代码已生成）且被本次变更影响**的 BC。BC↔\`backend/\` 模块 1:1，因此 arch 记录的重构动作直接映射为代码动作。执行前先读取 \`change/current/{change-id}/\` 下 arch 写好的 ADR / 动作记录，确定每个受影响 slug 的目标拓扑。
 
 ### 代码动作映射（仅 S4 执行）
 
@@ -88,7 +89,7 @@ const APPLY_BODY = `# Sparrow Apply — 按实现计划执行代码生成
 校验不通过则停下并报告，不得带病推进。
 
 ### 收尾
-- 变更后重跑 **Code Review** 生成/更新 \`docs/sparrow/design/{slug}/code_review.md\`。
+- 变更后重跑 **Code Review** 生成/更新 \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/code_review.md\`。
 - 受影响模块代码版本递增（在 \`project.md\` 或模块说明中记录），元数据块追加 \`change-id\`。
 - 全部受影响 S4 slug 完成后，提示用户依次执行 **sparrow-verify** 验证，验证通过后执行 **sparrow-archive** 归档本次变更。
 
@@ -98,17 +99,17 @@ const APPLY_BODY = `# Sparrow Apply — 按实现计划执行代码生成
 
 ## 必读规约
 
-- \`docs/sparrow/design/{slug}/plan.md\` — 执行计划（以 plan 为准的执行顺序）
-- \`docs/sparrow/design/{slug}/spec.md\` — 场景与验收
-- \`docs/sparrow/design/{slug}/api.md\` — 对外契约
-- \`docs/sparrow/design/{slug}/tech.md\` — 技术栈与工具链
-- \`docs/sparrow/design/{slug}/model.md\` — 领域模型（静态 + 动态）
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/plan.md\` — 执行计划（以 plan 为准的执行顺序）
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/spec.md\` — 场景与验收
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/api.md\` — 对外契约
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/tech.md\` — 技术栈与工具链
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/model.md\` — 领域模型（静态 + 动态）
 
 ---
 
 ## 代码与模型一致性（核心约束）
 
-代码实现**必须**与 \`docs/sparrow/design/{slug}/model.md\` 中定义的领域模型保持严格一致。
+代码实现**必须**与 \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/model.md\` 中定义的领域模型保持严格一致。
 
 ### 领域层一致性
 
@@ -204,7 +205,7 @@ infrastructure 层（南向网关）:
 - **禁止**领域层单元测试（领域 TDD 属于 dev）
 
 ### Code Review（全部 dev + qa 任务完成后）
-- 运行检查并生成 \`docs/sparrow/design/{slug}/code_review.md\`
+- 运行检查并生成 \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/code_review.md\`
 - 验证代码是否符合 tech.md 的技术栈要求
 - 验证是否符合对应语言的编码规范
 
@@ -298,7 +299,7 @@ integration-tests/{slug}/
 
 ### 代码评审报告
 \`\`\`
-docs/sparrow/design/{slug}/code_review.md
+docs/sparrow/change/current/{activeChangeId}/design/{slug}/code_review.md
 \`\`\`
 
 ---
@@ -365,10 +366,10 @@ edge/
 
 除 \`design/{slug}/\` 下的 spec.md / api.md / tech.md / model.md / plan.md 外，还必须读取 sparrow-requirement 产出的 UI 规格：
 
-- \`docs/sparrow/requirement/ui/ui-spec.md\` — 页面结构、布局、交互方式
-- \`docs/sparrow/requirement/ui/design-tokens.md\` — 色彩体系、字体层级、间距、圆角/阴影
-- \`docs/sparrow/requirement/ui/components/component-library.md\` — 组件定义与变体
-- \`docs/sparrow/requirement/ui/prototypes/*.html\` — 视觉与交互基准（颜色 / 位置 / 大小 / 布局 1:1 还原）
+- \`docs/sparrow/change/current/{activeChangeId}/requirement/ui/ui-spec.md\` — 页面结构、布局、交互方式
+- \`docs/sparrow/change/current/{activeChangeId}/requirement/ui/design-tokens.md\` — 色彩体系、字体层级、间距、圆角/阴影
+- \`docs/sparrow/change/current/{activeChangeId}/requirement/ui/components/component-library.md\` — 组件定义与变体
+- \`docs/sparrow/change/current/{activeChangeId}/requirement/ui/prototypes/*.html\` — 视觉与交互基准（颜色 / 位置 / 大小 / 布局 1:1 还原）
 
 ### 前端代码生成规则
 
@@ -411,7 +412,7 @@ edge/bff/
   {pageName}/
     {PageName}Aggregator.{ext}
 
-docs/sparrow/design/{ui-slug}/code_review.md
+docs/sparrow/change/current/{activeChangeId}/design/{ui-slug}/code_review.md
 \`\`\`
 
 ### 质量检查清单（交互上下文）

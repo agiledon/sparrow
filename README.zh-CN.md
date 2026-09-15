@@ -67,6 +67,8 @@ flowchart LR
 - **团队级**步骤（3–8）**按 slug 运行**——每个限界上下文与交互上下文各跑一遍。所有上下文共用同一套命令且完全正交：无相互依赖，可按任意顺序或并行执行。
 - 任一步骤完成后可暂停审阅、对话 refine 并重新运行——下一步始终读取最新版本。
 
+**规格布局**：活动变更在 `docs/sparrow/change/current/{change-id}/` 读写；已发布基线在 `docs/sparrow/master/`（首次 **archive promote** 后才有内容）。项目类型写在 `proposal.md` 的 `development-mode`：**绿地**（`greenfield`）、**版本迭代**（`iteration`）、**棕地**（`brownfield`）。详见 [输出结构](#输出结构) 与 `docs/prd/sparrow-development-modes.md`。
+
 各步骤的输入、输出与细节见下文 [核心工作流参考](#核心工作流参考)。
 
 ### 支持工作流
@@ -177,11 +179,17 @@ your-project/
 │   └── ...
 ├── .pi/                #（若选择了 Pi）
 │   └── ...
-├── docs/sparrow/harness/  # 项目级约束资产（占位文件）
-└── sparrow.json        # 项目配置
+├── docs/sparrow/
+│   ├── master/              # 基线规格（archive promote 后填充）
+│   ├── change/current|archive/
+│   ├── harness/             # 项目级约束占位
+│   └── README.md
+└── .sparrow/
+    ├── sparrow.json         # 项目配置
+    └── active-change.json   # 当前 change-id
 ```
 
-`sparrow init` 还会将**全局约束资产**（DDD 通用纪律）写入全局配置目录（macOS/Linux 为 `~/.config/sparrow/harness`，Windows 为 `%APPDATA%\sparrow\harness`）。
+`sparrow init` 还会将**全局约束资产**（含 `brownfield.md`）写入全局配置目录（macOS/Linux 为 `~/.config/sparrow/harness`，Windows 为 `%APPDATA%\sparrow\harness`）。
 
 初始化后，可随时检查更新：
 
@@ -214,147 +222,191 @@ sparrow update
 
 ### 步骤 1：sparrow-requirement（产品级）
 
-**输入**：原始需求文档或描述  
-**输出**：
-- `docs/sparrow/requirement/prd-business.md` — 结构化业务服务定义
-- `docs/sparrow/requirement/prd-quanlity.md` — 系统质量属性（性能、安全、高可用等）
-- `docs/sparrow/requirement/ui/` — \[可选\] UI 设计规格、设计令牌、组件库与交互式 HTML 原型
+**工作区**：`docs/sparrow/change/current/{change-id}/`（无 current 时由本步创建 change-id 与 `proposal.md`）
 
-sparrow-requirement 采用 **Grill Me** 交互探索模式，分两阶段。**阶段 1**：业务需求——覆盖参与者、核心流程、业务规则、边界条件、异常场景与质量属性。**阶段 2**：生成需求文档后，可选进入 **UI 设计探索**（同样为 Grill Me），产出用户画像、旅程、页面概念与视觉偏好——纯 UX，不限界上下文关联。
+**输入**：原始需求；**棕地**项目另需结合现有代码与运行行为  
+**输出**（均在变更工作区内）：
+- `requirement/business/prd-business.md` — 结构化业务服务定义
+- `requirement/quality/prd-quality.md` — 系统质量属性（性能、安全、高可用等）
+- `requirement/ui/` — \[可选\] UI 设计规格、设计令牌、组件库与 HTML 原型
+
+**Grill Me** 分两阶段：业务需求探索 → 可选 UI 设计探索（纯 UX，不限界上下文）。**版本迭代**时对照 `master/requirement/` 做增量；change 内规格**不写** `<!-- version -->` 元数据块。
 
 ### 步骤 2：sparrow-arch（产品级）
 
-**输入**：`requirement/prd-business.md` + `requirement/prd-quanlity.md` + \[可选\] `requirement/ui/`  
-**输出**：
-- `docs/sparrow/architecture/business.md` — 子域（核心/支撑/通用）+ Mermaid 业务架构图
-- `docs/sparrow/architecture/application.md` — 限界上下文、上下文映射、四层应用架构图
-- `docs/sparrow/design/{slug}/spec.md` — 按上下文切片的业务规格
-- `docs/sparrow/architecture/frontend.md` — \[若有 UI\] 含交互上下文定义、技术栈选型、BFF 设计与 API 契约绑定表的前端架构
+**输入**：change 内 `requirement/` + \[可选\] `requirement/ui/`；只读参考 `master/`  
+**输出**（change 工作区）：
+- `architecture/business.md` — 子域 + Mermaid 业务架构图
+- `architecture/application.md` — 限界上下文与上下文映射
+- `design/{slug}/spec.md` — 该 BC 的**业务需求规格**切片（非 API 设计文档）
+- `architecture/frontend.md` — \[若有 UI\] 交互上下文、BFF、API 契约绑定表
 
-将子域分类为核心、支撑与通用，映射为限界上下文及关系模式。**若存在 UI 需求**，额外生成前端架构，包括：交互式技术栈选型（Web/Mobile/QT/BFF）、**交互上下文**定义（与 BC 同级、涵盖全部 UI + BFF 聚合），以及 **API 契约绑定表**——唯一同步点，保证前后端契约一致，使后续 BC 与交互上下文的 design/model/plan/apply 可独立、无相互依赖地执行。
+**若存在 UI 需求**，生成前端架构与绑定表，使 BC 与交互上下文后续 design/model/plan/apply 可并行、无互读依赖。BC 拓扑变更须在 **archive** 前经用户确认（见步骤 8）。
 
 ### 步骤 3：sparrow-design（团队级，按上下文）
 
 **输入**：`design/{slug}/spec.md` + 架构文档  
-**输出**：
-- `docs/sparrow/design/{slug}/api.md` — 服务契约（后端 BC）或含 ViewModel 接口的 BFF API 规格（交互上下文）
-- `docs/sparrow/design/{slug}/tech.md` — 技术栈选型
+**输出**：`design/{slug}/api.md`、`design/{slug}/tech.md`
 
-**后端 BC**：交互式技术栈选型（Java/Python/Node.js/Go/Rust/REST/gRPC）。**交互上下文**：BFF 聚合端点设计、ViewModel 定义及前端 + BFF 技术栈选型。交互上下文 design 不读取任何 BC 的 api.md——契约一致性由 frontend.md 中的绑定表保证。
+**后端 BC**：技术栈与 REST/gRPC 等选型。**交互上下文**：BFF 与 ViewModel 接口；不读取 BC 的 api.md，契约由 `frontend.md` 绑定表保证。
 
 ### 步骤 4：sparrow-model（团队级，按上下文）
 
 **输入**：`spec.md` + `api.md` + `tech.md`  
-**输出**：`docs/sparrow/design/{slug}/model.md`
+**输出**：`design/{slug}/model.md`
 
-**后端 BC**：三阶段领域建模（静态类图 + 动态时序图 + 集成）。**交互上下文**：ViewModel 静态模型、组件树模型与数据流模型。
+**后端 BC**：静态类图 + 动态时序 + 集成。**交互上下文**：ViewModel 与组件树/数据流模型。
 
 ### 步骤 5：sparrow-plan（团队级，按上下文）
 
 **输入**：`spec.md` + `api.md` + `tech.md` + `model.md`  
-**输出**：`docs/sparrow/design/{slug}/plan.md` — 有序实施计划
+**输出**：`design/{slug}/plan.md`（**仅存在于 change 工作区**，不 promote 到 master）
 
-**后端 BC**：按 DDD 层依赖组织任务。**交互上下文**：按页面/功能组织任务并标注可并行项，覆盖前端组件开发、BFF 聚合实现与集成测试。
+**后端 BC**：按 DDD 层组织任务。**棕地**（`development-mode=brownfield`）：用户选择 **solidify**（仅测试计划）或 **refactor**（测试 + 重构计划）。
 
 ### 步骤 6：sparrow-apply（团队级，按上下文）
 
 **输入**：`plan.md`  
 **输出**：
-- `backend/{slug}/` — 后端 BC 的 DDD 四层模块（api/application/domain/infrastructure）
-- `integration-tests/{slug}/` — 独立集成/API 测试
-- `docs/sparrow/design/{slug}/code_review.md` — 审查报告
+- `backend/{slug}/` — 后端 BC 四层模块
+- `integration-tests/{slug}/`
+- `change/.../design/{slug}/code_review.md`
 
-**交互上下文** 将前端代码生成至 `frontend/features/`，BFF 聚合代码生成至 `edge/bff/`。
+**交互上下文**：`frontend/features/`、`edge/bff/`。
 
 ### 步骤 7：sparrow-verify（团队级，按上下文）
 
-**输入**：已 apply 的代码 + `spec.md` + `api.md` + `tech.md` + `model.md`  
-**输出**：`docs/sparrow/design/{slug}/verify_report.md` — 完整性、正确性与一致性报告，含按严重程度分类的发现项
+**输入**：已 apply 的代码 + change 内 `spec.md` / `api.md` / `tech.md` / `model.md`  
+**输出**：`design/{slug}/verify_report.md`
 
-仅在所选 slug 完成 apply 后运行。尚未 apply 的 slug 会跳过。
+仅在所选 slug 完成 apply 后运行。
 
 ### 步骤 8：sparrow-archive（团队级，revise 工作流）
 
-**输入**：`docs/sparrow/changes/{change-id}/` 下已完成的变更  
-**输出**：归档至 `docs/sparrow/changes/archive/`
+**输入**：`docs/sparrow/change/current/{change-id}/` 下已完成的变更  
+**输出**：移至 `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/`，并 **promote** 合并至 `docs/sparrow/master/`（含 requirement/design 两份 revision-history）
 
-在 verify 通过（无 P0/P1 阻塞项）且存在活跃 revise 模式变更时运行。无活跃变更的基线项目不需要此步骤。
+在 verify 通过（无 P0/P1 阻塞项）后运行。绿地首次交付完成后亦通过 archive 填充 master。
 
 ## 输出结构
 
-运行完整流水线后，项目将包含：
+规格采用 **master（基线）** 与 **change（变更）** 分离布局，类似「主分支 + 变更分支」。`sparrow init` 会创建目录骨架；活动变更 ID 记录在 `.sparrow/active-change.json`。
+
+| 区域 | 路径 | 说明 |
+|------|------|------|
+| 基线 | `docs/sparrow/master/` | archive **promote** 后的有效规格正文；含 `project.md` 向导 |
+| 活动变更 | `docs/sparrow/change/current/{change-id}/` | 8 步流水线**读写**工作区，目录与 master 同构 |
+| 归档 | `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/` | 某次变更的完整快照 |
+
+**master 与 change 同构内容**（路径均相对于各自根）：
+
+```
+project.md
+requirement/business/prd-business.md
+requirement/quality/prd-quality.md
+requirement/ui/                    # 可选
+architecture/business.md
+architecture/application.md
+architecture/frontend.md           # 可选
+architecture/api.md                # 项目级 API 总目录（sparrow-design 维护）
+design/{slug}/spec.md              # BC 业务需求规格
+design/{slug}/api.md | tech.md | model.md
+```
+
+**仅 change 工作区额外包含**：`design/{slug}/plan.md`、`code_review.md`、`verify_report.md`、`proposal.md`。
+
+**master 修订历史**（正文合并进各规格文件，历史单独存放）：
+
+- `master/requirement/revision-history.md` — 需求域 promote 摘要（每条含 **synced-at**）
+- `master/design/revision-history.md` — 架构 + design 域 promote 摘要
+- `master/architecture/bc-revision-history.md` — 限界上下文拓扑变更（须用户确认）
+
+**完整项目树示例**（一次活动变更 + 已 promote 的 master）：
 
 ```
 your-project/
+├── .sparrow/
+│   ├── sparrow.json
+│   └── active-change.json           # { "changeId": "first-ddd" }
 ├── docs/sparrow/
-│   ├── requirement/
-│   │   ├── prd-business.md               # sparrow-requirement（功能需求）
-│   │   ├── prd-quanlity.md               # sparrow-requirement（质量属性）
-│   │   └── ui/                            # [可选] sparrow-requirement（UI 设计探索）
-│   │       ├── ui-spec.md
-│   │       ├── design-tokens.md
-│   │       ├── components/
-│   │       └── prototypes/
-│   ├── architecture/
-│   │   ├── business.md                   # sparrow-arch（子域）
-│   │   ├── application.md                # sparrow-arch（限界上下文）
-│   │   └── frontend.md                   # [可选] sparrow-arch（前端 + 交互上下文）
-│   ├── project.md                        # 项目目录索引
-│   └── design/{english-slug}/
-│       ├── spec.md                       # 按上下文切片的规格
-│       ├── api.md                        # sparrow-design
-│       ├── tech.md                       # sparrow-design
-│       ├── model.md                      # sparrow-model
-│       ├── plan.md                       # sparrow-plan
-│       ├── code_review.md                # sparrow-apply
-│       └── verify_report.md              # sparrow-verify
-├── backend/{slug}/                       # sparrow-apply（后端 BC）
-│   ├── api/command/, query/, dto/
-│   ├── application/
-│   ├── domain/aggregate/, entity/, valueobject/, service/
-│   └── infrastructure/port/, adapter/
-├── frontend/                             # sparrow-apply（交互上下文）
-│   ├── features/{name}/
-│   └── shared/
-├── edge/bff/                             # sparrow-apply（BFF 聚合）
-├── integration-tests/{slug}/             # sparrow-apply（QA 任务）
-└── sparrow.json                          # 项目配置
+│   ├── README.md                    # 布局说明
+│   ├── master/
+│   │   ├── project.md
+│   │   ├── requirement/
+│   │   │   ├── business/prd-business.md
+│   │   │   ├── quality/prd-quality.md
+│   │   │   ├── ui/ …
+│   │   │   └── revision-history.md
+│   │   ├── architecture/
+│   │   │   ├── business.md
+│   │   │   ├── application.md
+│   │   │   ├── frontend.md          # 可选
+│   │   │   ├── api.md               # 项目级 API 总目录
+│   │   │   └── bc-revision-history.md
+│   │   ├── design/
+│   │   │   ├── revision-history.md
+│   │   │   └── {slug}/
+│   │   │       ├── spec.md
+│   │   │       ├── api.md
+│   │   │       ├── tech.md
+│   │   │       └── model.md         # master 不含 plan.md
+│   ├── change/
+│   │   ├── current/first-ddd/       # 与 master 同构 + plan 等
+│   │   │   ├── proposal.md          # development-mode: greenfield | iteration | brownfield
+│   │   │   └── design/{slug}/plan.md
+│   │   └── archive/2026-06-06-first-ddd/
+│   └── harness/                     # 项目级约束占位
+├── backend/{slug}/
+├── frontend/
+├── edge/bff/
+└── integration-tests/{slug}/
 ```
+
+> **旧布局**：根下直接的 `docs/sparrow/requirement/prd-business.md` 或 `docs/sparrow/changes/` 已废弃，请迁移至 master/change（见 `docs/prd/sparrow-change-management.md`）。
 
 所有限界上下文共享同一项目根命名空间，但各自为独立模块，拥有专属语言脚手架与依赖管理。
 
 ## 约束资产（Harness）
 
-Sparrow 内置 **约束资产**（harness）——各阶段强制执行的「必须 / 禁止」DDD 纪律。存放于两处：
+Sparrow 内置 **约束资产**（harness）——各阶段强制执行的「必须 / 禁止」纪律。存放于两处：
 
 | 范围 | 位置 | 内容 |
 |------|------|------|
-| **全局** | `~/.config/sparrow/harness/`（macOS/Linux），`%APPDATA%\sparrow\harness`（Windows） | DDD 通用纪律，由 `sparrow init` 写入、`sparrow update` 同步 |
-| **项目** | `docs/sparrow/harness/` | 项目专属约束；`sparrow init` 创建占位文件，可自由编辑 |
+| **全局** | `~/.config/sparrow/harness/`（macOS/Linux），`%APPDATA%\sparrow\harness`（Windows） | DDD 通用纪律 + **棕地**约束模板，由 `sparrow init` / `sparrow update` 同步 |
+| **项目** | `docs/sparrow/harness/` | 项目专属约束；`sparrow init` 创建占位，可自由编辑 |
 
 **优先级**：项目级 > 全局级。冲突时项目级优先；若项目文件为空或缺失，则直接使用全局级。
 
-全局 harness 含各阶段文件及一份 constitution：
+全局 harness 含各阶段文件、**棕地项目**约束及 constitution 索引：
 
 ```
 harness/
-├── constitution.md            # 聚合索引：阶段 → 文件 → 描述
-├── requirement/requirements.md    # 业务服务识别 + UI 设计探索纪律
-├── arch/business.md           # 子域分类纪律
-├── arch/application.md        # 限界上下文、自治与通信纪律
-├── arch/frontend.md           # 前端架构与交互上下文纪律
-├── design/api-design.md       # 服务契约与 API 纪律
-├── model/architecture.md      # 四层、构造型、PO 与调用规则
-├── model/domain-modeling.md   # 聚合与 OOP 纪律
-├── model/view-modeling.md     # View Model 建模纪律（交互上下文）
-└── apply/implementation.md    # 代码生成与封装纪律
+├── constitution.md              # 阶段 → 约束文件 → 说明（含棕地行）
+├── requirement/requirements.md  # 绿地/迭代：业务服务识别 + UI 探索
+├── arch/business.md
+├── arch/application.md
+├── arch/frontend.md
+├── design/api-design.md
+├── model/architecture.md
+├── model/domain-modeling.md
+├── model/view-modeling.md
+├── apply/implementation.md
+└── brownfield.md                # 棕地：as-is 规格化、plan 的 solidify/refactor 分支
 ```
+
+**按项目类型加载**：
+
+| development-mode | 除阶段约束外额外加载 |
+|------------------|----------------------|
+| `greenfield`（绿地） | 各阶段默认 harness |
+| `iteration`（版本迭代） | 同绿地；arch 侧重 BC 归属与拓扑确认 |
+| `brownfield`（棕地） | **`brownfield.md`** + 各阶段约束；requirement/arch/model 以现有系统取证为主，plan 必须走 solidify 或 refactor |
 
 工作机制：
 
-- 各核心工作流 skill 在 `📐 约束资产（Harness）` 章节引用 harness，要求 AI **在执行前**加载相关约束文件。
-- 通过 [**harness 支持工作流**](#支持工作流)（`/sparrow-supporting-harness`）查看索引，增删改项目级约束；新约束会自动归类到对应阶段文件。
-- 受管全局模板在版本升级时会刷新，但**用户编辑过的文件不会被覆盖**（项目文件始终归你所有）。
+- 各核心 skill 在 `📐 约束资产（Harness）` 章节引用 harness，要求 AI **执行前**加载对应阶段文件；棕地项目在 `proposal.md` 标明 `brownfield` 时**必须**加载 `brownfield.md`。
+- 通过 [**harness 支持工作流**](#支持工作流)（`/sparrow-supporting-harness`）查看索引，增删改项目级约束。
+- 受管全局模板在版本升级时会刷新，**用户编辑过的文件不会被覆盖**。
 
 ## 支持的 AI 工具
 
@@ -373,7 +425,7 @@ harness/
 
 ### sparrow.json
 
-由 `sparrow init` 在项目根目录生成：
+由 `sparrow init` 在 `.sparrow/sparrow.json` 生成：
 
 ```json
 {

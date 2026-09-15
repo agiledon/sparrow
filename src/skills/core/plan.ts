@@ -5,8 +5,9 @@
  */
 
 import type { SkillSpec } from '../../core/skills.js';
+import { SPEC_LAYOUT_GUIDE } from '../../core/spec-paths.js';
 
-const PLAN_BODY = `# Sparrow Plan — 实现计划制订
+const PLAN_BODY = SPEC_LAYOUT_GUIDE + `# Sparrow Plan — 实现计划制订
 
 ## 执行顺序检查
 
@@ -14,10 +15,10 @@ const PLAN_BODY = `# Sparrow Plan — 实现计划制订
 当前步骤：sparrow-plan（第 5 步 / 共 8 步）
 所属层级：团队级（team-level），针对特定限界上下文或交互上下文
 前置条件（必须全部存在）：
-  1. docs/sparrow/design/{slug}/spec.md
-  2. docs/sparrow/design/{slug}/api.md
-  3. docs/sparrow/design/{slug}/tech.md
-  4. docs/sparrow/design/{slug}/model.md
+  1. docs/sparrow/change/current/{activeChangeId}/design/{slug}/spec.md
+  2. docs/sparrow/change/current/{activeChangeId}/design/{slug}/api.md
+  3. docs/sparrow/change/current/{activeChangeId}/design/{slug}/tech.md
+  4. docs/sparrow/change/current/{activeChangeId}/design/{slug}/model.md
 下一步骤：sparrow-apply @{slug}（第 6 步）→ sparrow-verify @{slug}（第 7 步）
 \`\`\`
 
@@ -28,7 +29,7 @@ const PLAN_BODY = `# Sparrow Plan — 实现计划制订
 
 ### Slug 类型判定
 
-1. 读取 \`docs/sparrow/project.md\` 的「限界上下文设计」部分
+1. 读取 \`docs/sparrow/change/current/{activeChangeId}/project.md\` 的「限界上下文设计」部分
 2. 如果当前 slug 标注了 **— *交互上下文*** 标记 → 执行下方「交互上下文实现计划」章节
 3. 否则 → 执行下方「后端限界上下文实现计划」章节（保持现有逻辑）
 
@@ -38,7 +39,7 @@ const PLAN_BODY = `# Sparrow Plan — 实现计划制订
 
 在开始生成内容之前，请检查以下输出文件是否已经存在：
 
-- \`docs/sparrow/design/{slug}/plan.md\`
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/plan.md\`
 
 如果文件已存在，请**让用户进行选择**：
 
@@ -50,18 +51,31 @@ const PLAN_BODY = `# Sparrow Plan — 实现计划制订
 
 ---
 
+
+
+## 棕地项目（brownfield）— plan 分支
+
+> 仅当 \`change/current/{change-id}/proposal.md\` 的 \`development-mode\` 为 \`brownfield\` 时执行。
+
+**必须**请用户选择：
+
+- **solidify**：\`plan.md\` 仅包含测试计划（特征/回归/契约/冒烟）；不得含重构任务。
+- **refactor**：\`plan.md\` 包含测试计划 + 重构计划（步骤、边界、迁移顺序），供 sparrow-apply 遵循。
+
+加载 \`docs/sparrow/harness/brownfield.md\` 约束。
+
 ## 变更模式（revise）— 按 BC 档位按需重生成
 
 > **⚠️ 门控声明（向后兼容硬性约束）**：本节仅在**检测到活动变更**时进入。**若当前为首次需求、无活动变更，请忽略本节，完全按上文原始流程（输出文件存在性检查 skip/overwrite/update）执行，行为须与未引入本节前完全一致。**
 
-**触发条件**（同 sparrow-arch「变更处理 / revise」章节）：\`docs/sparrow/changes/\` 含未归档变更文件夹，或 \`project.md\` 当前 change-id 非空。
+**触发条件**（同 sparrow-arch「变更处理 / revise」章节）：\`docs/sparrow/change/current/\` 含未归档变更文件夹，或 \`project.md\` 当前 change-id 非空。
 
 **revise 行为**：
 1. 从 \`project.md\`「变更管理」块读取本次变更的**受影响 slug 列表**。
 2. 对每个受影响 slug，依据其档位（S0–S4，见 sparrow-arch）判断是否在本阶段处理：
    - **plan 阶段处理条件**：档位 ≥ S3（即 plan 已生成）
    - 不满足则跳过该 slug
-3. 满足条件的 slug：在现有 \`plan.md\` 基础上，按 \`changes/{change-id}/deltas/design/{slug}/plan.md\`（若有）做增量更新或重生成（沿用存在性检查的 update 语义），版本号递增并追加 \`change-id\` 到元数据块。
+3. 满足条件的 slug：在现有 \`plan.md\` 基础上，按 \`change/current/{change-id}/design/{slug}/plan.md\`（若有）做增量更新或重生成（沿用存在性检查的 update 语义），change 工作区不写 version 元数据。
 4. 未受影响的 slug 不处理。
 
 > 仅 S0–S2 档位的 BC 不会到达 plan，本阶段不参与。
@@ -70,14 +84,14 @@ const PLAN_BODY = `# Sparrow Plan — 实现计划制订
 
 ## 📋 project.md 更新
 
-完成输出后，**必须**更新 \`docs/sparrow/project.md\`：
+完成输出后，**必须**更新 \`docs/sparrow/change/current/{activeChangeId}/project.md\`：
 
 1. 如果 \`project.md\` 不存在，根据当前项目信息创建它
 2. 在"限界上下文设计"部分，找到当前 \`{slug}\` 的子章节
 3. 更新 \`plan.md\` 的状态从 \`_待生成_\` 改为 \`_v{version}_\`
 4. 更新文件头部的"最后更新"时间戳
 
-**project.md 路径**: \`docs/sparrow/project.md\`
+**project.md 路径**: \`docs/sparrow/change/current/{activeChangeId}/project.md\`
 
 ---
 
@@ -124,14 +138,14 @@ const PLAN_BODY = `# Sparrow Plan — 实现计划制订
 
 ## 必读输入
 
-- \`docs/sparrow/design/{slug}/spec.md\` — 场景与验收
-- \`docs/sparrow/design/{slug}/api.md\` — 对外契约
-- \`docs/sparrow/design/{slug}/tech.md\` — 技术栈与工具链
-- \`docs/sparrow/design/{slug}/model.md\` — 领域静态/动态模型
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/spec.md\` — 场景与验收
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/api.md\` — 对外契约
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/tech.md\` — 技术栈与工具链
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/model.md\` — 领域静态/动态模型
 
 ## 输出
 
-写入 **\`docs/sparrow/design/{slug}/plan.md\`**
+写入 **\`docs/sparrow/change/current/{activeChangeId}/design/{slug}/plan.md\`**
 
 ---
 
@@ -469,7 +483,7 @@ backend/
 **可并行**：\`是\`（可与任务 1/2 并行）
 
 - [ ] 依据契约绑定表为每个下游 BC API 生成 MockClient（fixture）
-- [ ] 依据项目级 \`docs/sparrow/api.md\` 预留 RealClient 端点映射（ACL）
+- [ ] 依据项目级 \`docs/sparrow/change/current/{activeChangeId}/architecture/api.md\` 预留 RealClient 端点映射（ACL）
 - [ ] 配置装配层切换开关（如 \`BC_ADAPTER=mock|real\`）
 
 ## 任务 4：共享组件开发
@@ -506,7 +520,7 @@ backend/
 ## 任务 8：契约桩切换（联调）
 
 **执行方**：\`dev\`
-**依赖**：本交互上下文聚合的所有目标 BC 的 apply 均完成（其公开 API 已进项目级 \`docs/sparrow/api.md\`）
+**依赖**：本交互上下文聚合的所有目标 BC 的 apply 均完成（其公开 API 已进项目级 \`docs/sparrow/change/current/{activeChangeId}/architecture/api.md\`）
 **可并行**：\`否\`（跨上下文串行，排在最后）
 
 - [ ] 运行契约测试，验证真实 BC 实现满足契约绑定表

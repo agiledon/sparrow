@@ -5,8 +5,9 @@
  */
 
 import type { SkillSpec } from '../../core/skills.js';
+import { SPEC_LAYOUT_GUIDE } from '../../core/spec-paths.js';
 
-const MODEL_BODY = `# Sparrow Model — 领域建模
+const MODEL_BODY = SPEC_LAYOUT_GUIDE + `# Sparrow Model — 领域建模
 
 ## 执行顺序检查
 
@@ -14,9 +15,9 @@ const MODEL_BODY = `# Sparrow Model — 领域建模
 当前步骤：sparrow-model（第 4 步 / 共 8 步）
 所属层级：团队级（team-level），针对特定限界上下文或交互上下文
 前置条件：
-  1. docs/sparrow/design/{slug}/spec.md 必须存在
-  2. docs/sparrow/design/{slug}/api.md 必须存在
-  3. docs/sparrow/design/{slug}/tech.md 必须存在
+  1. docs/sparrow/change/current/{activeChangeId}/design/{slug}/spec.md 必须存在
+  2. docs/sparrow/change/current/{activeChangeId}/design/{slug}/api.md 必须存在
+  3. docs/sparrow/change/current/{activeChangeId}/design/{slug}/tech.md 必须存在
 下一步骤：sparrow-plan @{slug}（团队级）
 \`\`\`
 
@@ -27,7 +28,7 @@ const MODEL_BODY = `# Sparrow Model — 领域建模
 
 ### Slug 类型判定
 
-1. 读取 \`docs/sparrow/project.md\` 的「限界上下文设计」部分
+1. 读取 \`docs/sparrow/change/current/{activeChangeId}/project.md\` 的「限界上下文设计」部分
 2. 如果当前 slug 标注了 **— *交互上下文*** 标记 → 执行下方「交互上下文建模」分支
 3. 否则 → 执行下方「后端限界上下文建模」分支（保持现有逻辑）
 
@@ -39,7 +40,7 @@ const MODEL_BODY = `# Sparrow Model — 领域建模
 
 在开始生成内容之前，请检查以下输出文件是否已经存在：
 
-- \`docs/sparrow/design/{slug}/model.md\`
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/model.md\`
 
 如果文件已存在，请**让用户进行选择**：
 
@@ -55,14 +56,14 @@ const MODEL_BODY = `# Sparrow Model — 领域建模
 
 > **⚠️ 门控声明（向后兼容硬性约束）**：本节仅在**检测到活动变更**时进入。**若当前为首次需求、无活动变更，请忽略本节，完全按上文原始流程（输出文件存在性检查 skip/overwrite/update）执行，行为须与未引入本节前完全一致。**
 
-**触发条件**（同 sparrow-arch「变更处理 / revise」章节）：\`docs/sparrow/changes/\` 含未归档变更文件夹，或 \`project.md\` 当前 change-id 非空。
+**触发条件**（同 sparrow-arch「变更处理 / revise」章节）：\`docs/sparrow/change/current/\` 含未归档变更文件夹，或 \`project.md\` 当前 change-id 非空。
 
 **revise 行为**：
 1. 从 \`project.md\`「变更管理」块读取本次变更的**受影响 slug 列表**。
 2. 对每个受影响 slug，依据其档位（S0–S4，见 sparrow-arch）判断是否在本阶段处理：
    - **model 阶段处理条件**：档位 ≥ S2（即 design 已完成且已建模）
    - 不满足则跳过该 slug
-3. 满足条件的 slug：在现有 \`model.md\` 基础上，按 \`changes/{change-id}/deltas/design/{slug}/model.md\`（若有）做增量更新或重生成（沿用存在性检查的 update 语义），版本号递增并追加 \`change-id\` 到元数据块。
+3. 满足条件的 slug：在现有 \`model.md\` 基础上，按 \`change/current/{change-id}/design/{slug}/model.md\`（若有）做增量更新或重生成（沿用存在性检查的 update 语义），change 工作区不写 version 元数据。
 4. 未受影响的 slug 不处理。
 
 > 仅 S0/S1 档位的 BC 不会到达 model，本阶段不参与。
@@ -71,14 +72,14 @@ const MODEL_BODY = `# Sparrow Model — 领域建模
 
 ## 📋 project.md 更新
 
-完成输出后，**必须**更新 \`docs/sparrow/project.md\`：
+完成输出后，**必须**更新 \`docs/sparrow/change/current/{activeChangeId}/project.md\`：
 
 1. 如果 \`project.md\` 不存在，根据当前项目信息创建它
 2. 在"限界上下文设计"部分，找到当前 \`{slug}\` 的子章节
 3. 更新 \`model.md\` 的状态从 \`_待生成_\` 改为 \`_v{version}_\`
 4. 更新文件头部的"最后更新"时间戳
 
-**project.md 路径**: \`docs/sparrow/project.md\`
+**project.md 路径**: \`docs/sparrow/change/current/{activeChangeId}/project.md\`
 
 ---
 
@@ -124,13 +125,13 @@ const MODEL_BODY = `# Sparrow Model — 领域建模
 1. **静态领域模型**：以聚合为基本单位的领域模型（聚合根、实体、值对象）
 2. **动态领域模型**：以 api.md 的 API 定义为入口，通过任务分解和角色构造型，为每个 API 绘制内部序列图
 
-输出文件：**\`docs/sparrow/design/{slug}/model.md\`**
+输出文件：**\`docs/sparrow/change/current/{activeChangeId}/design/{slug}/model.md\`**
 
 ## 核心原则：API 驱动的动态建模
 
 **动态领域模型以 design 阶段产出的 api.md 为起点，逐层向内部展开。**
 
-- 从 \`docs/sparrow/design/{slug}/api.md\` 中提取当前 BC 的每个**对外公开的 API**
+- 从 \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/api.md\` 中提取当前 BC 的每个**对外公开的 API**
 - 每个 API 作为动态领域模型**任务树的第一级入口**（根节点）
 - 任务树从 API 入口出发，逐步分解到应用服务 → 领域服务 → 聚合 → 端口，直到原子任务
 - **远程服务（Command/Query）的接口必须与 api.md 中的 API 定义保持一致**
@@ -257,7 +258,7 @@ Meeting ||--|| MeetingTime : has
 
 ### 步骤〇：API 入口提取（必须在任务分解之前执行）
 
-1. 读取 \`docs/sparrow/design/{slug}/api.md\`，提取当前 BC 的**所有对外公开的 API**
+1. 读取 \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/api.md\`，提取当前 BC 的**所有对外公开的 API**
 2. 对每个 API，确认其通信协议（HTTP/RPC/Event）和操作签名
 3. 这些 API 将作为动态领域模型**任务树的第一级入口**
 
@@ -431,7 +432,7 @@ deactivate APP
 
 ## 输出文档格式
 
-写入 **\`docs/sparrow/design/{slug}/model.md\`**：
+写入 **\`docs/sparrow/change/current/{activeChangeId}/design/{slug}/model.md\`**：
 
 
 \`\`\`markdown
@@ -450,7 +451,7 @@ deactivate APP
 
 ## 2. 动态领域模型（阶段二输出）
 
-> 以下每个 API 入口来自 docs/sparrow/design/{slug}/api.md
+> 以下每个 API 入口来自 docs/sparrow/change/current/{activeChangeId}/design/{slug}/api.md
 
 ### 2.1 API：{API名称}（来自 api.md）
 
@@ -565,9 +566,9 @@ deactivate APP
 
 | 文档 | 路径 | 用途 |
 |------|------|------|
-| BFF API 契约 | \`docs/sparrow/design/{ui-slug}/api.md\` | BFF 端点定义和 ViewModel 接口 |
-| 前端技术栈 | \`docs/sparrow/design/{ui-slug}/tech.md\` | 技术约束 |
-| UI 规格 | \`docs/sparrow/requirement/ui/ui-spec.md\` | 页面结构和交互定义 |
+| BFF API 契约 | \`docs/sparrow/change/current/{activeChangeId}/design/{ui-slug}/api.md\` | BFF 端点定义和 ViewModel 接口 |
+| 前端技术栈 | \`docs/sparrow/change/current/{activeChangeId}/design/{ui-slug}/tech.md\` | 技术约束 |
+| UI 规格 | \`docs/sparrow/change/current/{activeChangeId}/requirement/ui/ui-spec.md\` | 页面结构和交互定义 |
 
 ### 建模步骤
 

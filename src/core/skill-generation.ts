@@ -235,7 +235,7 @@ export function generateProjectConfig(ctx: ProjectContext): string {
  */
 export function generateProjectMd(ctx: ProjectContext): string {
   const { projectRoot, projectName, version, toolIds } = ctx;
-  const mdPath = join(projectRoot, 'docs', 'sparrow', 'project.md');
+  const mdPath = join(projectRoot, 'docs', 'sparrow', 'master', 'project.md');
   mkdirSync(dirname(mdPath), { recursive: true });
   const content = generateProjectMdContent(projectName, version, toolIds);
   writeFileSync(mdPath, content, 'utf-8');

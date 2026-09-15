@@ -40,7 +40,7 @@ export const ARCH_FRONTEND_BODY = `# 前端架构约束（arch / frontend）
 2. **BFF 是 edge 的核心职责（BFF ⊂ edge）**：按 UI 页面聚合多个 BC API，做数据聚合与格式转换。
 3. **微服务架构下 edge 可扩展 API 网关职责**：路由、鉴权、限流、协议转换、统一入口等（可选，按需）。
 4. 目录约定：\`edge/bff/\` 承载聚合逻辑；如需引入 API 网关职责，**必须**由 \`edge/gateway/\` 负责，禁止由 BFF 兼任。
-5. **边界**：edge 是交互上下文的独占责任区，所有后端 BC **不感知、不依赖 edge**；BC 只对外暴露北向公开 API（记录于项目级 \`docs/sparrow/api.md\`）。依赖方向单向：\`edge → BC\`（消费方），\`BC ↛ edge\`。
+5. **边界**：edge 是交互上下文的独占责任区，所有后端 BC **不感知、不依赖 edge**；BC 只对外暴露北向公开 API（记录于项目级 \`docs/sparrow/change/current/{activeChangeId}/architecture/api.md\`）。依赖方向单向：\`edge → BC\`（消费方），\`BC ↛ edge\`。
 
 ## BFF 聚合层设计
 
@@ -54,7 +54,7 @@ export const ARCH_FRONTEND_BODY = `# 前端架构约束（arch / frontend）
 
 1. BFF 南向网关 port 接口与 MockClient / RealClient **均由交互上下文定义与实现**（design/model 定 port，apply 实现两者），后端 BC 团队不写 BFF 代码。
 2. **MockClient**：不发出真实调用，返回契约形状的固定假数据（fixture），用于开发期与契约 / E2E 测试。
-3. **RealClient**：发出真实调用（HTTP / RPC / 进程内），对接真实 BC 公开端点（从项目级 \`docs/sparrow/api.md\` 读取），做 ACL 映射与序列化 / 超时 / 重试 / 错误处理。
+3. **RealClient**：发出真实调用（HTTP / RPC / 进程内），对接真实 BC 公开端点（从项目级 \`docs/sparrow/change/current/{activeChangeId}/architecture/api.md\` 读取），做 ACL 映射与序列化 / 超时 / 重试 / 错误处理。
 4. 切换在装配 / 配置层（如环境变量 \`BC_ADAPTER=mock|real\`），不改前端 / BFF 端点业务代码。
 5. **切换门禁**：某 BFF 端点聚合的所有目标 BC apply 完成，且契约测试通过，方可切到 RealClient；此切换是 plan 的终态联调任务。
 6. 契约桩与「降级策略」**不同**：降级是运行时某次 BC 调用失败时的兜底；契约桩是开发 / 联调期的替换件。

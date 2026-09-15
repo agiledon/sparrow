@@ -7,8 +7,9 @@
  */
 
 import type { SkillSpec } from '../../core/skills.js';
+import { SPEC_LAYOUT_GUIDE } from '../../core/spec-paths.js';
 
-const ARCH_BODY = `# Sparrow Arch — 业务架构与应用架构定义
+const ARCH_BODY = SPEC_LAYOUT_GUIDE + `# Sparrow Arch — 业务架构与应用架构定义
 
 ## 执行顺序检查
 
@@ -18,14 +19,14 @@ const ARCH_BODY = `# Sparrow Arch — 业务架构与应用架构定义
 当前步骤：sparrow-arch（第 2 步 / 共 8 步）
 所属层级：产品级（product-level）
 前置条件：
-  1. docs/sparrow/requirement/prd-business.md 必须存在
-  2. docs/sparrow/requirement/prd-quality.md （若存在则必须读取）
+  1. docs/sparrow/change/current/{activeChangeId}/requirement/business/prd-business.md 必须存在
+  2. docs/sparrow/change/current/{activeChangeId}/requirement/quality/prd-quality.md （若存在则必须读取）
 下一步骤：sparrow-design（团队级，按限界上下文执行）
 \`\`\`
 
 **前置条件检查**：
-- 如果 \`docs/sparrow/requirement/prd-business.md\` 不存在，请提示用户先执行 **sparrow-requirement**
-- 如果已存在 \`docs/sparrow/architecture/business.md\` 或 \`docs/sparrow/architecture/application.md\`，请参考下方"输出文件存在性检查"章节处理
+- 如果 \`docs/sparrow/change/current/{activeChangeId}/requirement/business/prd-business.md\` 不存在，请提示用户先执行 **sparrow-requirement**
+- 如果已存在 \`docs/sparrow/change/current/{activeChangeId}/architecture/business.md\` 或 \`docs/sparrow/change/current/{activeChangeId}/architecture/application.md\`，请参考下方"输出文件存在性检查"章节处理
 
 {{HARNESS}}
 
@@ -35,9 +36,9 @@ const ARCH_BODY = `# Sparrow Arch — 业务架构与应用架构定义
 
 在开始生成内容之前，请检查以下输出文件是否已经存在：
 
-- \`docs/sparrow/architecture/business.md\`
-- \`docs/sparrow/architecture/application.md\`
-- \`docs/sparrow/design/{slug}/spec.md\`（对每个限界上下文）
+- \`docs/sparrow/change/current/{activeChangeId}/architecture/business.md\`
+- \`docs/sparrow/change/current/{activeChangeId}/architecture/application.md\`
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/spec.md\`（对每个限界上下文）
 
 如果任一文件已存在，请**让用户进行一次选择**（该选择将应用于所有已存在的文件）：
 
@@ -51,7 +52,7 @@ const ARCH_BODY = `# Sparrow Arch — 业务架构与应用架构定义
 
 ## 📋 project.md 更新
 
-完成输出后，**必须**更新 \`docs/sparrow/project.md\`：
+完成输出后，**必须**更新 \`docs/sparrow/change/current/{activeChangeId}/project.md\`：
 
 1. 如果 \`project.md\` 不存在，根据当前项目信息创建它
 2. 在"文档索引"部分，更新 \`architecture/business.md\` 和 \`architecture/application.md\` 的链接，状态改为版本号
@@ -75,7 +76,7 @@ const ARCH_BODY = `# Sparrow Arch — 业务架构与应用架构定义
    \`\`\`
 4. 更新文件头部的"最后更新"时间戳
 
-**project.md 路径**: \`docs/sparrow/project.md\`
+**project.md 路径**: \`docs/sparrow/change/current/{activeChangeId}/project.md\`
 
 > **变更管理块（惰性，仅 revise 模式）**：\`project.md\` 的「变更管理」块与每个 BC 子章节的「进度档位」标注**仅在活动变更（revise 模式）下**才创建/更新。基线（首次需求、无活动变更）按上文原流程执行，**不写入**变更管理块、不标注档位，保持与未引入变更管理前完全一致。档位判定标准与变更管理块格式见下方「变更处理 / revise」章节及 \`docs/prd/sparrow-change-management.md\`。
 
@@ -128,8 +129,8 @@ const ARCH_BODY = `# Sparrow Arch — 业务架构与应用架构定义
 
 | 文档 | 路径 | 用途 |
 |------|------|------|
-| 功能需求文档 | \`docs/sparrow/requirement/prd-business.md\` | 提取全部业务服务，作为子领域分类的输入 |
-| 质量属性文档 | \`docs/sparrow/requirement/prd-quality.md\` | 了解系统的非功能约束，在定义子领域和后续应用架构映射时作为重要参考 |
+| 功能需求文档 | \`docs/sparrow/change/current/{activeChangeId}/requirement/business/prd-business.md\` | 提取全部业务服务，作为子领域分类的输入 |
+| 质量属性文档 | \`docs/sparrow/change/current/{activeChangeId}/requirement/quality/prd-quality.md\` | 了解系统的非功能约束，在定义子领域和后续应用架构映射时作为重要参考 |
 
 > 质量属性文档**若存在则必须读取**。在划分子领域和映射限界上下文时，需要结合质量属性（如安全隔离要求、高并发独立部署需求、数据一致性要求等）综合判断。例如：
 > - 高安全要求的功能可能需要独立的限界上下文进行隔离
@@ -252,7 +253,7 @@ graph TB
 
 ## 输出文档格式（阶段一）
 
-写入 **\`docs/sparrow/architecture/business.md\`**：
+写入 **\`docs/sparrow/change/current/{activeChangeId}/architecture/business.md\`**：
 
 \`\`\`markdown
 # 1 业务架构
@@ -507,7 +508,7 @@ Thought（思考）→ Action（行动）→ Observation（观察）→ Next Act
 
 ## 输出文档格式（阶段二）
 
-写入 **\`docs/sparrow/architecture/application.md\`**：
+写入 **\`docs/sparrow/change/current/{activeChangeId}/architecture/application.md\`**：
 
 \`\`\`markdown
 # 应用架构定义文档
@@ -572,8 +573,8 @@ Thought（思考）→ Action（行动）→ Observation（观察）→ Next Act
 完成应用架构定义后，需要为每个限界上下文创建专门的目录：
 
 1. 从 application.md 中提取所有限界上下文的英文 slug
-2. 在 \`docs/sparrow/design/{english-slug}/\` 下创建目录
-3. 将 \`requirement/prd-business.md\` 中的业务服务按映射关系切片，写入对应的 \`design/{english-slug}/spec.md\`
+2. 在 \`docs/sparrow/change/current/{activeChangeId}/design/{english-slug}/\` 下创建目录
+3. 将 \`requirement/business/prd-business.md\` 中的业务服务按映射关系切片，写入对应的 \`design/{english-slug}/spec.md\`
 
 **交互上下文目录创建**（若前端架构存在）：在前端架构定义完成后，也为交互上下文创建 \`design/{ui-slug}/\` 目录并写入业务服务切片 spec.md（详见下方「前端架构」章节）。
 
@@ -589,13 +590,13 @@ Thought（思考）→ Action（行动）→ Observation（观察）→ Next Act
 
 \`\`\`
 活动变更存在，当且仅当满足以下任一：
-  - docs/sparrow/changes/ 目录存在，且其中包含「未归档」的变更文件夹
-    （未归档 = 不在 changes/archive/ 下）
-  - docs/sparrow/project.md 的「变更管理」块中「当前活动 change-id」非空
+  - docs/sparrow/change/current/ 目录存在，且其中包含「未归档」的变更文件夹
+    （未归档 = 不在 change/archive/ 下）
+  - docs/sparrow/change/current/{activeChangeId}/project.md 的「变更管理」块中「当前活动 change-id」非空
 \`\`\`
 
 - **不满足** → 普通模式，跳过本节，按原流程执行（**基线零副作用**）。
-- **满足** → 进入 revise 模式：加载 \`docs/sparrow/changes/{change-id}/proposal.md\` 与 \`deltas/\`，执行下方决策框架。
+- **满足** → 进入 revise 模式：加载 \`docs/sparrow/change/current/{change-id}/proposal.md\` 与 change 工作区相对 master 的 diff，执行下方决策框架（BC 拓扑变更须用户确认清单）。
 
 > 完整约定（目录结构、delta 格式、版本元数据扩展、project.md 变更管理块、BC 档位判定）见 \`docs/prd/sparrow-change-management.md\`。各下游阶段（design/model/plan/apply/requirement）的 revise 分支均引用本节作为权威定义。
 
@@ -642,15 +643,15 @@ revise 模式下，对每个**受变更影响的 BC**，依据 \`project.md\` �
 
 ## arch 在 revise 模式的执行步骤
 
-1. **载入 delta**：读取 \`changes/{change-id}/proposal.md\` 与 \`deltas/\` 下各文档（ADDED/MODIFIED/REMOVED 标记）。
+1. **载入变更**：读取 \`change/current/{change-id}/proposal.md\` 与 change 工作区需求/架构产物，对照 \`master/\`（ADDED/MODIFIED/REMOVED 标记）。
 2. **重跑业务架构分析**：在现有 \`business.md\` 基础上，识别新增子域、消失服务、模型冲突。
 3. **重跑应用架构映射**：将新 BC 提案与现有 BC 对比，算出 diff：新增 BC / 删除 BC / 合并 BC / 拆分 BC / 移动聚合 / 加 ACL / 引绞杀者。
 4. **套决策表**：对每个 diff 项产出动作 + 理由，并标注涉及 BC 的档位（决定落地深度）。
 5. **破坏性确认**：删除 BC、合并 BC、绞杀者 cutover 三类操作，先向用户展示方案与理由，确认后再执行。
 6. **落实**：
    - 更新 \`architecture/business.md\`、\`architecture/application.md\`（MODIFIED 部分按 delta 合并，版本号递增，revise 模式下元数据块追加 \`change-id\` / \`supersedes\`）。
-   - 重建 \`design/{slug}/*\`：新建 BC 创建切片目录；合并/拆分按目标重组切片；删除 BC 将其 \`design/{slug}/\` 移入 \`changes/{change-id}/retired/\` 留档后移除索引。
-   - 在 \`changes/{change-id}/\` 下写 **ADR**（架构决策记录）：记录初始划分假设、触发变更的需求缺口、本次合并/删除/拆分的判定与理由。
+   - 重建 \`design/{slug}/*\`：新建 BC 创建切片目录；合并/拆分按目标重组切片；删除 BC 将其 \`design/{slug}/\` 移入 \`change/current/{change-id}/retired/\` 留档后移除索引。
+   - 在 \`change/current/{change-id}/\` 下写 **ADR**（架构决策记录）：记录初始划分假设、触发变更的需求缺口、本次合并/删除/拆分的判定与理由。
 7. **同步上下文映射**：按动作更新上下文映射关系（ACL / OHS / Conformist / Customer-Supplier / Shared Kernel / Publisher-Subscriber / Separate Ways 等）。
 8. **更新 project.md**：调整「限界上下文设计」索引（增/删/合/拆对应子章节与版本），并为每个 BC 标注档位；在「变更管理」块记录本次变更影响的文档与版本。
 
@@ -686,7 +687,7 @@ revise 模式下，对每个**受变更影响的 BC**，依据 \`project.md\` �
 
 ## 🖥️ 前端架构（可选）
 
-检查 \`docs/sparrow/requirement/ui/\` 目录是否存在：
+检查 \`docs/sparrow/change/current/{activeChangeId}/requirement/ui/\` 目录是否存在：
 
 ### 如果不存在
 
@@ -698,7 +699,7 @@ UI 规格尚未生成。询问用户：
 
 ### 如果存在
 
-读取 UI 规格（\`docs/sparrow/requirement/ui/ui-spec.md\`、\`docs/sparrow/requirement/ui/design-tokens.md\`），在架构设计中纳入前端考虑。
+读取 UI 规格（\`docs/sparrow/change/current/{activeChangeId}/requirement/ui/ui-spec.md\`、\`docs/sparrow/change/current/{activeChangeId}/requirement/ui/design-tokens.md\`），在架构设计中纳入前端考虑。
 
 > 📐 约束参见 harness \`arch/frontend.md\`。
 
@@ -790,7 +791,7 @@ UI 规格尚未生成。询问用户：
 ##### 绑定过程
 
 1. 读取 \`requirement/ui/ui-spec.md\`，提取所有 UI 页面和交互操作
-2. 读取 \`requirement/prd-business.md\`，获取完整的业务服务定义
+2. 读取 \`requirement/business/prd-business.md\`，获取完整的业务服务定义
 3. 对于每个 UI 交互操作：
    - 匹配对应的业务服务（通过操作描述和触发事件匹配）
    - 确定该业务服务归属的限界上下文（从步骤二中已确定的 BC 映射）
@@ -827,7 +828,7 @@ UI 规格尚未生成。询问用户：
 
 ##### 输出 frontend.md
 
-将以上所有内容写入 \`docs/sparrow/architecture/frontend.md\`，结构为：
+将以上所有内容写入 \`docs/sparrow/change/current/{activeChangeId}/architecture/frontend.md\`，结构为：
 
 \`\`\`markdown
 # 前端架构文档
@@ -869,7 +870,7 @@ edge/
 
 ##### 创建交互上下文 spec 切片
 
-在 \`docs/sparrow/design/{ui-slug}/\` 下创建 \`spec.md\`，内容为交互上下文关联的业务服务切片：
+在 \`docs/sparrow/change/current/{activeChangeId}/design/{ui-slug}/\` 下创建 \`spec.md\`，内容为交互上下文关联的业务服务切片：
 
 \`\`\`markdown
 # {交互上下文名称} 业务服务切片
@@ -894,7 +895,7 @@ edge/
 
 ##### 更新 project.md
 
-在 \`docs/sparrow/project.md\` 的「限界上下文设计」部分，将交互上下文与其他 BC 同级列出，并标注类型：
+在 \`docs/sparrow/change/current/{activeChangeId}/project.md\` 的「限界上下文设计」部分，将交互上下文与其他 BC 同级列出，并标注类型：
 
 \`\`\`markdown
 #### {交互上下文中文名称} (\`{ui-slug}\`) — *交互上下文*

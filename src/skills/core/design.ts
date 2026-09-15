@@ -6,8 +6,9 @@
  */
 
 import type { SkillSpec } from '../../core/skills.js';
+import { SPEC_LAYOUT_GUIDE } from '../../core/spec-paths.js';
 
-const DESIGN_BODY = `# Sparrow Design — API 契约与技术选型
+const DESIGN_BODY = SPEC_LAYOUT_GUIDE + `# Sparrow Design — API 契约与技术选型
 
 ## 执行顺序检查
 
@@ -17,22 +18,22 @@ const DESIGN_BODY = `# Sparrow Design — API 契约与技术选型
 当前步骤：sparrow-design（第 3 步 / 共 8 步）
 所属层级：团队级（team-level），针对特定限界上下文或交互上下文
 前置条件：
-  1. docs/sparrow/architecture/application.md 必须存在（后端 BC）
-     或 docs/sparrow/architecture/frontend.md 必须存在（交互上下文）
-  2. docs/sparrow/design/{slug}/spec.md 必须存在
+  1. docs/sparrow/change/current/{activeChangeId}/architecture/application.md 必须存在（后端 BC）
+     或 docs/sparrow/change/current/{activeChangeId}/architecture/frontend.md 必须存在（交互上下文）
+  2. docs/sparrow/change/current/{activeChangeId}/design/{slug}/spec.md 必须存在
 下一步骤：sparrow-model @{slug}（团队级）
 \`\`\`
 
 **前置条件检查**：
-- 如果 \`docs/sparrow/architecture/application.md\` 不存在且 \`docs/sparrow/architecture/frontend.md\` 不存在，请提示用户先执行 **sparrow-arch**
-- 如果 \`docs/sparrow/design/{slug}/spec.md\` 不存在，请提示用户先执行 **sparrow-arch**
+- 如果 \`docs/sparrow/change/current/{activeChangeId}/architecture/application.md\` 不存在且 \`docs/sparrow/change/current/{activeChangeId}/architecture/frontend.md\` 不存在，请提示用户先执行 **sparrow-arch**
+- 如果 \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/spec.md\` 不存在，请提示用户先执行 **sparrow-arch**
 - 如果用户未指定 slug，请列出可用的 slug 让用户选择（从 project.md 中读取所有 BC 和交互上下文）
 
 ### Slug 类型判定
 
 在执行 design 之前，先判定当前 slug 是**后端限界上下文**还是**交互上下文**：
 
-1. 读取 \`docs/sparrow/project.md\` 的「限界上下文设计」部分
+1. 读取 \`docs/sparrow/change/current/{activeChangeId}/project.md\` 的「限界上下文设计」部分
 2. 查找当前 slug 对应的子章节
 3. 如果标注了 **— *交互上下文*** 标记 → 当前 slug 是交互上下文，执行下方「交互上下文设计」分支
 4. 否则 → 当前 slug 是后端 BC，执行下方「后端限界上下文设计」分支（保持现有逻辑）
@@ -43,8 +44,8 @@ const DESIGN_BODY = `# Sparrow Design — API 契约与技术选型
 
 在开始生成内容之前，请检查以下输出文件是否已经存在：
 
-- \`docs/sparrow/design/{slug}/api.md\`
-- \`docs/sparrow/design/{slug}/tech.md\`
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/api.md\`
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/tech.md\`
 
 如果任一文件已存在，请**让用户进行一次选择**（该选择将应用于所有已存在的文件）：
 
@@ -60,14 +61,14 @@ const DESIGN_BODY = `# Sparrow Design — API 契约与技术选型
 
 > **⚠️ 门控声明（向后兼容硬性约束）**：本节仅在**检测到活动变更**时进入。**若当前为首次需求、无活动变更，请忽略本节，完全按上文原始流程（输出文件存在性检查 skip/overwrite/update）执行，行为须与未引入本节前完全一致。**
 
-**触发条件**（同 sparrow-arch「变更处理 / revise」章节）：\`docs/sparrow/changes/\` 含未归档变更文件夹，或 \`project.md\` 当前 change-id 非空。
+**触发条件**（同 sparrow-arch「变更处理 / revise」章节）：\`docs/sparrow/change/current/\` 含未归档变更文件夹，或 \`project.md\` 当前 change-id 非空。
 
 **revise 行为**：
-1. 从 \`project.md\`「变更管理」块（或 \`changes/{change-id}/proposal.md\`）读取本次变更的**受影响 slug 列表**及 arch 记录的重构动作。
+1. 从 \`project.md\`「变更管理」块（或 \`change/current/{change-id}/proposal.md\`）读取本次变更的**受影响 slug 列表**及 arch 记录的重构动作。
 2. 对每个受影响 slug，依据其档位（S0–S4，见 sparrow-arch）判断是否在本阶段处理：
    - **design 阶段处理条件**：slug 为新建（无 api.md/tech.md 产物）**或** 档位 ≥ S1
    - 不满足则跳过该 slug
-3. 满足条件的 slug：在现有 \`api.md\`/\`tech.md\` 基础上，按 \`changes/{change-id}/deltas/design/{slug}/\` 做增量更新或重生成（沿用存在性检查的 update 语义），版本号递增并追加 \`change-id\` 到元数据块；同步更新项目级 \`api.md\`。
+3. 满足条件的 slug：在现有 \`api.md\`/\`tech.md\` 基础上，按 \`change/current/{change-id}/design/{slug}/\` 做增量更新或重生成（沿用存在性检查的 update 语义），change 工作区不写 version 元数据；同步更新项目级 \`api.md\`。
 4. 未受影响的 slug 不处理。
 
 > 仅 S0 档位的 BC 不会到达 design，由 arch 直接记录原因，本阶段不参与。完整 BC→代码映射见 sparrow-apply 与 \`docs/prd/sparrow-change-management.md\`。
@@ -76,19 +77,19 @@ const DESIGN_BODY = `# Sparrow Design — API 契约与技术选型
 
 ## 📋 project.md 更新
 
-完成输出后，**必须**更新 \`docs/sparrow/project.md\`：
+完成输出后，**必须**更新 \`docs/sparrow/change/current/{activeChangeId}/project.md\`：
 
 1. 如果 \`project.md\` 不存在，根据当前项目信息创建它
 2. 在"限界上下文设计"部分，找到当前 \`{slug}\` 的子章节
 3. 更新 \`api.md\` 和 \`tech.md\` 的状态从 \`_待生成_\` 改为 \`_v{version}_\`
-4. 确保 project.md 的"API 目录"部分引用了 \`docs/sparrow/api.md\`：
+4. 确保 project.md 的"API 目录"部分引用了 \`docs/sparrow/change/current/{activeChangeId}/architecture/api.md\`：
    \`\`\`markdown
    ### 5. API 目录
-   - [API 总目录](./api.md) — 所有限界上下文的公开 API 汇总
+   - [API 总目录](./architecture/api.md) — 所有限界上下文的公开 API 汇总
    \`\`\`
 5. 更新文件头部的"最后更新"时间戳
 
-**project.md 路径**: \`docs/sparrow/project.md\`
+**project.md 路径**: \`docs/sparrow/change/current/{activeChangeId}/project.md\`
 
 ---
 
@@ -168,8 +169,8 @@ const DESIGN_BODY = `# Sparrow Design — API 契约与技术选型
 ## 输入文档要求
 
 ### 必需文档
-1. **业务服务列表文档**：\`docs/sparrow/design/{slug}/spec.md\`（当前限界上下文的切片需求）
-2. **应用架构定义文档**：\`docs/sparrow/architecture/application.md\`
+1. **业务服务列表文档**：\`docs/sparrow/change/current/{activeChangeId}/design/{slug}/spec.md\`（当前限界上下文的切片需求）
+2. **应用架构定义文档**：\`docs/sparrow/change/current/{activeChangeId}/architecture/application.md\`
 3. **架构图中的技术实现建议**（来自 application.md 中对当前上下文的描述）
 
 ## 技术选型交互流程
@@ -189,11 +190,11 @@ const DESIGN_BODY = `# Sparrow Design — API 契约与技术选型
 根据用户选择的语言，提供该语言下的若干套备选技术栈（包含框架、数据库、消息队列、缓存等），让用户选择。
 
 ### 第三步：写入 tech.md
-将用户选定的方案写入 \`docs/sparrow/design/{slug}/tech.md\`
+将用户选定的方案写入 \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/tech.md\`
 
 ## tech.md 结构
 
-写入 **\`docs/sparrow/design/{slug}/tech.md\`**：
+写入 **\`docs/sparrow/change/current/{activeChangeId}/design/{slug}/tech.md\`**：
 
 \`\`\`markdown
 # 技术选型 — {限界上下文中文名} ({english-slug})
@@ -316,7 +317,7 @@ sequenceDiagram
 
 ## api.md 结构
 
-写入 **\`docs/sparrow/design/{slug}/api.md\`**：
+写入 **\`docs/sparrow/change/current/{activeChangeId}/design/{slug}/api.md\`**：
 
 \`\`\`markdown
 # 服务契约 — {限界上下文中文名}
@@ -408,7 +409,7 @@ ExtSys <<-- EVT_OrderPlaced : subscribes
 
 ## 项目级 API 目录更新
 
-完成当前限界上下文的 api.md 后，**必须**更新 \`docs/sparrow/api.md\`（项目级 API 总目录）。
+完成当前限界上下文的 api.md 后，**必须**更新 \`docs/sparrow/change/current/{activeChangeId}/architecture/api.md\`（项目级 API 总目录）。
 
 ### api.md 目录结构（项目级）
 
@@ -448,7 +449,7 @@ ExtSys <<-- EVT_OrderPlaced : subscribes
 
 ### 更新操作
 
-1. 如果 \`docs/sparrow/api.md\` 不存在，根据上述模板创建
+1. 如果 \`docs/sparrow/change/current/{activeChangeId}/architecture/api.md\` 不存在，根据上述模板创建
 2. 在文件中找到当前限界上下文的章节（如不存在则新增）
 3. 更新"对外提供的 API"表格（与 api.md 中的 API 定义保持一致）
 4. 更新"对外发布的事件"表格
@@ -467,7 +468,7 @@ ExtSys <<-- EVT_OrderPlaced : subscribes
 - [ ] **组件图已绘制**：required interface 体现了所有跨 BC 调用
 - [ ] 事件发布/订阅在组件图中正确表示
 - [ ] tech.md 包含所有 8 个必要章节
-- [ ] **项目级 \`docs/sparrow/api.md\` 已更新**，当前 BC 的 API 已录入
+- [ ] **项目级 \`docs/sparrow/change/current/{activeChangeId}/architecture/api.md\` 已更新**，当前 BC 的 API 已录入
 - [ ] 跨上下文调用关系和通信协议清晰
 
 ---
@@ -487,15 +488,15 @@ ExtSys <<-- EVT_OrderPlaced : subscribes
 1. **不依赖 BC API**：交互上下文的 design 从自身 \`spec.md\` 和 \`frontend.md\` 出发，不读取任何 BC 的 \`api.md\`。契约一致性由 sparrow-arch 阶段的绑定表保证。
 2. **页面驱动**：BFF 端点设计以 UI 页面为粒度，一个页面一个 BFF 端点（或一组紧密关联的端点）。
 3. **纯聚合不侵入**：BFF 只做数据聚合和格式转换，不做业务逻辑。
-4. **契约桩与切换**：BFF 南向网关 port + MockClient / RealClient 由交互上下文设计；MockClient 依据契约绑定表做 fixture，RealClient 从项目级 \`docs/sparrow/api.md\` 取真实端点；切换以契约测试通过为门禁（详见 \`arch/frontend.md\`）。
+4. **契约桩与切换**：BFF 南向网关 port + MockClient / RealClient 由交互上下文设计；MockClient 依据契约绑定表做 fixture，RealClient 从项目级 \`docs/sparrow/change/current/{activeChangeId}/architecture/api.md\` 取真实端点；切换以契约测试通过为门禁（详见 \`arch/frontend.md\`）。
 
 ### 输入文档
 
 | 文档 | 路径 | 用途 |
 |------|------|------|
-| 交互上下文 spec 切片 | \`docs/sparrow/design/{ui-slug}/spec.md\` | 当前交互上下文关联的业务服务定义 |
-| 前端架构文档 | \`docs/sparrow/architecture/frontend.md\` | 契约绑定表 + 技术选型决策 |
-| UI 规格文档 | \`docs/sparrow/requirement/ui/ui-spec.md\` | UI 页面清单、用户旅程、交互方式 |
+| 交互上下文 spec 切片 | \`docs/sparrow/change/current/{activeChangeId}/design/{ui-slug}/spec.md\` | 当前交互上下文关联的业务服务定义 |
+| 前端架构文档 | \`docs/sparrow/change/current/{activeChangeId}/architecture/frontend.md\` | 契约绑定表 + 技术选型决策 |
+| UI 规格文档 | \`docs/sparrow/change/current/{activeChangeId}/requirement/ui/ui-spec.md\` | UI 页面清单、用户旅程、交互方式 |
 
 ### 设计步骤
 

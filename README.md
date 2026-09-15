@@ -67,6 +67,8 @@ The **core workflow** is Sparrow's main spec-driven DDD pipeline — eight order
 - **Team-level** steps (3–8) run **per slug** — once for each bounded context and Interaction Context. All contexts share the same commands and are fully orthogonal: no mutual dependencies, executable in any order or in parallel.
 - After any step, pause to review artifacts, refine through dialog, and re-run — the next step always reads the latest version.
 
+**Spec layout**: Active work happens under `docs/sparrow/change/current/{change-id}/`; the published baseline lives in `docs/sparrow/master/` (populated after the first **archive promote**). Set `development-mode` in `proposal.md`: **greenfield**, **iteration**, or **brownfield**. See [Output Structure](#output-structure) and `docs/prd/sparrow-development-modes.md`.
+
 See [Core Workflow Reference](#core-workflow-reference) below for inputs, outputs, and details of each step.
 
 ### Supporting Workflows
@@ -177,11 +179,17 @@ your-project/
 │   └── ...
 ├── .pi/                # (if Pi selected)
 │   └── ...
-├── docs/sparrow/harness/  # Project-level constraint assets (placeholders)
-└── sparrow.json        # Project config
+├── docs/sparrow/
+│   ├── master/              # Baseline specs (filled after archive promote)
+│   ├── change/current|archive/
+│   ├── harness/             # Project-level constraint placeholders
+│   └── README.md
+└── .sparrow/
+    ├── sparrow.json         # Project config
+    └── active-change.json   # Current change-id
 ```
 
-`sparrow init` also writes the **global constraint assets** (DDD-universal discipline) to the global config directory (`~/.config/sparrow/harness` on macOS/Linux, `%APPDATA%\sparrow\harness` on Windows).
+`sparrow init` also writes **global constraint assets** (including `brownfield.md`) to the global config directory (`~/.config/sparrow/harness` on macOS/Linux, `%APPDATA%\sparrow\harness` on Windows).
 
 After initialization, you can check for updates at any time:
 
@@ -214,147 +222,175 @@ Detailed inputs, outputs, and behavior for each step in the [core workflow](#cor
 
 ### Step 1: sparrow-requirement (Product-level)
 
-**Input**: Raw requirements document or description  
-**Output**:
-- `docs/sparrow/requirement/prd-business.md` — structured business service definitions
-- `docs/sparrow/requirement/prd-quanlity.md` — system quality attributes (performance, security, high availability, etc.)
-- `docs/sparrow/requirement/ui/` — \[optional\] UI design specs, design tokens, component library, and interactive HTML prototypes
+**Workspace**: `docs/sparrow/change/current/{change-id}/` (creates `{change-id}` and `proposal.md` when no active change exists)
 
-sparrow-requirement uses a **Grill Me** interactive exploration pattern in two phases. **Phase 1**: Business requirements — covers actors, core flows, business rules, boundary conditions, exception scenarios, and quality attributes. **Phase 2**: After generating the requirement docs, optionally enters **UI design exploration** (also Grill Me), producing user personas, journeys, page concepts, and visual preferences — pure UX, no bounded context associations.
+**Input**: Raw requirements; for **brownfield**, also the running system and codebase  
+**Output** (under the change workspace):
+- `requirement/business/prd-business.md` — structured business services
+- `requirement/quality/prd-quality.md` — quality attributes (performance, security, availability, etc.)
+- `requirement/ui/` — \[optional\] UI specs, design tokens, components, HTML prototypes
+
+**Grill Me** in two phases: business exploration → optional UI exploration (pure UX). For **iteration**, diff against `master/requirement/`. No `<!-- version -->` metadata blocks in the change workspace.
 
 ### Step 2: sparrow-arch (Product-level)
 
-**Input**: `requirement/prd-business.md` + `requirement/prd-quanlity.md` + \[optional\] `requirement/ui/`  
-**Output**:
-- `docs/sparrow/architecture/business.md` — subdomains (core/supporting/generic) + Mermaid business architecture diagram
-- `docs/sparrow/architecture/application.md` — bounded contexts, context mapping, four-layer application architecture diagram
-- `docs/sparrow/design/{slug}/spec.md` — per-context sliced business specs
-- `docs/sparrow/architecture/frontend.md` — \[if UI exists\] frontend architecture with Interaction Context definition, tech stack selection, BFF design, and API contract binding tables
+**Input**: `requirement/` in the change workspace + \[optional\] `requirement/ui/`; read-only `master/`  
+**Output** (change workspace):
+- `architecture/business.md` — subdomains + Mermaid diagram
+- `architecture/application.md` — bounded contexts and context map
+- `design/{slug}/spec.md` — **business requirement** slice per BC (not the API design doc)
+- `architecture/frontend.md` — \[if UI\] Interaction Context, BFF, API binding tables
 
-Classifies subdomains into core, supporting, and generic. Maps them to bounded contexts with relationship patterns. **If UI requirements exist**, additionally generates frontend architecture including: interactive tech stack selection (Web/Mobile/QT/BFF), **Interaction Context** definition (a BC-peer encompassing all UI + BFF aggregation), and **API contract binding tables** — the sole synchronization point that guarantees frontend-backend contract consistency, enabling all subsequent BC and Interaction Context design/model/plan/apply steps to run independently without mutual dependencies.
+With UI, generates binding tables so BC and Interaction Context pipelines stay orthogonal. BC topology changes require user confirmation before **archive** (see Step 8).
 
 ### Step 3: sparrow-design (Team-level, per context)
 
 **Input**: `design/{slug}/spec.md` + architecture docs  
-**Output**:
-- `docs/sparrow/design/{slug}/api.md` — service contracts (backend BC) or BFF API specs with ViewModel interfaces (Interaction Context)
-- `docs/sparrow/design/{slug}/tech.md` — technology stack selection
+**Output**: `design/{slug}/api.md`, `design/{slug}/tech.md` (per-slug contracts)
 
-For **backend BCs**: interactive tech stack selection (Java/Python/Node.js/Go/Rust/REST/gRPC). For **Interaction Context**: BFF aggregation endpoint design, ViewModel definition, and frontend + BFF tech stack selection. The Interaction Context design does NOT read any BC's api.md — contract consistency is guaranteed by the binding table in frontend.md.
+Also maintains the project-level catalog at `architecture/api.md` under the change workspace. Interaction Context design does not read BC `api.md` files — consistency comes from `frontend.md` binding tables.
 
 ### Step 4: sparrow-model (Team-level, per context)
 
 **Input**: `spec.md` + `api.md` + `tech.md`  
-**Output**: `docs/sparrow/design/{slug}/model.md`
+**Output**: `design/{slug}/model.md`
 
-For **backend BCs**: three-stage domain modeling (static class diagram + dynamic sequence diagram + integration). For **Interaction Context**: ViewModel static models, component tree models, and data flow models.
+Backend BCs: static + dynamic domain modeling. Interaction Context: ViewModel and component/data-flow models.
 
 ### Step 5: sparrow-plan (Team-level, per context)
 
 **Input**: `spec.md` + `api.md` + `tech.md` + `model.md`  
-**Output**: `docs/sparrow/design/{slug}/plan.md` — ordered implementation plan
+**Output**: `design/{slug}/plan.md` (**change workspace only** — not promoted to master)
 
-For **backend BCs**: tasks organized by DDD layer dependency. For **Interaction Context**: tasks organized by page/feature with parallelization markers, covering frontend component development, BFF aggregation implementation, and integration testing.
+For **brownfield** (`development-mode=brownfield`), the user chooses **solidify** (test plan only) or **refactor** (test + refactor plan).
 
 ### Step 6: sparrow-apply (Team-level, per context)
 
 **Input**: `plan.md`  
 **Output**:
-- `backend/{slug}/` — DDD four-layer module (api/application/domain/infrastructure) for backend BCs
-- `integration-tests/{slug}/` — isolated integration/API tests
-- `docs/sparrow/design/{slug}/code_review.md` — review report
+- `backend/{slug}/`, `integration-tests/{slug}/`
+- `change/.../design/{slug}/code_review.md`
 
-For **Interaction Context**, generates frontend code to `frontend/features/` and BFF aggregation code to `edge/bff/`.
+Interaction Context: `frontend/features/`, `edge/bff/`.
 
 ### Step 7: sparrow-verify (Team-level, per context)
 
-**Input**: Applied code + `spec.md` + `api.md` + `tech.md` + `model.md`  
-**Output**: `docs/sparrow/design/{slug}/verify_report.md` — completeness, correctness, and consistency report with severity-classified findings
+**Input**: Applied code + change workspace `spec.md` / `api.md` / `tech.md` / `model.md`  
+**Output**: `design/{slug}/verify_report.md`
 
-Only runs after apply completes for the selected slug(s). Skips slugs that have not been applied yet.
+Runs after apply for the selected slug(s).
 
-### Step 8: sparrow-archive (Team-level, revise workflow)
+### Step 8: sparrow-archive (Team-level)
 
-**Input**: Completed change under `docs/sparrow/changes/{change-id}/`  
-**Output**: Archived change under `docs/sparrow/changes/archive/`
+**Input**: Completed work under `docs/sparrow/change/current/{change-id}/`  
+**Output**: Move to `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/`, **promote** into `docs/sparrow/master/` (including `requirement/` and `design/` revision-history files)
 
-Runs after verify passes (no P0/P1 blockers) when an active revise-mode change exists. Not needed for baseline projects without active changes.
+After verify passes (no P0/P1 blockers). First greenfield delivery also fills `master/` via archive.
 
 ## Output Structure
 
-After running the full pipeline, your project will have:
+Specs use a **master (baseline)** vs **change (active/archive)** layout. `sparrow init` creates the skeleton; the active change id is stored in `.sparrow/active-change.json`.
+
+| Area | Path | Role |
+|------|------|------|
+| Baseline | `docs/sparrow/master/` | Promoted spec body; `master/project.md` wizard |
+| Active change | `docs/sparrow/change/current/{change-id}/` | Read/write workspace for all 8 steps (same tree as master) |
+| Archive | `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/` | Immutable snapshot per change |
+
+**Shared tree** (relative to `master/` or `change/current/{change-id}/`):
+
+```
+project.md
+requirement/business/prd-business.md
+requirement/quality/prd-quality.md
+requirement/ui/                    # optional
+architecture/business.md
+architecture/application.md
+architecture/frontend.md           # optional
+architecture/api.md                # project-level API catalog (sparrow-design)
+design/{slug}/spec.md              # BC business requirements
+design/{slug}/api.md | tech.md | model.md
+```
+
+**Change workspace only**: `design/{slug}/plan.md`, `code_review.md`, `verify_report.md`, `proposal.md`.
+
+**Master revision history** (body merged into spec files; history files hold summaries):
+
+- `master/requirement/revision-history.md` — requirement domain (each entry has **synced-at**)
+- `master/design/revision-history.md` — architecture + design domain
+- `master/architecture/bc-revision-history.md` — BC topology (user-confirmed)
+
+**Example project tree**:
 
 ```
 your-project/
+├── .sparrow/
+│   ├── sparrow.json
+│   └── active-change.json
 ├── docs/sparrow/
-│   ├── requirement/
-│   │   ├── prd-business.md               # sparrow-requirement (functional requirements)
-│   │   ├── prd-quanlity.md               # sparrow-requirement (quality attributes)
-│   │   └── ui/                            # [optional] sparrow-requirement (UI design exploration)
-│   │       ├── ui-spec.md
-│   │       ├── design-tokens.md
-│   │       ├── components/
-│   │       └── prototypes/
-│   ├── architecture/
-│   │   ├── business.md                   # sparrow-arch (subdomains)
-│   │   ├── application.md                # sparrow-arch (bounded contexts)
-│   │   └── frontend.md                   # [optional] sparrow-arch (frontend + Interaction Context)
-│   ├── project.md                        # Project catalog index
-│   └── design/{english-slug}/
-│       ├── spec.md                       # Per-context sliced spec
-│       ├── api.md                        # sparrow-design
-│       ├── tech.md                       # sparrow-design
-│       ├── model.md                      # sparrow-model
-│       ├── plan.md                       # sparrow-plan
-│       ├── code_review.md                # sparrow-apply
-│       └── verify_report.md              # sparrow-verify
-├── backend/{slug}/                       # sparrow-apply (backend BC)
-│   ├── api/command/, query/, dto/
-│   ├── application/
-│   ├── domain/aggregate/, entity/, valueobject/, service/
-│   └── infrastructure/port/, adapter/
-├── frontend/                             # sparrow-apply (Interaction Context)
-│   ├── features/{name}/
-│   └── shared/
-├── edge/bff/                             # sparrow-apply (BFF aggregation)
-├── integration-tests/{slug}/             # sparrow-apply (qa tasks)
-└── sparrow.json                          # Project config
+│   ├── README.md
+│   ├── master/
+│   │   ├── project.md
+│   │   ├── requirement/ … + revision-history.md
+│   │   ├── architecture/
+│   │   │   ├── business.md, application.md, frontend.md
+│   │   │   ├── api.md               # project-level API catalog
+│   │   │   └── bc-revision-history.md
+│   │   └── design/ … + revision-history.md
+│   ├── change/current/{change-id}/  # same as master + plan, proposal, etc.
+│   ├── change/archive/…
+│   └── harness/
+├── backend/{slug}/
+├── frontend/
+├── edge/bff/
+└── integration-tests/{slug}/
 ```
+
+> **Legacy layout**: Flat `docs/sparrow/requirement/prd-business.md` or `docs/sparrow/changes/` is deprecated — migrate to master/change (see `docs/prd/sparrow-change-management.md`).
 
 All bounded contexts share the same project root namespace, but each is an independent module with its own language-specific scaffold and dependency management.
 
 ## Constraint Assets (Harness)
 
-Sparrow ships **constraint assets** (harness) — the "must / must not" DDD discipline that each stage enforces. They live in two places:
+Sparrow ships **constraint assets** (harness) — stage-specific "must / must not" rules. Two scopes:
 
 | Scope | Location | Contents |
 |-------|----------|----------|
-| **Global** | `~/.config/sparrow/harness/` (macOS/Linux), `%APPDATA%\sparrow\harness` (Windows) | DDD-universal discipline, written by `sparrow init` and synced by `sparrow update` |
-| **Project** | `docs/sparrow/harness/` | Project-specific constraints; placeholder files created by `sparrow init`, free to edit |
+| **Global** | `~/.config/sparrow/harness/` (macOS/Linux), `%APPDATA%\sparrow\harness` (Windows) | DDD discipline + **brownfield** template; synced by `sparrow init` / `sparrow update` |
+| **Project** | `docs/sparrow/harness/` | Project overrides; placeholders from `sparrow init` |
 
-**Precedence**: project-level constraints > global constraints. On conflict the project level wins; if a project file is empty/missing, the global level is used directly.
+**Precedence**: project > global.
 
-The global harness contains one file per stage plus a constitution:
+Global harness layout:
 
 ```
 harness/
-├── constitution.md            # Aggregate index: stage → file → description
-├── requirement/requirements.md    # Business service identification + UI design exploration discipline
-├── arch/business.md           # Subdomain classification discipline
-├── arch/application.md        # Bounded context, autonomy & communication discipline
-├── arch/frontend.md           # Frontend architecture & Interaction Context discipline
-├── design/api-design.md       # Service contract & API discipline
-├── model/architecture.md      # Four layers, stereotypes, PO & call rules
-├── model/domain-modeling.md   # Aggregates & OOP discipline
-├── model/view-modeling.md     # View Model modeling discipline (Interaction Context)
-└── apply/implementation.md    # Code generation & encapsulation discipline
+├── constitution.md
+├── requirement/requirements.md
+├── arch/business.md
+├── arch/application.md
+├── arch/frontend.md
+├── design/api-design.md
+├── model/architecture.md
+├── model/domain-modeling.md
+├── model/view-modeling.md
+├── apply/implementation.md
+└── brownfield.md                # brownfield: as-is specs, plan solidify/refactor
 ```
+
+**Load by `development-mode`** (in `proposal.md`):
+
+| Mode | Extra harness |
+|------|----------------|
+| `greenfield` | Stage defaults only |
+| `iteration` | Same as greenfield; arch emphasizes BC assignment and topology confirmation |
+| `brownfield` | **`brownfield.md`** plus stage files; plan must use solidify or refactor |
 
 How it works:
 
-- Each core workflow skill references the harness in a `📐 约束资产（Harness）` section telling the AI to load the relevant constraint files **before** executing.
-- Use the [**harness supporting workflow**](#supporting-workflows) (`/sparrow-supporting-harness`) to view the index and add/update/delete project-level constraints. New constraints are auto-classified into the right stage file.
-- Managed global templates are refreshed on version upgrade, but **user-edited files are never overwritten** (project files are always yours).
+- Core skills load harness files **before** execution; when `development-mode` is `brownfield`, **`brownfield.md` is required**.
+- Use `/sparrow-supporting-harness` to manage project-level constraints.
+- Managed global templates refresh on upgrade; **user-edited files are never overwritten**.
 
 ## Supported AI Tools
 
@@ -373,7 +409,7 @@ How it works:
 
 ### sparrow.json
 
-Generated by `sparrow init` in your project root:
+Generated by `sparrow init` at `.sparrow/sparrow.json`:
 
 ```json
 {

@@ -6,8 +6,9 @@
  */
 
 import type { SkillSpec } from '../../core/skills.js';
+import { SPEC_LAYOUT_GUIDE } from '../../core/spec-paths.js';
 
-const REQUIREMENT_BODY = `# Sparrow Requirement — 需求探索与业务服务识别
+const REQUIREMENT_BODY = SPEC_LAYOUT_GUIDE + `# Sparrow Requirement — 需求探索与业务服务识别
 
 ## 执行顺序检查
 
@@ -18,8 +19,15 @@ const REQUIREMENT_BODY = `# Sparrow Requirement — 需求探索与业务服务�
 - **前置条件**：无（这是整个 DDD 流程的第一步）
 - **输入要求**：用户需要提供原始需求文档或需求描述
 - **检查逻辑**：
-  - 如果当前目录下不存在 \`docs/sparrow/requirement/prd-business.md\`，可以继续执行
+  - 如果当前目录下不存在 \`docs/sparrow/change/current/{activeChangeId}/requirement/business/prd-business.md\`，可以继续执行
   - 如果已经存在，请参考下方"输出文件存在性检查"章节处理
+
+
+## 创建活动变更（requirement 开始时）
+
+1. 若 \`docs/sparrow/change/current/\` 无子目录：请用户命名 \`{change-id}\`，创建与 \`master/\` 同构的空目录树，并写入 \`proposal.md\`（Intent / Scope / Why / \`development-mode\`：greenfield | iteration | brownfield）。
+2. 更新 \`.sparrow/active-change.json\` 的 \`changeId\`。
+3. 若 \`master/\` 已有内容且 mode 为 iteration，进入 revise 增量；greenfield 首次可全量在 change 内编写。
 
 {{HARNESS}}
 
@@ -29,8 +37,8 @@ const REQUIREMENT_BODY = `# Sparrow Requirement — 需求探索与业务服务�
 
 在开始生成内容之前，请检查以下输出文件是否已经存在：
 
-- \`docs/sparrow/requirement/prd-business.md\`
-- \`docs/sparrow/requirement/prd-quality.md\`
+- \`docs/sparrow/change/current/{activeChangeId}/requirement/business/prd-business.md\`
+- \`docs/sparrow/change/current/{activeChangeId}/requirement/quality/prd-quality.md\`
 
 如果任一文件已存在，请**让用户进行一次选择**（该选择将应用于所有已存在的文件）：
 
@@ -44,14 +52,14 @@ const REQUIREMENT_BODY = `# Sparrow Requirement — 需求探索与业务服务�
 
 ## 📋 project.md 更新
 
-完成输出后，**必须**更新 \`docs/sparrow/project.md\`：
+完成输出后，**必须**更新 \`docs/sparrow/change/current/{activeChangeId}/project.md\`：
 
 1. 如果 \`project.md\` 不存在，根据当前项目信息创建它
-2. 在"文档索引"部分，更新 \`requirement/prd-business.md\` 和 \`requirement/prd-quality.md\` 的链接
+2. 在"文档索引"部分，更新 \`requirement/business/prd-business.md\` 和 \`requirement/quality/prd-quality.md\` 的链接
 3. 将对应条目的状态从 \`_待生成 (sparrow-requirement)_\` 更新为 \`_v{version}_\`（使用实际版本号）
 4. 更新文件头部的"最后更新"时间戳
 
-**project.md 路径**: \`docs/sparrow/project.md\`
+**project.md 路径**: \`docs/sparrow/change/current/{activeChangeId}/project.md\`
 
 ---
 
@@ -148,8 +156,8 @@ sparrow-requirement 分为两个阶段：
 
 | 文档 | 路径 | 内容 |
 |------|------|------|
-| 功能需求文档 | \`docs/sparrow/requirement/prd-business.md\` | 功能性需求，按照业务服务规范编写 |
-| 系统质量属性文档 | \`docs/sparrow/requirement/prd-quality.md\` | 非功能性需求，从性能、安全、高可用等角度描述 |
+| 功能需求文档 | \`docs/sparrow/change/current/{activeChangeId}/requirement/business/prd-business.md\` | 功能性需求，按照业务服务规范编写 |
+| 系统质量属性文档 | \`docs/sparrow/change/current/{activeChangeId}/requirement/quality/prd-quality.md\` | 非功能性需求，从性能、安全、高可用等角度描述 |
 
 ---
 
@@ -169,27 +177,27 @@ sparrow-requirement 分为两个阶段：
 
 \`\`\`
 活动变更存在，当且仅当满足以下任一：
-  - docs/sparrow/changes/ 目录存在，且其中包含「未归档」的变更文件夹
-  - docs/sparrow/project.md 的「变更管理」块中「当前活动 change-id」非空
+  - docs/sparrow/change/current/ 目录存在，且其中包含「未归档」的变更文件夹
+  - docs/sparrow/change/current/{activeChangeId}/project.md 的「变更管理」块中「当前活动 change-id」非空
 \`\`\`
 
 - **不满足** → 普通模式，跳过本节，按原流程。
-- **满足** → 进入 revise 模式，加载 \`docs/sparrow/changes/{change-id}/proposal.md\`，对需求做**增量 delta** 而非全量重生成。
+- **满足** → 进入 revise 模式，加载 \`docs/sparrow/change/current/{change-id}/proposal.md\`，对需求做**增量 delta** 而非全量重生成。
 
 > 完整约定（目录结构、delta 格式、BC 档位判定、决策框架）见 \`docs/prd/sparrow-change-management.md\` 与 **sparrow-arch 的「变更处理 / revise」章节**（权威定义）。
 
 ### revise 模式行为
 
-1. 读取现有 \`docs/sparrow/requirement/prd-business.md\`（基线业务服务全集）。
+1. 读取 \`docs/sparrow/master/requirement/business/prd-business.md\`（若 master 尚无则跳过 diff，在 change 工作区全量编写）。
 2. 将用户提供的「新原始需求」与现有业务服务逐项比对，识别：
    - **ADDED**：新需求引入的、现有未覆盖的业务服务
    - **MODIFIED**：现有业务服务因需求变化需调整（描述/流程/验收）
    - **REMOVED**：现有业务服务因需求缺口或消失而不再需要
-3. 将 delta 写入 \`docs/sparrow/changes/{change-id}/deltas/requirement/prd-business.md\`，用 \`## ADDED Requirements\` / \`## MODIFIED Requirements\` / \`## REMOVED Requirements\` 分区（OpenSpec 格式）。
-4. **原地更新** \`docs/sparrow/requirement/prd-business.md\`：合并 ADDED、应用 MODIFIED、标注 REMOVED 为废弃，保持单一天然事实来源。
-5. 同样的 delta 流程应用于 \`docs/sparrow/requirement/prd-quality.md\`。
-6. 更新版本元数据：版本号递增（v1.0→v1.1），并在元数据块追加 \`change-id: {change-id}\`（基线不追加此字段）。
-7. 更新 \`docs/sparrow/project.md\`：同步 \`requirement/prd-business.md\` 和 \`requirement/prd-quality.md\` 的版本状态。
+3. 在 change 工作区更新需求文件；相对 master 的 ADDED/MODIFIED/REMOVED 在 archive promote 时写入 revision-history，用 \`## ADDED Requirements\` / \`## MODIFIED Requirements\` / \`## REMOVED Requirements\` 分区（OpenSpec 格式）。
+4. **原地更新** \`docs/sparrow/change/current/{activeChangeId}/requirement/business/prd-business.md\`：合并 ADDED、应用 MODIFIED、标注 REMOVED 为废弃，保持单一天然事实来源。
+5. 同样的 delta 流程应用于 \`docs/sparrow/change/current/{activeChangeId}/requirement/quality/prd-quality.md\`。
+6. **change 工作区不写** \`<!-- version -->\` 元数据块。
+7. 更新 \`docs/sparrow/change/current/{activeChangeId}/project.md\`：同步 \`requirement/business/prd-business.md\` 和 \`requirement/quality/prd-quality.md\` 的版本状态。
 
 > requirement 在 revise 模式下**始终执行**（任何变更都从需求 delta 开始）；下游阶段按 BC 档位按需触发（见 sparrow-arch 变更处理章节）。
 
@@ -334,7 +342,7 @@ sparrow-requirement 分为两个阶段：
 
 验收标准：
 1. 订单需要包含客户ID、配送地址、联系信息及已购商品的订单项；
-2. 订单项中商品的购买数量要小于或等于库存量；
+2. 订单项中商品的购买数量要小于或等于库棕地系统；
 3. 订单提交成功后，订单状态更改为"已提交"；
 4. 购物车对应商品被移除；
 5. 在完成支付或取消订单前，需要锁定对应数量的商品；
@@ -378,7 +386,7 @@ sparrow-requirement 分为两个阶段：
 
 ### 文档一：功能需求文档
 
-写入 **\`docs/sparrow/requirement/prd-business.md\`**：
+写入 **\`docs/sparrow/change/current/{activeChangeId}/requirement/business/prd-business.md\`**：
 
 \`\`\`markdown
 # {系统名称}功能需求文档
@@ -416,7 +424,7 @@ sparrow-requirement 分为两个阶段：
 
 ### 文档二：系统质量属性文档
 
-写入 **\`docs/sparrow/requirement/prd-quality.md\`**。
+写入 **\`docs/sparrow/change/current/{activeChangeId}/requirement/quality/prd-quality.md\`**。
 
 根据需求探索中涉及的质量属性要求，从以下角度（**仅覆盖需求中明确涉及的维度**，未涉及的维度不提供）：
 
@@ -531,7 +539,7 @@ sparrow-requirement 分为两个阶段：
 
 #### 核心流程
 
-1. 读取已生成的 \`docs/sparrow/requirement/prd-business.md\`，获取已识别的**参与者（Actor）**列表
+1. 读取已生成的 \`docs/sparrow/change/current/{activeChangeId}/requirement/business/prd-business.md\`，获取已识别的**参与者（Actor）**列表
 2. 基于参与者，逐个询问每个用户画像的详细信息
 3. 基于用户画像，推导并确认用户旅程
 4. 基于用户旅程的关键触点，定义 UI 页面概念
@@ -580,7 +588,7 @@ sparrow-requirement 分为两个阶段：
 
 ### 输出文档（阶段三）
 
-UI 探索完成后，生成以下文档到 **\`docs/sparrow/requirement/ui/\`**：
+UI 探索完成后，生成以下文档到 **\`docs/sparrow/change/current/{activeChangeId}/requirement/ui/\`**：
 
 | 文档 | 路径 | 内容 |
 |------|------|------|
@@ -625,7 +633,7 @@ UI 探索完成后，生成以下文档到 **\`docs/sparrow/requirement/ui/\`**�
 
 ## 完成后的下一步
 
-✅ 完成 sparrow-requirement 后（含可选的 UI 设计探索），请执行 **/sparrow-arch**（产品级）—— 基于 prd-business.md 和 prd-quality.md，划分子领域并映射限界上下文，定义系统的业务架构和应用架构。若有 UI 需求产出，sparrow-arch 将同时生成前端架构文档 \`docs/sparrow/architecture/frontend.md\`。`;
+✅ 完成 sparrow-requirement 后（含可选的 UI 设计探索），请执行 **/sparrow-arch**（产品级）—— 基于 prd-business.md 和 prd-quality.md，划分子领域并映射限界上下文，定义系统的业务架构和应用架构。若有 UI 需求产出，sparrow-arch 将同时生成前端架构文档 \`docs/sparrow/change/current/{activeChangeId}/architecture/frontend.md\`。`;
 
 export const spec: SkillSpec = {
   id: 'sparrow-requirement',

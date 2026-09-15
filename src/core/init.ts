@@ -11,6 +11,7 @@ import { initializePluginRuntimes } from './plugin-init.js';
 import { getSparrowVersion } from './package-version.js';
 import { detectInstalledTools, parseToolSelection } from './tools.js';
 import type { SkillRegistry } from './skills.js';
+import { initializeSpecLayout } from './spec-layout-init.js';
 
 export interface InitOptions {
   /** Comma-separated tool ids or 'all' */
@@ -69,6 +70,8 @@ export function executeInit(projectRoot: string, options: InitOptions, registry:
 
   // Step 5: Create project.md wizard file
   const projectMdPath = generateProjectMd(projectContext);
+
+  initializeSpecLayout(projectRoot);
 
   // Step 6: Initialize constraint assets (harness)
   // Global: DDD-universal discipline, written to the global config dir.

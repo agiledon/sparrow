@@ -1,7 +1,7 @@
 /**
  * project.md wizard file generation and management.
  *
- * project.md lives at docs/sparrow/project.md and serves as an index/guide
+ * project.md lives at docs/sparrow/master/project.md (master 向导) and serves as an index/guide
  * for the current project. It is:
  *   - Created by the CLI during `sparrow init`
  *   - Updated by AI assistants during skill execution (per template instructions)
@@ -12,8 +12,11 @@ export interface ProjectMdSection {
   entries: { label: string; path: string; status: 'pending' | 'generated'; version?: string }[];
 }
 
-/** Canonical path to the quality-attribute document (relative to docs/sparrow/). */
-export const PRD_QUALITY_PATH = 'requirement/prd-quality.md';
+import { ARCHITECTURE_API_CATALOG_REL } from './spec-paths.js';
+
+/** Canonical path to the quality-attribute document (relative to master/ or change workspace root). */
+export const API_CATALOG_PATH = ARCHITECTURE_API_CATALOG_REL;
+export const PRD_QUALITY_PATH = 'requirement/quality/prd-quality.md';
 
 /**
  * Generate the initial project.md content for a new project.
@@ -43,7 +46,7 @@ export function generateProjectMdContent(
 | 创建时间 | ${now} |
 | Sparrow 版本 | ${sparrowVersion} |
 | 配置工具 | ${toolList} |
-| 文档基路径 | \`docs/sparrow/\` |
+| 规格布局 | \`master/\` + \`change/current/{change-id}/\` |
 | 代码基路径 | \`backend/\` |
 
 ---
@@ -54,7 +57,7 @@ export function generateProjectMdContent(
 
 #### 1.1 业务需求
 
-- [ ] [功能需求文档](./requirement/prd-business.md) — *待生成 (sparrow-requirement)*
+- [ ] [功能需求文档](./requirement/business/prd-business.md) — *待生成 (sparrow-requirement)*
 
 #### 1.2 质量属性
 
@@ -63,7 +66,7 @@ export function generateProjectMdContent(
 #### 1.3 UI 需求（可选）
 
 > 如果项目需要前端界面，请在执行 \`/sparrow-requirement\` 时选择继续 UI 设计探索。
-> 生成的 UI 规格与原型存放于 \`docs/sparrow/requirement/ui/\` 目录。
+> UI 规格在变更工作区 \`change/current/{activeChangeId}/requirement/ui/\`。
 
 - [ ] [UI 规格](./requirement/ui/ui-spec.md) — *待生成 (sparrow-requirement)*
 - [ ] [设计令牌](./requirement/ui/design-tokens.md) — *待生成 (sparrow-requirement)*
@@ -86,7 +89,7 @@ export function generateProjectMdContent(
 
 ### 4. API 目录
 
-- [ ] [API 总目录](./api.md) — *待生成 (sparrow-design)*
+- [ ] [API 总目录](./${API_CATALOG_PATH}) — *待生成 (sparrow-design)*
 
 > 每完成一个限界上下文的 sparrow-design 后更新此文件。
 
@@ -102,6 +105,6 @@ export function generateProjectMdContent(
 
 1. 执行 **/sparrow-requirement** — 从原始需求中识别业务服务（如有需要，在技能中继续 UI 设计探索）
 2. 执行 **/sparrow-arch** — 划分子领域，定义业务架构、应用架构（如有 UI 则同时生成前端架构）
-3. 对每个限界上下文（含交互上下文）依次执行：**design → model → plan → apply → verify**；revise 模式变更完成后执行 **archive**
+3. 对每个限界上下文依次执行：**design → model → plan → apply → verify**；完成后 **archive** promote 至 \`master/\`
 `;
 }

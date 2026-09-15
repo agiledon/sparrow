@@ -6,8 +6,9 @@
  */
 
 import type { SkillSpec } from '../../core/skills.js';
+import { SPEC_LAYOUT_GUIDE } from '../../core/spec-paths.js';
 
-const VERIFY_BODY = `# Sparrow Verify — 限界上下文实现验证
+const VERIFY_BODY = SPEC_LAYOUT_GUIDE + `# Sparrow Verify — 限界上下文实现验证
 
 ## 执行顺序检查
 
@@ -19,7 +20,7 @@ const VERIFY_BODY = `# Sparrow Verify — 限界上下文实现验证
 \`\`\`
 
 **前置条件检查**：
-- 如果用户未指定 slug，从 \`docs/sparrow/project.md\` 列出所有限界上下文（含交互上下文），让用户选择单个 slug、多个 slug，或**全部**
+- 如果用户未指定 slug，从 \`docs/sparrow/change/current/{activeChangeId}/project.md\` 列出所有限界上下文（含交互上下文），让用户选择单个 slug、多个 slug，或**全部**
 - 对每个选定的 slug，**必须先判定是否已 apply**（见下方「Apply 门禁」）；未 apply 的 slug 提示并跳过
 
 {{HARNESS}}
@@ -30,8 +31,8 @@ const VERIFY_BODY = `# Sparrow Verify — 限界上下文实现验证
 
 对选定 slug 依次检查：
 
-1. \`docs/sparrow/design/{slug}/plan.md\` 存在且所有步骤已标记 \`- [x]\`
-2. \`docs/sparrow/design/{slug}/code_review.md\` 已生成
+1. \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/plan.md\` 存在且所有步骤已标记 \`- [x]\`
+2. \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/code_review.md\` 已生成
 
 **不满足** → 输出：
 \`\`\`
@@ -45,10 +46,10 @@ const VERIFY_BODY = `# Sparrow Verify — 限界上下文实现验证
 
 ## 必读规约（每个通过门禁的 slug）
 
-- \`docs/sparrow/design/{slug}/spec.md\` — 场景与验收
-- \`docs/sparrow/design/{slug}/api.md\` — 对外契约
-- \`docs/sparrow/design/{slug}/tech.md\` — 技术栈与工具链
-- \`docs/sparrow/design/{slug}/model.md\` — 领域模型（静态 + 动态）
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/spec.md\` — 场景与验收
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/api.md\` — 对外契约
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/tech.md\` — 技术栈与工具链
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/model.md\` — 领域模型（静态 + 动态）
 - 对应产品代码（后端 \`backend/{slug}/\` 或交互上下文 \`frontend/\` + \`edge/bff/\`）
 
 ---
@@ -109,7 +110,7 @@ const VERIFY_BODY = `# Sparrow Verify — 限界上下文实现验证
 对每个验证的 slug，生成验证报告并写入：
 
 \`\`\`
-docs/sparrow/design/{slug}/verify_report.md
+docs/sparrow/change/current/{activeChangeId}/design/{slug}/verify_report.md
 \`\`\`
 
 报告结构：
@@ -138,7 +139,7 @@ docs/sparrow/design/{slug}/verify_report.md
 ...
 \`\`\`
 
-更新 \`docs/sparrow/project.md\`：在对应 slug 条目下标注 verify_report.md 版本状态。
+更新 \`docs/sparrow/change/current/{activeChangeId}/project.md\`：在对应 slug 条目下标注 verify_report.md 版本状态。
 
 ---
 

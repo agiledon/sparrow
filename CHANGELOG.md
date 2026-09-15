@@ -9,10 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Master / change spec layout**: `docs/sparrow/master/` (promoted baseline) and `docs/sparrow/change/current|archive/` (active and archived changes). Domain revision histories: `master/requirement/revision-history.md` and `master/design/revision-history.md` (each entry includes **synced-at**). See `docs/prd/sparrow-change-management.md`.
+  - **规格 master/change 布局**：活动变更在 `change/current/{id}/` 编辑，archive promote 合并至 `master/`。
+- **Development modes** (`greenfield` | `iteration` | `brownfield`) documented in `docs/prd/sparrow-development-modes.md`; brownfield harness `harness/brownfield.md`.
+  - **绿地 / 版本迭代 / 棕地** 三模式；棕地 plan 支持 solidify / refactor 分支。
+- **`spec-promote` module** and tests for archive-time promote (excludes `plan.md` under BC dirs).
+
 ### Changed
 
 - **Breaking**: `/sparrow-explore` renamed to **`/sparrow-requirement`**. Harness path `explore/requirements.md` → `requirement/requirements.md`. Re-run `sparrow init` to regenerate skill files; deprecated `sparrow-explore` assets are cleaned up automatically.
   - **破坏性变更**：需求阶段命令更名为 **`/sparrow-requirement`**；约束资产路径同步调整。重新执行 `sparrow init` 以更新 skill 文件。
+- **Breaking**: `sparrow init` creates master/change skeleton; wizard file at `docs/sparrow/master/project.md`. Requirement paths: `requirement/business/prd-business.md`, `requirement/quality/prd-quality.md`. Project-level API catalog: `architecture/api.md` (not repo root under master). Core skills embed `SPEC_LAYOUT_GUIDE`. Legacy flat `docs/sparrow/changes/` deprecated.
+  - **破坏性变更**：规格目录与 archive promote 流程；项目级 API 总目录位于 `architecture/api.md`。
 
 ---
 

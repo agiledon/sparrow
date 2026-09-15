@@ -31,6 +31,7 @@ export const CONSTITUTION_BODY = `# Sparrow 约束资产宪法（Harness Constit
 | 领域建模 | sparrow-model | model/domain-modeling.md | 静态/动态建模与 OOP 纪律 |
 | 领域建模 | sparrow-model | model/view-modeling.md | View Model 建模纪律（UI 存在时生效） |
 | 代码实现 | sparrow-apply | apply/implementation.md | 代码生成与封装纪律 |
+| 棕地项目 | development-mode=brownfield | brownfield.md | 棕地 as-is 规格与 plan 分支 |
 
 ## 全局通用纪律（所有阶段适用）
 

@@ -17,12 +17,13 @@ import { MODEL_ARCHITECTURE_BODY } from './model-architecture.js';
 import { MODEL_DOMAIN_BODY } from './model-domain.js';
 import { MODEL_VIEW_BODY } from './model-view.js';
 import { APPLY_IMPLEMENTATION_BODY } from './apply-implementation.js';
+import { BROWNFIELD_BODY } from './brownfield.js';
 
 /**
  * Harness asset version. Bump when constraint content changes so that
  * `sparrow update` can sync managed template files.
  */
-export const HARNESS_VERSION = '1.0.9';
+export const HARNESS_VERSION = '1.0.10';
 
 /**
  * Marker embedded at the top of managed (tool-written) template files.
@@ -51,6 +52,7 @@ export const HARNESS_FILES: HarnessFile[] = [
   { relPath: 'model/domain-modeling.md', title: '领域建模约束', body: MODEL_DOMAIN_BODY },
   { relPath: 'model/view-modeling.md', title: 'View Model 建模约束', body: MODEL_VIEW_BODY },
   { relPath: 'apply/implementation.md', title: '代码实现约束', body: APPLY_IMPLEMENTATION_BODY },
+  { relPath: 'brownfield.md', title: '棕地项目约束', body: BROWNFIELD_BODY },
 ];
 
 /**
