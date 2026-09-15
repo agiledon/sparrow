@@ -1,5 +1,9 @@
 # 🪶 Sparrow
 
+[![CI](https://github.com/agiledon/sparrow/actions/workflows/ci.yml/badge.svg)](https://github.com/agiledon/sparrow/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/sparrow-ddd.svg)](https://www.npmjs.com/package/sparrow-ddd)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 [English](./README.md) | 简体中文
 
 ![Sparrow Logo](assets/sparrow-logo.png)
