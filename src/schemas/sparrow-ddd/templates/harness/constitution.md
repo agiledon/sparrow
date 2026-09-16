@@ -11,14 +11,14 @@
 3. **无项目级文件时**：使用全局级同名路径。
 4. **约束性质**：约束资产是各 stage skill 的行为基准；skill 正文与约束冲突时**以约束资产为准**。
 
-## 全局约束索引（`global/`）
+## 通用约束索引（`common/`）
 
 | 类型 | 路径 | 说明 |
 |------|------|------|
-| always | `global/always/interactive-interaction.md` | 互动式交互纪律（逐题确认） |
-| conditional | `global/conditional/brownfield.md` | 当 `proposal.md` 的 `development-mode` 为 `brownfield` |
+| always | `common/always/interactive-interaction.md` | 互动式交互纪律（逐题确认） |
+| conditional | `common/conditional/brownfield.md` | 当 `proposal.md` 的 `development-mode` 为 `brownfield` |
 
-目录约定见 `global/README.md`。新增全局纪律：放入 `global/always/` 或 `global/conditional/`，更新 `schema.yaml` 的 `globalHarness` 与本表（**仅指针**）。
+目录约定见 `common/README.md`。新增跨阶段纪律：放入 `common/always/` 或 `common/conditional/`，更新 `schema.yaml` 的 `globalHarness` 与本表（**仅指针**）。
 
 ## 阶段专项约束索引
 
@@ -34,17 +34,17 @@
 | 领域建模 | sparrow-model | model/view-modeling.md | View Model（有 UI 时） |
 | 代码实现 | sparrow-apply / verify | apply/implementation.md | 代码生成与封装 |
 
-## 全局通用纪律（指针）
+## 通用纪律（指针）
 
 执行前须加载并遵守对应文件；**本处不展开 Must/Not 全文**。
 
 | # | 主题 | 权威文件 |
 |---|------|----------|
 | 1 | 约束资产优先 | 本文件「加载规则」 |
-| 2 | 统一语言 | （待扩展时可新增 `global/always/ubiquitous-language.md`） |
+| 2 | 统一语言 | （待扩展时可新增 `common/always/ubiquitous-language.md`） |
 | 3 | 依赖方向 | 阶段专项 harness（如 model/architecture.md） |
 | 4 | 版本元数据 | 各 skill「版本元数据管理」章节 |
-| 5 | 互动式交互 | `global/always/interactive-interaction.md` |
+| 5 | 互动式交互 | `common/always/interactive-interaction.md` |
 | 6 | 活动变更 ID 命名与确认 | `requirement/requirements.md`「活动变更 ID 确认纪律」 |
 
 ## 维护方式

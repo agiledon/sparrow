@@ -40,8 +40,8 @@
 | 聚合边界 / OOP 原则 / 静态动态建模 | model/domain-modeling.md |
 | 代码生成 / 封装 / 语言反模式 / 跨 BC 通信 | apply/implementation.md |
 | 跨阶段通用纪律 / 约束索引 | constitution.md |
-| 全局 always（逐题确认等） | global/always/*.md |
-| 全局 conditional（如棕地） | global/conditional/*.md |
+| 跨阶段 always（逐题确认等） | common/always/*.md |
+| 跨阶段 conditional（如棕地） | common/conditional/*.md |
 
 ## 格式要求
 

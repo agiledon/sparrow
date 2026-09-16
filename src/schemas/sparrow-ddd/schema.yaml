@@ -5,9 +5,9 @@ coreStepCount: 8
 globalHarness:
   always:
     - constitution.md
-    - global/always/interactive-interaction.md
+    - common/always/interactive-interaction.md
   conditional:
-    - path: global/conditional/brownfield.md
+    - path: common/conditional/brownfield.md
       when: change/current/{activeChangeId}/proposal.md 的 development-mode 为 brownfield
 steps:
   - id: requirement

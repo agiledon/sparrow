@@ -678,7 +678,7 @@ UI 规格尚未生成。询问用户：
 
 #### 步骤1：技术选型
 
-分别对**客户端**和 **BFF 聚合层**进行技术选型。逐一询问用户，每次提供推荐方案并等待用户确认或修改（遵守 \`global/always/interactive-interaction.md\`；QT 同进程等 follow-up 须在客户端方案确认后再单独询问）。
+分别对**客户端**和 **BFF 聚合层**进行技术选型。逐一询问用户，每次提供推荐方案并等待用户确认或修改（遵守 \`common/always/interactive-interaction.md\`；QT 同进程等 follow-up 须在客户端方案确认后再单独询问）。
 
 ##### 客户端技术选型
 

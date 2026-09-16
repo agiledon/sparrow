@@ -78,7 +78,7 @@
 
 ### 阶段 5：用户确认与写入
 
-1. 输出**变更清单**（文件路径 + 变更摘要 + 分类 + 跳过项），请用户确认后再写入（若需澄清，遵守 \`global/always/interactive-interaction.md\`）
+1. 输出**变更清单**（文件路径 + 变更摘要 + 分类 + 跳过项），请用户确认后再写入（若需澄清，遵守 \`common/always/interactive-interaction.md\`）
 2. 遵循版本元数据规范（复用 requirement/design 中的 \`<!-- version: ... -->\` 块；次版本递增）
 3. 更新 \`docs/sparrow/change/current/{activeChangeId}/project.md\` 的「最后更新」时间戳及已修改文档的版本状态
 4. **不改动** project.md 中的 BC 列表结构、slug 条目或架构文档链接

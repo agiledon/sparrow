@@ -193,7 +193,7 @@ your-project/
     └── active-change.json   # Current change-id
 ```
 
-`sparrow init` also writes **global constraint assets** (including the `global/` tree) to the global config directory (`~/.config/sparrow/harness` on macOS/Linux, `%APPDATA%\sparrow\harness` on Windows).
+`sparrow init` also writes **global constraint assets** (including the `common/` tree) to the global config directory (`~/.config/sparrow/harness` on macOS/Linux, `%APPDATA%\sparrow\harness` on Windows).
 
 After initialization, you can check for updates at any time:
 
@@ -365,12 +365,12 @@ Sparrow ships **constraint assets** (harness) — stage-specific "must / must no
 
 **Precedence**: project > global.
 
-Global harness layout. Cross-cutting rules live under **`global/`**; **`globalHarness`** in the workflow schema merges `always` paths into every skill and declares `conditional` paths (e.g. brownfield).
+Global harness layout. Cross-cutting rules live under **`common/`** (not to be confused with global-level vs project-level harness); **`globalHarness`** in the workflow schema merges `always` paths into every skill and declares `conditional` paths (e.g. brownfield).
 
 ```
 harness/
 ├── constitution.md
-├── global/
+├── common/
 │   ├── README.md
 │   ├── always/
 │   │   └── interactive-interaction.md
@@ -389,11 +389,11 @@ harness/
 |------|-----------------------------|
 | `greenfield` | None |
 | `iteration` | None |
-| `brownfield` | **`global/conditional/brownfield.md`** |
+| `brownfield` | **`common/conditional/brownfield.md`** |
 
 How it works:
 
-- Core skills list **always** and **conditional** harness paths before execution; when `development-mode` is `brownfield`, load **`global/conditional/brownfield.md`**.
+- Core skills list **always** and **conditional** harness paths before execution; when `development-mode` is `brownfield`, load **`common/conditional/brownfield.md`**.
 - Use `/sparrow-supporting-harness` to manage project-level constraints.
 - Managed global templates refresh on upgrade; **user-edited files are never overwritten**.
 

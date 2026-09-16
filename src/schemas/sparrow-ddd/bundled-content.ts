@@ -50,9 +50,9 @@ import h_templates_harness_arch_application_md from './templates/harness/arch/ap
 import h_templates_harness_arch_business_md from './templates/harness/arch/business.md';
 import h_templates_harness_arch_frontend_md from './templates/harness/arch/frontend.md';
 import h_templates_harness_constitution_md from './templates/harness/constitution.md';
-import h_templates_harness_global_readme_md from './templates/harness/global/README.md';
-import h_templates_harness_global_always_interactive_interaction_md from './templates/harness/global/always/interactive-interaction.md';
-import h_templates_harness_global_conditional_brownfield_md from './templates/harness/global/conditional/brownfield.md';
+import h_templates_harness_common_readme_md from './templates/harness/common/README.md';
+import h_templates_harness_common_always_interactive_interaction_md from './templates/harness/common/always/interactive-interaction.md';
+import h_templates_harness_common_conditional_brownfield_md from './templates/harness/common/conditional/brownfield.md';
 import h_templates_harness_design_api_design_md from './templates/harness/design/api-design.md';
 import h_templates_harness_model_architecture_md from './templates/harness/model/architecture.md';
 import h_templates_harness_model_domain_modeling_md from './templates/harness/model/domain-modeling.md';
@@ -67,14 +67,14 @@ export const bundledHarnessBodies: Record<string, { title: string; body: string 
   'arch/business.md': { title: '业务架构约束', body: h_templates_harness_arch_business_md },
   'arch/frontend.md': { title: '前端架构约束', body: h_templates_harness_arch_frontend_md },
   'constitution.md': { title: '约束资产宪法', body: h_templates_harness_constitution_md },
-  'global/README.md': { title: '全局约束目录说明', body: h_templates_harness_global_readme_md },
-  'global/always/interactive-interaction.md': {
+  'common/README.md': { title: '通用约束目录说明', body: h_templates_harness_common_readme_md },
+  'common/always/interactive-interaction.md': {
     title: '互动式交互纪律',
-    body: h_templates_harness_global_always_interactive_interaction_md,
+    body: h_templates_harness_common_always_interactive_interaction_md,
   },
-  'global/conditional/brownfield.md': {
+  'common/conditional/brownfield.md': {
     title: '棕地项目约束',
-    body: h_templates_harness_global_conditional_brownfield_md,
+    body: h_templates_harness_common_conditional_brownfield_md,
   },
   'design/api-design.md': { title: 'API 设计约束', body: h_templates_harness_design_api_design_md },
   'model/architecture.md': { title: '领域建模架构约束', body: h_templates_harness_model_architecture_md },

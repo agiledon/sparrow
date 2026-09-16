@@ -9,7 +9,7 @@
  * templates are refreshed; user-edited files are never clobbered.
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmdirSync, unlinkSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 import {
@@ -21,6 +21,13 @@ import {
 
 /** Version stamp file inside the harness directory. */
 const VERSION_FILE = '.version';
+
+/** Retired when cross-stage harness was renamed from `global/` to `common/`. */
+const DEPRECATED_HARNESS_REL_PATHS = [
+  'global/README.md',
+  'global/always/interactive-interaction.md',
+  'global/conditional/brownfield.md',
+];
 
 /**
  * Resolve the global Sparrow config directory (cross-platform).
@@ -95,6 +102,32 @@ function writeGlobalFile(dir: string, file: HarnessFile, overwrite: boolean): bo
   return true;
 }
 
+function tryRemoveEmptyDir(dir: string): void {
+  try {
+    rmdirSync(dir);
+  } catch {
+    // still has files, or already gone
+  }
+}
+
+/**
+ * Drop managed copies of retired `global/` paths after the rename to `common/`.
+ * User-edited files (no managed marker) are left in place.
+ */
+function removeDeprecatedManagedFiles(dir: string): void {
+  for (const relPath of DEPRECATED_HARNESS_REL_PATHS) {
+    if (!isManagedFile(dir, relPath)) continue;
+    try {
+      unlinkSync(join(dir, relPath));
+    } catch {
+      // already gone
+    }
+  }
+  tryRemoveEmptyDir(join(dir, 'global', 'always'));
+  tryRemoveEmptyDir(join(dir, 'global', 'conditional'));
+  tryRemoveEmptyDir(join(dir, 'global'));
+}
+
 /**
  * Initialize the global harness directory, writing any missing or outdated
  * managed templates. Preserves user-customized files.
@@ -111,6 +144,7 @@ export function initializeGlobalHarness(): string[] {
       written.push(file.relPath);
     }
   }
+  removeDeprecatedManagedFiles(dir);
   writeFileSync(join(dir, VERSION_FILE), HARNESS_VERSION + '\n', 'utf-8');
   return written;
 }

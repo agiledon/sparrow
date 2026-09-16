@@ -1,6 +1,6 @@
 # 互动式交互纪律（interactive-interaction）
 
-> **唯一权威定义**：全项目、全阶段、全部 skill 凡以提问 / 回答、Grill Me、选型对话、确认清单等方式与用户交互时，**必须**遵守本文件。其它约束资产与 skill 正文**不得重复展开**本条全文，仅引用 `global/always/interactive-interaction.md` 即可。
+> **唯一权威定义**：全项目、全阶段、全部 skill 凡以提问 / 回答、Grill Me、选型对话、确认清单等方式与用户交互时，**必须**遵守本文件。其它约束资产与 skill 正文**不得重复展开**本条全文，仅引用 `common/always/interactive-interaction.md` 即可。
 
 ## 必须（MUST）
 
