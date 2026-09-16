@@ -23,6 +23,28 @@ export interface WorkflowStep {
   harness: string[];
   requires: string[];
   scope?: 'slug';
+  /** Shared reference files copied into this skill's references/ */
+  share?: string[];
+  /** Skill-specific files under templates/skills/<id>/references/ */
+  references?: string[];
+  /** Output templates under templates/skills/<id>/assets/ or shared/assets/ */
+  assets?: string[];
+  /** Mechanical scripts under templates/skills/<id>/scripts/ */
+  scripts?: string[];
+  /** Output templates and the workspace-relative dest they fill. */
+  outputs?: ArtifactOutput[];
+}
+
+export interface ArtifactOutput {
+  /** Filename in assets/ (skill dir or shared/assets) */
+  asset: string;
+  /**
+   * Destination relative to `docs/sparrow/change/current/{activeChangeId}/`,
+   * unless it starts with `docs/sparrow/master/`.
+   */
+  dest: string;
+  /** True for UI / interaction-context / topology-only artifacts. */
+  optional?: boolean;
 }
 
 export interface SparrowWorkflowSchema {

@@ -17,6 +17,8 @@ export interface CommandContent {
   category: string;
   /** Tags for discovery */
   tags: string[];
+  /** Tool-relative path to this skill's SKILL.md (for short command pointers) */
+  skillRelPath?: string;
 }
 
 export interface ToolCommandAdapter {

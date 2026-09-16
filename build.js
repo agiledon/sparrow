@@ -24,6 +24,8 @@ const buildOpts = {
   loader: {
     '.md': 'text',
     '.yaml': 'text',
+    '.html': 'text',
+    '.mjs': 'text',
   },
   external: [
     'commander',

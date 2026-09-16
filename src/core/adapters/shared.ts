@@ -41,7 +41,13 @@ function formatCommandContent(content: CommandContent, style: 'standard' | 'pi')
   const fm = style === 'pi'
     ? frontmatter([`description: ${content.description}`])
     : fullFrontmatter(content);
-  return `${fm}\n\n${content.body}`;
+  const skillPath = content.skillRelPath ?? `skills/${content.id}/SKILL.md`;
+  const body = [
+    `读取并遵循 \`${skillPath}\`。`,
+    '按需打开同目录 `references/`（过程规则）、`assets/`（产出模板）、`scripts/`（机械步骤）。',
+    '不要把附属文件全文贴进本命令或对话。',
+  ].join('\n');
+  return `${fm}\n\n${body}\n`;
 }
 
 export interface AdapterConfig {

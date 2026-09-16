@@ -4,8 +4,11 @@ import schemaJson from '../../schemas/schema.json';
 import {
   skillTemplates,
   workflowBlocks,
-  specLayoutGuide,
+  sharedReferences,
+  sharedAssets,
+  skillExtras,
 } from '../../schemas/bundled-content.js';
+import { HARNESS_TOKEN } from '../skill-tokens.js';
 
 let cached: SparrowWorkflowSchema | null = null;
 
@@ -38,21 +41,45 @@ export function composeSkillBodyFromWorkflow(skillId: string): string {
   if (!step) {
     throw new Error(`No workflow step for skill: ${skillId}`);
   }
-  const parts: string[] = [specLayoutGuide];
+  const parts: string[] = [];
   if (step.workflowBlock) {
     const block = workflowBlocks[step.workflowBlock];
     if (block) {
-      parts.push(block);
+      parts.push(block.replaceAll(HARNESS_TOKEN, '').trim());
     }
   }
-  parts.push(getSkillTemplateBody(skillId));
-  return parts.join('\n\n');
+  parts.push(getSkillTemplateBody(skillId).trim());
+  let body = parts.join('\n\n');
+  if (!body.includes(HARNESS_TOKEN)) {
+    body = `${body}\n\n${HARNESS_TOKEN}\n`;
+  }
+  return body;
 }
 
 export function resolveStepHarnessPaths(step: WorkflowStep): string[] {
   const { globalHarness } = getWorkflowSchema();
   const always = globalHarness?.always ?? [];
   return [...always, ...step.harness];
+}
+
+export function lookupSharedReference(name: string): string | undefined {
+  return sharedReferences[name];
+}
+
+export function lookupSharedAsset(name: string): string | undefined {
+  return sharedAssets[name];
+}
+
+export function lookupSkillExtra(skillId: string, relPath: string): string | undefined {
+  return skillExtras[skillId]?.[relPath];
+}
+
+export function uniqueAssetNames(step: WorkflowStep): string[] {
+  const names = (step.outputs ?? []).map((o) => o.asset);
+  if (names.length === 0) {
+    return [...(step.assets ?? [])];
+  }
+  return [...new Set(names)];
 }
 
 export function workflowStepsToSkillSpecs(): import('../skills.js').SkillSpec[] {
@@ -71,4 +98,4 @@ export function workflowStepsToSkillSpecs(): import('../skills.js').SkillSpec[] 
   }));
 }
 
-export type { SparrowWorkflowSchema, WorkflowStep, GlobalHarness, ConditionalHarnessEntry } from './types.js';
+export type { SparrowWorkflowSchema, WorkflowStep, ArtifactOutput, GlobalHarness, ConditionalHarnessEntry } from './types.js';

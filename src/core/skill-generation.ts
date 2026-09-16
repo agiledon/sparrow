@@ -11,14 +11,21 @@ import { join, dirname } from 'node:path';
 import type { SkillDefinition, SkillRegistry } from './skills.js';
 import { getAdapter } from './adapters/index.js';
 import type { CommandContent, ToolCommandAdapter } from './adapters/types.js';
-import { getWorkflowSchema } from './workflow-schema/index.js';
+import {
+  getWorkflowSchema,
+  getWorkflowStepBySkillId,
+  lookupSharedAsset,
+  lookupSharedReference,
+  lookupSkillExtra,
+  uniqueAssetNames,
+} from './workflow-schema/index.js';
+import { HARNESS_TOKEN } from './skill-tokens.js';
 
 import { getBundledPlugins } from '../plugins/index.js';
 import type { Plugin } from '../plugins/types.js';
 import { buildPluginSkillBody } from './plugin-generation.js';
 
-/** Token in skill bodies where the harness reference section is injected. */
-export const HARNESS_TOKEN = '{{HARNESS}}';
+export { HARNESS_TOKEN } from './skill-tokens.js';
 
 /** Token pattern for augment plugin injection: {{PLUGIN:<pluginId>}} */
 const PLUGIN_TOKEN_RE = /\{\{PLUGIN:([\w-]+)\}\}/g;
@@ -140,6 +147,60 @@ export function registerPluginSkillTemplates(plugins: Plugin[], registry: SkillR
   }
 }
 
+function writeBundleFile(absPath: string, content: string): void {
+  mkdirSync(dirname(absPath), { recursive: true });
+  writeFileSync(absPath, content.endsWith('\n') ? content : `${content}\n`, 'utf-8');
+}
+
+function writeSkillExtras(projectRoot: string, skillDirRel: string, skillId: string): string[] {
+  const step = getWorkflowStepBySkillId(skillId);
+  if (!step) return [];
+  const created: string[] = [];
+  const skillDir = join(projectRoot, skillDirRel);
+
+  for (const name of step.share ?? []) {
+    const body = lookupSharedReference(name);
+    if (body === undefined) {
+      throw new Error(`Missing shared reference '${name}' for skill ${skillId}`);
+    }
+    const rel = join(skillDirRel, 'references', name);
+    writeBundleFile(join(skillDir, 'references', name), body);
+    created.push(rel);
+  }
+
+  for (const name of step.references ?? []) {
+    const body = lookupSkillExtra(skillId, `references/${name}`);
+    if (body === undefined) {
+      throw new Error(`Missing references/${name} for skill ${skillId}`);
+    }
+    const rel = join(skillDirRel, 'references', name);
+    writeBundleFile(join(skillDir, 'references', name), body);
+    created.push(rel);
+  }
+
+  for (const name of uniqueAssetNames(step)) {
+    const body = lookupSkillExtra(skillId, `assets/${name}`) ?? lookupSharedAsset(name);
+    if (body === undefined) {
+      throw new Error(`Missing asset '${name}' for skill ${skillId}`);
+    }
+    const rel = join(skillDirRel, 'assets', name);
+    writeBundleFile(join(skillDir, 'assets', name), body);
+    created.push(rel);
+  }
+
+  for (const name of step.scripts ?? []) {
+    const body = lookupSkillExtra(skillId, `scripts/${name}`);
+    if (body === undefined) {
+      throw new Error(`Missing scripts/${name} for skill ${skillId}`);
+    }
+    const rel = join(skillDirRel, 'scripts', name);
+    writeBundleFile(join(skillDir, 'scripts', name), body);
+    created.push(rel);
+  }
+
+  return created;
+}
+
 /**
  * Generate skill and command files for a list of tool ids.
  *
@@ -162,24 +223,23 @@ export function generateSkillFiles(
     for (const skill of skills) {
       const content = assembleSkillContent(skill, registry);
 
-      // Inject the harness reference section (project + global constraint assets)
       const harnessSection = buildHarnessSection(adapter, skill.id, registry);
-      if (harnessSection) {
-        content.body = content.body.includes(HARNESS_TOKEN)
-          ? content.body.replace(HARNESS_TOKEN, harnessSection)
-          : content.body + '\n' + harnessSection;
+      if (content.body.includes(HARNESS_TOKEN)) {
+        content.body = content.body.replace(HARNESS_TOKEN, harnessSection);
+      } else if (harnessSection) {
+        content.body = `${content.body}\n${harnessSection}`;
       }
 
-      // Inject augment plugins ({{PLUGIN:archify}} etc.)
       content.body = injectAugmentPlugins(content.body, skill.id);
 
-      // Generate skill file
-      const skillPath = join(projectRoot, adapter.getSkillPath(skill.id));
-      mkdirSync(join(skillPath, '..'), { recursive: true });
+      const skillRelPath = adapter.getSkillPath(skill.id);
+      content.skillRelPath = skillRelPath;
+      const skillPath = join(projectRoot, skillRelPath);
+      mkdirSync(dirname(skillPath), { recursive: true });
       writeFileSync(skillPath, adapter.formatSkill(content), 'utf-8');
-      createdFiles.push(adapter.getSkillPath(skill.id));
+      createdFiles.push(skillRelPath);
+      createdFiles.push(...writeSkillExtras(projectRoot, dirname(skillRelPath), skill.id));
 
-      // Generate command file (skip if tool discovers commands from skills directory)
       const commandRelPath = adapter.getCommandPath(skill.id);
       if (commandRelPath !== null) {
         const commandPath = join(projectRoot, commandRelPath);

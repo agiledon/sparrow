@@ -163,16 +163,20 @@ This creates skill and command files for each selected tool:
 your-project/
 ├── .claude/
 │   ├── skills/
-│   │   ├── sparrow-requirement/SKILL.md
-│   │   ├── sparrow-arch/SKILL.md
-│   │   ├── sparrow-design/SKILL.md
-│   │   ├── sparrow-model/SKILL.md
-│   │   ├── sparrow-plan/SKILL.md
-│   │   ├── sparrow-apply/SKILL.md
-│   │   ├── sparrow-verify/SKILL.md
-│   │   ├── sparrow-archive/SKILL.md
-│   │   ├── sparrow-supporting-harness/SKILL.md
-│   │   └── sparrow-supporting-reconcile/SKILL.md
+│   │   ├── sparrow-requirement/
+│   │   │   ├── SKILL.md
+│   │   │   ├── references/
+│   │   │   ├── assets/
+│   │   │   └── scripts/
+│   │   ├── sparrow-arch/
+│   │   ├── sparrow-design/
+│   │   ├── sparrow-model/
+│   │   ├── sparrow-plan/
+│   │   ├── sparrow-apply/
+│   │   ├── sparrow-verify/
+│   │   ├── sparrow-archive/
+│   │   ├── sparrow-supporting-harness/
+│   │   └── sparrow-supporting-reconcile/
 │   └── commands/sparrow/
 │       ├── sparrow-requirement.md
 │       ├── sparrow-arch.md
@@ -456,16 +460,16 @@ Each language has its own DDD directory layout, coding standards, and anti-patte
 ## How It Works
 
 1. **`sparrow init`** generates skill/command files into each AI tool's directory, plus global and project-level constraint assets (harness). Skills are classified as **core** (pipeline steps) or **supporting** (auxiliary workflows).
-2. Each **skill** is a Markdown file with YAML frontmatter containing:
-   - Role definition (business architect, application architect, DDD expert, etc.)
-   - First principles and design rules
-   - Step-by-step instructions
-   - Output templates with Mermaid/PlantUML examples
-   - Quality checklists
-3. Each stage skill **loads its constraint assets** (`📐 约束资产（Harness）`) — project-level and global rules — before executing
-4. The **AI assistant** reads the skill and executes it, reading input files and writing output files
-5. Each skill **checks prerequisites** — if something is missing, it tells you which skill to run first
-6. After completing, each skill **hints at the next step**
+2. Each **skill** is a directory (`SKILL.md` plus optional `references/`, `assets/`, `scripts/`):
+   - `SKILL.md` — trigger description, completion criteria, ordered steps, next skill; harness refs last
+   - `references/` — process rules loaded on demand (shared language, Grill Me, revise gates)
+   - `assets/` — output document templates (`prd-business.md`, `application.md`, …). Change artifact structure here, not in the skill
+   - `scripts/` — mechanical steps (e.g. create a change workspace only after change-id confirmation)
+3. Slash commands are short pointers to that skill directory (they do not duplicate `references/` or `assets/`).
+4. Each stage skill **loads its constraint assets** (`📐 约束资产（Harness）`) — project-level and global rules — at the end of `SKILL.md`
+5. The **AI assistant** reads the skill and fills the templates into `docs/sparrow/change/current/{change-id}/`
+6. Each skill **checks prerequisites** — if something is missing, it tells you which skill to run first
+7. After completing, each skill **hints at the next step**
 
 **No multi-agent framework needed.** The AI coding assistant itself provides intelligence, multi-agent capabilities, and LLM configuration. Sparrow only provides the structured knowledge and process guidance.
 
@@ -480,7 +484,9 @@ npm run build
 
 # Type check
 npm run typecheck
-# or: npx tsc --noEmit
+
+# Tests
+npm test
 
 # Run locally (dev mode)
 npm run dev -- init --tools claude --force

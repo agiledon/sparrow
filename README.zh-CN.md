@@ -163,16 +163,20 @@ sparrow init --tools all --force
 your-project/
 ├── .claude/
 │   ├── skills/
-│   │   ├── sparrow-requirement/SKILL.md
-│   │   ├── sparrow-arch/SKILL.md
-│   │   ├── sparrow-design/SKILL.md
-│   │   ├── sparrow-model/SKILL.md
-│   │   ├── sparrow-plan/SKILL.md
-│   │   ├── sparrow-apply/SKILL.md
-│   │   ├── sparrow-verify/SKILL.md
-│   │   ├── sparrow-archive/SKILL.md
-│   │   ├── sparrow-supporting-harness/SKILL.md
-│   │   └── sparrow-supporting-reconcile/SKILL.md
+│   │   ├── sparrow-requirement/
+│   │   │   ├── SKILL.md
+│   │   │   ├── references/
+│   │   │   ├── assets/
+│   │   │   └── scripts/
+│   │   ├── sparrow-arch/
+│   │   ├── sparrow-design/
+│   │   ├── sparrow-model/
+│   │   ├── sparrow-plan/
+│   │   ├── sparrow-apply/
+│   │   ├── sparrow-verify/
+│   │   ├── sparrow-archive/
+│   │   ├── sparrow-supporting-harness/
+│   │   └── sparrow-supporting-reconcile/
 │   └── commands/sparrow/
 │       ├── sparrow-requirement.md
 │       ├── sparrow-arch.md
@@ -472,16 +476,16 @@ paths:
 ## 工作原理
 
 1. **`sparrow init`** 向各 AI 工具目录生成 skill/command 文件，以及全局与项目级约束资产（harness）。Skill 分为 **core**（流水线步骤）与 **supporting**（辅助工作流）两类。
-2. 每个 **skill** 是带 YAML frontmatter 的 Markdown 文件，包含：
-   - 角色定义（业务架构师、应用架构师、DDD 专家等）
-   - 第一性原理与设计规则
-   - 分步说明
-   - 含 Mermaid/PlantUML 示例的输出模板
-   - 质量检查清单
-3. 各阶段 skill **加载约束资产**（`📐 约束资产（Harness）`）——项目级与全局规则——再执行
-4. **AI 助手**读取 skill 并执行，读取输入文件、写入输出文件
-5. 每个 skill **检查前置条件**——若缺失会提示应先运行哪个 skill
-6. 完成后每个 skill **提示下一步**
+2. 每个 **skill** 是一个目录（`SKILL.md` 加可选的 `references/`、`assets/`、`scripts/`）：
+   - `SKILL.md` — 触发条件、完成标准、有序步骤、下一 skill；harness 引用在文末
+   - `references/` — 按需加载的过程规则（统一语言、Grill Me、revise 门控）
+   - `assets/` — 产出物模板（`prd-business.md`、`application.md` 等）。改产出结构只改模板，不改 skill
+   - `scripts/` — 机械步骤（例如仅在确认 change-id 后创建工作区）
+3. 斜杠命令是指向该 skill 目录的短指令（不复制 `references/` 或 `assets/`）。
+4. 各阶段 skill **加载约束资产**（`📐 约束资产（Harness）`）——项目级与全局规则——写在 `SKILL.md` 文末
+5. **AI 助手**读取 skill，按模板填写到 `docs/sparrow/change/current/{change-id}/`
+6. 每个 skill **检查前置条件**——若缺失会提示应先运行哪个 skill
+7. 完成后每个 skill **提示下一步**
 
 **无需多 Agent 框架。** AI 编程助手本身提供智能、多 Agent 能力与 LLM 配置。Sparrow 只提供结构化知识与流程引导。
 

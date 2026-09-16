@@ -16,6 +16,11 @@ export function validateWorkflowSchema(schema: SparrowWorkflowSchema): void {
         throw new Error(`Step ${step.id} requires unknown step: ${req}`);
       }
     }
+    for (const output of step.outputs ?? []) {
+      if (!output.asset || !output.dest) {
+        throw new Error(`Step ${step.id} outputs require asset and dest`);
+      }
+    }
   }
   const core = schema.steps.filter((s) => s.kind === 'core' && s.order <= schema.coreStepCount);
   const orders = new Set(core.map((s) => s.order));

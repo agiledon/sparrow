@@ -17,7 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - schema 内容从 `src/schemas/sparrow-ddd/` 上提至 `src/schemas/`。
 - **Spec layout init**: `sparrow init` creates empty `master/`, `change/current/`, and `change/archive/` directories, and does not pre-fill `master/project.md` or a change-id workspace. The change-id subdirectory appears after confirmation (`change/current/{id}/`); archive promote fills `master/`. If the user aborts without a change-id, `current/` stays empty. Re-run `sparrow init` to refresh skill instructions.
   - **修复**：init 创建空的 `master/`、`change/current/`、`change/archive/`，不预填内容。未确认 change-id 时 `current/` 为空；首次归档前 `master/` 为空。产出写在 `change/current/{change-id}/`。
-- **Skill / harness content separation**: Core workflow defined in `src/schemas/schema.yaml` (with `schema.json` for runtime); skill bodies in `templates/skills/`; workflow prerequisite blocks in `workflow-blocks/`; harness assets in `templates/harness/`. Composition via `src/core/workflow-schema/`. Removed legacy `src/skills/core/*.ts` and `src/harness/*.ts` string blobs.
+- **Skill bundles**: Each generated skill is a directory (`SKILL.md` + `references/` + `assets/` + optional `scripts/`). Output document structure lives in `assets/` templates (e.g. `prd-business.md`, `application.md`); changing artifact format does not require editing skill process text. Slash commands are short pointers to the skill directory. Re-run `sparrow init` / `sparrow update` to refresh.
+  - **Skill 目录化**：每个 skill 生成为目录；产出物章节结构只在 `assets/` 模板中维护。斜杠命令改为指向 skill 目录的短指令。重新执行 `sparrow init` / `sparrow update` 以刷新。
 
 ---
 

@@ -19,6 +19,7 @@ import {
   MASTER_REQUIREMENT_HISTORY,
   MASTER_ROOT,
 } from './spec-paths.js';
+import { skillExtras } from '../schemas/bundled-content.js';
 
 
 export interface PromoteResult {
@@ -55,6 +56,14 @@ function shouldSkipPromote(rel: string): boolean {
   return /^design\/[^/]+\/plan\.md$/.test(norm);
 }
 
+function archiveAsset(name: string): string {
+  const body = skillExtras['sparrow-archive']?.[`assets/${name}`];
+  if (!body) {
+    throw new Error(`Missing archive asset: ${name}`);
+  }
+  return body;
+}
+
 function appendHistory(
   historyPath: string,
   changeId: string,
@@ -63,10 +72,17 @@ function appendHistory(
   files: string[]
 ): void {
   mkdirSync(dirname(historyPath), { recursive: true });
-  const header = existsSync(historyPath) ? readFileSync(historyPath, 'utf-8') : '# 修订历史\n\n';
-  const body = files.map((f) => `- \`${f}\``).join('\n');
-  const entry = `\n## ${changeId}\n- **synced-at**: ${syncedAt}\n- **source**: ${archiveRel}\n\n### Promoted files\n${body || '- (none)'}\n`;
-  writeFileSync(historyPath, header + entry, 'utf-8');
+  const header = existsSync(historyPath)
+    ? readFileSync(historyPath, 'utf-8')
+    : archiveAsset('revision-history.md').trimEnd() + '\n\n';
+  const fileList = files.map((f) => `- \`${f}\``).join('\n') || '- (none)';
+  const entry = archiveAsset('revision-history-entry.md')
+    .replaceAll('{changeId}', changeId)
+    .replaceAll('{syncedAt}', syncedAt)
+    .replaceAll('{archiveRel}', archiveRel)
+    .replaceAll('{fileList}', fileList)
+    .trimEnd();
+  writeFileSync(historyPath, header + entry + '\n', 'utf-8');
 }
 
 /**

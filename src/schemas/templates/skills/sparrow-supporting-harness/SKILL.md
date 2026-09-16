@@ -1,0 +1,32 @@
+# Sparrow Harness — 约束资产管理
+
+辅助命令，可随时调用。不新增流水线产出。
+
+## 完成标准
+
+按用户意图查看、添加、更新或删除 **项目级** `docs/sparrow/harness/` 中的 Must / Must Not 约束；需要时同步 `constitution.md` 索引。
+
+## 步骤
+
+1. 读 `references/ubiquitous-language.md` 与 `docs/sparrow/harness/constitution.md`。
+2. 查看：列出项目级与全局级文件。添加/更新/删除：写入对应阶段文件。用户未指定阶段时按内容自动分类。
+3. 格式：Must / Must Not；同一文件内按必须 / 禁止 / 判断标准分组。
+
+## 分类
+
+| 约束内容 | 目标文件 |
+|---------|---------|
+| 业务服务 / Grill Me | requirement/requirements.md |
+| 子领域 / 业务架构 | arch/business.md |
+| 限界上下文 / 映射 | arch/application.md |
+| API / 序列图 | design/api-design.md |
+| DDD 四层 / 角色 | model/architecture.md |
+| 聚合 / 建模 | model/domain-modeling.md |
+| 代码生成 / 反模式 | apply/implementation.md |
+| 跨阶段索引 | constitution.md |
+| 跨阶段 always | common/always/*.md |
+| 跨阶段 conditional | common/conditional/*.md |
+
+优先级：项目级 > 全局级。新增约束对后续阶段命令即时生效。
+
+{{HARNESS}}
