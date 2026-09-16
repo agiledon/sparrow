@@ -2,7 +2,7 @@
  * Harness registry — aggregates bundled constraint asset templates.
  */
 
-import { bundledHarnessBodies } from '../schemas/sparrow-ddd/bundled-content.js';
+import { bundledHarnessBodies } from '../schemas/bundled-content.js';
 
 export const HARNESS_VERSION = '1.0.13';
 

@@ -1,11 +1,11 @@
 import type { SparrowWorkflowSchema, WorkflowStep } from './types.js';
 import { validateWorkflowSchema } from './validate.js';
-import schemaJson from '../../schemas/sparrow-ddd/schema.json';
+import schemaJson from '../../schemas/schema.json';
 import {
   skillTemplates,
   workflowBlocks,
   specLayoutGuide,
-} from '../../schemas/sparrow-ddd/bundled-content.js';
+} from '../../schemas/bundled-content.js';
 
 let cached: SparrowWorkflowSchema | null = null;
 

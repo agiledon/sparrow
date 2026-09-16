@@ -13,7 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Harness layout**: Cross-stage constraint directory renamed from `harness/global/` to `harness/common/` to avoid confusion with global-level vs project-level harness. Re-run `sparrow init` / `sparrow update` to refresh managed templates.
   - 跨阶段约束目录由 `global/` 更名为 `common/`，避免与「全局级 / 项目级」harness 混淆。重新执行 `sparrow init` / `sparrow update` 以刷新受管模板。
-- **Skill / harness content separation**: Core workflow defined in `src/schemas/sparrow-ddd/schema.yaml` (with `schema.json` for runtime); skill bodies in `templates/skills/`; workflow prerequisite blocks in `workflow-blocks/`; harness assets in `templates/harness/`. Composition via `src/core/workflow-schema/`. Removed legacy `src/skills/core/*.ts` and `src/harness/*.ts` string blobs.
+- **Schema layout**: Flattened `src/schemas/sparrow-ddd/` into `src/schemas/` (schema, templates, workflow-blocks).
+  - schema 内容从 `src/schemas/sparrow-ddd/` 上提至 `src/schemas/`。
+- **Skill / harness content separation**: Core workflow defined in `src/schemas/schema.yaml` (with `schema.json` for runtime); skill bodies in `templates/skills/`; workflow prerequisite blocks in `workflow-blocks/`; harness assets in `templates/harness/`. Composition via `src/core/workflow-schema/`. Removed legacy `src/skills/core/*.ts` and `src/harness/*.ts` string blobs.
 
 ---
 

@@ -35,7 +35,7 @@ Examples (replace `<author>` with the actual committer):
 
 - Write the summary in clear English or 中文; keep it specific and imperative.
 - Do **not** add tool-specific trailers (e.g. co-authored-by lines for editors) unless the project explicitly requires them.
-- After editing `src/schemas/sparrow-ddd/schema.yaml`, run `npm run sync-schema` before committing if `schema.json` is part of the change.
+- After editing `src/schemas/schema.yaml`, run `npm run sync-schema` before committing if `schema.json` is part of the change.
 
 
 See `docs/contributing-content.md` for content editing workflow.
