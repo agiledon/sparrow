@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 跨阶段约束目录由 `global/` 更名为 `common/`，避免与「全局级 / 项目级」harness 混淆。重新执行 `sparrow init` / `sparrow update` 以刷新受管模板。
 - **Schema layout**: Flattened `src/schemas/sparrow-ddd/` into `src/schemas/` (schema, templates, workflow-blocks).
   - schema 内容从 `src/schemas/sparrow-ddd/` 上提至 `src/schemas/`。
+- **Spec layout init**: `sparrow init` creates empty `master/`, `change/current/`, and `change/archive/` directories, and does not pre-fill `master/project.md` or a change-id workspace. The change-id subdirectory appears after confirmation (`change/current/{id}/`); archive promote fills `master/`. If the user aborts without a change-id, `current/` stays empty. Re-run `sparrow init` to refresh skill instructions.
+  - **修复**：init 创建空的 `master/`、`change/current/`、`change/archive/`，不预填内容。未确认 change-id 时 `current/` 为空；首次归档前 `master/` 为空。产出写在 `change/current/{change-id}/`。
 - **Skill / harness content separation**: Core workflow defined in `src/schemas/schema.yaml` (with `schema.json` for runtime); skill bodies in `templates/skills/`; workflow prerequisite blocks in `workflow-blocks/`; harness assets in `templates/harness/`. Composition via `src/core/workflow-schema/`. Removed legacy `src/skills/core/*.ts` and `src/harness/*.ts` string blobs.
 
 ---

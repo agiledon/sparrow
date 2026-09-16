@@ -47,7 +47,7 @@ export function formatInitSummary(result: InitResult): string {
   lines.push(`📦 Project: ${result.projectName}`);
   lines.push(`📋 Tools configured: ${result.tools.join(', ')}`);
   lines.push(`📄 Config: .sparrow/sparrow.json`);
-  lines.push(`📑 Guide: ${result.projectMdPath}`);
+  lines.push(`📑 Spec layout: ${result.projectMdPath}`);
   lines.push(`📁 Backend dir: backend/`);
   lines.push('');
   lines.push(`📐 Constraint assets (harness):`);

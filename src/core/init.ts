@@ -5,13 +5,15 @@
  * for each selected tool, and creates a sparrow.json project config.
  */
 
-import { generateSkillFiles, generateProjectConfig, generateProjectMd, type ProjectContext } from './skill-generation.js';
+import { join } from 'node:path';
+import { generateSkillFiles, generateProjectConfig, type ProjectContext } from './skill-generation.js';
 import { initializeGlobalHarness, initializeProjectHarness } from './harness-init.js';
 import { initializePluginRuntimes } from './plugin-init.js';
 import { getSparrowVersion } from './package-version.js';
 import { detectInstalledTools, parseToolSelection } from './tools.js';
 import type { SkillRegistry } from './skills.js';
 import { initializeSpecLayout } from './spec-layout-init.js';
+import { SPARROW_DOCS } from './spec-paths.js';
 
 export interface InitOptions {
   /** Comma-separated tool ids or 'all' */
@@ -68,10 +70,9 @@ export function executeInit(projectRoot: string, options: InitOptions, registry:
   };
   const configPath = generateProjectConfig(projectContext);
 
-  // Step 5: Create project.md wizard file
-  const projectMdPath = generateProjectMd(projectContext);
-
+  // Step 5: Spec layout — README + active-change.json only; master/ and change/ stay empty
   initializeSpecLayout(projectRoot);
+  const projectMdPath = join(projectRoot, SPARROW_DOCS, 'README.md');
 
   // Step 6: Initialize constraint assets (harness)
   // Global: DDD-universal discipline, written to the global config dir.

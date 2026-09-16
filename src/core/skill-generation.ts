@@ -11,7 +11,6 @@ import { join, dirname } from 'node:path';
 import type { SkillDefinition, SkillRegistry } from './skills.js';
 import { getAdapter } from './adapters/index.js';
 import type { CommandContent, ToolCommandAdapter } from './adapters/types.js';
-import { generateProjectMdContent } from './project-md.js';
 import { getWorkflowSchema } from './workflow-schema/index.js';
 
 import { getBundledPlugins } from '../plugins/index.js';
@@ -242,17 +241,4 @@ export function generateProjectConfig(ctx: ProjectContext): string {
   const configPath = join(sparrowDir, 'sparrow.json');
   writeFileSync(configPath, JSON.stringify(config, null, 2) + '\n', 'utf-8');
   return configPath;
-}
-
-/**
- * Generate the project.md wizard file under docs/sparrow/.
- * Returns the path to the created file.
- */
-export function generateProjectMd(ctx: ProjectContext): string {
-  const { projectRoot, projectName, version, toolIds } = ctx;
-  const mdPath = join(projectRoot, 'docs', 'sparrow', 'master', 'project.md');
-  mkdirSync(dirname(mdPath), { recursive: true });
-  const content = generateProjectMdContent(projectName, version, toolIds);
-  writeFileSync(mdPath, content, 'utf-8');
-  return mdPath;
 }

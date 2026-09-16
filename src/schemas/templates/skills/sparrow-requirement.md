@@ -67,7 +67,7 @@ sparrow-requirement 分为两个阶段：
 1. **阶段一：互动式需求探索（Grill Me）** — 通过一问一答的方式，深度挖掘用户需求
 2. **阶段二：需求文档生成** — 将探索结果整理为功能需求文档（prd-business.md）和系统质量属性文档（prd-quality.md）
 
-> **活动变更**：若 \`docs/sparrow/change/current/\` 无子目录，须先按 \`requirement/requirements.md\`「活动变更 ID 确认纪律」及 \`common/always/interactive-interaction.md\` 确认 \`{change-id}\`；**change-id 确认完成前**不得进入 Grill Me 或 proposal 其它字段的追问。
+> **活动变更**：若无活动 change-id，须先按 \`requirement/requirements.md\`「活动变更 ID 确认纪律」及 \`common/always/interactive-interaction.md\` 确认 \`{change-id}\`；**change-id 确认完成前**不得在 \`change/current/\` 下创建子目录、不得向 \`master/\` 写入内容、不得进入 Grill Me 或 proposal 其它字段的追问。用户中止或未指定 change-id 时保持 \`current/\` 与 \`master/\` 均为空并停止执行。确认后再创建 \`docs/sparrow/change/current/{change-id}/\` 及产出目录。
 
 ---
 

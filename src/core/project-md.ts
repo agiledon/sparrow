@@ -1,10 +1,10 @@
 /**
  * project.md wizard file generation and management.
  *
- * project.md lives at docs/sparrow/master/project.md (master 向导) and serves as an index/guide
- * for the current project. It is:
- *   - Created by the CLI during `sparrow init`
- *   - Updated by AI assistants during skill execution (per template instructions)
+ * project.md lives at docs/sparrow/change/current/{change-id}/project.md (change 工作区向导)
+ * and, after archive promote, at docs/sparrow/master/project.md (基线索引).
+ * The change-workspace copy is created by the requirement skill after the user
+ * confirms a change-id — not by `sparrow init`.
  */
 
 export interface ProjectMdSection {
@@ -19,7 +19,7 @@ export const API_CATALOG_PATH = ARCHITECTURE_API_CATALOG_REL;
 export const PRD_QUALITY_PATH = 'requirement/quality/prd-quality.md';
 
 /**
- * Generate the initial project.md content for a new project.
+ * Generate project.md content for a change workspace (or promoted master copy).
  */
 export function generateProjectMdContent(
   projectName: string,

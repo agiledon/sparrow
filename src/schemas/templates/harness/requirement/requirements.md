@@ -11,7 +11,9 @@
 1. **必须**根据用户已提供的原始需求或变更意图，给出 **1～3 个建议名称**（小写 kebab-case，简短且能概括变更主题，如 `add-order-refund`、`iteration-v2-checkout`）。
 2. **必须**明确说明用户可：**接受某一建议**（回复建议名或序号）、**输入自定义名称**（须符合 kebab-case，避免空格与特殊字符），或 **修改**某一建议后再确认。
 3. **每次只确认 change-id 这一项**（遵守 `common/always/interactive-interaction.md`）；在用户确认最终名称之前，**禁止**继续追问 development-mode、proposal 内容或进入 Grill Me 下一题。
-4. 确认后创建目录、写入 `proposal.md`，并更新 `.sparrow/active-change.json` 的 `changeId`。
+4. 确认后创建 `docs/sparrow/change/current/{change-id}/`（及 `requirement/business/`、`requirement/quality/`、`requirement/ui/`、`architecture/`、`design/`），写入 `proposal.md`，并更新 `.sparrow/active-change.json` 的 `changeId`。
+5. **change-id 确认完成前禁止**在 `docs/sparrow/change/current/` 下创建子目录或文件。用户中止或未指定 change-id 时，**`current/` 必须保持为空**，并停止执行。
+6. **禁止**在 archive promote 之前向 `docs/sparrow/master/` 写入。首次归档前 master 保持为空。
 
 ## 必须（MUST）
 
@@ -30,6 +32,7 @@
 3. **禁止将一次操作拆分为多个业务服务**。
 4. **禁止包含线下执行步骤**：执行步骤仅限于系统后端收到请求后执行的一次连续而完整的功能交互，不包括前端操作和线下动作。
 5. **禁止引入纯技术功能**：没有实际业务价值的纯技术功能不应被识别为业务服务。
+6. **禁止在 change-id 确认前在 \`change/current/\` 下创建子目录或文件**；用户中止时 \`current/\` 必须为空。**禁止**在首次 archive 前向 \`master/\` 写入内容。
 
 ## 判断标准（一次请求原则）
 

@@ -184,13 +184,15 @@ your-project/
 ├── .pi/                # (if Pi selected)
 │   └── ...
 ├── docs/sparrow/
-│   ├── master/              # Baseline specs (filled after archive promote)
-│   ├── change/current|archive/
+│   ├── master/              # Empty until archive promote
+│   ├── change/
+│   │   ├── current/         # Empty until a change-id is confirmed
+│   │   └── archive/         # Empty until a change is archived
 │   ├── harness/             # Project-level constraint placeholders
 │   └── README.md
 └── .sparrow/
     ├── sparrow.json         # Project config
-    └── active-change.json   # Current change-id
+    └── active-change.json   # Current change-id (null until confirmed)
 ```
 
 `sparrow init` also writes **global constraint assets** (including the `common/` tree) to the global config directory (`~/.config/sparrow/harness` on macOS/Linux, `%APPDATA%\sparrow\harness` on Windows).

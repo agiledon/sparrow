@@ -184,13 +184,15 @@ your-project/
 ├── .pi/                #（若选择了 Pi）
 │   └── ...
 ├── docs/sparrow/
-│   ├── master/              # 基线规格（archive promote 后填充）
-│   ├── change/current|archive/
+│   ├── master/              # 空目录，archive promote 后才写入
+│   ├── change/
+│   │   ├── current/         # 确认 change-id 前为空
+│   │   └── archive/         # 归档前为空
 │   ├── harness/             # 项目级约束占位
 │   └── README.md
 └── .sparrow/
     ├── sparrow.json         # 项目配置
-    └── active-change.json   # 当前 change-id
+    └── active-change.json   # 当前 change-id（确认前为 null）
 ```
 
 `sparrow init` 还会将**全局约束资产**（含 `common/` 目录，跨阶段纪律）写入全局配置目录（macOS/Linux 为 `~/.config/sparrow/harness`，Windows 为 `%APPDATA%\sparrow\harness`）。
