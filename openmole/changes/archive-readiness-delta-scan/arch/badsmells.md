@@ -1,6 +1,6 @@
 # 坏味道规约文档（OpenMole Bad Smells）
 
-**版本**：0.2.0
+**版本**：0.3.0
 **状态**：草案
 **依据**：OpenMole 规约摘要（见 Skill 内嵌）；change 内 [tasks.md](./tasks.md)
 **修订日期**：2026-09-20
@@ -32,7 +32,7 @@
 | BS-ID | 类别 | 状态 | 说明 |
 |-------|------|------|------|
 | ARCH-CP-001 | 耦合性 | 已消除 | state/archive 判定在 TS 与 mjs 双轨复制（CP-04） |
-| ARCH-CH-001 | 内聚性 | 未清除 | `project-state.ts` 混合 IO/探测/流水线/归档门控（CH-01） |
+| ARCH-CH-001 | 内聚性 | 已消除 | `project-state.ts` 混合 IO/探测/流水线/归档门控（CH-01） |
 | ARCH-BD-001 | 边界性 | 未清除 | archive skill 依赖 core `promoteChangeToMaster`，生成态无 ACL/脚本入口（BD-04） |
 | ARCH-EV-001 | 演进性 | 未清除 | 变更 archive 规则需同步改 core + 模板脚本 + skill 文案（EV-02） |
 
@@ -96,3 +96,4 @@
 |------|------|----------|------|
 | 0.1.0 | 2026-09-20 | `fe8c2cc` | 初版：ARCH-CP-001、ARCH-CH-001、ARCH-BD-001、ARCH-EV-001。 |
 | 0.2.0 | 2026-09-20 | — | B-T01：mjs 由 project-state 打包生成；ARCH-CP-001 → 已消除。 |
+| 0.3.0 | 2026-09-20 | — | B-T02：拆分 types/io/development-mode/archive-readiness；ARCH-CH-001 → 已消除。 |

@@ -4,9 +4,60 @@
  * Source: src/agent-scripts/sparrow-state.ts (+ src/core/project-state.ts).
  * Re-run: node scripts/generate-sparrow-state-mjs.mjs (also via npm run sync-schema).
  */
-// src/core/project-state.ts
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
-import { dirname, extname, join } from "node:path";
+// src/core/project-state-types.ts
+var DEFAULT_PROJECT_STATE = {
+  "active-change": { changeId: null },
+  "development-mode": "tbd",
+  pipeline: null
+};
+var MODES = /* @__PURE__ */ new Set(["tbd", "greenfield", "brownfield", "iteration"]);
+var STEPS = /* @__PURE__ */ new Set([
+  "requirement",
+  "arch",
+  "design",
+  "model",
+  "plan",
+  "apply",
+  "verify",
+  "archive"
+]);
+var STATUSES = /* @__PURE__ */ new Set(["ongoing", "done"]);
+function normalizeProjectState(raw) {
+  const src = raw && typeof raw === "object" ? raw : {};
+  const active = src["active-change"] && typeof src["active-change"] === "object" ? src["active-change"] : {};
+  const changeId = typeof active.changeId === "string" && active.changeId.length > 0 ? active.changeId : null;
+  const mode = MODES.has(src["development-mode"]) ? src["development-mode"] : "tbd";
+  let pipeline = null;
+  if (mode !== "tbd" && src.pipeline && typeof src.pipeline === "object") {
+    const p = src.pipeline;
+    const step = STEPS.has(p["current-step"]) ? p["current-step"] : "requirement";
+    const status = STATUSES.has(p.status) ? p.status : "ongoing";
+    const contexts = {};
+    if (p.contexts && typeof p.contexts === "object") {
+      for (const [slug, value] of Object.entries(p.contexts)) {
+        if (!value || typeof value !== "object") continue;
+        const c = value;
+        if (!STEPS.has(c["current-step"]) || !STATUSES.has(c.status)) {
+          continue;
+        }
+        contexts[slug] = {
+          "current-step": c["current-step"],
+          status: c.status
+        };
+      }
+    }
+    pipeline = { "current-step": step, status, contexts };
+  }
+  return {
+    "active-change": { changeId },
+    "development-mode": mode,
+    pipeline: mode === "tbd" ? null : pipeline
+  };
+}
+
+// src/core/project-state-io.ts
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 
 // src/core/spec-paths.ts
 var SPARROW_DOCS = "docs/sparrow";
@@ -25,24 +76,32 @@ var MASTER_DESIGN_HISTORY = `${MASTER_ROOT}/design/revision-history.md`;
 var MASTER_BC_HISTORY = `${MASTER_ROOT}/architecture/bc-revision-history.md`;
 var LEGACY_CHANGES_ROOT = `${SPARROW_DOCS}/changes`;
 
-// src/core/project-state.ts
-var DEFAULT_PROJECT_STATE = {
-  "active-change": { changeId: null },
-  "development-mode": "tbd",
-  pipeline: null
-};
-var MODES = /* @__PURE__ */ new Set(["tbd", "greenfield", "brownfield", "iteration"]);
-var STEPS = /* @__PURE__ */ new Set([
-  "requirement",
-  "arch",
-  "design",
-  "model",
-  "plan",
-  "apply",
-  "verify",
-  "archive"
-]);
-var STATUSES = /* @__PURE__ */ new Set(["ongoing", "done"]);
+// src/core/project-state-io.ts
+function stateAbsPath(projectRoot) {
+  return join(projectRoot, STATE_FILE);
+}
+function loadProjectState(projectRoot) {
+  const path = stateAbsPath(projectRoot);
+  if (!existsSync(path)) {
+    return { ...DEFAULT_PROJECT_STATE, "active-change": { changeId: null }, pipeline: null };
+  }
+  try {
+    return normalizeProjectState(JSON.parse(readFileSync(path, "utf-8")));
+  } catch {
+    return { ...DEFAULT_PROJECT_STATE };
+  }
+}
+function saveProjectState(projectRoot, state) {
+  const normalized = normalizeProjectState(state);
+  const dest = stateAbsPath(projectRoot);
+  mkdirSync(dirname(dest), { recursive: true });
+  writeFileSync(dest, JSON.stringify(normalized, null, 2) + "\n", "utf-8");
+  return dest;
+}
+
+// src/core/development-mode.ts
+import { existsSync as existsSync2, readdirSync as readdirSync2, statSync } from "node:fs";
+import { extname, join as join2 } from "node:path";
 var IGNORE_DIRS = /* @__PURE__ */ new Set([
   "node_modules",
   ".git",
@@ -89,61 +148,10 @@ var SOURCE_EXT = /* @__PURE__ */ new Set([
   ".vue",
   ".svelte"
 ]);
-function stateAbsPath(projectRoot) {
-  return join(projectRoot, STATE_FILE);
-}
-function normalizeProjectState(raw) {
-  const src = raw && typeof raw === "object" ? raw : {};
-  const active = src["active-change"] && typeof src["active-change"] === "object" ? src["active-change"] : {};
-  const changeId = typeof active.changeId === "string" && active.changeId.length > 0 ? active.changeId : null;
-  const mode = MODES.has(src["development-mode"]) ? src["development-mode"] : "tbd";
-  let pipeline = null;
-  if (mode !== "tbd" && src.pipeline && typeof src.pipeline === "object") {
-    const p = src.pipeline;
-    const step = STEPS.has(p["current-step"]) ? p["current-step"] : "requirement";
-    const status = STATUSES.has(p.status) ? p.status : "ongoing";
-    const contexts = {};
-    if (p.contexts && typeof p.contexts === "object") {
-      for (const [slug, value] of Object.entries(p.contexts)) {
-        if (!value || typeof value !== "object") continue;
-        const c = value;
-        if (!STEPS.has(c["current-step"]) || !STATUSES.has(c.status)) continue;
-        contexts[slug] = {
-          "current-step": c["current-step"],
-          status: c.status
-        };
-      }
-    }
-    pipeline = { "current-step": step, status, contexts };
-  }
-  return {
-    "active-change": { changeId },
-    "development-mode": mode,
-    pipeline: mode === "tbd" ? null : pipeline
-  };
-}
-function loadProjectState(projectRoot) {
-  const path = stateAbsPath(projectRoot);
-  if (!existsSync(path)) {
-    return { ...DEFAULT_PROJECT_STATE, "active-change": { changeId: null }, pipeline: null };
-  }
-  try {
-    return normalizeProjectState(JSON.parse(readFileSync(path, "utf-8")));
-  } catch {
-    return { ...DEFAULT_PROJECT_STATE };
-  }
-}
-function saveProjectState(projectRoot, state) {
-  const normalized = normalizeProjectState(state);
-  const dest = stateAbsPath(projectRoot);
-  mkdirSync(dirname(dest), { recursive: true });
-  writeFileSync(dest, JSON.stringify(normalized, null, 2) + "\n", "utf-8");
-  return dest;
-}
 function dirHasFiles(dir) {
-  if (!existsSync(dir) || !statSync(dir).isDirectory()) return false;
-  for (const name of readdirSync(dir)) {
-    const full = join(dir, name);
+  if (!existsSync2(dir) || !statSync(dir).isDirectory()) return false;
+  for (const name of readdirSync2(dir)) {
+    const full = join2(dir, name);
     if (statSync(full).isDirectory()) {
       if (dirHasFiles(full)) return true;
     } else {
@@ -153,12 +161,12 @@ function dirHasFiles(dir) {
   return false;
 }
 function hasSourceFiles(projectRoot) {
-  const skipAbs = join(projectRoot, SPARROW_DOCS);
+  const skipAbs = join2(projectRoot, SPARROW_DOCS);
   const walk = (dir) => {
-    if (!existsSync(dir) || !statSync(dir).isDirectory()) return false;
-    for (const name of readdirSync(dir)) {
+    if (!existsSync2(dir) || !statSync(dir).isDirectory()) return false;
+    for (const name of readdirSync2(dir)) {
       if (IGNORE_DIRS.has(name)) continue;
-      const full = join(dir, name);
+      const full = join2(dir, name);
       if (full === skipAbs || full.startsWith(skipAbs + "/") || full.startsWith(skipAbs + "\\")) continue;
       const st = statSync(full);
       if (st.isDirectory()) {
@@ -173,75 +181,30 @@ function hasSourceFiles(projectRoot) {
 }
 function detectDevelopmentMode(projectRoot) {
   const reasons = [];
-  const currentHas = dirHasFiles(join(projectRoot, CHANGE_CURRENT));
-  const archiveHas = dirHasFiles(join(projectRoot, CHANGE_ARCHIVE));
-  const masterHas = dirHasFiles(join(projectRoot, MASTER_ROOT));
+  const currentHas = dirHasFiles(join2(projectRoot, CHANGE_CURRENT));
+  const archiveHas = dirHasFiles(join2(projectRoot, CHANGE_ARCHIVE));
+  const masterHas = dirHasFiles(join2(projectRoot, MASTER_ROOT));
   if (currentHas) reasons.push("change/current has documents");
   if (archiveHas) reasons.push("change/archive has documents");
   if (masterHas) reasons.push("master has documents");
   if (currentHas || archiveHas || masterHas) {
     return { mode: "iteration", reasons };
   }
-  const source = hasSourceFiles(projectRoot);
-  if (source) {
+  if (hasSourceFiles(projectRoot)) {
     reasons.push("archive and change are empty; source files found");
     return { mode: "brownfield", reasons };
   }
   reasons.push("archive and change are empty; no source files found");
   return { mode: "greenfield", reasons };
 }
-function applyChangeId(state, changeId) {
-  return normalizeProjectState({
-    ...state,
-    "active-change": { changeId }
-  });
-}
-function applyDevelopmentMode(state, mode) {
-  const next = { ...state, "development-mode": mode };
-  if (mode === "tbd" || mode === "brownfield") {
-    next.pipeline = null;
-  }
-  return normalizeProjectState(next);
-}
-function applyPipelineStep(state, step, status) {
-  if (state["development-mode"] === "tbd") {
-    throw new Error("Cannot set pipeline while development-mode is tbd");
-  }
-  const pipeline = state.pipeline ?? {
-    "current-step": step,
-    status,
-    contexts: {}
-  };
-  pipeline["current-step"] = step;
-  pipeline.status = status;
-  return normalizeProjectState({ ...state, pipeline });
-}
-function applyPipelineContext(state, slug, step, status) {
-  if (state["development-mode"] === "tbd") {
-    throw new Error("Cannot set pipeline while development-mode is tbd");
-  }
-  const pipeline = state.pipeline ?? {
-    "current-step": step,
-    status,
-    contexts: {}
-  };
-  pipeline["current-step"] = step;
-  pipeline.status = status;
-  pipeline.contexts = { ...pipeline.contexts, [slug]: { "current-step": step, status } };
-  return normalizeProjectState({ ...state, pipeline });
-}
-function applyArchiveComplete(state) {
-  const mode = state["development-mode"] === "greenfield" ? "iteration" : state["development-mode"];
-  return normalizeProjectState({
-    "active-change": { changeId: null },
-    "development-mode": mode === "tbd" ? "iteration" : mode,
-    pipeline: null
-  });
-}
+
+// src/core/archive-readiness.ts
+import { existsSync as existsSync3, readdirSync as readdirSync3, statSync as statSync2 } from "node:fs";
+import { join as join3 } from "node:path";
 function listDesignSlugs(projectRoot, changeId) {
-  const dir = join(projectRoot, CHANGE_CURRENT, changeId, "design");
-  if (!existsSync(dir) || !statSync(dir).isDirectory()) return [];
-  return readdirSync(dir).filter((name) => statSync(join(dir, name)).isDirectory()).sort();
+  const dir = join3(projectRoot, CHANGE_CURRENT, changeId, "design");
+  if (!existsSync3(dir) || !statSync2(dir).isDirectory()) return [];
+  return readdirSync3(dir).filter((name) => statSync2(join3(dir, name)).isDirectory()).sort();
 }
 function isSlugArchiveReady(ctx) {
   return ctx?.["current-step"] === "verify" && ctx?.status === "done";
@@ -309,6 +272,56 @@ function applyPruneContexts(projectRoot, slugs) {
   const next = prunePipelineContexts(loadProjectState(projectRoot), slugs);
   saveProjectState(projectRoot, next);
   return next;
+}
+
+// src/core/project-state.ts
+function applyChangeId(state, changeId) {
+  return normalizeProjectState({
+    ...state,
+    "active-change": { changeId }
+  });
+}
+function applyDevelopmentMode(state, mode) {
+  const next = { ...state, "development-mode": mode };
+  if (mode === "tbd" || mode === "brownfield") {
+    next.pipeline = null;
+  }
+  return normalizeProjectState(next);
+}
+function applyPipelineStep(state, step, status) {
+  if (state["development-mode"] === "tbd") {
+    throw new Error("Cannot set pipeline while development-mode is tbd");
+  }
+  const pipeline = state.pipeline ?? {
+    "current-step": step,
+    status,
+    contexts: {}
+  };
+  pipeline["current-step"] = step;
+  pipeline.status = status;
+  return normalizeProjectState({ ...state, pipeline });
+}
+function applyPipelineContext(state, slug, step, status) {
+  if (state["development-mode"] === "tbd") {
+    throw new Error("Cannot set pipeline while development-mode is tbd");
+  }
+  const pipeline = state.pipeline ?? {
+    "current-step": step,
+    status,
+    contexts: {}
+  };
+  pipeline["current-step"] = step;
+  pipeline.status = status;
+  pipeline.contexts = { ...pipeline.contexts, [slug]: { "current-step": step, status } };
+  return normalizeProjectState({ ...state, pipeline });
+}
+function applyArchiveComplete(state) {
+  const mode = state["development-mode"] === "greenfield" ? "iteration" : state["development-mode"];
+  return normalizeProjectState({
+    "active-change": { changeId: null },
+    "development-mode": mode === "tbd" ? "iteration" : mode,
+    pipeline: null
+  });
 }
 
 // src/agent-scripts/sparrow-state.ts

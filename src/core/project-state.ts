@@ -1,293 +1,52 @@
 /**
- * Pipeline state: .sparrow/sparrow-state.json
+ * Pipeline state facade: .sparrow/sparrow-state.json
+ *
+ * Split by responsibility:
+ * - project-state-types — types + normalize
+ * - project-state-io — load/save/migrate/wipe
+ * - development-mode — greenfield/brownfield/iteration detection
+ * - archive-readiness — check-archive / prune-contexts
  */
 
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
-import { dirname, extname, join } from 'node:path';
 import {
-  CHANGE_ARCHIVE,
-  CHANGE_CURRENT,
-  LEGACY_ACTIVE_CHANGE_FILE,
-  MASTER_ROOT,
-  SPARROW_DIR,
-  SPARROW_DOCS,
-  STATE_FILE,
-} from './spec-paths.js';
+  normalizeProjectState,
+  type DevelopmentMode,
+  type PipelineState,
+  type PipelineStatus,
+  type PipelineStep,
+  type SparrowProjectState,
+} from './project-state-types.js';
 
-export type DevelopmentMode = 'tbd' | 'greenfield' | 'brownfield' | 'iteration';
-export type PipelineStatus = 'ongoing' | 'done';
-export type PipelineStep =
-  | 'requirement'
-  | 'arch'
-  | 'design'
-  | 'model'
-  | 'plan'
-  | 'apply'
-  | 'verify'
-  | 'archive';
+export type {
+  DevelopmentMode,
+  PipelineContextState,
+  PipelineState,
+  PipelineStatus,
+  PipelineStep,
+  SparrowProjectState,
+} from './project-state-types.js';
+export { DEFAULT_PROJECT_STATE, normalizeProjectState } from './project-state-types.js';
 
-export interface PipelineContextState {
-  'current-step': PipelineStep;
-  status: PipelineStatus;
-}
+export {
+  ensureProjectState,
+  loadProjectState,
+  projectStateExists,
+  resetProjectState,
+  saveProjectState,
+  stateAbsPath,
+  wipeSpecTrees,
+} from './project-state-io.js';
 
-export interface PipelineState {
-  'current-step': PipelineStep;
-  status: PipelineStatus;
-  contexts: Record<string, PipelineContextState>;
-}
+export { detectDevelopmentMode, type DetectModeResult } from './development-mode.js';
 
-export interface SparrowProjectState {
-  'active-change': { changeId: string | null };
-  'development-mode': DevelopmentMode;
-  pipeline: PipelineState | null;
-}
-
-export const DEFAULT_PROJECT_STATE: SparrowProjectState = {
-  'active-change': { changeId: null },
-  'development-mode': 'tbd',
-  pipeline: null,
-};
-
-const MODES = new Set<DevelopmentMode>(['tbd', 'greenfield', 'brownfield', 'iteration']);
-const STEPS = new Set<PipelineStep>([
-  'requirement',
-  'arch',
-  'design',
-  'model',
-  'plan',
-  'apply',
-  'verify',
-  'archive',
-]);
-const STATUSES = new Set<PipelineStatus>(['ongoing', 'done']);
-
-const IGNORE_DIRS = new Set([
-  'node_modules',
-  '.git',
-  'dist',
-  'build',
-  'coverage',
-  '.sparrow',
-  '.cursor',
-  '.claude',
-  '.codex',
-  '.opencode',
-  '.qoder',
-  '.trae',
-  '.pi',
-  '.kiro',
-  'vendor',
-  '.github',
-  'bin',
-]);
-
-const SOURCE_EXT = new Set([
-  '.ts',
-  '.tsx',
-  '.js',
-  '.jsx',
-  '.mjs',
-  '.cjs',
-  '.py',
-  '.go',
-  '.java',
-  '.kt',
-  '.cs',
-  '.rb',
-  '.rs',
-  '.php',
-  '.swift',
-  '.c',
-  '.cc',
-  '.cpp',
-  '.h',
-  '.hpp',
-  '.m',
-  '.mm',
-  '.scala',
-  '.vue',
-  '.svelte',
-]);
-
-export function stateAbsPath(projectRoot: string): string {
-  return join(projectRoot, STATE_FILE);
-}
-
-export function projectStateExists(projectRoot: string): boolean {
-  return existsSync(stateAbsPath(projectRoot));
-}
-
-export function normalizeProjectState(raw: unknown): SparrowProjectState {
-  const src = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {};
-  const active = src['active-change'] && typeof src['active-change'] === 'object'
-    ? (src['active-change'] as Record<string, unknown>)
-    : {};
-  const changeId = typeof active.changeId === 'string' && active.changeId.length > 0 ? active.changeId : null;
-  const mode = MODES.has(src['development-mode'] as DevelopmentMode)
-    ? (src['development-mode'] as DevelopmentMode)
-    : 'tbd';
-  let pipeline: PipelineState | null = null;
-  if (mode !== 'tbd' && src.pipeline && typeof src.pipeline === 'object') {
-    const p = src.pipeline as Record<string, unknown>;
-    const step = STEPS.has(p['current-step'] as PipelineStep) ? (p['current-step'] as PipelineStep) : 'requirement';
-    const status = STATUSES.has(p.status as PipelineStatus) ? (p.status as PipelineStatus) : 'ongoing';
-    const contexts: Record<string, PipelineContextState> = {};
-    if (p.contexts && typeof p.contexts === 'object') {
-      for (const [slug, value] of Object.entries(p.contexts as Record<string, unknown>)) {
-        if (!value || typeof value !== 'object') continue;
-        const c = value as Record<string, unknown>;
-        if (!STEPS.has(c['current-step'] as PipelineStep) || !STATUSES.has(c.status as PipelineStatus)) continue;
-        contexts[slug] = {
-          'current-step': c['current-step'] as PipelineStep,
-          status: c.status as PipelineStatus,
-        };
-      }
-    }
-    pipeline = { 'current-step': step, status, contexts };
-  }
-  return {
-    'active-change': { changeId },
-    'development-mode': mode,
-    pipeline: mode === 'tbd' ? null : pipeline,
-  };
-}
-
-export function loadProjectState(projectRoot: string): SparrowProjectState {
-  const path = stateAbsPath(projectRoot);
-  if (!existsSync(path)) {
-    return { ...DEFAULT_PROJECT_STATE, 'active-change': { changeId: null }, pipeline: null };
-  }
-  try {
-    return normalizeProjectState(JSON.parse(readFileSync(path, 'utf-8')));
-  } catch {
-    return { ...DEFAULT_PROJECT_STATE };
-  }
-}
-
-export function saveProjectState(projectRoot: string, state: SparrowProjectState): string {
-  const normalized = normalizeProjectState(state);
-  const dest = stateAbsPath(projectRoot);
-  mkdirSync(dirname(dest), { recursive: true });
-  writeFileSync(dest, JSON.stringify(normalized, null, 2) + '\n', 'utf-8');
-  return dest;
-}
-
-function readLegacyChangeId(projectRoot: string): string | null {
-  const legacy = join(projectRoot, LEGACY_ACTIVE_CHANGE_FILE);
-  if (!existsSync(legacy)) return null;
-  try {
-    const data = JSON.parse(readFileSync(legacy, 'utf-8')) as { changeId?: unknown };
-    return typeof data.changeId === 'string' && data.changeId.length > 0 ? data.changeId : null;
-  } catch {
-    return null;
-  }
-}
-
-function deleteLegacyActiveChange(projectRoot: string): void {
-  const legacy = join(projectRoot, LEGACY_ACTIVE_CHANGE_FILE);
-  if (existsSync(legacy)) {
-    rmSync(legacy, { force: true });
-  }
-}
-
-/**
- * Create sparrow-state.json if missing. Never overwrites an existing file.
- * Migrates changeId from active-change.json and deletes that file.
- */
-export function ensureProjectState(projectRoot: string): { created: boolean; path: string; state: SparrowProjectState } {
-  mkdirSync(join(projectRoot, SPARROW_DIR), { recursive: true });
-  const path = stateAbsPath(projectRoot);
-  if (existsSync(path)) {
-    const state = loadProjectState(projectRoot);
-    deleteLegacyActiveChange(projectRoot);
-    return { created: false, path, state };
-  }
-  const migratedId = readLegacyChangeId(projectRoot);
-  const state = normalizeProjectState({
-    ...DEFAULT_PROJECT_STATE,
-    'active-change': { changeId: migratedId },
-  });
-  saveProjectState(projectRoot, state);
-  deleteLegacyActiveChange(projectRoot);
-  return { created: true, path, state };
-}
-
-export function resetProjectState(projectRoot: string): string {
-  return saveProjectState(projectRoot, DEFAULT_PROJECT_STATE);
-}
-
-function emptyDirContents(dir: string): void {
-  mkdirSync(dir, { recursive: true });
-  for (const name of readdirSync(dir)) {
-    rmSync(join(dir, name), { recursive: true, force: true });
-  }
-}
-
-/** Delete all spec files under master / change (keep empty directory skeleton). */
-export function wipeSpecTrees(projectRoot: string): void {
-  emptyDirContents(join(projectRoot, MASTER_ROOT));
-  emptyDirContents(join(projectRoot, CHANGE_CURRENT));
-  emptyDirContents(join(projectRoot, CHANGE_ARCHIVE));
-}
-
-function dirHasFiles(dir: string): boolean {
-  if (!existsSync(dir) || !statSync(dir).isDirectory()) return false;
-  for (const name of readdirSync(dir)) {
-    const full = join(dir, name);
-    if (statSync(full).isDirectory()) {
-      if (dirHasFiles(full)) return true;
-    } else {
-      return true;
-    }
-  }
-  return false;
-}
-
-function hasSourceFiles(projectRoot: string): boolean {
-  const skipAbs = join(projectRoot, SPARROW_DOCS);
-  const walk = (dir: string): boolean => {
-    if (!existsSync(dir) || !statSync(dir).isDirectory()) return false;
-    for (const name of readdirSync(dir)) {
-      if (IGNORE_DIRS.has(name)) continue;
-      const full = join(dir, name);
-      if (full === skipAbs || full.startsWith(skipAbs + '/') || full.startsWith(skipAbs + '\\')) continue;
-      const st = statSync(full);
-      if (st.isDirectory()) {
-        if (walk(full)) return true;
-      } else if (SOURCE_EXT.has(extname(name).toLowerCase())) {
-        return true;
-      }
-    }
-    return false;
-  };
-  return walk(projectRoot);
-}
-
-export interface DetectModeResult {
-  mode: Exclude<DevelopmentMode, 'tbd'>;
-  reasons: string[];
-}
-
-export function detectDevelopmentMode(projectRoot: string): DetectModeResult {
-  const reasons: string[] = [];
-  const currentHas = dirHasFiles(join(projectRoot, CHANGE_CURRENT));
-  const archiveHas = dirHasFiles(join(projectRoot, CHANGE_ARCHIVE));
-  const masterHas = dirHasFiles(join(projectRoot, MASTER_ROOT));
-  if (currentHas) reasons.push('change/current has documents');
-  if (archiveHas) reasons.push('change/archive has documents');
-  if (masterHas) reasons.push('master has documents');
-  if (currentHas || archiveHas || masterHas) {
-    return { mode: 'iteration', reasons };
-  }
-  const source = hasSourceFiles(projectRoot);
-  if (source) {
-    reasons.push('archive and change are empty; source files found');
-    return { mode: 'brownfield', reasons };
-  }
-  reasons.push('archive and change are empty; no source files found');
-  return { mode: 'greenfield', reasons };
-}
+export {
+  applyPruneContexts,
+  checkArchiveReadiness,
+  isSlugArchiveReady,
+  prunePipelineContexts,
+  type ArchiveReadiness,
+  type ArchiveSlugStatus,
+} from './archive-readiness.js';
 
 export function applyChangeId(state: SparrowProjectState, changeId: string | null): SparrowProjectState {
   return normalizeProjectState({
@@ -349,118 +108,4 @@ export function applyArchiveComplete(state: SparrowProjectState): SparrowProject
     'development-mode': mode === 'tbd' ? 'iteration' : mode,
     pipeline: null,
   });
-}
-
-export interface ArchiveSlugStatus {
-  slug: string;
-  'current-step': PipelineStep | null;
-  status: PipelineStatus | null;
-  ready: boolean;
-  reason: string;
-}
-
-export interface ArchiveReadiness {
-  changeId: string | null;
-  pipelineStep: PipelineStep | null;
-  pipelineStatus: PipelineStatus | null;
-  ready: ArchiveSlugStatus[];
-  incomplete: ArchiveSlugStatus[];
-  allComplete: boolean;
-  canPartialArchive: boolean;
-}
-
-function listDesignSlugs(projectRoot: string, changeId: string): string[] {
-  const dir = join(projectRoot, CHANGE_CURRENT, changeId, 'design');
-  if (!existsSync(dir) || !statSync(dir).isDirectory()) return [];
-  return readdirSync(dir)
-    .filter((name) => statSync(join(dir, name)).isDirectory())
-    .sort();
-}
-
-export function isSlugArchiveReady(ctx: PipelineContextState | undefined): boolean {
-  return ctx?.['current-step'] === 'verify' && ctx?.status === 'done';
-}
-
-/**
- * Summarize which BC / interaction-context slugs are ready to archive.
- * Slug set = pipeline.contexts keys ∪ design/* under the change workspace.
- */
-export function checkArchiveReadiness(
-  projectRoot: string,
-  changeId?: string | null
-): ArchiveReadiness {
-  const state = loadProjectState(projectRoot);
-  const id = changeId ?? state['active-change'].changeId;
-  const contexts = state.pipeline?.contexts ?? {};
-  const designSlugs = id ? listDesignSlugs(projectRoot, id) : [];
-  const slugSet = new Set([...Object.keys(contexts), ...designSlugs]);
-
-  const ready: ArchiveSlugStatus[] = [];
-  const incomplete: ArchiveSlugStatus[] = [];
-
-  for (const slug of [...slugSet].sort()) {
-    const ctx = contexts[slug];
-    if (isSlugArchiveReady(ctx)) {
-      ready.push({
-        slug,
-        'current-step': ctx['current-step'],
-        status: ctx.status,
-        ready: true,
-        reason: 'verify done',
-      });
-    } else {
-      const step = ctx?.['current-step'] ?? null;
-      const status = ctx?.status ?? null;
-      let reason = 'missing pipeline context';
-      if (ctx) {
-        reason =
-          step === 'verify' && status !== 'done'
-            ? 'verify not done'
-            : `at ${step}/${status}; need verify/done`;
-      }
-      incomplete.push({
-        slug,
-        'current-step': step,
-        status,
-        ready: false,
-        reason,
-      });
-    }
-  }
-
-  return {
-    changeId: id,
-    pipelineStep: state.pipeline?.['current-step'] ?? null,
-    pipelineStatus: state.pipeline?.status ?? null,
-    ready,
-    incomplete,
-    allComplete: incomplete.length === 0 && ready.length > 0,
-    canPartialArchive: ready.length > 0,
-  };
-}
-
-/** Remove completed slugs from pipeline.contexts after a partial archive; keep changeId. */
-export function prunePipelineContexts(
-  state: SparrowProjectState,
-  slugs: string[]
-): SparrowProjectState {
-  if (!state.pipeline) return normalizeProjectState(state);
-  const remove = new Set(slugs);
-  const contexts = { ...state.pipeline.contexts };
-  for (const slug of remove) {
-    delete contexts[slug];
-  }
-  return normalizeProjectState({
-    ...state,
-    pipeline: {
-      ...state.pipeline,
-      contexts,
-    },
-  });
-}
-
-export function applyPruneContexts(projectRoot: string, slugs: string[]): SparrowProjectState {
-  const next = prunePipelineContexts(loadProjectState(projectRoot), slugs);
-  saveProjectState(projectRoot, next);
-  return next;
 }
