@@ -17,7 +17,7 @@ The middle segment is the **committer’s display name** (who is making the comm
 Examples (replace `<author>` with the actual committer):
 
 - `feat - Bruce Zhang - separate skill content into schema-driven Markdown assets`
-- `fix - Zhang - correct harness version sync on update`
+- `fix - Bruce Zhang - correct harness version sync on update`
 - `docs - Bruce Zhang - document sparrow-ddd schema layout`
 
 ### Types
@@ -33,7 +33,7 @@ Examples (replace `<author>` with the actual committer):
 
 ### Notes
 
-- Write the summary in clear English or 中文; keep it specific and imperative.
+- Write the subject and body in **English only**. Keep the summary specific and imperative. Do not use 中文 in the commit message.
 - Do **not** add tool-specific trailers (e.g. co-authored-by lines for editors) unless the project explicitly requires them.
 - After editing `src/schemas/schema.yaml`, run `npm run sync-schema` before committing if `schema.json` is part of the change.
 
