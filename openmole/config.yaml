@@ -1,6 +1,7 @@
 # OpenMole workspace config (managed by openmole init)
-current_change: null
+current_change: archive-readiness-delta-scan
 installed_ides:
   - pi
+  - cursor
 init_version: "0.9.0"
 init_at: "2026-08-13T13:43:59.938Z"

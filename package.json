@@ -1,7 +1,7 @@
 {
   "name": "sparrow-ddd",
   "version": "0.5.0",
-  "description": "Sparrow \u2014 spec-driven DDD framework for AI coding assistants. Generate structured skills that guide AI agents through domain-driven design, from business requirements to production code.",
+  "description": "Sparrow — spec-driven DDD framework for AI coding assistants. Generate structured skills that guide AI agents through domain-driven design, from business requirements to production code.",
   "type": "module",
   "bin": {
     "sparrow": "./bin/sparrow.js"
@@ -19,7 +19,7 @@
     "clean": "rm -rf dist bin/sparrow.js",
     "prepublishOnly": "npm run build",
     "typecheck": "tsc --noEmit",
-    "sync-schema": "node scripts/sync-schema-json.mjs && node scripts/sync-bundled-content.mjs",
+    "sync-schema": "node scripts/sync-schema-json.mjs && node scripts/generate-sparrow-state-mjs.mjs && node scripts/sync-bundled-content.mjs",
     "test": "node --import ./scripts/register-assets.mjs --import tsx --test src/core/spec-promote.test.ts src/core/spec-layout-init.test.ts src/core/exec-errors.test.ts src/core/package-version.test.ts src/core/version-compare.test.ts src/core/workflow-schema/validate.test.ts src/core/skill-generation.test.ts src/core/project-state.test.ts"
   },
   "keywords": [
