@@ -1,5 +1,5 @@
 # OpenMole workspace config (managed by openmole init)
-current_change: archive-readiness-delta-scan
+current_change: null
 installed_ides:
   - pi
   - cursor
