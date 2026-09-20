@@ -7,6 +7,8 @@ import {
   applyArchiveComplete,
   applyDevelopmentMode,
   applyPipelineStep,
+  applyPruneContexts,
+  checkArchiveReadiness,
   detectDevelopmentMode,
   ensureProjectState,
   loadProjectState,
@@ -151,4 +153,55 @@ test('wipeSpecTrees empties spec dirs but keeps skeleton', () => {
   assert.deepEqual(JSON.parse(readFileSync(join(root, STATE_FILE), 'utf-8'))['development-mode'], 'tbd');
   assert.ok(existsSync(join(root, MASTER_ROOT)));
   assert.equal(existsSync(join(root, MASTER_ROOT, 'requirement', 'prd.md')), false);
+});
+
+test('checkArchiveReadiness: verify/done is ready; design slug without state is incomplete', () => {
+  const root = tmpRoot('sparrow-archive-ready-');
+  mkdirSync(join(root, '.sparrow'), { recursive: true });
+  mkdirSync(join(root, CHANGE_CURRENT, 'c1', 'design', 'orders'), { recursive: true });
+  mkdirSync(join(root, CHANGE_CURRENT, 'c1', 'design', 'payments'), { recursive: true });
+  saveProjectState(root, {
+    'active-change': { changeId: 'c1' },
+    'development-mode': 'iteration',
+    pipeline: {
+      'current-step': 'verify',
+      status: 'ongoing',
+      contexts: {
+        orders: { 'current-step': 'verify', status: 'done' },
+        catalog: { 'current-step': 'apply', status: 'ongoing' },
+      },
+    },
+  });
+
+  const r = checkArchiveReadiness(root);
+  assert.equal(r.changeId, 'c1');
+  assert.equal(r.allComplete, false);
+  assert.equal(r.canPartialArchive, true);
+  assert.deepEqual(
+    r.ready.map((x) => x.slug),
+    ['orders']
+  );
+  const incompleteSlugs = r.incomplete.map((x) => x.slug).sort();
+  assert.deepEqual(incompleteSlugs, ['catalog', 'payments']);
+});
+
+test('applyPruneContexts removes slugs but keeps changeId', () => {
+  const root = tmpRoot('sparrow-prune-');
+  mkdirSync(join(root, '.sparrow'), { recursive: true });
+  saveProjectState(root, {
+    'active-change': { changeId: 'c1' },
+    'development-mode': 'iteration',
+    pipeline: {
+      'current-step': 'verify',
+      status: 'ongoing',
+      contexts: {
+        orders: { 'current-step': 'verify', status: 'done' },
+        payments: { 'current-step': 'plan', status: 'ongoing' },
+      },
+    },
+  });
+  const next = applyPruneContexts(root, ['orders']);
+  assert.equal(next['active-change'].changeId, 'c1');
+  assert.equal(next.pipeline?.contexts.orders, undefined);
+  assert.ok(next.pipeline?.contexts.payments);
 });

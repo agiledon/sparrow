@@ -8,6 +8,8 @@
  *   node scripts/sparrow-state.mjs set-change <id|null>
  *   node scripts/sparrow-state.mjs set-step <step> <ongoing|done>
  *   node scripts/sparrow-state.mjs set-context <slug> <step> <ongoing|done>
+ *   node scripts/sparrow-state.mjs check-archive [change-id]
+ *   node scripts/sparrow-state.mjs prune-contexts <slug> [slug...]
  *   node scripts/sparrow-state.mjs archive-done
  */
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
@@ -137,6 +139,66 @@ function detectMode() {
   return { mode: 'greenfield', reasons };
 }
 
+function listDesignSlugs(changeId) {
+  const dir = join(CHANGE_CURRENT, changeId, 'design');
+  if (!existsSync(dir) || !statSync(dir).isDirectory()) return [];
+  return readdirSync(dir)
+    .filter((name) => statSync(join(dir, name)).isDirectory())
+    .sort();
+}
+
+function isSlugReady(ctx) {
+  return ctx && ctx['current-step'] === 'verify' && ctx.status === 'done';
+}
+
+function checkArchive(changeIdArg) {
+  const state = load();
+  const changeId = changeIdArg || state['active-change'].changeId;
+  const contexts = (state.pipeline && state.pipeline.contexts) || {};
+  const designSlugs = changeId ? listDesignSlugs(changeId) : [];
+  const slugSet = new Set([...Object.keys(contexts), ...designSlugs]);
+  const ready = [];
+  const incomplete = [];
+  for (const slug of [...slugSet].sort()) {
+    const ctx = contexts[slug];
+    if (isSlugReady(ctx)) {
+      ready.push({
+        slug,
+        'current-step': ctx['current-step'],
+        status: ctx.status,
+        ready: true,
+        reason: 'verify done',
+      });
+    } else {
+      const step = ctx ? ctx['current-step'] : null;
+      const status = ctx ? ctx.status : null;
+      let reason = 'missing pipeline context';
+      if (ctx) {
+        reason =
+          step === 'verify' && status !== 'done'
+            ? 'verify not done'
+            : `at ${step}/${status}; need verify/done`;
+      }
+      incomplete.push({
+        slug,
+        'current-step': step,
+        status,
+        ready: false,
+        reason,
+      });
+    }
+  }
+  return {
+    changeId,
+    pipelineStep: state.pipeline ? state.pipeline['current-step'] : null,
+    pipelineStatus: state.pipeline ? state.pipeline.status : null,
+    ready,
+    incomplete,
+    allComplete: incomplete.length === 0 && ready.length > 0,
+    canPartialArchive: ready.length > 0,
+  };
+}
+
 function failUsage() {
   console.error('Usage:');
   console.error('  node scripts/sparrow-state.mjs show');
@@ -145,6 +207,8 @@ function failUsage() {
   console.error('  node scripts/sparrow-state.mjs set-change <id|null>');
   console.error('  node scripts/sparrow-state.mjs set-step <step> <ongoing|done>');
   console.error('  node scripts/sparrow-state.mjs set-context <slug> <step> <ongoing|done>');
+  console.error('  node scripts/sparrow-state.mjs check-archive [change-id]');
+  console.error('  node scripts/sparrow-state.mjs prune-contexts <slug> [slug...]');
   console.error('  node scripts/sparrow-state.mjs archive-done');
   process.exit(2);
 }
@@ -215,6 +279,27 @@ if (cmd === 'set-context') {
   pipeline.status = status;
   pipeline.contexts = { ...(pipeline.contexts || {}), [slug]: { 'current-step': step, status } };
   state.pipeline = pipeline;
+  process.stdout.write(`${JSON.stringify(save(state), null, 2)}\n`);
+  process.exit(0);
+}
+
+if (cmd === 'check-archive') {
+  process.stdout.write(`${JSON.stringify(checkArchive(args[0]), null, 2)}\n`);
+  process.exit(0);
+}
+
+if (cmd === 'prune-contexts') {
+  if (args.length === 0) failUsage();
+  const state = load();
+  if (!state.pipeline) {
+    process.stdout.write(`${JSON.stringify(save(state), null, 2)}\n`);
+    process.exit(0);
+  }
+  const contexts = { ...(state.pipeline.contexts || {}) };
+  for (const slug of args) {
+    delete contexts[slug];
+  }
+  state.pipeline = { ...state.pipeline, contexts };
   process.stdout.write(`${JSON.stringify(save(state), null, 2)}\n`);
   process.exit(0);
 }

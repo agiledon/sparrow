@@ -293,10 +293,13 @@ Runs after apply for the selected slug(s).
 
 ### Step 8: sparrow-archive (Product-level)
 
-**Input**: Completed work under `docs/sparrow/change/current/{change-id}/` for all slugs (backend BCs + Interaction Context)  
-**Output**: Move to `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/`, **promote** delivery specs into `docs/sparrow/master/` (including `requirement/` and `design/` revision-history files). Source code under `backend/`, `frontend/`, and `edge/bff/` is not versioned by archive.
+**Input**: Work under `docs/sparrow/change/current/{change-id}/`; readiness from `.sparrow/sparrow-state.json` (`check-archive`: a slug is complete iff `current-step=verify` and `status=done`)  
+**Output**:
+- Full archive (all slugs complete): move whole change → `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/`, then promote, then `archive-done`
+- Partial archive (user insists while some slugs incomplete): archive only shared specs + completed `design/{slug}/`; leave incomplete slugs in `current`; promote with `slugAllowlist`; then `prune-contexts` (keep changeId)
+- **Promote is required** and is **append-only delta** into `docs/sparrow/master/`: ADDED creates files; MODIFIED appends a marked block (never overwrite); REMOVED is history-only (never delete). Revision histories group deltas under `shared` vs `slug: {slug}`. Source code under `backend/`, `frontend/`, and `edge/bff/` is not versioned by archive.
 
-Runs once per change after all slugs verify (no P0/P1 blockers). First greenfield delivery also fills `master/` via archive.
+Requires user confirmation after the readiness summary. First greenfield delivery also fills `master/` via archive.
 
 ## Output Structure
 
@@ -325,10 +328,10 @@ design/{slug}/api.md | tech.md | model.md
 
 **Change workspace only**: `design/{slug}/plan.md`, `code_review.md`, `verify_report.md`, `proposal.md`.
 
-**Master revision history** (body merged into spec files; history files hold summaries):
+**Master revision history** (promote is append-only; history entries list ADDED / MODIFIED / REMOVED grouped by `shared` or `slug`):
 
-- `master/requirement/revision-history.md` — requirement domain (each entry has **synced-at**)
-- `master/design/revision-history.md` — architecture + design domain
+- `master/requirement/revision-history.md` — requirement / shared product-level (each entry has **synced-at**)
+- `master/design/revision-history.md` — architecture + per-slug `design/{slug}/` deltas
 - `master/architecture/bc-revision-history.md` — BC topology (user-confirmed)
 
 **Example project tree**:

@@ -294,10 +294,13 @@ sparrow update
 
 ### 步骤 8：sparrow-archive（产品级）
 
-**输入**：`docs/sparrow/change/current/{change-id}/` 下全部 slug（后端 BC + 交互上下文）已完成的变更  
-**输出**：移至 `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/`，并 **promote** 交付规格至 `docs/sparrow/master/`（含 requirement/design 两份 revision-history）。`backend/`、`frontend/`、`edge/bff/` 源代码不由 archive 做版本管理。
+**输入**：`docs/sparrow/change/current/{change-id}/` 下的变更；完成度来自 `.sparrow/sparrow-state.json`（`check-archive`：slug 完成当且仅当 `current-step=verify` 且 `status=done`）  
+**输出**：
+- **完整归档**（全部 slug 完成）：整目录移至 `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/`，再 promote，再 `archive-done`
+- **部分归档**（有未完成但用户坚持）：只归档共享规格 + 已完成的 `design/{slug}/`；未完成留在 `current`；promote 时传 `slugAllowlist`；再 `prune-contexts`（保留 changeId）
+- **Promote 必做**，且为对 `docs/sparrow/master/` 的 **append-only delta**：ADDED 新建；MODIFIED 文末追加标记块（不覆盖）；REMOVED 仅记历史（不删文件）。revision-history 按 `shared` / `slug: {slug}` 分组。`backend/`、`frontend/`、`edge/bff/` 源代码不由 archive 做版本管理。
 
-每个 change 在全部 slug verify 通过（无 P0/P1 阻塞项）后运行一次。绿地首次交付完成后亦通过 archive 填充 master。
+须在 readiness 汇总后经用户确认。绿地首次交付完成后亦通过 archive 填充 master。
 
 ## 输出结构
 
@@ -326,10 +329,10 @@ design/{slug}/api.md | tech.md | model.md
 
 **仅 change 工作区额外包含**：`design/{slug}/plan.md`、`code_review.md`、`verify_report.md`、`proposal.md`。
 
-**master 修订历史**（正文合并进各规格文件，历史单独存放）：
+**master 修订历史**（promote 为 append-only；历史条目按 `shared` / `slug` 列出 ADDED / MODIFIED / REMOVED）：
 
-- `master/requirement/revision-history.md` — 需求域 promote 摘要（每条含 **synced-at**）
-- `master/design/revision-history.md` — 架构 + design 域 promote 摘要
+- `master/requirement/revision-history.md` — 需求 / 共享产品级（每条含 **synced-at**）
+- `master/design/revision-history.md` — 架构 + 各 `design/{slug}/` delta
 - `master/architecture/bc-revision-history.md` — 限界上下文拓扑变更（须用户确认）
 
 **完整项目树示例**（一次活动变更 + 已 promote 的 master）：
