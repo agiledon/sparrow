@@ -11,8 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Archive readiness gate**: `sparrow-state.mjs check-archive` / `prune-contexts` gate archive on per-slug `verify`+`done`. Full vs partial archive (incomplete slugs stay in `current`). Promote is mandatory and **append-only delta** (ADDED / MODIFIED append / REMOVED history-only; never delete master files); revision-history groups by `shared` and `slug`.
-  - **归档门控**：按 slug 的 `verify`+`done` 判定；支持完整/部分归档；promote 为只追加的 delta 同步，永不删除 master 既有文件。
+- **Archive readiness gate**: `sparrow-state.mjs check-archive` / `prune-contexts` gate archive on per-slug `verify`+`done`. Full vs partial archive. Promote via generated `sparrow-promote.mjs` (**append-only delta**). Canonical narrative: skill `references/archive-gate.md`. State script is generated from `src/core/project-state*` (single source).
+  - **归档门控**：按 slug 的 `verify`+`done`；完整/部分归档；`sparrow-promote.mjs` 只追加 delta；契约见 `archive-gate.md`。
 - **Core workflow levels**: `archive` is product-level (once per change, after all slugs). Team-level steps are design → verify (per slug). Product-level bookends are requirement → arch and archive.
   - **核心工作流层级**：`archive` 为产品级（每个 change 在全部 slug 完成后运行一次）。团队级为 design → verify（按 slug）。产品级两端为 requirement → arch 与 archive。
 - **Project state**: `.sparrow/sparrow-state.json` holds `active-change`, `development-mode` (`tbd` until `/sparrow-requirement` detects it), and `pipeline` progress. Replaces `active-change.json`. If mode is `tbd`, `pipeline` is always null. Brownfield is detected then aborted (not implemented). Re-run `sparrow init` / `sparrow update` to refresh skills; `sparrow init --force` wipes specs after confirmation.

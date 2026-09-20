@@ -293,13 +293,10 @@ Runs after apply for the selected slug(s).
 
 ### Step 8: sparrow-archive (Product-level)
 
-**Input**: Work under `docs/sparrow/change/current/{change-id}/`; readiness from `.sparrow/sparrow-state.json` (`check-archive`: a slug is complete iff `current-step=verify` and `status=done`)  
-**Output**:
-- Full archive (all slugs complete): move whole change → `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/`, then promote, then `archive-done`
-- Partial archive (user insists while some slugs incomplete): archive only shared specs + completed `design/{slug}/`; leave incomplete slugs in `current`; promote with `slugAllowlist`; then `prune-contexts` (keep changeId)
-- **Promote is required** and is **append-only delta** into `docs/sparrow/master/`: ADDED creates files; MODIFIED appends a marked block (never overwrite); REMOVED is history-only (never delete). Revision histories group deltas under `shared` vs `slug: {slug}`. Source code under `backend/`, `frontend/`, and `edge/bff/` is not versioned by archive.
+**Input / rules**: See generated skill `references/archive-gate.md` (slug complete iff `verify`+`done`; full vs partial archive; required `scripts/sparrow-promote.mjs` append-only delta).  
+**Output**: Archive under `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/`, promote into `docs/sparrow/master/`, then `archive-done` or `prune-contexts`. Source code is not versioned by archive.
 
-Requires user confirmation after the readiness summary. First greenfield delivery also fills `master/` via archive.
+Requires user confirmation after `check-archive`. First greenfield delivery also fills `master/` via archive.
 
 ## Output Structure
 

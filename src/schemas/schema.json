@@ -422,7 +422,8 @@
         "ubiquitous-language.md",
         "version-metadata.md",
         "project-md-update.md",
-        "spec-layout-guide.md"
+        "spec-layout-guide.md",
+        "archive-gate.md"
       ],
       "outputs": [
         {

@@ -3,6 +3,7 @@
 import specLayoutGuideMd from './templates/shared/spec-layout-guide.md';
 export const specLayoutGuide = specLayoutGuideMd;
 
+import _shared_archive_gate_md from './templates/shared/archive-gate.md';
 import _shared_assets_project_md from './templates/shared/assets/project.md';
 import _shared_grill_me_md from './templates/shared/grill-me.md';
 import _shared_output_existence_check_md from './templates/shared/output-existence-check.md';
@@ -15,6 +16,7 @@ import _shared_ubiquitous_language_md from './templates/shared/ubiquitous-langua
 import _shared_version_metadata_md from './templates/shared/version-metadata.md';
 
 export const sharedReferences: Record<string, string> = {
+  'archive-gate.md': _shared_archive_gate_md,
   'grill-me.md': _shared_grill_me_md,
   'output-existence-check.md': _shared_output_existence_check_md,
   'project-md-update.md': _shared_project_md_update_md,

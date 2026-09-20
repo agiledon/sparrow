@@ -294,13 +294,10 @@ sparrow update
 
 ### 步骤 8：sparrow-archive（产品级）
 
-**输入**：`docs/sparrow/change/current/{change-id}/` 下的变更；完成度来自 `.sparrow/sparrow-state.json`（`check-archive`：slug 完成当且仅当 `current-step=verify` 且 `status=done`）  
-**输出**：
-- **完整归档**（全部 slug 完成）：整目录移至 `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/`，再 promote，再 `archive-done`
-- **部分归档**（有未完成但用户坚持）：只归档共享规格 + 已完成的 `design/{slug}/`；未完成留在 `current`；promote 时传 `slugAllowlist`；再 `prune-contexts`（保留 changeId）
-- **Promote 必做**，且为对 `docs/sparrow/master/` 的 **append-only delta**：ADDED 新建；MODIFIED 文末追加标记块（不覆盖）；REMOVED 仅记历史（不删文件）。revision-history 按 `shared` / `slug: {slug}` 分组。`backend/`、`frontend/`、`edge/bff/` 源代码不由 archive 做版本管理。
+**输入 / 规则**：见生成 skill 的 `references/archive-gate.md`（slug 完成 = `verify`+`done`；完整/部分归档；必跑 `scripts/sparrow-promote.mjs` append-only delta）。  
+**输出**：归档至 `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/`，promote 至 `docs/sparrow/master/`，再 `archive-done` 或 `prune-contexts`。源代码不由 archive 版本管理。
 
-须在 readiness 汇总后经用户确认。绿地首次交付完成后亦通过 archive 填充 master。
+须在 `check-archive` 后经用户确认。绿地首次交付亦通过 archive 填充 master。
 
 ## 输出结构
 

@@ -67,7 +67,7 @@
 
 ### B-T03：聚合归档语义，缓解 Shotgun Surgery（消除 DESIGN-DF-001）
 
-- [ ] **B-T03.** 将完成判定/部分归档/delta 语义收拢到可引用契约
+- [x] **B-T03.** 将完成判定/部分归档/delta 语义收拢到可引用契约
   - **依赖**：B-T01；建议在 ARCH B-T04 前完成契约，供文档引用。
   - **级别**：DESIGN
   - **坏味道**：`badsmells.md` §2 / `DESIGN-DF-001`。

@@ -306,6 +306,7 @@ steps:
       - version-metadata.md
       - project-md-update.md
       - spec-layout-guide.md
+      - archive-gate.md
     outputs:
       - asset: project.md
         dest: "docs/sparrow/master/project.md"
