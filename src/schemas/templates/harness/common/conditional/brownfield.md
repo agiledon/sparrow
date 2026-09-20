@@ -1,6 +1,6 @@
 # 棕地项目约束（brownfield）
 
-> 当活动变更 \`change/current/{activeChangeId}/proposal.md\` 的 \`development-mode\` 为 \`brownfield\` 时加载（见 \`globalHarness.conditional\`）；与标准 harness 一并适用；冲突时以本文件对 as-is 探索的放宽规则为准。
+> 当 `.sparrow/sparrow-state.json` 的 `development-mode` 为 `brownfield` 时加载（见 `globalHarness.conditional`）；与标准 harness 一并适用；冲突时以本文件对 as-is 探索的放宽规则为准。当前核心流程**暂不执行**棕地路径。
 
 ## 必须（MUST）
 

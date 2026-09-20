@@ -4,6 +4,7 @@ import { getBundledPlugins } from '../plugins/index.js';
 import type { Plugin } from '../plugins/types.js';
 import { getGlobalConfigDir } from './harness-init.js';
 import { getPluginStatus, markPluginInstalled } from './global-config.js';
+import { readProjectConfig, writeProjectConfig } from './project-config.js';
 
 const PLUGINS_SUBDIR = 'plugins';
 
@@ -26,17 +27,11 @@ function readInstalledVersion(pluginDir: string): string | null {
 }
 
 function readSparrowConfig(projectRoot: string): Record<string, unknown> {
-  try {
-    return JSON.parse(readFileSync(join(projectRoot, '.sparrow', 'sparrow.json'), 'utf-8'));
-  } catch {
-    return {};
-  }
+  return readProjectConfig(projectRoot);
 }
 
 function writeSparrowConfig(projectRoot: string, config: Record<string, unknown>): void {
-  const dir = join(projectRoot, '.sparrow');
-  mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, 'sparrow.json'), JSON.stringify(config, null, 2) + '\n', 'utf-8');
+  writeProjectConfig(projectRoot, config);
 }
 
 function getProjectPlugins(projectRoot: string): SpWriterPlugin[] {

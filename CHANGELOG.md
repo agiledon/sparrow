@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Project state**: `.sparrow/sparrow-state.json` holds `active-change`, `development-mode` (`tbd` until `/sparrow-requirement` detects it), and `pipeline` progress. Replaces `active-change.json`. If mode is `tbd`, `pipeline` is always null. Brownfield is detected then aborted (not implemented). Re-run `sparrow init` / `sparrow update` to refresh skills; `sparrow init --force` wipes specs after confirmation.
+  - **项目状态**：`.sparrow/sparrow-state.json` 记录 change-id、开发模式与阶段进度。`tbd` 时 pipeline 为空。棕地探测后暂不进入核心流程。`sparrow init --force` 会在确认后清空规格。
+- **Config rename**: `.sparrow/sparrow.json` → `.sparrow/sparrow-config.json` (legacy file is migrated then deleted).
+  - **配置更名**：`sparrow.json` 更名为 `sparrow-config.json`。
 - **Harness layout**: Cross-stage constraint directory renamed from `harness/global/` to `harness/common/` to avoid confusion with global-level vs project-level harness. Re-run `sparrow init` / `sparrow update` to refresh managed templates.
   - 跨阶段约束目录由 `global/` 更名为 `common/`，避免与「全局级 / 项目级」harness 混淆。重新执行 `sparrow init` / `sparrow update` 以刷新受管模板。
 - **Schema layout**: Flattened `src/schemas/sparrow-ddd/` into `src/schemas/` (schema, templates, workflow-blocks).

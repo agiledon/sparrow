@@ -10,7 +10,7 @@ globalHarness:
     - common/always/interactive-interaction.md
   conditional:
     - path: common/conditional/brownfield.md
-      when: change/current/{activeChangeId}/proposal.md 的 development-mode 为 brownfield
+      when: .sparrow/sparrow-state.json 的 development-mode 为 brownfield
 steps:
   - id: requirement
     skillId: sparrow-requirement
@@ -59,6 +59,7 @@ steps:
         optional: true
     scripts:
       - ensure-change-workspace.mjs
+      - sparrow-state.mjs
 
   - id: arch
     skillId: sparrow-arch
@@ -104,6 +105,8 @@ steps:
       - asset: spec-interaction.md
         dest: "design/{ui-slug}/spec.md"
         optional: true
+    scripts:
+      - sparrow-state.mjs
 
   - id: design
     skillId: sparrow-design
@@ -146,6 +149,8 @@ steps:
         optional: true
       - asset: architecture-api.md
         dest: "architecture/api.md"
+    scripts:
+      - sparrow-state.mjs
   - id: model
     skillId: sparrow-model
     name: Sparrow Model
@@ -182,6 +187,8 @@ steps:
       - asset: model-interaction.md
         dest: "design/{slug}/model.md"
         optional: true
+    scripts:
+      - sparrow-state.mjs
   - id: plan
     skillId: sparrow-plan
     name: Sparrow Plan
@@ -215,6 +222,8 @@ steps:
       - asset: plan-interaction.md
         dest: "design/{slug}/plan.md"
         optional: true
+    scripts:
+      - sparrow-state.mjs
   - id: apply
     skillId: sparrow-apply
     name: Sparrow Apply
@@ -246,6 +255,8 @@ steps:
         dest: "project.md"
       - asset: code_review.md
         dest: "design/{slug}/code_review.md"
+    scripts:
+      - sparrow-state.mjs
   - id: verify
     skillId: sparrow-verify
     name: Sparrow Verify
@@ -274,6 +285,8 @@ steps:
         dest: "project.md"
       - asset: verify_report.md
         dest: "design/{slug}/verify_report.md"
+    scripts:
+      - sparrow-state.mjs
   - id: archive
     skillId: sparrow-archive
     name: Sparrow Archive
@@ -310,6 +323,8 @@ steps:
       - asset: bc-revision-history-entry.md
         dest: "docs/sparrow/master/architecture/bc-revision-history.md"
         optional: true
+    scripts:
+      - sparrow-state.mjs
   - id: supporting-harness
     skillId: sparrow-supporting-harness
     name: Sparrow Harness

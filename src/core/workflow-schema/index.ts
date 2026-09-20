@@ -6,6 +6,7 @@ import {
   workflowBlocks,
   sharedReferences,
   sharedAssets,
+  sharedScripts,
   skillExtras,
 } from '../../schemas/bundled-content.js';
 import { HARNESS_TOKEN } from '../skill-tokens.js';
@@ -68,6 +69,10 @@ export function lookupSharedReference(name: string): string | undefined {
 
 export function lookupSharedAsset(name: string): string | undefined {
   return sharedAssets[name];
+}
+
+export function lookupSharedScript(name: string): string | undefined {
+  return sharedScripts[name];
 }
 
 export function lookupSkillExtra(skillId: string, relPath: string): string | undefined {

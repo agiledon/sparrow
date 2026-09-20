@@ -71,7 +71,7 @@ flowchart LR
 - **团队级**步骤（3–8）**按 slug 运行**——每个限界上下文与交互上下文各跑一遍。所有上下文共用同一套命令且完全正交：无相互依赖，可按任意顺序或并行执行。
 - 任一步骤完成后可暂停审阅、对话 refine 并重新运行——下一步始终读取最新版本。
 
-**规格布局**：活动变更在 `docs/sparrow/change/current/{change-id}/` 读写；已发布基线在 `docs/sparrow/master/`（首次 **archive promote** 后才有内容）。项目类型写在 `proposal.md` 的 `development-mode`：**绿地**（`greenfield`）、**版本迭代**（`iteration`）、**棕地**（`brownfield`）。详见 [输出结构](#输出结构) 与 `docs/prd/sparrow-development-modes.md`。
+**规格布局**：活动变更在 `docs/sparrow/change/current/{change-id}/` 读写；已发布基线在 `docs/sparrow/master/`（首次 **archive promote** 后才有内容）。`development-mode`（`tbd` | `greenfield` | `iteration` | `brownfield`）写在 `.sparrow/sparrow-state.json`。棕地核心流程暂不支持。详见 [输出结构](#输出结构)。
 
 各步骤的输入、输出与细节见下文 [核心工作流参考](#核心工作流参考)。
 
@@ -195,8 +195,8 @@ your-project/
 │   ├── harness/             # 项目级约束占位
 │   └── README.md
 └── .sparrow/
-    ├── sparrow.json         # 项目配置
-    └── active-change.json   # 当前 change-id（确认前为 null）
+    ├── sparrow-config.json  # 项目工具 / 版本 / plugins
+    └── sparrow-state.json   # change-id、开发模式、阶段进度
 ```
 
 `sparrow init` 还会将**全局约束资产**（含 `common/` 目录，跨阶段纪律）写入全局配置目录（macOS/Linux 为 `~/.config/sparrow/harness`，Windows 为 `%APPDATA%\sparrow\harness`）。
@@ -300,7 +300,7 @@ sparrow update
 
 ## 输出结构
 
-规格采用 **master（基线）** 与 **change（变更）** 分离布局，类似「主分支 + 变更分支」。`sparrow init` 会创建目录骨架；活动变更 ID 记录在 `.sparrow/active-change.json`。
+规格采用 **master（基线）** 与 **change（变更）** 分离布局，类似「主分支 + 变更分支」。`sparrow init` 会创建目录骨架；流水线状态在 `.sparrow/sparrow-state.json`。再次 `sparrow init` 刷新 skills 时不改 state。`sparrow init --force` 会在确认后清空 `master/` 与 `change/` 下全部规格。
 
 | 区域 | 路径 | 说明 |
 |------|------|------|
@@ -336,8 +336,8 @@ design/{slug}/api.md | tech.md | model.md
 ```
 your-project/
 ├── .sparrow/
-│   ├── sparrow.json
-│   └── active-change.json           # { "changeId": "first-ddd" }
+│   ├── sparrow-config.json
+│   └── sparrow-state.json
 ├── docs/sparrow/
 │   ├── README.md                    # 布局说明
 │   ├── master/
@@ -434,9 +434,9 @@ harness/
 
 ## 配置
 
-### sparrow.json
+### sparrow-config.json
 
-由 `sparrow init` 在 `.sparrow/sparrow.json` 生成：
+由 `sparrow init` 在 `.sparrow/sparrow-config.json` 生成（会迁移旧的 `sparrow.json`）：
 
 ```json
 {

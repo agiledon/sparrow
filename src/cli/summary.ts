@@ -46,7 +46,8 @@ export function formatInitSummary(result: InitResult): string {
   lines.push('');
   lines.push(`📦 Project: ${result.projectName}`);
   lines.push(`📋 Tools configured: ${result.tools.join(', ')}`);
-  lines.push(`📄 Config: .sparrow/sparrow.json`);
+  lines.push(`📄 Config: .sparrow/sparrow-config.json`);
+  lines.push(`🧭 State: .sparrow/sparrow-state.json${result.stateCreated ? ' (created)' : result.specsWiped ? ' (reset)' : ''}`);
   lines.push(`📑 Spec layout: ${result.projectMdPath}`);
   lines.push(`📁 Backend dir: backend/`);
   lines.push('');

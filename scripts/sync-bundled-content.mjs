@@ -42,12 +42,15 @@ emit('');
 const sharedDir = join(templates, 'shared');
 const sharedRefs = [];
 const sharedAssets = [];
+const sharedScripts = [];
 for (const file of walk(sharedDir)) {
   const relFromShared = posixRel(sharedDir, file);
   const id = importId(`shared/${relFromShared}`);
   emit(`import ${id} from './templates/shared/${relFromShared}';`);
   if (relFromShared.startsWith('assets/')) {
     sharedAssets.push([relFromShared.slice('assets/'.length), id]);
+  } else if (relFromShared.startsWith('scripts/')) {
+    sharedScripts.push([relFromShared.slice('scripts/'.length), id]);
   } else {
     sharedRefs.push([relFromShared, id]);
   }
@@ -59,6 +62,10 @@ emit('};');
 emit('');
 emit('export const sharedAssets: Record<string, string> = {');
 for (const [name, id] of sharedAssets) emit(`  '${name}': ${id},`);
+emit('};');
+emit('');
+emit('export const sharedScripts: Record<string, string> = {');
+for (const [name, id] of sharedScripts) emit(`  '${name}': ${id},`);
 emit('};');
 emit('');
 

@@ -15,4 +15,4 @@
 
 ## development-mode
 
-`greenfield` | `iteration` | `brownfield`
+从 `.sparrow/sparrow-state.json` 抄写：`greenfield` | `iteration` | `brownfield`

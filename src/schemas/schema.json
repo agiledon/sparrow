@@ -11,7 +11,7 @@
     "conditional": [
       {
         "path": "common/conditional/brownfield.md",
-        "when": "change/current/{activeChangeId}/proposal.md 的 development-mode 为 brownfield"
+        "when": ".sparrow/sparrow-state.json 的 development-mode 为 brownfield"
       }
     ]
   },
@@ -83,7 +83,8 @@
         }
       ],
       "scripts": [
-        "ensure-change-workspace.mjs"
+        "ensure-change-workspace.mjs",
+        "sparrow-state.mjs"
       ]
     },
     {
@@ -147,6 +148,9 @@
           "dest": "design/{ui-slug}/spec.md",
           "optional": true
         }
+      ],
+      "scripts": [
+        "sparrow-state.mjs"
       ]
     },
     {
@@ -207,6 +211,9 @@
           "asset": "architecture-api.md",
           "dest": "architecture/api.md"
         }
+      ],
+      "scripts": [
+        "sparrow-state.mjs"
       ]
     },
     {
@@ -256,6 +263,9 @@
           "dest": "design/{slug}/model.md",
           "optional": true
         }
+      ],
+      "scripts": [
+        "sparrow-state.mjs"
       ]
     },
     {
@@ -301,6 +311,9 @@
           "dest": "design/{slug}/plan.md",
           "optional": true
         }
+      ],
+      "scripts": [
+        "sparrow-state.mjs"
       ]
     },
     {
@@ -343,6 +356,9 @@
           "asset": "code_review.md",
           "dest": "design/{slug}/code_review.md"
         }
+      ],
+      "scripts": [
+        "sparrow-state.mjs"
       ]
     },
     {
@@ -381,6 +397,9 @@
           "asset": "verify_report.md",
           "dest": "design/{slug}/verify_report.md"
         }
+      ],
+      "scripts": [
+        "sparrow-state.mjs"
       ]
     },
     {
@@ -436,6 +455,9 @@
           "dest": "docs/sparrow/master/architecture/bc-revision-history.md",
           "optional": true
         }
+      ],
+      "scripts": [
+        "sparrow-state.mjs"
       ]
     },
     {

@@ -5,13 +5,14 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { initializeSpecLayout } from './spec-layout-init.js';
 import {
-  ACTIVE_CHANGE_FILE,
   MASTER_ROOT,
   CHANGE_ROOT,
   CHANGE_CURRENT,
   CHANGE_ARCHIVE,
   SPARROW_DOCS,
+  STATE_FILE,
 } from './spec-paths.js';
+import { ensureProjectState } from './project-state.js';
 
 function listImmediate(dir: string): string[] {
   if (!existsSync(dir)) return [];
@@ -30,6 +31,7 @@ test('init spec layout creates empty master, change/current, and change/archive'
   assert.deepEqual(listImmediate(join(root, CHANGE_ROOT)), ['archive', 'current']);
   assert.ok(isEmptyDir(join(root, CHANGE_CURRENT)));
   assert.ok(isEmptyDir(join(root, CHANGE_ARCHIVE)));
-  assert.ok(existsSync(join(root, ACTIVE_CHANGE_FILE)));
+  ensureProjectState(root);
+  assert.ok(existsSync(join(root, STATE_FILE)));
   assert.ok(existsSync(join(root, SPARROW_DOCS, 'README.md')));
 });

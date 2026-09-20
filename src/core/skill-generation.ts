@@ -6,8 +6,10 @@
  * formatted files via the adapter registry.
  */
 
-import { mkdirSync, readFileSync, writeFileSync, existsSync, rmSync } from 'node:fs';
+import { mkdirSync, writeFileSync, existsSync, rmSync } from 'node:fs';
 import { join, dirname } from 'node:path';
+import { SPARROW_DIR } from './spec-paths.js';
+import { readProjectConfig, writeProjectConfig } from './project-config.js';
 import type { SkillDefinition, SkillRegistry } from './skills.js';
 import { getAdapter } from './adapters/index.js';
 import type { CommandContent, ToolCommandAdapter } from './adapters/types.js';
@@ -16,6 +18,7 @@ import {
   getWorkflowStepBySkillId,
   lookupSharedAsset,
   lookupSharedReference,
+  lookupSharedScript,
   lookupSkillExtra,
   uniqueAssetNames,
 } from './workflow-schema/index.js';
@@ -189,7 +192,7 @@ function writeSkillExtras(projectRoot: string, skillDirRel: string, skillId: str
   }
 
   for (const name of step.scripts ?? []) {
-    const body = lookupSkillExtra(skillId, `scripts/${name}`);
+    const body = lookupSkillExtra(skillId, `scripts/${name}`) ?? lookupSharedScript(name);
     if (body === undefined) {
       throw new Error(`Missing scripts/${name} for skill ${skillId}`);
     }
@@ -257,11 +260,7 @@ export function generateSkillFiles(
   return results;
 }
 
-/**
- * Sparrow configuration directory (hidden).
- * All framework config files live under .sparrow/ in the project root.
- */
-export const SPARROW_DIR = '.sparrow';
+export { SPARROW_DIR };
 
 export interface ProjectContext {
   projectRoot: string;
@@ -271,34 +270,23 @@ export interface ProjectContext {
 }
 
 /**
- * Generate a sparrow.json config file under .sparrow/ in the project root.
+ * Generate sparrow-config.json under .sparrow/ (migrates leftover sparrow.json).
  */
 export function generateProjectConfig(ctx: ProjectContext): string {
   const { projectRoot, projectName, version, toolIds } = ctx;
-  let existingPlugins: unknown[] = [];
-  try {
-    const existing = JSON.parse(readFileSync(join(projectRoot, SPARROW_DIR, 'sparrow.json'), 'utf-8'));
-    if (Array.isArray(existing.plugins)) {
-      existingPlugins = existing.plugins;
-    }
-  } catch {
-    // no existing config
-  }
+  const existing = readProjectConfig(projectRoot);
+  const existingPlugins = Array.isArray(existing.plugins) ? existing.plugins : [];
 
   const config = {
     version,
     tools: toolIds,
     projectName,
-    createdAt: new Date().toISOString(),
+    createdAt: typeof existing.createdAt === 'string' ? existing.createdAt : new Date().toISOString(),
     outputBase: 'docs/sparrow',
     codeBase: 'backend',
     frontendBase: 'frontend',
     ...(existingPlugins.length > 0 ? { plugins: existingPlugins } : {}),
   };
 
-  const sparrowDir = join(projectRoot, SPARROW_DIR);
-  mkdirSync(sparrowDir, { recursive: true });
-  const configPath = join(sparrowDir, 'sparrow.json');
-  writeFileSync(configPath, JSON.stringify(config, null, 2) + '\n', 'utf-8');
-  return configPath;
+  return writeProjectConfig(projectRoot, config);
 }

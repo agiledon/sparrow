@@ -11,10 +11,11 @@
 import { Command } from 'commander';
 import { resolve, basename } from 'node:path';
 import { executeInit } from '../core/init.js';
+import { projectStateExists } from '../core/project-state.js';
 import { detectInstalledTools } from '../core/tools.js';
 import { formatInitSummary, formatToolDetectionSummary } from './summary.js';
 import { getSupportedToolIds } from '../core/config.js';
-import { renderWelcomePage, promptInput, promptToolSelection } from '../core/prompts.js';
+import { renderWelcomePage, promptInput, promptToolSelection, promptConfirm } from '../core/prompts.js';
 import { compareVersions } from '../core/version-compare.js';
 import { initializeSkills } from '../skills/index.js';
 import { readLocalVersion, fetchLatestVersion, syncAssets, installUpdate, UpdateError } from '../core/update.js';
@@ -38,7 +39,8 @@ Examples:
   $ sparrow init                    Initialize with detected tools
   $ sparrow init --tools claude     Set up for Claude Code only
   $ sparrow init --tools claude,opencode,cursor,pi  Set up for multiple tools
-  $ sparrow init --tools all --force  Set up for all tools, no prompts
+  $ sparrow init --tools all          Set up for all tools
+  $ sparrow init --force              Wipe specs and reset sparrow-state.json (asks for confirmation)
   $ sparrow update                   Check and update to the latest version
   $ sparrow --version                Show version
 
@@ -65,7 +67,7 @@ program
     'Comma-separated tool ids to set up (claude, opencode, cursor, pi), or "all"'
   )
   .option('--project-name <name>', 'Project name in English (used for code directory)')
-  .option('--force', 'Skip confirmation prompts')
+  .option('--force', 'If sparrow-state.json exists: delete all specs under docs/sparrow/master and docs/sparrow/change, then reset state (requires confirmation)')
   .action(async (options: { tools?: string; projectName?: string; force?: boolean }) => {
     const projectRoot = resolve(process.cwd());
 
@@ -118,9 +120,29 @@ program
     try {
       const registry = new SkillRegistry();
       initializeSkills(registry);
+
+      let wipeSpecs = false;
+      if (options.force && projectStateExists(projectRoot)) {
+        console.log('');
+        console.log('⚠️  DANGER: --force will DELETE all Sparrow specs:');
+        console.log('   - docs/sparrow/master/');
+        console.log('   - docs/sparrow/change/current/');
+        console.log('   - docs/sparrow/change/archive/');
+        console.log('   Then reset .sparrow/sparrow-state.json (development-mode=tbd).');
+        console.log('   Project harness and generated skills are kept.');
+        console.log('');
+        const ok = await promptConfirm('I understand this cannot be undone. Continue?', false);
+        if (!ok) {
+          console.error('❌ Aborted. Specs were not deleted.');
+          process.exit(1);
+        }
+        wipeSpecs = true;
+      }
+
       const result = executeInit(projectRoot, {
         tools: options.tools || selectedToolIds.join(','),
         force: options.force,
+        wipeSpecs,
         projectName,
       }, registry);
 

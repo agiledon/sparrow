@@ -4,7 +4,10 @@
 
 export const SPARROW_DOCS = 'docs/sparrow';
 export const SPARROW_DIR = '.sparrow';
-export const ACTIVE_CHANGE_FILE = `${SPARROW_DIR}/active-change.json`;
+export const CONFIG_FILE = `${SPARROW_DIR}/sparrow-config.json`;
+export const LEGACY_CONFIG_FILE = `${SPARROW_DIR}/sparrow.json`;
+export const STATE_FILE = `${SPARROW_DIR}/sparrow-state.json`;
+export const LEGACY_ACTIVE_CHANGE_FILE = `${SPARROW_DIR}/active-change.json`;
 
 export const MASTER_ROOT = `${SPARROW_DOCS}/master`;
 export const CHANGE_ROOT = `${SPARROW_DOCS}/change`;

@@ -10,8 +10,6 @@ import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import {
   SPARROW_DOCS,
-  SPARROW_DIR,
-  ACTIVE_CHANGE_FILE,
   MASTER_ROOT,
   CHANGE_CURRENT,
   CHANGE_ARCHIVE,
@@ -32,13 +30,6 @@ export function initializeSpecLayout(projectRoot: string): string[] {
     }
   }
 
-  const activeChangePath = join(projectRoot, ACTIVE_CHANGE_FILE);
-  if (!existsSync(activeChangePath)) {
-    mkdirSync(join(projectRoot, SPARROW_DIR), { recursive: true });
-    writeFileSync(activeChangePath, JSON.stringify({ changeId: null }, null, 2) + '\n', 'utf-8');
-    created.push(activeChangePath);
-  }
-
   const readmePath = join(projectRoot, SPARROW_DOCS, 'README.md');
   if (!existsSync(readmePath)) {
     writeFileSync(
@@ -49,7 +40,7 @@ export function initializeSpecLayout(projectRoot: string): string[] {
 - **活动变更**：确认 \`{change-id}\` 后创建 \`change/current/{change-id}/\`
 - **归档**：\`change/archive/YYYY-MM-DD-{change-id}/\`
 
-未确认 change-id 前不要在 \`change/current/\` 下创建子目录。活动变更 ID 记录在 \`.sparrow/active-change.json\`。
+未确认 change-id 前不要在 \`change/current/\` 下创建子目录。活动变更 ID 记录在 \`.sparrow/sparrow-state.json\` 的 \`active-change.changeId\`。
 `,
       'utf-8'
     );

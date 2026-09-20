@@ -16,7 +16,7 @@
 | 类型 | 路径 | 说明 |
 |------|------|------|
 | always | `common/always/interactive-interaction.md` | 互动式交互纪律（逐题确认） |
-| conditional | `common/conditional/brownfield.md` | 当 `proposal.md` 的 `development-mode` 为 `brownfield` |
+| conditional | `common/conditional/brownfield.md` | 当 `.sparrow/sparrow-state.json` 的 `development-mode` 为 `brownfield` |
 
 目录约定见 `common/README.md`。新增跨阶段纪律：放入 `common/always/` 或 `common/conditional/`，更新 `schema.yaml` 的 `globalHarness` 与本表（**仅指针**）。
 

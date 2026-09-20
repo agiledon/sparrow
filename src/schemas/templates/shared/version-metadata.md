@@ -7,7 +7,7 @@
   version: v1.0
   last-updated: {ISO_8601_TIMESTAMP}
   generated-by: {skill-id}
-  sparrow-version: {从 .sparrow/sparrow.json 读取}
+  sparrow-version: {从 .sparrow/sparrow-config.json 读取}
 -->
 ```
 

@@ -12,7 +12,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync, statSy
 import { join } from 'node:path';
 
 const CHANGE_CURRENT = join('docs', 'sparrow', 'change', 'current');
-const ACTIVE = join('.sparrow', 'active-change.json');
+const STATE = join('.sparrow', 'sparrow-state.json');
 const WORKSPACE_DIRS = [
   'requirement/business',
   'requirement/quality',
@@ -21,14 +21,43 @@ const WORKSPACE_DIRS = [
   'design',
 ];
 
-function readActiveChangeId() {
-  if (!existsSync(ACTIVE)) return null;
+function defaultState() {
+  return {
+    'active-change': { changeId: null },
+    'development-mode': 'tbd',
+    pipeline: null,
+  };
+}
+
+function loadState() {
+  if (!existsSync(STATE)) return defaultState();
   try {
-    const data = JSON.parse(readFileSync(ACTIVE, 'utf8'));
-    return typeof data.changeId === 'string' && data.changeId.length > 0 ? data.changeId : null;
+    const data = JSON.parse(readFileSync(STATE, 'utf8'));
+    return {
+      'active-change': {
+        changeId:
+          typeof data?.['active-change']?.changeId === 'string' && data['active-change'].changeId.length > 0
+            ? data['active-change'].changeId
+            : null,
+      },
+      'development-mode': data['development-mode'] || 'tbd',
+      pipeline: data['development-mode'] === 'tbd' ? null : data.pipeline ?? null,
+    };
   } catch {
-    return null;
+    return defaultState();
   }
+}
+
+function readActiveChangeId() {
+  return loadState()['active-change'].changeId;
+}
+
+function writeChangeId(id) {
+  const state = loadState();
+  state['active-change'] = { changeId: id };
+  if (state['development-mode'] === 'tbd') state.pipeline = null;
+  mkdirSync('.sparrow', { recursive: true });
+  writeFileSync(STATE, `${JSON.stringify(state, null, 2)}\n`);
 }
 
 function listCurrent() {
@@ -72,8 +101,7 @@ if (cmd === '--create') {
   for (const dir of WORKSPACE_DIRS) {
     mkdirSync(join(root, dir), { recursive: true });
   }
-  mkdirSync('.sparrow', { recursive: true });
-  writeFileSync(ACTIVE, `${JSON.stringify({ changeId: id }, null, 2)}\n`);
+  writeChangeId(id);
   process.stdout.write(`${root}\n`);
   process.exit(0);
 }

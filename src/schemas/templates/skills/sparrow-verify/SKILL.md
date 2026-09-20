@@ -9,11 +9,12 @@
 
 ## 步骤
 
-1. 读 `references/ubiquitous-language.md`。未指定 slug 时从 `project.md` 列出，可选单个、多个或全部。
-2. 门禁：该 slug 须已 apply（`plan.md` 全 `[x]` 且 `code_review.md` 存在）；否则提示并跳过。
-3. 对照 `spec.md`、`api.md`、`tech.md`、`model.md` 与代码，按完整性 / 正确性 / 一致性检查。
-4. 分级：P0 阻塞、P1 严重、P2 一般、P3 建议。按模板写入报告。
-5. 读 `references/project-md-update.md`。
+1. 运行本 skill 的 `scripts/sparrow-state.mjs show`。`tbd` 则先 **sparrow-requirement**；`brownfield` 则停止。未指定 slug 时从 `project.md` 列出，可选单个、多个或全部。对每个 slug：`set-context {slug} verify ongoing`。
+2. 读 `references/ubiquitous-language.md`。
+3. 门禁：该 slug 须已 apply（`plan.md` 全 `[x]` 且 `code_review.md` 存在）；否则提示并跳过。
+4. 对照 `spec.md`、`api.md`、`tech.md`、`model.md` 与代码，按完整性 / 正确性 / 一致性检查。
+5. 分级：P0 阻塞、P1 严重、P2 一般、P3 建议。按模板写入报告。
+6. 读 `references/project-md-update.md`。该 slug 无 P0/P1 时 `set-context {slug} verify done`。
 
 ## 下一步
 

@@ -7,7 +7,7 @@ import { SkillRegistry } from './skills.js';
 import { initializeSkills } from '../skills/index.js';
 import { generateSkillFiles } from './skill-generation.js';
 import { getWorkflowSchema, uniqueAssetNames } from './workflow-schema/index.js';
-import { skillExtras, sharedAssets, sharedReferences, skillTemplates } from '../schemas/bundled-content.js';
+import { skillExtras, sharedAssets, sharedReferences, sharedScripts, skillTemplates } from '../schemas/bundled-content.js';
 
 const SKILL_MD_LINE_LIMIT = 500;
 
@@ -70,7 +70,8 @@ test('schema extras resolve in bundled content', () => {
       assert.ok(found, `${step.skillId} asset ${name}`);
     }
     for (const name of step.scripts ?? []) {
-      assert.ok(skillExtras[step.skillId]?.[`scripts/${name}`], `${step.skillId} scripts/${name}`);
+      const found = skillExtras[step.skillId]?.[`scripts/${name}`] ?? sharedScripts[name];
+      assert.ok(found, `${step.skillId} scripts/${name}`);
     }
   }
 });
