@@ -46,7 +46,7 @@
 
 ### B-T02：模块化 promote（消除 DESIGN-MO-001）
 
-- [ ] **B-T02.** 拆分 `computeDeltas` / `applyDeltas` / `appendHistories`
+- [x] **B-T02.** 拆分 `computeDeltas` / `applyDeltas` / `appendHistories`
   - **依赖**：无。
   - **级别**：DESIGN
   - **坏味道**：`badsmells.md` §2 / `DESIGN-MO-001`。

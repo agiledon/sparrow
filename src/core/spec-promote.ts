@@ -46,6 +46,8 @@ export interface PromoteResult {
   designHistoryAppended: boolean;
 }
 
+export type FileTextMap = Record<string, string>;
+
 function listFilesRecursive(dir: string, base = dir): string[] {
   if (!existsSync(dir)) return [];
   const out: string[] = [];
@@ -91,7 +93,7 @@ function isUnderAllowlist(rel: string, allowlist: string[] | undefined): boolean
   return allowlist.includes(group);
 }
 
-function buildModifiedAppend(changeId: string, syncedAt: string, body: string): string {
+export function buildModifiedAppend(changeId: string, syncedAt: string, body: string): string {
   const trimmed = body.replace(/\s+$/g, '');
   return (
     `\n\n---\n\n` +
@@ -138,6 +140,20 @@ function buildGroupedHistoryBody(deltas: PromoteDelta[]): string {
   return parts.join('\n').trimEnd();
 }
 
+export function isRequirementHistoryDelta(d: PromoteDelta): boolean {
+  if (d.path.startsWith('requirement/')) return true;
+  return (
+    d.slug === 'shared' &&
+    !d.path.startsWith('architecture/') &&
+    !d.path.startsWith('design/') &&
+    !d.path.startsWith('requirement/')
+  );
+}
+
+export function isDesignHistoryDelta(d: PromoteDelta): boolean {
+  return d.path.startsWith('architecture/') || d.path.startsWith('design/');
+}
+
 function appendHistoryEntry(
   historyPath: string,
   changeId: string,
@@ -177,65 +193,48 @@ function collectMasterRels(projectRoot: string, allowlist?: string[]): string[] 
     });
 }
 
-/**
- * Append-only promote into master. Never deletes existing master files.
- */
-export function promoteChangeToMaster(
-  projectRoot: string,
-  changeId: string,
-  syncedAt: string,
-  sourceOrOptions: 'current' | 'archive' | PromoteOptions = 'archive',
-  archiveFolderName?: string
-): PromoteResult {
-  const options: PromoteOptions =
-    typeof sourceOrOptions === 'string'
-      ? { source: sourceOrOptions, archiveFolderName }
-      : sourceOrOptions;
-
-  const source = options.source ?? 'archive';
-  const folder =
-    source === 'current'
-      ? join(projectRoot, CHANGE_CURRENT, changeId)
-      : join(
-          projectRoot,
-          CHANGE_ARCHIVE,
-          options.archiveFolderName ?? archiveFolderName ?? `${syncedAt}-${changeId}`
-        );
-
-  if (!existsSync(folder)) {
-    throw new Error(`Change folder not found: ${folder}`);
+function readTextMap(baseDir: string, rels: string[]): FileTextMap {
+  const map: FileTextMap = {};
+  for (const rel of rels) {
+    map[rel] = readFileSync(join(baseDir, rel), 'utf-8');
   }
+  return map;
+}
 
-  const allowlist = options.slugAllowlist;
-  const sourceRels = collectSourceRels(folder, allowlist);
+/**
+ * Pure delta analysis: compare source vs master text maps. No filesystem I/O.
+ */
+export function computeDeltas(
+  sourceTexts: FileTextMap,
+  masterTexts: FileTextMap,
+  sourceRels: string[],
+  masterRels: string[]
+): { deltas: PromoteDelta[]; writePlan: { path: string; kind: 'ADDED' | 'MODIFIED'; body: string }[] } {
   const sourceSet = new Set(sourceRels);
-  const masterRels = collectMasterRels(projectRoot, allowlist);
-
   const deltas: PromoteDelta[] = [];
-  const promotedFiles: string[] = [];
+  const writePlan: { path: string; kind: 'ADDED' | 'MODIFIED'; body: string }[] = [];
 
   for (const rel of sourceRels) {
-    const src = join(folder, rel);
-    const dest = join(projectRoot, MASTER_ROOT, rel);
-    const srcBody = readFileSync(src, 'utf-8');
+    const srcBody = sourceTexts[rel] ?? '';
     const group = classifyPromoteGroup(rel);
+    const masterBody = masterTexts[rel];
 
-    if (!existsSync(dest)) {
-      mkdirSync(dirname(dest), { recursive: true });
-      writeFileSync(dest, srcBody.endsWith('\n') ? srcBody : `${srcBody}\n`, 'utf-8');
+    if (masterBody === undefined) {
       deltas.push({ path: rel, kind: 'ADDED', slug: group });
-      promotedFiles.push(rel);
+      writePlan.push({
+        path: rel,
+        kind: 'ADDED',
+        body: srcBody.endsWith('\n') ? srcBody : `${srcBody}\n`,
+      });
       continue;
     }
 
-    const masterBody = readFileSync(dest, 'utf-8');
     if (normalizeText(masterBody) === normalizeText(srcBody)) {
       continue;
     }
 
-    writeFileSync(dest, masterBody.replace(/\s+$/g, '') + buildModifiedAppend(changeId, syncedAt, srcBody), 'utf-8');
     deltas.push({ path: rel, kind: 'MODIFIED', slug: group });
-    promotedFiles.push(rel);
+    writePlan.push({ path: rel, kind: 'MODIFIED', body: srcBody });
   }
 
   for (const rel of masterRels) {
@@ -251,24 +250,43 @@ export function promoteChangeToMaster(
     deltas.push({ path: rel, kind: 'REMOVED', slug: group });
   }
 
-  const archiveRel =
-    source === 'current'
-      ? `${CHANGE_CURRENT}/${changeId}/`
-      : `${CHANGE_ARCHIVE}/${options.archiveFolderName ?? archiveFolderName ?? `${syncedAt}-${changeId}`}/`;
+  return { deltas, writePlan };
+}
 
-  // requirement history: requirement/** + shared non-architecture/design (e.g. project.md)
-  const requirementHistoryDeltas = deltas.filter(
-    (d) =>
-      d.path.startsWith('requirement/') ||
-      (d.slug === 'shared' &&
-        !d.path.startsWith('architecture/') &&
-        !d.path.startsWith('design/') &&
-        !d.path.startsWith('requirement/'))
-  );
-  // design history: architecture/** + design/** (must group by slug)
-  const designHistoryDeltas = deltas.filter(
-    (d) => d.path.startsWith('architecture/') || d.path.startsWith('design/')
-  );
+function applyWritePlan(
+  projectRoot: string,
+  changeId: string,
+  syncedAt: string,
+  writePlan: { path: string; kind: 'ADDED' | 'MODIFIED'; body: string }[]
+): string[] {
+  const promotedFiles: string[] = [];
+  for (const item of writePlan) {
+    const dest = join(projectRoot, MASTER_ROOT, item.path);
+    if (item.kind === 'ADDED') {
+      mkdirSync(dirname(dest), { recursive: true });
+      writeFileSync(dest, item.body, 'utf-8');
+    } else {
+      const masterBody = readFileSync(dest, 'utf-8');
+      writeFileSync(
+        dest,
+        masterBody.replace(/\s+$/g, '') + buildModifiedAppend(changeId, syncedAt, item.body),
+        'utf-8'
+      );
+    }
+    promotedFiles.push(item.path);
+  }
+  return promotedFiles;
+}
+
+function appendHistories(
+  projectRoot: string,
+  changeId: string,
+  syncedAt: string,
+  archiveRel: string,
+  deltas: PromoteDelta[]
+): { requirementHistoryAppended: boolean; designHistoryAppended: boolean } {
+  const requirementHistoryDeltas = deltas.filter(isRequirementHistoryDelta);
+  const designHistoryDeltas = deltas.filter(isDesignHistoryDelta);
 
   if (requirementHistoryDeltas.length > 0) {
     appendHistoryEntry(
@@ -288,12 +306,59 @@ export function promoteChangeToMaster(
       designHistoryDeltas
     );
   }
+  return {
+    requirementHistoryAppended: requirementHistoryDeltas.length > 0,
+    designHistoryAppended: designHistoryDeltas.length > 0,
+  };
+}
+
+/**
+ * Append-only promote into master. Never deletes existing master files.
+ */
+export function promoteChangeToMaster(
+  projectRoot: string,
+  changeId: string,
+  syncedAt: string,
+  sourceOrOptions: 'current' | 'archive' | PromoteOptions = 'archive',
+  archiveFolderName?: string
+): PromoteResult {
+  const options: PromoteOptions =
+    typeof sourceOrOptions === 'string'
+      ? { source: sourceOrOptions, archiveFolderName }
+      : sourceOrOptions;
+
+  const source = options.source ?? 'archive';
+  const folderName = options.archiveFolderName ?? archiveFolderName ?? `${syncedAt}-${changeId}`;
+  const folder =
+    source === 'current'
+      ? join(projectRoot, CHANGE_CURRENT, changeId)
+      : join(projectRoot, CHANGE_ARCHIVE, folderName);
+
+  if (!existsSync(folder)) {
+    throw new Error(`Change folder not found: ${folder}`);
+  }
+
+  const allowlist = options.slugAllowlist;
+  const sourceRels = collectSourceRels(folder, allowlist);
+  const masterRels = collectMasterRels(projectRoot, allowlist);
+  const sourceTexts = readTextMap(folder, sourceRels);
+  const masterTexts = readTextMap(join(projectRoot, MASTER_ROOT), masterRels);
+
+  const { deltas, writePlan } = computeDeltas(sourceTexts, masterTexts, sourceRels, masterRels);
+  const promotedFiles = applyWritePlan(projectRoot, changeId, syncedAt, writePlan);
+
+  const archiveRel =
+    source === 'current'
+      ? `${CHANGE_CURRENT}/${changeId}/`
+      : `${CHANGE_ARCHIVE}/${folderName}/`;
+
+  const history = appendHistories(projectRoot, changeId, syncedAt, archiveRel, deltas);
 
   return {
     promotedFiles,
     deltas,
-    requirementHistoryAppended: requirementHistoryDeltas.length > 0,
-    designHistoryAppended: designHistoryDeltas.length > 0,
+    requirementHistoryAppended: history.requirementHistoryAppended,
+    designHistoryAppended: history.designHistoryAppended,
   };
 }
 

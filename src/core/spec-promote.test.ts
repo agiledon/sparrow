@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { promoteChangeToMaster, listCurrentChangeIds, classifyPromoteGroup } from './spec-promote.js';
+import { promoteChangeToMaster, listCurrentChangeIds, classifyPromoteGroup, computeDeltas } from './spec-promote.js';
 import { MASTER_ROOT, CHANGE_CURRENT } from './spec-paths.js';
 
 function seedChange(root: string, changeId: string): string {
@@ -94,6 +94,32 @@ test('classifyPromoteGroup', () => {
   assert.equal(classifyPromoteGroup('design/orders/spec.md'), 'orders');
   assert.equal(classifyPromoteGroup('requirement/business/prd-business.md'), 'shared');
   assert.equal(classifyPromoteGroup('architecture/business.md'), 'shared');
+});
+
+test('computeDeltas is pure: ADDED MODIFIED REMOVED without filesystem', () => {
+  const sourceRels = ['requirement/a.md', 'design/orders/spec.md'];
+  const masterRels = ['requirement/a.md', 'design/orders/spec.md', 'design/orders/api.md'];
+  const sourceTexts = {
+    'requirement/a.md': '# a\n',
+    'design/orders/spec.md': '# spec v2\n',
+  };
+  const masterTexts = {
+    'requirement/a.md': '# a\n',
+    'design/orders/spec.md': '# spec\n',
+    'design/orders/api.md': '# api\n',
+  };
+  const { deltas, writePlan } = computeDeltas(sourceTexts, masterTexts, sourceRels, masterRels);
+  assert.ok(deltas.some((d) => d.path === 'design/orders/spec.md' && d.kind === 'MODIFIED'));
+  assert.ok(deltas.some((d) => d.path === 'design/orders/api.md' && d.kind === 'REMOVED'));
+  assert.equal(
+    deltas.some((d) => d.path === 'requirement/a.md'),
+    false
+  );
+  assert.ok(writePlan.some((w) => w.path === 'design/orders/spec.md' && w.kind === 'MODIFIED'));
+  assert.equal(
+    writePlan.some((w) => w.path === 'design/orders/api.md'),
+    false
+  );
 });
 
 test('listCurrentChangeIds', () => {

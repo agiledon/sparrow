@@ -1,6 +1,6 @@
 # 坏味道规约文档（OpenMole Bad Smells）
 
-**版本**：0.2.0
+**版本**：0.3.0
 **状态**：草案
 **依据**：OpenMole 规约摘要（见 Skill 内嵌）；change 内 [tasks.md](./tasks.md)
 **修订日期**：2026-09-20
@@ -31,7 +31,7 @@
 | BS-ID | 类别 | 状态 | 说明 |
 |-------|------|------|------|
 | DESIGN-RD-001 | 冗余 | 已消除 | `project-state.ts` ↔ `sparrow-state.mjs` 重复实现（RD-01） |
-| DESIGN-MO-001 | 模块化 | 未清除 | `promoteChangeToMaster` 职责过重（MO-01） |
+| DESIGN-MO-001 | 模块化 | 已消除 | `promoteChangeToMaster` 职责过重（MO-01） |
 | DESIGN-DF-001 | 设计缺陷 | 未清除 | 归档语义变更需改多处（DF-02 Shotgun Surgery） |
 | DESIGN-EN-001 | 封装 | 未清除 | promote 重载 API（string \| Options）泄漏演进细节（EN-04） |
 
@@ -95,3 +95,4 @@
 |------|------|----------|------|
 | 0.1.0 | 2026-09-20 | `fe8c2cc` | 初版：DESIGN-RD-001、DESIGN-MO-001、DESIGN-DF-001、DESIGN-EN-001。 |
 | 0.2.0 | 2026-09-20 | — | 随 arch B-T01：mjs 生成自 core；DESIGN-RD-001 → 已消除。 |
+| 0.3.0 | 2026-09-20 | — | B-T02：computeDeltas/applyWritePlan/appendHistories；DESIGN-MO-001 → 已消除。 |

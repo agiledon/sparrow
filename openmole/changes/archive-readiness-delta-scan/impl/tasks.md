@@ -26,7 +26,7 @@
 
 ### B-T01：缩短并拆分 `promoteChangeToMaster`（消除 IMPL-GEN-001）
 
-- [ ] **B-T01.** 将长函数拆为命名步骤，主流程可读
+- [x] **B-T01.** 将长函数拆为命名步骤，主流程可读
   - **依赖**：优先跟随 `design` B-T02；若 DESIGN 未做，本任务仅做函数内抽取。
   - **级别**：IMPL
   - **坏味道**：`badsmells.md` §2 / `IMPL-GEN-001`。
@@ -39,7 +39,7 @@
 
 ### B-T02：分离纯 delta 计算与 fs 副作用（消除 IMPL-FP-001）
 
-- [ ] **B-T02.** 抽取纯函数计算 deltas，写盘独立
+- [x] **B-T02.** 抽取纯函数计算 deltas，写盘独立
   - **依赖**：B-T01 或 `design` B-T02。
   - **级别**：IMPL
   - **坏味道**：`badsmells.md` §2 / `IMPL-FP-001`。
@@ -65,7 +65,7 @@
 
 ### B-T04：命名历史分桶谓词（消除 IMPL-GEN-003）
 
-- [ ] **B-T04.** 抽出 `isRequirementHistoryDelta` / `isDesignHistoryDelta`
+- [x] **B-T04.** 抽出 `isRequirementHistoryDelta` / `isDesignHistoryDelta`
   - **依赖**：B-T01（同文件整理时一并做更合适）。
   - **级别**：IMPL
   - **坏味道**：`badsmells.md` §2 / `IMPL-GEN-003`。
