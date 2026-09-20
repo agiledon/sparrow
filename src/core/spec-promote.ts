@@ -319,16 +319,10 @@ export function promoteChangeToMaster(
   projectRoot: string,
   changeId: string,
   syncedAt: string,
-  sourceOrOptions: 'current' | 'archive' | PromoteOptions = 'archive',
-  archiveFolderName?: string
+  options: PromoteOptions = {}
 ): PromoteResult {
-  const options: PromoteOptions =
-    typeof sourceOrOptions === 'string'
-      ? { source: sourceOrOptions, archiveFolderName }
-      : sourceOrOptions;
-
   const source = options.source ?? 'archive';
-  const folderName = options.archiveFolderName ?? archiveFolderName ?? `${syncedAt}-${changeId}`;
+  const folderName = options.archiveFolderName ?? `${syncedAt}-${changeId}`;
   const folder =
     source === 'current'
       ? join(projectRoot, CHANGE_CURRENT, changeId)

@@ -22,7 +22,7 @@ test('promote ADDED creates master files and skips plan.md', () => {
   const changeId = 'first-ddd';
   seedChange(root, changeId);
 
-  const result = promoteChangeToMaster(root, changeId, '2026-06-06', 'current');
+  const result = promoteChangeToMaster(root, changeId, '2026-06-06', { source: 'current' });
   assert.ok(result.promotedFiles.includes('requirement/business/prd-business.md'));
   assert.ok(result.promotedFiles.includes('design/orders/spec.md'));
   assert.equal(result.promotedFiles.includes('design/orders/plan.md'), false);
@@ -41,13 +41,13 @@ test('promote MODIFIED appends delta block and keeps original body', () => {
   const root = mkdtempSync(join(tmpdir(), 'sparrow-promote-mod-'));
   const changeId = 'iter-2';
   seedChange(root, changeId);
-  promoteChangeToMaster(root, changeId, '2026-06-01', 'current');
+  promoteChangeToMaster(root, changeId, '2026-06-01', { source: 'current' });
 
   const masterSpec = join(root, MASTER_ROOT, 'design/orders/spec.md');
   const original = readFileSync(masterSpec, 'utf-8');
   writeFileSync(join(root, CHANGE_CURRENT, changeId, 'design/orders/spec.md'), '# spec v2\nnew line\n', 'utf-8');
 
-  const result = promoteChangeToMaster(root, changeId, '2026-06-10', 'current');
+  const result = promoteChangeToMaster(root, changeId, '2026-06-10', { source: 'current' });
   const after = readFileSync(masterSpec, 'utf-8');
   assert.ok(after.includes('# spec'));
   assert.ok(after.includes('Delta — iter-2'));
@@ -62,11 +62,11 @@ test('promote REMOVED records history only and keeps master file', () => {
   const changeId = 'iter-3';
   const base = seedChange(root, changeId);
   writeFileSync(join(base, 'design/orders/api.md'), '# api\n', 'utf-8');
-  promoteChangeToMaster(root, changeId, '2026-06-01', 'current');
+  promoteChangeToMaster(root, changeId, '2026-06-01', { source: 'current' });
 
   unlinkSync(join(base, 'design/orders/api.md'));
 
-  const result = promoteChangeToMaster(root, changeId, '2026-06-15', 'current');
+  const result = promoteChangeToMaster(root, changeId, '2026-06-15', { source: 'current' });
   assert.ok(existsSync(join(root, MASTER_ROOT, 'design/orders/api.md')));
   assert.ok(result.deltas.some((d) => d.path === 'design/orders/api.md' && d.kind === 'REMOVED' && d.slug === 'orders'));
   const designHist = readFileSync(join(root, MASTER_ROOT, 'design/revision-history.md'), 'utf-8');

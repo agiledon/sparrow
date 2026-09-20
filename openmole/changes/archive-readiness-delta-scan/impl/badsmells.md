@@ -1,6 +1,6 @@
 # 坏味道规约文档（OpenMole Bad Smells）
 
-**版本**：0.2.0
+**版本**：0.3.0
 **状态**：草案
 **依据**：OpenMole 规约摘要（见 Skill 内嵌）；change 内 [tasks.md](./tasks.md)
 **修订日期**：2026-09-20
@@ -32,7 +32,7 @@
 |-------|------|------|------|
 | IMPL-GEN-001 | 函数 | 已消除 | `promoteChangeToMaster` 过长（IMPL-02） |
 | IMPL-FP-001 | 函数式惯用法 | 已消除 | delta 计算与 fs 写盘混在同一函数（FP-01） |
-| IMPL-GEN-002 | 命名 | 未清除 | `sourceOrOptions` 语义含糊（IMPL-01） |
+| IMPL-GEN-002 | 命名 | 已消除 | `sourceOrOptions` 语义含糊（IMPL-01） |
 | IMPL-GEN-003 | 可读性 | 已消除 | requirement 历史分桶条件嵌套难读（IMPL-04/清晰性） |
 
 ---
@@ -95,3 +95,4 @@
 |------|------|----------|------|
 | 0.1.0 | 2026-09-20 | `fe8c2cc` | 初版：IMPL-GEN-001~003、IMPL-FP-001。 |
 | 0.2.0 | 2026-09-20 | — | 随 design B-T02：纯 computeDeltas + 历史谓词；GEN-001/FP-001/GEN-003 → 已消除。 |
+| 0.3.0 | 2026-09-20 | — | B-T03：PromoteOptions 统一命名；GEN-002 → 已消除。 |

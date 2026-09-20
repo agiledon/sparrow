@@ -52,7 +52,7 @@
 
 ### B-T03：澄清 promote 参数命名（消除 IMPL-GEN-002）
 
-- [ ] **B-T03.** 重命名/统一 `sourceOrOptions` 为清晰 Options
+- [x] **B-T03.** 重命名/统一 `sourceOrOptions` 为清晰 Options
   - **依赖**：`design` B-T04（推荐同一变更集）。
   - **级别**：IMPL
   - **坏味道**：`badsmells.md` §2 / `IMPL-GEN-002`。

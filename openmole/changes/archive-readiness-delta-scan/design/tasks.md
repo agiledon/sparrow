@@ -80,7 +80,7 @@
 
 ### B-T04：统一 promote Options API（消除 DESIGN-EN-001）
 
-- [ ] **B-T04.** 废弃 `sourceOrOptions` 双形态，统一 `PromoteOptions`
+- [x] **B-T04.** 废弃 `sourceOrOptions` 双形态，统一 `PromoteOptions`
   - **依赖**：B-T02（模块化时一并改签名更干净）。
   - **级别**：DESIGN
   - **坏味道**：`badsmells.md` §2 / `DESIGN-EN-001`。
