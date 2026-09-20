@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Core workflow levels**: `archive` is product-level (once per change, after all slugs). Team-level steps are design → verify (per slug). Product-level bookends are requirement → arch and archive.
+  - **核心工作流层级**：`archive` 为产品级（每个 change 在全部 slug 完成后运行一次）。团队级为 design → verify（按 slug）。产品级两端为 requirement → arch 与 archive。
 - **Project state**: `.sparrow/sparrow-state.json` holds `active-change`, `development-mode` (`tbd` until `/sparrow-requirement` detects it), and `pipeline` progress. Replaces `active-change.json`. If mode is `tbd`, `pipeline` is always null. Brownfield is detected then aborted (not implemented). Re-run `sparrow init` / `sparrow update` to refresh skills; `sparrow init --force` wipes specs after confirmation.
   - **项目状态**：`.sparrow/sparrow-state.json` 记录 change-id、开发模式与阶段进度。`tbd` 时 pipeline 为空。棕地探测后暂不进入核心流程。`sparrow init --force` 会在确认后清空规格。
 - **Config rename**: `.sparrow/sparrow.json` → `.sparrow/sparrow-config.json` (legacy file is migrated then deleted).

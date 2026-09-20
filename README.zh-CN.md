@@ -30,7 +30,7 @@ Sparrow 将所有 AI 辅助开发组织为两类工作流。每个 skill 都带�
 
 | 类别 | `kind` | 角色 | 运行时机 |
 |------|--------|------|----------|
-| **核心工作流** | `core` | 顺序执行的 DDD 流水线——从需求到可验证、可归档的代码 | 按序运行；产品级步骤一次，团队级步骤按上下文 |
+| **核心工作流** | `core` | 顺序执行的 DDD 流水线——从需求到可验证、可归档的代码 | 按序运行；产品级 requirement/arch 每个 change 一次，团队级按上下文，产品级 archive 收束一次 |
 | **支持工作流** | `supporting` | 辅助 DDD 流程的附加能力，不替代流水线本身 | 随时调用，与流水线位置无关 |
 
 ```mermaid
@@ -63,12 +63,13 @@ flowchart LR
 | 5 | `/sparrow-plan @{slug}` | 团队级 | 制定含任务清单的实施计划 |
 | 6 | `/sparrow-apply @{slug}` | 团队级 | 生成 DDD 结构化代码（后端）或前端 + BFF 代码（交互上下文） |
 | 7 | `/sparrow-verify @{slug}` | 团队级 | 对照 spec.md、api.md、tech.md、model.md 验证代码实现 |
-| 8 | `/sparrow-archive` | 团队级 | 归档已完成的 revise 模式变更（verify 通过后） |
+| 8 | `/sparrow-archive` | 产品级 | 收束全部 slug 的交付规格（不含源代码）并 promote 至 `master/` 做版本管理 |
 
 **核心工作流运行规则：**
 
-- **产品级**步骤（1–2）每个项目或重大 initiative **运行一次**——建立共享的需求与架构基线。
-- **团队级**步骤（3–8）**按 slug 运行**——每个限界上下文与交互上下文各跑一遍。所有上下文共用同一套命令且完全正交：无相互依赖，可按任意顺序或并行执行。
+- **产品级** `requirement` 与 `arch`（1–2）每个 change **运行一次**，面向整个产品——建立共享的需求与架构基线；arch 划定限界上下文与交互上下文。
+- **团队级**步骤（3–7）**按 slug 运行**——每个限界上下文与交互上下文各跑一遍。所有上下文共用同一套命令且完全正交：无相互依赖，可按任意顺序或并行执行。
+- **产品级** `archive`（8）每个 change 在全部团队级 slug 完成后 **运行一次**——收束每个 slug 的交付规格（不含源代码）并 promote 至 `master/` 做版本管理。
 - 任一步骤完成后可暂停审阅、对话 refine 并重新运行——下一步始终读取最新版本。
 
 **规格布局**：活动变更在 `docs/sparrow/change/current/{change-id}/` 读写；已发布基线在 `docs/sparrow/master/`（首次 **archive promote** 后才有内容）。`development-mode`（`tbd` | `greenfield` | `iteration` | `brownfield`）写在 `.sparrow/sparrow-state.json`。棕地核心流程暂不支持。详见 [输出结构](#输出结构)。
@@ -216,7 +217,7 @@ sparrow update
 - **核心工作流** — 按序运行八步流水线：`/sparrow-requirement` → `/sparrow-arch` → `/sparrow-design @{slug}` → … → `/sparrow-verify @{slug}` → `/sparrow-archive`
 - **支持工作流** — 按需随时调用：`/sparrow-supporting-harness`、`/sparrow-supporting-reconcile`
 
-> **重要**：产品级核心步骤（1–2）运行一次。团队级核心步骤（3–8）按 slug 运行——所有上下文（后端 BC + 交互上下文）共用同一套命令且完全正交。
+> **重要**：产品级 `requirement` 与 `arch`（1–2）每个 change 运行一次。团队级核心步骤（3–7）按 slug 运行——所有上下文（后端 BC + 交互上下文）共用同一套命令且完全正交。产品级 `archive`（8）在全部 slug 完成后每个 change 运行一次。
 
 ### 4. 迭代与 refine
 
@@ -291,12 +292,12 @@ sparrow update
 
 仅在所选 slug 完成 apply 后运行。
 
-### 步骤 8：sparrow-archive（团队级，revise 工作流）
+### 步骤 8：sparrow-archive（产品级）
 
-**输入**：`docs/sparrow/change/current/{change-id}/` 下已完成的变更  
-**输出**：移至 `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/`，并 **promote** 合并至 `docs/sparrow/master/`（含 requirement/design 两份 revision-history）
+**输入**：`docs/sparrow/change/current/{change-id}/` 下全部 slug（后端 BC + 交互上下文）已完成的变更  
+**输出**：移至 `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/`，并 **promote** 交付规格至 `docs/sparrow/master/`（含 requirement/design 两份 revision-history）。`backend/`、`frontend/`、`edge/bff/` 源代码不由 archive 做版本管理。
 
-在 verify 通过（无 P0/P1 阻塞项）后运行。绿地首次交付完成后亦通过 archive 填充 master。
+每个 change 在全部 slug verify 通过（无 P0/P1 阻塞项）后运行一次。绿地首次交付完成后亦通过 archive 填充 master。
 
 ## 输出结构
 

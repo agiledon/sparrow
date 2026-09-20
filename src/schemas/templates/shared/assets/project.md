@@ -74,4 +74,4 @@
 
 1. 执行 **/sparrow-requirement** — 从原始需求中识别业务服务（如有需要，在技能中继续 UI 设计探索）
 2. 执行 **/sparrow-arch** — 划分子领域，定义业务架构、应用架构（如有 UI 则同时生成前端架构）
-3. 对每个限界上下文依次执行：**design → model → plan → apply → verify**；完成后 **archive** promote 至 `master/`
+3. 对每个 slug（限界上下文或交互上下文）依次执行：**design → model → plan → apply → verify**；全部完成后 **archive**（产品级）promote 交付规格至 `master/`

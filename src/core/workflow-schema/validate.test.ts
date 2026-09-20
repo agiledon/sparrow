@@ -12,6 +12,14 @@ test('workflow schema validates structurally', () => {
   assert.equal(schema.globalHarness.conditional[0]?.path, 'common/conditional/brownfield.md');
   const requirement = schema.steps.find((s) => s.id === 'requirement');
   assert.ok(requirement?.outputs?.some((o) => o.dest === 'requirement/business/prd-business.md'));
+  const archive = schema.steps.find((s) => s.id === 'archive');
+  assert.equal(archive?.phase, 'product');
+  assert.equal(archive?.scope, undefined);
+  const teamCore = schema.steps.filter((s) => s.kind === 'core' && s.phase === 'team');
+  assert.deepEqual(
+    teamCore.map((s) => s.id),
+    ['design', 'model', 'plan', 'apply', 'verify']
+  );
   for (const step of schema.steps) {
     if (step.kind === 'core') {
       assert.ok((step.outputs ?? []).length > 0, `${step.id} missing outputs catalog`);

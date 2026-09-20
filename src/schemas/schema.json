@@ -407,7 +407,7 @@
       "skillId": "sparrow-archive",
       "name": "Sparrow Archive",
       "description": "Use when archiving a completed change and promoting specs into docs/sparrow/master/.",
-      "phase": "team",
+      "phase": "product",
       "order": 8,
       "nextSkill": null,
       "kind": "core",

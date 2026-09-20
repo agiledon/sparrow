@@ -30,7 +30,7 @@ Sparrow organizes all AI-assisted development into two workflow categories. Each
 
 | Category | `kind` | Role | When to run |
 |----------|--------|------|-------------|
-| **Core workflows** | `core` | The sequential DDD pipeline — from requirements to verified, archivable code | In order; product-level steps once, team-level steps per context |
+| **Core workflows** | `core` | The sequential DDD pipeline — from requirements to verified, archivable code | In order; product-level requirement/arch once per change, team-level per context, product-level archive once to close |
 | **Supporting workflows** | `supporting` | Auxiliary capabilities that assist the DDD process without replacing the pipeline | Anytime, independent of pipeline position |
 
 ```mermaid
@@ -63,12 +63,13 @@ The **core workflow** is Sparrow's main spec-driven DDD pipeline — eight order
 | 5 | `/sparrow-plan @{slug}` | Team | Devise implementation plan with task checklist |
 | 6 | `/sparrow-apply @{slug}` | Team | Generate DDD-structured code (backend) or frontend + BFF code (Interaction Context) |
 | 7 | `/sparrow-verify @{slug}` | Team | Verify code implementation against spec.md, api.md, tech.md, and model.md |
-| 8 | `/sparrow-archive` | Team | Archive a completed revise-mode change (after verify passes) |
+| 8 | `/sparrow-archive` | Product | Collect all slugs' delivery specs (not source code) and promote into `master/` for versioning |
 
 **How core workflows run:**
 
-- **Product-level** steps (1–2) run **once** per project or major initiative — they establish shared requirements and architecture.
-- **Team-level** steps (3–8) run **per slug** — once for each bounded context and Interaction Context. All contexts share the same commands and are fully orthogonal: no mutual dependencies, executable in any order or in parallel.
+- **Product-level** `requirement` and `arch` (1–2) run **once** per change for the whole product — they establish shared requirements and architecture; arch defines bounded contexts and the Interaction Context.
+- **Team-level** steps (3–7) run **per slug** — once for each bounded context and Interaction Context. All contexts share the same commands and are fully orthogonal: no mutual dependencies, executable in any order or in parallel.
+- **Product-level** `archive` (8) runs **once** per change after all team-level slugs complete — it collects every slug's delivery specs (not source code) and promotes them into `master/` for versioning.
 - After any step, pause to review artifacts, refine through dialog, and re-run — the next step always reads the latest version.
 
 **Spec layout**: Active work happens under `docs/sparrow/change/current/{change-id}/`; the published baseline lives in `docs/sparrow/master/` (populated after the first **archive promote**). `development-mode` (`tbd` | `greenfield` | `iteration` | `brownfield`) is stored in `.sparrow/sparrow-state.json`. Brownfield core flow is not supported yet. See [Output Structure](#output-structure).
@@ -216,7 +217,7 @@ Invoke skills as slash commands in your AI tool. Sparrow provides two workflow c
 - **Core workflows** — run the eight-step pipeline in order: `/sparrow-requirement` → `/sparrow-arch` → `/sparrow-design @{slug}` → … → `/sparrow-verify @{slug}` → `/sparrow-archive`
 - **Supporting workflows** — invoke anytime as needed: `/sparrow-supporting-harness`, `/sparrow-supporting-reconcile`
 
-> **Important**: Product-level core steps (1–2) run once. Team-level core steps (3–8) run per slug — all contexts (backend BCs + Interaction Context) share the same commands and are fully orthogonal.
+> **Important**: Product-level `requirement` and `arch` (1–2) run once per change. Team-level core steps (3–7) run per slug — all contexts (backend BCs + Interaction Context) share the same commands and are fully orthogonal. Product-level `archive` (8) runs once per change after all slugs complete.
 
 ### 4. Iterate and refine
 
@@ -290,12 +291,12 @@ Interaction Context: `frontend/features/`, `edge/bff/`.
 
 Runs after apply for the selected slug(s).
 
-### Step 8: sparrow-archive (Team-level)
+### Step 8: sparrow-archive (Product-level)
 
-**Input**: Completed work under `docs/sparrow/change/current/{change-id}/`  
-**Output**: Move to `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/`, **promote** into `docs/sparrow/master/` (including `requirement/` and `design/` revision-history files)
+**Input**: Completed work under `docs/sparrow/change/current/{change-id}/` for all slugs (backend BCs + Interaction Context)  
+**Output**: Move to `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/`, **promote** delivery specs into `docs/sparrow/master/` (including `requirement/` and `design/` revision-history files). Source code under `backend/`, `frontend/`, and `edge/bff/` is not versioned by archive.
 
-After verify passes (no P0/P1 blockers). First greenfield delivery also fills `master/` via archive.
+Runs once per change after all slugs verify (no P0/P1 blockers). First greenfield delivery also fills `master/` via archive.
 
 ## Output Structure
 
