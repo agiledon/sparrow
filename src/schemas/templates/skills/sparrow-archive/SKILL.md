@@ -7,7 +7,7 @@
 - 已运行 `scripts/sparrow-state.mjs check-archive`，用户确认归档范围（完整或部分）
 - 已完成 slug 的交付物已进入 `change/archive/{synced-at}-{change-id}/`
 - 未完成 `design/{slug}/` **未**进入 archive、**未** promote
-- 已 promote 到 `docs/sparrow/master/`（ADDED 新建 / MODIFIED 文末追加 delta / REMOVED 仅记历史；**永不删除** master 既有文件）
+- 已运行 `scripts/sparrow-promote.mjs` promote 到 `docs/sparrow/master/`（ADDED 新建 / MODIFIED 文末追加 delta / REMOVED 仅记历史；**永不删除** master 既有文件）
 - 按模板更新：
   - `docs/sparrow/master/project.md`
   - `assets/revision-history.md` + `assets/revision-history-entry.md` → `docs/sparrow/master/requirement/revision-history.md` 与 `docs/sparrow/master/design/revision-history.md`（按 `### shared` / `### slug: {slug}` 分组）
@@ -31,11 +31,11 @@
 6. `synced-at` = `YYYY-MM-DD`。按确认结果落盘：
    - **完整归档**：整目录 `change/current/{id}/` → `change/archive/{synced-at}-{id}/`
    - **部分归档**：只把共享物（`proposal.md`、`requirement/`、`architecture/`、`project.md` 等）+ 已完成 `design/{slug}/` 写入 archive；未完成 slug 留在 `current`
-7. **Promote（必做）**：对 archive 目录执行 append-only delta 同步（可用项目 `promoteChangeToMaster`；部分归档传 `slugAllowlist` = 已完成 slug）。排除 `design/{slug}/plan.md` 与 `proposal.md`。规则：
+7. **Promote（必做）**：运行 `scripts/sparrow-promote.mjs <change-id> <synced-at> [--source archive|current] [--folder <name>] [--slugs slug1,slug2]`（部分归档传 `--slugs` = 已完成 slug）。排除 `design/{slug}/plan.md` 与 `proposal.md`。规则：
    - **ADDED**：master 无该路径 → 新建写入源内容
    - **MODIFIED**：master 已有且内容不同 → **不覆盖**；在文末追加带 change-id / synced-at / `MODIFIED` 的 delta 区（正文为本次源全文）
    - **REMOVED**：源侧缺失 → **不删** master 文件；仅在 revision-history 记录
-   - 历史写入 `assets/revision-history.md` + `assets/revision-history-entry.md` → `master/requirement/revision-history.md` 与 `master/design/revision-history.md`（按 `### shared` / `### slug: {slug}` 分组）
+   - 历史写入 `assets/revision-history.md` + `assets/revision-history-entry.md` → `docs/sparrow/master/requirement/revision-history.md` 与 `docs/sparrow/master/design/revision-history.md`（按 `### shared` / `### slug: {slug}` 分组）
 8. 更新 `docs/sparrow/master/project.md`（若完整归档或共享物有变）。
 9. 收尾状态：
    - **完整**：`scripts/sparrow-state.mjs archive-done`（清空 changeId；greenfield → iteration；pipeline 置空）

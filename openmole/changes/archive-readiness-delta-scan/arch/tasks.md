@@ -72,7 +72,7 @@
 
 ### B-T03：为 agent 暴露 promote 可执行边界（消除 ARCH-BD-001）
 
-- [ ] **B-T03.** 提供与 state 脚本同级的 promote 入口，并改 skill 指向
+- [x] **B-T03.** 提供与 state 脚本同级的 promote 入口，并改 skill 指向
   - **依赖**：建议在 DESIGN/IMPL 侧完成 promote 模块化（`design` B-T02 / `impl` B-T01）后再做，或本任务内先做最小可运行包装。
   - **级别**：ARCH
   - **坏味道**：`badsmells.md` §2 / `ARCH-BD-001`。

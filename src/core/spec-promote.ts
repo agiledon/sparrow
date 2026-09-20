@@ -21,7 +21,7 @@ import {
   MASTER_REQUIREMENT_HISTORY,
   MASTER_ROOT,
 } from './spec-paths.js';
-import { skillExtras } from '../schemas/bundled-content.js';
+import { archivePromoteAsset } from './archive-promote-assets.js';
 
 export type DeltaKind = 'ADDED' | 'MODIFIED' | 'REMOVED';
 
@@ -69,11 +69,7 @@ function shouldSkipPromote(rel: string): boolean {
 }
 
 function archiveAsset(name: string): string {
-  const body = skillExtras['sparrow-archive']?.[`assets/${name}`];
-  if (!body) {
-    throw new Error(`Missing archive asset: ${name}`);
-  }
-  return body;
+  return archivePromoteAsset(name);
 }
 
 export function classifyPromoteGroup(rel: string): string {

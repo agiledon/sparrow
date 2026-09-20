@@ -325,6 +325,7 @@ steps:
         optional: true
     scripts:
       - sparrow-state.mjs
+      - sparrow-promote.mjs
   - id: supporting-harness
     skillId: sparrow-supporting-harness
     name: Sparrow Harness

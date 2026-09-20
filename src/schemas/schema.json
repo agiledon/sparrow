@@ -457,7 +457,8 @@
         }
       ],
       "scripts": [
-        "sparrow-state.mjs"
+        "sparrow-state.mjs",
+        "sparrow-promote.mjs"
       ]
     },
     {

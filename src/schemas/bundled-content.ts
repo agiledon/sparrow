@@ -8,6 +8,7 @@ import _shared_grill_me_md from './templates/shared/grill-me.md';
 import _shared_output_existence_check_md from './templates/shared/output-existence-check.md';
 import _shared_project_md_update_md from './templates/shared/project-md-update.md';
 import _shared_revise_gate_md from './templates/shared/revise-gate.md';
+import _shared_scripts_sparrow_promote_mjs from './templates/shared/scripts/sparrow-promote.mjs';
 import _shared_scripts_sparrow_state_mjs from './templates/shared/scripts/sparrow-state.mjs';
 import _shared_spec_layout_guide_md from './templates/shared/spec-layout-guide.md';
 import _shared_ubiquitous_language_md from './templates/shared/ubiquitous-language.md';
@@ -28,6 +29,7 @@ export const sharedAssets: Record<string, string> = {
 };
 
 export const sharedScripts: Record<string, string> = {
+  'sparrow-promote.mjs': _shared_scripts_sparrow_promote_mjs,
   'sparrow-state.mjs': _shared_scripts_sparrow_state_mjs,
 };
 
