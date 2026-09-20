@@ -435,19 +435,73 @@ harness/
 
 ## 配置
 
+两个文件都位于项目根目录的 `.sparrow/` 下，由 `sparrow init` 创建（不会提交到 Sparrow 框架仓库）。再次执行 `sparrow init` 会刷新 `sparrow-config.json` 与 skills，**不会**覆盖已有的 `sparrow-state.json`，除非加上 `--force`（确认后会清空规格）。
+
 ### sparrow-config.json
 
-由 `sparrow init` 在 `.sparrow/sparrow-config.json` 生成（会迁移旧的 `sparrow.json`）：
+项目工具配置：Sparrow 版本、已选 AI 工具、项目名，以及可选的 plugins。生成路径为 `.sparrow/sparrow-config.json`（会迁移旧的 `sparrow.json`）。
+
+`sparrow init` 后的典型示例：
 
 ```json
 {
-  "version": "0.3.0",
-  "tools": ["claude", "opencode"],
-  "createdAt": "2026-06-29T04:05:45.650Z",
+  "version": "0.5.0",
+  "tools": ["cursor", "claude"],
+  "projectName": "my-project",
+  "createdAt": "2026-09-20T08:00:00.000Z",
   "outputBase": "docs/sparrow",
-  "codeBase": "code"
+  "codeBase": "backend",
+  "frontendBase": "frontend",
+  "plugins": [
+    {
+      "name": "archify",
+      "version": "1.0.0",
+      "enabled": true
+    }
+  ]
 }
 ```
+
+未安装插件时省略 `plugins`。Skill 与版本元数据从此文件读取 Sparrow 版本号。
+
+### sparrow-state.json
+
+流水线状态：活动 change-id、开发模式与阶段进度。文件不存在时由 `sparrow init` 创建；核心 skill 通过 `scripts/sparrow-state.mjs` 更新。
+
+刚完成 init（`development-mode` 尚未确定）时：
+
+```json
+{
+  "active-change": { "changeId": null },
+  "development-mode": "tbd",
+  "pipeline": null
+}
+```
+
+绿地变更进行中（产品级 `requirement` 已完成；两个 slug 处于团队级步骤）时：
+
+```json
+{
+  "active-change": { "changeId": "add-order-refund" },
+  "development-mode": "greenfield",
+  "pipeline": {
+    "current-step": "design",
+    "status": "ongoing",
+    "contexts": {
+      "orders": { "current-step": "design", "status": "ongoing" },
+      "checkout-ui": { "current-step": "model", "status": "done" }
+    }
+  }
+}
+```
+
+| 字段 | 取值 / 说明 |
+|------|-------------|
+| `active-change.changeId` | kebab-case 的 change-id；确认前为 `null` |
+| `development-mode` | `tbd` \| `greenfield` \| `iteration` \| `brownfield`（在 `/sparrow-requirement` 探测前为 `tbd`） |
+| `pipeline` | **`development-mode` 为 `tbd` 时必须为 `null`**。否则为顶层 `current-step` + `status`（`ongoing` \| `done`）；团队级步骤另填 `contexts.<slug>` |
+
+棕地会被探测到，随后终止（核心流程暂不支持）。`/sparrow-archive` 成功后会清空 `changeId`，`greenfield` 变为 `iteration`，`pipeline` 置为 `null`。
 
 ### 覆盖输出路径
 
