@@ -56,8 +56,8 @@ The **core workflow** is Sparrow's main spec-driven DDD pipeline — eight order
 
 | Step | Command | Level | What it does |
 |------|---------|-------|--------------|
-| 1 | `/sparrow-requirement` | Product | Interactive requirement exploration (Grill Me) + generate functional & quality requirement docs + [optional] UI design exploration |
-| 2 | `/sparrow-arch` | Product | Define business architecture (subdomains) + application architecture (bounded contexts) + [if UI exists] frontend architecture with Interaction Context |
+| 1 | `/sparrow-requirement` | Product | Hierarchical exploration (SD→C→S→EBP→BS via Grill Me) + quality docs + [optional] UI operation flows from EBP |
+| 2 | `/sparrow-arch` | Product | Map subdomains to bounded contexts (1:1 then adjust) + thin spec slices with Properties + [if UI] frontend / Interaction Context |
 | 3 | `/sparrow-design @{slug}` | Team | Define API contracts and tech stack for a bounded context or Interaction Context |
 | 4 | `/sparrow-model @{slug}` | Team | Domain modeling (backend BC) or ViewModel + component modeling (Interaction Context) |
 | 5 | `/sparrow-plan @{slug}` | Team | Devise implementation plan with task checklist |
@@ -237,19 +237,19 @@ Detailed inputs, outputs, and behavior for each step in the [core workflow](#cor
 
 **Input**: Raw requirements; for **brownfield**, also the running system and codebase  
 **Output** (under the change workspace):
-- `requirement/business/prd-business.md` — structured business services
+- `requirement/business/catalog.md` — index + end-to-end business processes (EBP→BS)
+- `requirement/business/subdomains/` · `capabilities/` · `scenarios/` · `services/` — hierarchical problem-space specs (EARS acceptance on services)
 - `requirement/quality/prd-quality.md` — quality attributes (performance, security, availability, etc.)
-- `requirement/ui/` — \[optional\] UI specs, design tokens, components, HTML prototypes
+- `requirement/ui/` — \[optional\] UI specs (operation flows ← EBP), design tokens, components, HTML prototypes
 
-**Grill Me** in two phases: business exploration → optional UI exploration (pure UX). For **iteration**, diff against `master/requirement/`. No `<!-- version -->` metadata blocks in the change workspace.
+**Grill Me** follows problem-space layers then EBP coverage; optional UI converts EBP into end-to-end operation flows. For **iteration**, diff against `master/requirement/`. No `<!-- version -->` metadata blocks in the change workspace.
 
 ### Step 2: sparrow-arch (Product-level)
 
-**Input**: `requirement/` in the change workspace + \[optional\] `requirement/ui/`; read-only `master/`  
+**Input**: `requirement/business/` (catalog + services) + \[optional\] `requirement/ui/`; read-only `master/`  
 **Output** (change workspace):
-- `architecture/business.md` — subdomains + Mermaid diagram
-- `architecture/application.md` — bounded contexts and context map
-- `design/{slug}/spec.md` — **business requirement** slice per BC (not the API design doc)
+- `architecture/bounded-contexts.md` — SD→BC map, context map (no separate “business architecture” doc)
+- `design/{slug}/spec.md` — thin BS projection + Properties (links back to `services/*`)
 - `architecture/frontend.md` — \[if UI\] Interaction Context, BFF, API binding tables
 
 With UI, generates binding tables so BC and Interaction Context pipelines stay orthogonal. BC topology changes require user confirmation before **archive** (see Step 8).
@@ -312,14 +312,17 @@ Specs use a **master (baseline)** vs **change (active/archive)** layout. `sparro
 
 ```
 project.md
-requirement/business/prd-business.md
+requirement/business/catalog.md
+requirement/business/subdomains/…
+requirement/business/capabilities/…   # optional when inlined
+requirement/business/scenarios/…
+requirement/business/services/…
 requirement/quality/prd-quality.md
 requirement/ui/                    # optional
-architecture/business.md
-architecture/application.md
+architecture/bounded-contexts.md
 architecture/frontend.md           # optional
 architecture/api.md                # project-level API catalog (sparrow-design)
-design/{slug}/spec.md              # BC business requirements
+design/{slug}/spec.md              # thin BS projection + Properties
 design/{slug}/api.md | tech.md | model.md
 ```
 
@@ -344,7 +347,7 @@ your-project/
 │   │   ├── project.md
 │   │   ├── requirement/ … + revision-history.md
 │   │   ├── architecture/
-│   │   │   ├── business.md, application.md, frontend.md
+│   │   │   ├── bounded-contexts.md, frontend.md
 │   │   │   ├── api.md               # project-level API catalog
 │   │   │   └── bc-revision-history.md
 │   │   └── design/ … + revision-history.md
@@ -357,7 +360,7 @@ your-project/
 └── integration-tests/{slug}/
 ```
 
-> **Legacy layout**: Flat `docs/sparrow/requirement/prd-business.md` or `docs/sparrow/changes/` is deprecated — migrate to master/change (see `docs/prd/sparrow-change-management.md`).
+> **Legacy layout**: Flat `docs/sparrow/requirement/prd-business.md`, `architecture/business.md` / `application.md`, or `docs/sparrow/changes/` is deprecated — migrate per skill `compat-migrate.md` and `docs/prd/sparrow-change-management.md`.
 
 All bounded contexts share the same project root namespace, but each is an independent module with its own language-specific scaffold and dependency management.
 
@@ -518,7 +521,7 @@ Each language has its own DDD directory layout, coding standards, and anti-patte
 2. Each **skill** is a directory (`SKILL.md` plus optional `references/`, `assets/`, `scripts/`):
    - `SKILL.md` — trigger description, completion criteria, ordered steps, next skill; harness refs last
    - `references/` — process rules loaded on demand (shared language, Grill Me, revise gates)
-   - `assets/` — output document templates (`prd-business.md`, `application.md`, …). Change artifact structure here, not in the skill
+   - `assets/` — output document templates (`catalog.md`, `service.md`, `bounded-contexts.md`, …). Change artifact structure here, not in the skill
    - `scripts/` — mechanical steps (e.g. create a change workspace only after change-id confirmation)
 3. Slash commands are short pointers to that skill directory (they do not duplicate `references/` or `assets/`).
 4. Each stage skill **loads its constraint assets** (`📐 约束资产（Harness）`) — project-level and global rules — at the end of `SKILL.md`

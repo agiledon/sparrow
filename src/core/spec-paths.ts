@@ -22,6 +22,11 @@ export const MASTER_BC_HISTORY = `${MASTER_ROOT}/architecture/bc-revision-histor
 /** @deprecated Legacy flat layout */
 export const LEGACY_CHANGES_ROOT = `${SPARROW_DOCS}/changes`;
 
+export const CATALOG_REL = 'requirement/business/catalog.md';
+/** @deprecated Use catalog + services/; kept for migration detection */
 export const PRD_BUSINESS_REL = 'requirement/business/prd-business.md';
+export const BOUNDED_CONTEXTS_REL = 'architecture/bounded-contexts.md';
+/** @deprecated Use bounded-contexts.md */
+export const APPLICATION_ARCH_REL = 'architecture/application.md';
 export const PRD_QUALITY_REL = 'requirement/quality/prd-quality.md';
 export const ARCHITECTURE_API_CATALOG_REL = 'architecture/api.md';

@@ -13,8 +13,8 @@
 | 设计/架构修订历史 | `docs/sparrow/master/design/revision-history.md` |
 | BC 拓扑历史 | `docs/sparrow/master/architecture/bc-revision-history.md` |
 
-工作区与 master 同构（含 `architecture/api.md`）：`project.md`、`requirement/business/`、`requirement/quality/`、`requirement/ui/`、`architecture/`、`design/{slug}/`（**仅 change 含** `plan.md`）。`spec.md` 为该 BC 业务需求规格。
+工作区与 master 同构（含 `architecture/api.md`）：`project.md`、`requirement/business/`（`catalog.md`、`subdomains/`、`capabilities/`、`scenarios/`、`services/`）、`requirement/quality/`、`requirement/ui/`、`architecture/`（`bounded-contexts.md` 等）、`design/{slug}/`（**仅 change 含** `plan.md`）。`design/{slug}/spec.md` 为该 BC 业务服务薄投影 + Properties。
 
 **change 下禁止** `<!-- version: ... -->`。**development-mode** 以 `.sparrow/sparrow-state.json` 为准（`tbd` \| `greenfield` \| `iteration` \| `brownfield`）；`proposal.md` 抄写该值。`tbd` 时 `pipeline` 必须为空。
 
-旧路径 `docs/sparrow/requirement/prd-business.md` 或 `docs/sparrow/changes/` 须先迁移。
+旧路径 `prd-business.md`、`architecture/business.md`、`architecture/application.md` 须按 `compat-migrate.md` 迁移。`docs/sparrow/changes/` 旧布局须先迁移。

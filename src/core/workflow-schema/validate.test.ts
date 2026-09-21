@@ -11,7 +11,11 @@ test('workflow schema validates structurally', () => {
   assert.ok(schema.globalHarness.always.includes('common/always/interactive-interaction.md'));
   assert.equal(schema.globalHarness.conditional[0]?.path, 'common/conditional/brownfield.md');
   const requirement = schema.steps.find((s) => s.id === 'requirement');
-  assert.ok(requirement?.outputs?.some((o) => o.dest === 'requirement/business/prd-business.md'));
+  assert.ok(requirement?.outputs?.some((o) => o.dest === 'requirement/business/catalog.md'));
+  const arch = schema.steps.find((s) => s.id === 'arch');
+  assert.ok(arch?.outputs?.some((o) => o.dest === 'architecture/bounded-contexts.md'));
+  assert.ok(arch?.harness?.includes('arch/bounded-contexts.md'));
+  assert.ok(!(arch?.harness ?? []).includes('arch/business.md'));
   const archive = schema.steps.find((s) => s.id === 'archive');
   assert.equal(archive?.phase, 'product');
   assert.equal(archive?.scope, undefined);

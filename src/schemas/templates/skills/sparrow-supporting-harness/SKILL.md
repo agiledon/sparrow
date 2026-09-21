@@ -16,9 +16,11 @@
 
 | 约束内容 | 目标文件 |
 |---------|---------|
-| 业务服务 / Grill Me | requirement/requirements.md |
-| 子领域 / 业务架构 | arch/business.md |
-| 限界上下文 / 映射 | arch/application.md |
+| 业务服务 / Grill Me / EBP / EARS / UI 操作流程 | requirement/requirements.md |
+| 子领域划分 | requirement/subdomains.md |
+| 限界上下文 / SD→BC 映射 | arch/bounded-contexts.md |
+| 规格切片 / Property | arch/spec-slice.md |
+| 交互上下文 / 前端 | arch/frontend.md |
 | API / 序列图 | design/api-design.md |
 | DDD 四层 / 角色 | model/architecture.md |
 | 聚合 / 建模 | model/domain-modeling.md |

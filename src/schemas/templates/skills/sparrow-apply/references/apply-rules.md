@@ -97,9 +97,9 @@
 
 ---
 
-## 跨 BC 通信（与应用架构一致）
+## 跨 BC 通信（与限界上下文纪律一致）
 
-> 📐 跨 BC 通信纪律与应用架构阶段（\`arch/application.md\`）完全一致：
+> 📐 跨 BC 通信纪律与 arch 阶段（\`arch/bounded-contexts.md\`）完全一致：
 > - **同一进程**：通过下游 BC 的南向网关 Client 调用上游 BC 的北向网关本地服务
 > - **不同进程**：通过公开 API 或领域事件通信
 > - **无论是否同一进程，禁止直接跨 BC 访问领域对象**；跨 BC 调用一律经 \`api/\` 或 \`infrastructure/adapter/\`（ACL）边界

@@ -1,4 +1,9 @@
-# {系统名称}功能需求文档
+# {服务名}（已弃用单文件形态）
+
+> **Deprecated.** 新 change 请使用分层资产：
+> `catalog.md`、`subdomains/`、`capabilities/`、`scenarios/`、`services/{BS-id}.md`。
+> Iteration 迁移：将本节拆入对应 `services/BS-*.md`，并更新 catalog 与 EBP 表。
+> 详见 skill 内 `references/compat-migrate.md`。
 
 ## 1 {业务服务1名称}
 
@@ -14,20 +19,11 @@
 **基本流程：**
 
 1. {步骤1}；
-2. {步骤2}；
 
 **替代流程：**
 
 1a. {异常情况1}；
-2a. {异常情况2}；
 
-**验收标准：**
+**验收标准（EARS）：**
 
-1. {标准1}；
-2. {标准2}；
-
----
-
-## 2 {业务服务2名称}
-
-（按同一结构继续）
+1. WHEN {条件}, THE system SHALL {行为}。

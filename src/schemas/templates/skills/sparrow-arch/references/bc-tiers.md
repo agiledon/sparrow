@@ -62,12 +62,12 @@ revise 模式下，对每个**受变更影响的 BC**，依据 \`project.md\` �
 ## arch 在 revise 模式的执行步骤
 
 1. **载入变更**：读取 \`change/current/{change-id}/proposal.md\` 与 change 工作区需求/架构产物，对照 \`master/\`（ADDED/MODIFIED/REMOVED 标记）。
-2. **重跑业务架构分析**：在现有 \`business.md\` 基础上，识别新增子域、消失服务、模型冲突。
-3. **重跑应用架构映射**：将新 BC 提案与现有 BC 对比，算出 diff：新增 BC / 删除 BC / 合并 BC / 拆分 BC / 移动聚合 / 加 ACL / 引绞杀者。
+2. **核对问题空间结构**：在现有 \`requirement/business/\`（catalog / subdomains / services）基础上，识别新增子域、消失服务、模型冲突；**禁止**在 arch 重划子领域。
+3. **重跑限界上下文映射**：将新 BC 提案与现有 BC 对比，算出 diff：新增 BC / 删除 BC / 合并 BC / 拆分 BC / 移动聚合 / 加 ACL / 引绞杀者。
 4. **套决策表**：对每个 diff 项产出动作 + 理由，并标注涉及 BC 的档位（决定落地深度）。
 5. **破坏性确认**：删除 BC、合并 BC、绞杀者 cutover 三类操作，先向用户展示方案与理由，确认后再执行。
 6. **落实**：
-   - 更新 \`architecture/business.md\`、\`architecture/application.md\`（MODIFIED 部分按 delta 合并，版本号递增，revise 模式下元数据块追加 \`change-id\` / \`supersedes\`）。
+   - 更新 \`architecture/bounded-contexts.md\`（MODIFIED 部分按 delta 合并，版本号递增，revise 模式下元数据块追加 \`change-id\` / \`supersedes\`）。问题空间变更在 requirement 侧更新，不写 \`architecture/business.md\`。
    - 重建 \`design/{slug}/*\`：新建 BC 创建切片目录；合并/拆分按目标重组切片；删除 BC 将其 \`design/{slug}/\` 移入 \`change/current/{change-id}/retired/\` 留档后移除索引。
    - 在 \`change/current/{change-id}/\` 下写 **ADR**（架构决策记录）：记录初始划分假设、触发变更的需求缺口、本次合并/删除/拆分的判定与理由。
 7. **同步上下文映射**：按动作更新上下文映射关系（ACL / OHS / Conformist / Customer-Supplier / Shared Kernel / Publisher-Subscriber / Separate Ways 等）。
@@ -201,7 +201,7 @@ UI 规格尚未生成。询问用户：
 
 ##### 绑定规则
 
-1. **业务服务是唯一真相源**：所有契约定义来自 \`prd-business.md\` 中的业务服务。交互上下文的 BFF 聚合调用和 BC 的 API 端点都从同一个业务服务定义推导而来。
+1. **业务服务是唯一真相源**：所有契约定义来自 \`requirement/business/services/*\`。交互上下文的 BFF 聚合调用和 BC 的 API 端点都从同一个业务服务定义推导而来。
 2. **请求一致性**：前端发起的请求参数名、类型、必填性必须与对应 BC 的业务服务输入定义完全一致。
 3. **响应一致性**：BC API 返回的数据字段必须覆盖 UI 页面的信息展示需求。
 4. **无需互读对方产物**：绑定表写入 \`frontend.md\` 后，交互上下文的 design 步骤从自身 \`spec.md\` 和 \`frontend.md\` 推导 BFF API，各 BC 的 design 步骤从自身 \`spec.md\` 推导 BC API。双方无需读取对方产物，契约自然一致。
@@ -209,7 +209,7 @@ UI 规格尚未生成。询问用户：
 ##### 绑定过程
 
 1. 读取 \`requirement/ui/ui-spec.md\`，提取所有 UI 页面和交互操作
-2. 读取 \`requirement/business/prd-business.md\`，获取完整的业务服务定义
+2. 读取 \`requirement/business/catalog.md\` 与相关 \`services/*.md\`，获取业务服务定义
 3. 对于每个 UI 交互操作：
    - 匹配对应的业务服务（通过操作描述和触发事件匹配）
    - 确定该业务服务归属的限界上下文（从步骤二中已确定的 BC 映射）

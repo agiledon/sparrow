@@ -20,7 +20,7 @@
       "id": "requirement",
       "skillId": "sparrow-requirement",
       "name": "Sparrow Requirement",
-      "description": "Use when gathering or revising product requirements, identifying business services, or exploring optional UI specs from raw needs.",
+      "description": "Use when gathering or revising product requirements, partitioning subdomains/capabilities/scenarios, identifying business services along end-to-end processes, or exploring optional UI specs.",
       "phase": "product",
       "order": 1,
       "nextSkill": "sparrow-arch",
@@ -29,7 +29,8 @@
       "template": "sparrow-requirement/SKILL.md",
       "workflowBlock": "sparrow-requirement.md",
       "harness": [
-        "requirement/requirements.md"
+        "requirement/requirements.md",
+        "requirement/subdomains.md"
       ],
       "requires": [],
       "share": [
@@ -42,7 +43,9 @@
         "revise-gate.md"
       ],
       "references": [
-        "business-service-rules.md"
+        "business-service-rules.md",
+        "subdomain-rules.md",
+        "compat-migrate.md"
       ],
       "outputs": [
         {
@@ -54,8 +57,25 @@
           "dest": "proposal.md"
         },
         {
-          "asset": "prd-business.md",
-          "dest": "requirement/business/prd-business.md"
+          "asset": "catalog.md",
+          "dest": "requirement/business/catalog.md"
+        },
+        {
+          "asset": "subdomain.md",
+          "dest": "requirement/business/subdomains/{sd-slug}.md"
+        },
+        {
+          "asset": "capability.md",
+          "dest": "requirement/business/capabilities/{c-slug}.md",
+          "optional": true
+        },
+        {
+          "asset": "scenario.md",
+          "dest": "requirement/business/scenarios/{s-slug}.md"
+        },
+        {
+          "asset": "service.md",
+          "dest": "requirement/business/services/{bs-id}.md"
         },
         {
           "asset": "prd-quality.md",
@@ -91,7 +111,7 @@
       "id": "arch",
       "skillId": "sparrow-arch",
       "name": "Sparrow Arch",
-      "description": "Use when defining business architecture, application architecture, bounded contexts, or interaction-context frontend architecture.",
+      "description": "Use when mapping subdomains to bounded contexts, defining context maps, slicing business services into design specs with properties, or interaction-context frontend architecture.",
       "phase": "product",
       "order": 2,
       "nextSkill": "sparrow-design",
@@ -100,8 +120,8 @@
       "template": "sparrow-arch/SKILL.md",
       "workflowBlock": "sparrow-arch.md",
       "harness": [
-        "arch/business.md",
-        "arch/application.md",
+        "arch/bounded-contexts.md",
+        "arch/spec-slice.md",
         "arch/frontend.md"
       ],
       "requires": [
@@ -116,10 +136,11 @@
         "revise-gate.md"
       ],
       "references": [
-        "business-architecture.md",
         "react-mapping.md",
+        "property-rules.md",
         "bc-tiers.md",
-        "frontend-architecture.md"
+        "frontend-architecture.md",
+        "compat-migrate.md"
       ],
       "outputs": [
         {
@@ -127,12 +148,8 @@
           "dest": "project.md"
         },
         {
-          "asset": "business.md",
-          "dest": "architecture/business.md"
-        },
-        {
-          "asset": "application.md",
-          "dest": "architecture/application.md"
+          "asset": "bounded-contexts.md",
+          "dest": "architecture/bounded-contexts.md"
         },
         {
           "asset": "spec.md",

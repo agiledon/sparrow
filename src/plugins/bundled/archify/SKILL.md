@@ -23,7 +23,7 @@ ARCHIFY_BIN="$HOME/.config/sparrow/plugins/archify/bin/archify.mjs"
 
 | 当前阶段需要绘制的图 | Archify type | 说明 |
 |---|---|---|
-| 业务架构图、应用架构图、上下文映射图、组件图、静态类图 | `architecture` | 节点 + 关系，支持 grouping/嵌套表达层次 |
+| 子领域示意、限界上下文图、上下文映射图、组件图、静态类图 | `architecture` | 节点 + 关系，支持 grouping/嵌套表达层次 |
 | 序列图、API 契约交互图 | `sequence` | 调用链，支持参与者和消息流 |
 
 Archify `architecture` 类型可绘制的 component type：`frontend`, `backend`, `database`, `cloud`, `security`, `messagebus`, `external`。

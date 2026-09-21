@@ -27,6 +27,8 @@ const DEPRECATED_HARNESS_REL_PATHS = [
   'global/README.md',
   'global/always/interactive-interaction.md',
   'global/conditional/brownfield.md',
+  'arch/business.md',
+  'arch/application.md',
 ];
 
 /**

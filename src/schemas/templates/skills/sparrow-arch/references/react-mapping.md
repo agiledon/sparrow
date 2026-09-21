@@ -1,4 +1,4 @@
-# 应用架构映射（ReAct）
+# 限界上下文映射（ReAct）
 
 
 ## 第一性原理
@@ -48,7 +48,7 @@ Thought（思考）→ Action（行动）→ Observation（观察）→ Next Act
 **Thought（思考）**：列出所有子领域清单，思考每个子领域的业务目标与范围边界。
 
 **Action（行动）**：
-一个子领域可以对应 **1 个或多个**限界上下文。初始映射按照一对一的关系，将业务架构中的子领域直接映射为限界上下文：
+一个子领域可以对应 **1 个或多个**限界上下文。**必须先**按一对一关系，将 `requirement/business/` 中已确认的子领域（SD）直接映射为限界上下文：
 - **核心子领域** → **核心能力层**
 - **支撑子领域** → **公共能力层**
 - **通用子领域** → **公共能力层**
@@ -199,14 +199,14 @@ Thought（思考）→ Action（行动）→ Observation（观察）→ Next Act
 
 - 每次迭代必须完整输出 **Step 1 → 2 → 3 → 4** 的全部内容
 - Step 4 的 **Observation** 和 **Next Action** 是强制输出项，不可省略
-- 当 Next Action 为"通过"时，再生成最终的 \`application.md\` 文档
+- 当 Next Action 为"通过"时，再生成最终的 \`bounded-contexts.md\` 文档
 - 在最终文档的每个限界上下文「调整理由」字段中，附上迭代摘要
 
 ## 上下文映射关系模式
 
-> 📐 完整的上下文映射模式清单与选择纪律见约束资产 \`arch/application.md\`。所有跨 BC 关系必须明确标注映射模式并说明选择理由，包括：防腐层（ACL）、开放主机服务（OHS）、遵奉者（Conformist）、客户-供应商（Customer-Supplier）、共享内核（Shared Kernel）、**发布-订阅（Publisher-Subscriber）**、分离方式（Separate Ways）。
+> 📐 完整的上下文映射模式清单与选择纪律见约束资产 \`arch/bounded-contexts.md\`。所有跨 BC 关系必须明确标注映射模式并说明选择理由，包括：防腐层（ACL）、开放主机服务（OHS）、遵奉者（Conformist）、客户-供应商（Customer-Supplier）、共享内核（Shared Kernel）、**发布-订阅（Publisher-Subscriber）**、分离方式（Separate Ways）。
 
-## 应用架构图绘制规范
+## 限界上下文图绘制规范
 
 四层架构：客户端层 → 边缘层 → 核心能力层 → 公共能力层
 
@@ -218,18 +218,20 @@ Thought（思考）→ Action（行动）→ Observation（观察）→ Next Act
 
 ## 限界上下文命名规则
 
-> 📐 命名纪律见约束资产 \`arch/application.md\`：限界上下文名称必须为**名词**，精简抽象，体现核心能力，**禁止含"系统""服务"后缀**。
+> 📐 命名纪律见约束资产 \`arch/bounded-contexts.md\`：限界上下文名称必须为**名词**，精简抽象，体现核心能力，**禁止含"系统""服务"后缀**。
 > - ✅ 正确示例：\`库存\`、\`支付\`、\`用户\`、\`订单\`、\`计费\`、\`通知\`
 > - ❌ 错误示例：\`订单管理系统\`（含"系统"后缀）、\`用户服务\`（含"服务"后缀）、\`数据统计分析\`（含动词）
 
 ## 输出文档格式（阶段二）
 
-写入 **\`docs/sparrow/change/current/{activeChangeId}/architecture/application.md\`**：
+写入 **\`docs/sparrow/change/current/{activeChangeId}/architecture/bounded-contexts.md\`**：
 
 \`\`\`markdown
-# 应用架构定义文档
+# 限界上下文与上下文映射
 
-## 1. 应用架构图
+## 1. SD → BC 映射表（先一对一，再记调整）
+
+## 2. 限界上下文图
 [Mermaid 四层架构图]
 
 ## 2. 限界上下文总览
@@ -269,7 +271,7 @@ Thought（思考）→ Action（行动）→ Observation（观察）→ Next Act
 - [ ] 上下文映射关系模式选择合理
 - [ ] 每个限界上下文都有明确的职责边界
 - [ ] 服务契约分配合理，无重复或遗漏
-- [ ] BC调整理由已完整记录在 application.md 中
+- [ ] BC调整理由已完整记录在 bounded-contexts.md 中
 
 ## 强制性优化检查清单
 - [ ] 识别并解决了概念重叠问题

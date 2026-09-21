@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Problem-space hierarchy**: Requirement produces `catalog.md` + `subdomains/` / `capabilities/` / `scenarios/` / `services/` (EARS acceptance, EBP coverage). Subdomain partitioning moves out of arch. Grill Me aligns with SD→C→S→EBP→BS; UI converts EBP to end-to-end operation flows.
+  - **问题空间分层**：requirement 产出 catalog 与分层资产；子领域前移到 requirement；Grill Me 对齐层次与端到端流程；UI 由 EBP 转操作流程。
+- **Solution-space rename**: Arch produces `architecture/bounded-contexts.md` (not business/application architecture). Spec slices are thin projections + **Properties** (EARS→P). Harness: `requirement/subdomains.md`, `arch/bounded-contexts.md`, `arch/spec-slice.md`.
+  - **解空间更名**：arch 产出 `bounded-contexts.md`；spec 为薄投影 + Property；harness 路径同步调整。
+- **Breaking paths**: Prefer new layout; migrate `prd-business.md`, `architecture/business.md`, `architecture/application.md` via skill `compat-migrate.md`. Re-run `sparrow init` / `sparrow update`.
+  - **破坏性路径变更**：旧路径按 `compat-migrate.md` 迁移；重新执行 init/update 刷新 skill。
 - **Archive readiness gate**: `sparrow-state.mjs check-archive` / `prune-contexts` gate archive on per-slug `verify`+`done`. Full vs partial archive. Promote via generated `sparrow-promote.mjs` (**append-only delta**). Canonical narrative: skill `references/archive-gate.md`. State script is generated from `src/core/project-state*` (single source).
   - **归档门控**：按 slug 的 `verify`+`done`；完整/部分归档；`sparrow-promote.mjs` 只追加 delta；契约见 `archive-gate.md`。
 - **Core workflow levels**: `archive` is product-level (once per change, after all slugs). Team-level steps are design → verify (per slug). Product-level bookends are requirement → arch and archive.
@@ -25,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - schema 内容从 `src/schemas/sparrow-ddd/` 上提至 `src/schemas/`。
 - **Spec layout init**: `sparrow init` creates empty `master/`, `change/current/`, and `change/archive/` directories, and does not pre-fill `master/project.md` or a change-id workspace. The change-id subdirectory appears after confirmation (`change/current/{id}/`); archive promote fills `master/`. If the user aborts without a change-id, `current/` stays empty. Re-run `sparrow init` to refresh skill instructions.
   - **修复**：init 创建空的 `master/`、`change/current/`、`change/archive/`，不预填内容。未确认 change-id 时 `current/` 为空；首次归档前 `master/` 为空。产出写在 `change/current/{change-id}/`。
-- **Skill bundles**: Each generated skill is a directory (`SKILL.md` + `references/` + `assets/` + optional `scripts/`). Output document structure lives in `assets/` templates (e.g. `prd-business.md`, `application.md`); changing artifact format does not require editing skill process text. Slash commands are short pointers to the skill directory. Re-run `sparrow init` / `sparrow update` to refresh.
+- **Skill bundles**: Each generated skill is a directory (`SKILL.md` + `references/` + `assets/` + optional `scripts/`). Output document structure lives in `assets/` templates (e.g. `catalog.md`, `bounded-contexts.md`); changing artifact format does not require editing skill process text. Slash commands are short pointers to the skill directory. Re-run `sparrow init` / `sparrow update` to refresh.
   - **Skill 目录化**：每个 skill 生成为目录；产出物章节结构只在 `assets/` 模板中维护。斜杠命令改为指向 skill 目录的短指令。重新执行 `sparrow init` / `sparrow update` 以刷新。
 
 ---

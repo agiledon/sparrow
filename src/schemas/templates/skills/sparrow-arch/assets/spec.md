@@ -1,16 +1,21 @@
 # {限界上下文中文名} 业务服务切片
 
-## 关联子域
+## 映射
 
-{子域名称与类型}
+| SD | BC slug | 备注 |
+|----|---------|------|
+| SD-{slug} | {slug} | 一对一 / 调整理由 |
 
-## 业务服务列表
+## 业务服务
 
-### {SERVICE-ID} {服务名称}
+> 薄投影：叙事全文见 `source`；本文件只保留身份、追溯与 Properties。
+> 禁止复制用户故事 / 基本·替代流程全文；禁止用「scenario」指代验收片段。
 
-- **服务描述**：作为{角色}，我想要{功能}，以便{价值}。
-- **触发事件**：{触发事件}
-- **基本流程**：{摘要}
-- **替代流程**：{摘要}
-- **验收标准**：{摘要}
-- **来源**：`requirement/business/prd-business.md`
+### BS-{id} {服务名称}
+
+- **参与者**：{角色}
+- **source**：`../../requirement/business/services/BS-{id}.md`
+- **trace**：SD-{slug} / C-{slug} / S-{slug} / EBP-{id}#{n}
+- **properties**：
+  - **P-{id}**：For any {量化范围}, {系统行为不变量}。（`from: EARS#1`）
+  - **P-{id}**：…（`example-only` 若不可普遍量化）

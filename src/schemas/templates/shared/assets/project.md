@@ -24,9 +24,12 @@
 
 ### 1. 产品需求
 
-#### 1.1 业务需求
+#### 1.1 业务需求（问题空间）
 
-- [ ] [功能需求文档](./requirement/business/prd-business.md) — *待生成 (sparrow-requirement)*
+- [ ] [需求目录 Catalog](./requirement/business/catalog.md) — *待生成 (sparrow-requirement)*
+- [ ] [子领域](./requirement/business/subdomains/) — *待生成 (sparrow-requirement)*
+- [ ] [场景](./requirement/business/scenarios/) — *待生成 (sparrow-requirement)*
+- [ ] [业务服务](./requirement/business/services/) — *待生成 (sparrow-requirement)*
 
 #### 1.2 质量属性
 
@@ -42,10 +45,9 @@
 - [ ] [组件库](./requirement/ui/components/component-library.md) — *待生成 (sparrow-requirement)*
 - [ ] [主页面原型](./requirement/ui/prototypes/index.html) — *待生成 (sparrow-requirement)*
 
-### 2. 系统架构
+### 2. 系统架构（解空间）
 
-- [ ] [业务架构](./architecture/business.md) — *待生成 (sparrow-arch)*
-- [ ] [应用架构](./architecture/application.md) — *待生成 (sparrow-arch)*
+- [ ] [限界上下文与上下文映射](./architecture/bounded-contexts.md) — *待生成 (sparrow-arch)*
 - [ ] [前端架构](./architecture/frontend.md) — *待生成 (sparrow-arch)*
 
 > 前端架构仅在项目有 UI 开发需求时提供。若无 UI 需求，该文档不会生成。
@@ -72,6 +74,6 @@
 
 ## 下一步
 
-1. 执行 **/sparrow-requirement** — 从原始需求中识别业务服务（如有需要，在技能中继续 UI 设计探索）
-2. 执行 **/sparrow-arch** — 划分子领域，定义业务架构、应用架构（如有 UI 则同时生成前端架构）
+1. 执行 **/sparrow-requirement** — 划分子领域/能力/场景，沿端到端业务流程识别业务服务（如有需要，继续 UI 设计探索）
+2. 执行 **/sparrow-arch** — 将子领域映射为限界上下文，切片 spec（含 Properties）；如有 UI 则同时生成前端架构
 3. 对每个 slug（限界上下文或交互上下文）依次执行：**design → model → plan → apply → verify**；全部完成后 **archive**（产品级）promote 交付规格至 `master/`

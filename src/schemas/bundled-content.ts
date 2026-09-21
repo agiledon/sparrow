@@ -40,14 +40,14 @@ import _skill_sparrow_apply_assets_code_review_md from './templates/skills/sparr
 import _skill_sparrow_apply_references_apply_rules_md from './templates/skills/sparrow-apply/references/apply-rules.md';
 import _skill_sparrow_apply_references_interaction_apply_md from './templates/skills/sparrow-apply/references/interaction-apply.md';
 import _skill_sparrow_arch_SKILL_md from './templates/skills/sparrow-arch/SKILL.md';
-import _skill_sparrow_arch_assets_application_md from './templates/skills/sparrow-arch/assets/application.md';
-import _skill_sparrow_arch_assets_business_md from './templates/skills/sparrow-arch/assets/business.md';
+import _skill_sparrow_arch_assets_bounded_contexts_md from './templates/skills/sparrow-arch/assets/bounded-contexts.md';
 import _skill_sparrow_arch_assets_frontend_md from './templates/skills/sparrow-arch/assets/frontend.md';
 import _skill_sparrow_arch_assets_spec_interaction_md from './templates/skills/sparrow-arch/assets/spec-interaction.md';
 import _skill_sparrow_arch_assets_spec_md from './templates/skills/sparrow-arch/assets/spec.md';
 import _skill_sparrow_arch_references_bc_tiers_md from './templates/skills/sparrow-arch/references/bc-tiers.md';
-import _skill_sparrow_arch_references_business_architecture_md from './templates/skills/sparrow-arch/references/business-architecture.md';
+import _skill_sparrow_arch_references_compat_migrate_md from './templates/skills/sparrow-arch/references/compat-migrate.md';
 import _skill_sparrow_arch_references_frontend_architecture_md from './templates/skills/sparrow-arch/references/frontend-architecture.md';
+import _skill_sparrow_arch_references_property_rules_md from './templates/skills/sparrow-arch/references/property-rules.md';
 import _skill_sparrow_arch_references_react_mapping_md from './templates/skills/sparrow-arch/references/react-mapping.md';
 import _skill_sparrow_archive_SKILL_md from './templates/skills/sparrow-archive/SKILL.md';
 import _skill_sparrow_archive_assets_bc_revision_history_entry_md from './templates/skills/sparrow-archive/assets/bc-revision-history-entry.md';
@@ -73,14 +73,21 @@ import _skill_sparrow_plan_assets_plan_md from './templates/skills/sparrow-plan/
 import _skill_sparrow_plan_references_interaction_plan_md from './templates/skills/sparrow-plan/references/interaction-plan.md';
 import _skill_sparrow_plan_references_module_layouts_md from './templates/skills/sparrow-plan/references/module-layouts.md';
 import _skill_sparrow_requirement_SKILL_md from './templates/skills/sparrow-requirement/SKILL.md';
+import _skill_sparrow_requirement_assets_capability_md from './templates/skills/sparrow-requirement/assets/capability.md';
+import _skill_sparrow_requirement_assets_catalog_md from './templates/skills/sparrow-requirement/assets/catalog.md';
 import _skill_sparrow_requirement_assets_component_library_md from './templates/skills/sparrow-requirement/assets/component-library.md';
 import _skill_sparrow_requirement_assets_design_tokens_md from './templates/skills/sparrow-requirement/assets/design-tokens.md';
 import _skill_sparrow_requirement_assets_prd_business_md from './templates/skills/sparrow-requirement/assets/prd-business.md';
 import _skill_sparrow_requirement_assets_prd_quality_md from './templates/skills/sparrow-requirement/assets/prd-quality.md';
 import _skill_sparrow_requirement_assets_proposal_md from './templates/skills/sparrow-requirement/assets/proposal.md';
 import _skill_sparrow_requirement_assets_prototype_index_html from './templates/skills/sparrow-requirement/assets/prototype-index.html';
+import _skill_sparrow_requirement_assets_scenario_md from './templates/skills/sparrow-requirement/assets/scenario.md';
+import _skill_sparrow_requirement_assets_service_md from './templates/skills/sparrow-requirement/assets/service.md';
+import _skill_sparrow_requirement_assets_subdomain_md from './templates/skills/sparrow-requirement/assets/subdomain.md';
 import _skill_sparrow_requirement_assets_ui_spec_md from './templates/skills/sparrow-requirement/assets/ui-spec.md';
 import _skill_sparrow_requirement_references_business_service_rules_md from './templates/skills/sparrow-requirement/references/business-service-rules.md';
+import _skill_sparrow_requirement_references_compat_migrate_md from './templates/skills/sparrow-requirement/references/compat-migrate.md';
+import _skill_sparrow_requirement_references_subdomain_rules_md from './templates/skills/sparrow-requirement/references/subdomain-rules.md';
 import _skill_sparrow_requirement_scripts_ensure_change_workspace_mjs from './templates/skills/sparrow-requirement/scripts/ensure-change-workspace.mjs';
 import _skill_sparrow_supporting_harness_SKILL_md from './templates/skills/sparrow-supporting-harness/SKILL.md';
 import _skill_sparrow_supporting_reconcile_SKILL_md from './templates/skills/sparrow-supporting-reconcile/SKILL.md';
@@ -107,14 +114,14 @@ export const skillExtras: Record<string, Record<string, string>> = {
     'references/interaction-apply.md': _skill_sparrow_apply_references_interaction_apply_md,
   },
   'sparrow-arch': {
-    'assets/application.md': _skill_sparrow_arch_assets_application_md,
-    'assets/business.md': _skill_sparrow_arch_assets_business_md,
+    'assets/bounded-contexts.md': _skill_sparrow_arch_assets_bounded_contexts_md,
     'assets/frontend.md': _skill_sparrow_arch_assets_frontend_md,
     'assets/spec-interaction.md': _skill_sparrow_arch_assets_spec_interaction_md,
     'assets/spec.md': _skill_sparrow_arch_assets_spec_md,
     'references/bc-tiers.md': _skill_sparrow_arch_references_bc_tiers_md,
-    'references/business-architecture.md': _skill_sparrow_arch_references_business_architecture_md,
+    'references/compat-migrate.md': _skill_sparrow_arch_references_compat_migrate_md,
     'references/frontend-architecture.md': _skill_sparrow_arch_references_frontend_architecture_md,
+    'references/property-rules.md': _skill_sparrow_arch_references_property_rules_md,
     'references/react-mapping.md': _skill_sparrow_arch_references_react_mapping_md,
   },
   'sparrow-archive': {
@@ -145,14 +152,21 @@ export const skillExtras: Record<string, Record<string, string>> = {
     'references/module-layouts.md': _skill_sparrow_plan_references_module_layouts_md,
   },
   'sparrow-requirement': {
+    'assets/capability.md': _skill_sparrow_requirement_assets_capability_md,
+    'assets/catalog.md': _skill_sparrow_requirement_assets_catalog_md,
     'assets/component-library.md': _skill_sparrow_requirement_assets_component_library_md,
     'assets/design-tokens.md': _skill_sparrow_requirement_assets_design_tokens_md,
     'assets/prd-business.md': _skill_sparrow_requirement_assets_prd_business_md,
     'assets/prd-quality.md': _skill_sparrow_requirement_assets_prd_quality_md,
     'assets/proposal.md': _skill_sparrow_requirement_assets_proposal_md,
     'assets/prototype-index.html': _skill_sparrow_requirement_assets_prototype_index_html,
+    'assets/scenario.md': _skill_sparrow_requirement_assets_scenario_md,
+    'assets/service.md': _skill_sparrow_requirement_assets_service_md,
+    'assets/subdomain.md': _skill_sparrow_requirement_assets_subdomain_md,
     'assets/ui-spec.md': _skill_sparrow_requirement_assets_ui_spec_md,
     'references/business-service-rules.md': _skill_sparrow_requirement_references_business_service_rules_md,
+    'references/compat-migrate.md': _skill_sparrow_requirement_references_compat_migrate_md,
+    'references/subdomain-rules.md': _skill_sparrow_requirement_references_subdomain_rules_md,
     'scripts/ensure-change-workspace.mjs': _skill_sparrow_requirement_scripts_ensure_change_workspace_mjs,
   },
   'sparrow-supporting-harness': {
@@ -185,9 +199,9 @@ export const workflowBlocks: Record<string, string> = {
 };
 
 import _h_apply_implementation_md from './templates/harness/apply/implementation.md';
-import _h_arch_application_md from './templates/harness/arch/application.md';
-import _h_arch_business_md from './templates/harness/arch/business.md';
+import _h_arch_bounded_contexts_md from './templates/harness/arch/bounded-contexts.md';
 import _h_arch_frontend_md from './templates/harness/arch/frontend.md';
+import _h_arch_spec_slice_md from './templates/harness/arch/spec-slice.md';
 import _h_common_README_md from './templates/harness/common/README.md';
 import _h_common_always_interactive_interaction_md from './templates/harness/common/always/interactive-interaction.md';
 import _h_common_conditional_brownfield_md from './templates/harness/common/conditional/brownfield.md';
@@ -197,14 +211,15 @@ import _h_model_architecture_md from './templates/harness/model/architecture.md'
 import _h_model_domain_modeling_md from './templates/harness/model/domain-modeling.md';
 import _h_model_view_modeling_md from './templates/harness/model/view-modeling.md';
 import _h_requirement_requirements_md from './templates/harness/requirement/requirements.md';
+import _h_requirement_subdomains_md from './templates/harness/requirement/subdomains.md';
 
 export interface BundledHarnessEntry { relPath: string; title: string; body: string; }
 
 export const bundledHarnessBodies: Record<string, { title: string; body: string }> = {
   'apply/implementation.md': { title: "代码实现约束（apply / implementation）", body: _h_apply_implementation_md },
-  'arch/application.md': { title: "应用架构约束（arch / application）", body: _h_arch_application_md },
-  'arch/business.md': { title: "业务架构约束（arch / business）", body: _h_arch_business_md },
+  'arch/bounded-contexts.md': { title: "限界上下文约束（arch / bounded-contexts）", body: _h_arch_bounded_contexts_md },
   'arch/frontend.md': { title: "前端架构约束（arch / frontend）", body: _h_arch_frontend_md },
+  'arch/spec-slice.md': { title: "规格切片约束（arch / spec-slice）", body: _h_arch_spec_slice_md },
   'common/README.md': { title: "通用约束（common）", body: _h_common_README_md },
   'common/always/interactive-interaction.md': { title: "互动式交互纪律（interactive-interaction）", body: _h_common_always_interactive_interaction_md },
   'common/conditional/brownfield.md': { title: "棕地项目约束（brownfield）", body: _h_common_conditional_brownfield_md },
@@ -214,5 +229,6 @@ export const bundledHarnessBodies: Record<string, { title: string; body: string 
   'model/domain-modeling.md': { title: "领域建模约束（model / domain-modeling）", body: _h_model_domain_modeling_md },
   'model/view-modeling.md': { title: "View Model 建模约束（model / view-modeling）", body: _h_model_view_modeling_md },
   'requirement/requirements.md': { title: "需求约束（requirement / requirements）", body: _h_requirement_requirements_md },
+  'requirement/subdomains.md': { title: "子领域约束（requirement / subdomains）", body: _h_requirement_subdomains_md },
 };
 

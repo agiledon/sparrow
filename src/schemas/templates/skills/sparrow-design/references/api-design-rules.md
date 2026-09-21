@@ -48,8 +48,8 @@
 
 ### 必需文档
 1. **业务服务列表文档**：\`docs/sparrow/change/current/{activeChangeId}/design/{slug}/spec.md\`（当前限界上下文的切片需求）
-2. **应用架构定义文档**：\`docs/sparrow/change/current/{activeChangeId}/architecture/application.md\`
-3. **架构图中的技术实现建议**（来自 application.md 中对当前上下文的描述）
+2. **限界上下文定义文档**：\`docs/sparrow/change/current/{activeChangeId}/architecture/bounded-contexts.md\`
+3. **架构图中的技术实现建议**（来自 bounded-contexts.md 中对当前上下文的描述）
 
 ## 技术选型交互流程
 
@@ -79,7 +79,7 @@
 3. 区分哪些是当前 BC 对外提供的服务，哪些依赖其他 BC
 
 ### 步骤2: 分析上下文映射关系
-1. 从 application.md 中识别当前上下文与其他上下文的关系
+1. 从 bounded-contexts.md 中识别当前上下文与其他上下文的关系
 2. 确定调用模式 (Customer/Supplier, ACL, OHS 等)
 3. 设计跨上下文的消息交互（同步调用 + 异步事件）
 

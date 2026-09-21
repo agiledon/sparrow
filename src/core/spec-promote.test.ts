@@ -8,8 +8,11 @@ import { MASTER_ROOT, CHANGE_CURRENT } from './spec-paths.js';
 
 function seedChange(root: string, changeId: string): string {
   const base = join(root, CHANGE_CURRENT, changeId);
-  mkdirSync(join(base, 'requirement', 'business'), { recursive: true });
-  writeFileSync(join(base, 'requirement', 'business', 'prd-business.md'), '# biz\n', 'utf-8');
+  mkdirSync(join(base, 'requirement', 'business', 'services'), { recursive: true });
+  writeFileSync(join(base, 'requirement', 'business', 'catalog.md'), '# catalog\n', 'utf-8');
+  writeFileSync(join(base, 'requirement', 'business', 'services', 'BS-submit-order.md'), '# svc\n', 'utf-8');
+  mkdirSync(join(base, 'architecture'), { recursive: true });
+  writeFileSync(join(base, 'architecture', 'bounded-contexts.md'), '# bc\n', 'utf-8');
   const planDir = join(base, 'design', 'orders');
   mkdirSync(planDir, { recursive: true });
   writeFileSync(join(planDir, 'spec.md'), '# spec\n', 'utf-8');
@@ -23,16 +26,17 @@ test('promote ADDED creates master files and skips plan.md', () => {
   seedChange(root, changeId);
 
   const result = promoteChangeToMaster(root, changeId, '2026-06-06', { source: 'current' });
-  assert.ok(result.promotedFiles.includes('requirement/business/prd-business.md'));
+  assert.ok(result.promotedFiles.includes('requirement/business/catalog.md'));
+  assert.ok(result.promotedFiles.includes('architecture/bounded-contexts.md'));
   assert.ok(result.promotedFiles.includes('design/orders/spec.md'));
   assert.equal(result.promotedFiles.includes('design/orders/plan.md'), false);
   assert.ok(existsSync(join(root, MASTER_ROOT, 'design/orders/spec.md')));
   assert.ok(result.deltas.some((d) => d.path === 'design/orders/spec.md' && d.kind === 'ADDED' && d.slug === 'orders'));
-  assert.ok(result.deltas.some((d) => d.path === 'requirement/business/prd-business.md' && d.kind === 'ADDED' && d.slug === 'shared'));
+  assert.ok(result.deltas.some((d) => d.path === 'requirement/business/catalog.md' && d.kind === 'ADDED' && d.slug === 'shared'));
   const hist = readFileSync(join(root, MASTER_ROOT, 'requirement/revision-history.md'), 'utf-8');
   assert.match(hist, /synced-at.*2026-06-06/);
   assert.match(hist, /### shared/);
-  assert.match(hist, /ADDED:.*prd-business/);
+  assert.match(hist, /ADDED:.*catalog\.md/);
   const designHist = readFileSync(join(root, MASTER_ROOT, 'design/revision-history.md'), 'utf-8');
   assert.match(designHist, /### slug: orders/);
 });
@@ -87,13 +91,13 @@ test('slugAllowlist skips non-allowlisted design slugs', () => {
   assert.ok(existsSync(join(root, MASTER_ROOT, 'design/orders/spec.md')));
   assert.equal(existsSync(join(root, MASTER_ROOT, 'design/payments/spec.md')), false);
   assert.ok(result.deltas.every((d) => d.slug === 'shared' || d.slug === 'orders'));
-  assert.ok(result.promotedFiles.includes('requirement/business/prd-business.md'));
+  assert.ok(result.promotedFiles.includes('requirement/business/catalog.md'));
 });
 
 test('classifyPromoteGroup', () => {
   assert.equal(classifyPromoteGroup('design/orders/spec.md'), 'orders');
-  assert.equal(classifyPromoteGroup('requirement/business/prd-business.md'), 'shared');
-  assert.equal(classifyPromoteGroup('architecture/business.md'), 'shared');
+  assert.equal(classifyPromoteGroup('requirement/business/catalog.md'), 'shared');
+  assert.equal(classifyPromoteGroup('architecture/bounded-contexts.md'), 'shared');
 });
 
 test('computeDeltas is pure: ADDED MODIFIED REMOVED without filesystem', () => {
