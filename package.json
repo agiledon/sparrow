@@ -20,7 +20,7 @@
     "prepublishOnly": "npm run build",
     "typecheck": "tsc --noEmit",
     "sync-schema": "node scripts/sync-schema-json.mjs && node scripts/generate-sparrow-state-mjs.mjs && node scripts/generate-sparrow-promote-mjs.mjs && node scripts/sync-bundled-content.mjs",
-    "test": "node --import ./scripts/register-assets.mjs --import tsx --test src/core/spec-promote.test.ts src/core/spec-layout-init.test.ts src/core/exec-errors.test.ts src/core/package-version.test.ts src/core/version-compare.test.ts src/core/workflow-schema/validate.test.ts src/core/skill-generation.test.ts src/core/project-state.test.ts src/core/os-locale.test.ts"
+    "test": "node --import ./scripts/register-assets.mjs --import tsx --test src/core/spec-promote.test.ts src/core/spec-layout-init.test.ts src/core/exec-errors.test.ts src/core/package-version.test.ts src/core/version-compare.test.ts src/core/workflow-schema/validate.test.ts src/core/skill-generation.test.ts src/core/project-state.test.ts src/core/os-locale.test.ts src/core/ingest.test.ts"
   },
   "keywords": [
     "ddd",
@@ -49,11 +49,15 @@
   "dependencies": {
     "@inquirer/prompts": "^7.0.0",
     "commander": "^13.1.0",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "mammoth": "^1.12.3",
+    "tesseract.js": "^7.0.0",
+    "unpdf": "^1.8.1",
+    "word-extractor": "^1.0.4"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
     "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.0.0",
     "esbuild": "^0.25.0",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"

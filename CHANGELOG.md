@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Requirement document ingest**: `sparrow ingest` parses `.md` / `.doc` / `.docx` / `.pdf` into a content-addressed cache (sections, verbatim `signals.md`, OCR'd figures, `read-plan.json`). `/sparrow-requirement @path` runs ingest and reads only the plan. Progress goes to stderr; stdout is a one-line summary.
+  - **需求文档解析**：`sparrow ingest` 将 md/doc/docx/pdf 解析为缓存文本与 `read-plan.json`；requirement skill 只按清单阅读。进度在 stderr，不经过模型。
+
 ## [0.6.0] - 2026-09-21
 
 ### Added

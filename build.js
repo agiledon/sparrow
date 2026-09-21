@@ -31,6 +31,10 @@ const buildOpts = {
     'commander',
     'js-yaml',
     '@inquirer/prompts',
+    'mammoth',
+    'word-extractor',
+    'unpdf',
+    'tesseract.js',
   ],
   banner: {
     js: 'import { createRequire } from \'module\'; const require = createRequire(import.meta.url);',

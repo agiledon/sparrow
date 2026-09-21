@@ -238,7 +238,7 @@ Detailed inputs, outputs, and behavior for each step in the [core workflow](#cor
 
 **Workspace**: `docs/sparrow/change/current/{change-id}/` (creates `{change-id}` and `proposal.md` when no active change exists)
 
-**Input**: Raw requirements; for **brownfield**, also the running system and codebase  
+**Input**: Raw requirements (`/sparrow-requirement @docs/prd.docx`); for **brownfield**, also the running system and codebase  
 **Output** (under the change workspace):
 - `requirement/business/catalog.md` — index + end-to-end business processes (EBP→BS)
 - `requirement/business/subdomains/` · `capabilities/` · `scenarios/` · `services/` — hierarchical problem-space specs (EARS acceptance on services)

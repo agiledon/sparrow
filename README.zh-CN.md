@@ -238,7 +238,7 @@ sparrow update
 
 **工作区**：`docs/sparrow/change/current/{change-id}/`（无 current 时由本步创建 change-id 与 `proposal.md`）
 
-**输入**：原始需求；**棕地**项目另需结合现有代码与运行行为  
+**输入**：原始需求（`/sparrow-requirement @docs/prd.docx`）；**棕地**项目另需结合现有代码与运行行为  
 **输出**（均在变更工作区内）：
 - `requirement/business/catalog.md` — 索引 + 端到端业务流程（EBP→BS）
 - `requirement/business/subdomains/` · `capabilities/` · `scenarios/` · `services/` — 问题空间分层规格（服务验收用 EARS）

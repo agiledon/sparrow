@@ -31,8 +31,8 @@
 2. 若 `development-mode` 为 `tbd`：运行 `scripts/sparrow-state.mjs detect-mode`，把输出的 `mode` 写入 `set-mode`。判定规则（脚本已实现）：archive 与 change 皆空且无源码 → `greenfield`；皆空且有源码 → `brownfield`；archive / change / master 已有规格 → `iteration`。
 3. 若模式为 `brownfield`：告知用户 Sparrow 暂不支持棕地核心流程，**停止**。不创建 change 工作区，不 Grill Me。`pipeline` 保持为空。
 4. `greenfield` 与 `iteration` 走同一套核心流程（iteration 仍按 revise / master diff）。收集本次需求分析输入：
-   - 用户已给提示词或显式指定了要读的文件：以用户输入为准，不全局搜索。
-   - 否则：在仓库内搜索文本/Markdown（文件名或路径含 `prd`、`srs`、`requirement`、`需求`、`规格`），**排除** `docs/sparrow/`。有候选则解读并请用户确认是否作为本次输入；没有则请用户给出原始需求或指定文档。无输入则停止。
+   - 用户消息中的 `@path`（可多个）为显式输入，不全库搜索。对每个路径在项目根运行 `sparrow ingest <path>`（进度只出现在该命令的 **stderr**，禁止用模型输出复述）。然后只读取该次写入的 `read-plan.json` 点名的文本：对清单项执行 `sparrow ingest show <path> --section <id> [--offset N]`。禁止打开清单外的节或图片，禁止自行摘要原文，禁止看图像素或用模型描述图。图中没有被 OCR 或题注写下来的步骤不得写入需求分析。
+   - 无 `@` 时：若用户已给提示词或显式文件路径，以用户输入为准；否则在仓库内搜索文本/Markdown（文件名或路径含 `prd`、`srs`、`requirement`、`需求`、`规格`），**排除** `docs/sparrow/`。搜到的文件同样先 `sparrow ingest`，再按 `read-plan.json` 阅读。有候选则请用户确认；没有则请用户给出原始需求或指定文档。无输入则停止。
 5. 从项目根运行 `scripts/ensure-change-workspace.mjs --check`。若退出码 1：按 `requirement/requirements.md`「活动变更 ID 确认纪律」只确认 change-id；用户中止则停止且不创建子目录。确认后运行 `scripts/ensure-change-workspace.mjs --create {change-id}`，再按 `assets/proposal.md` 填写 `proposal.md`（development-mode 用配置值）。禁止向 `master/` 写入。运行 `scripts/sparrow-state.mjs set-step requirement ongoing`。
 6. 读 `references/revise-gate.md`。无活动变更基线则走全量；有则对 master 需求做 ADDED / MODIFIED / REMOVED 增量，在 change 工作区更新，不写 version 元数据。若存在旧 `prd-business.md`，先按 `references/compat-migrate.md` 迁移。
 7. 读 `references/output-existence-check.md`，对本阶段已存在的 catalog / subdomain / service / quality 等做一次 skip / overwrite / update。

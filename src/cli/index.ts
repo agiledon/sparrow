@@ -6,6 +6,8 @@
  *
  * Commands:
  *   sparrow init    Initialize Sparrow in a project
+ *   sparrow ingest  Parse requirement documents into cached text and a read-plan
+ *   sparrow update  Check and update to the latest version
  */
 
 import { Command } from 'commander';
@@ -23,6 +25,7 @@ import { detectOsLocale, formatCommonLangs, resolveInitLang } from '../core/os-l
 import { readProjectConfig } from '../core/project-config.js';
 import { getSparrowVersion } from '../core/package-version.js';
 import { SkillRegistry } from '../core/skills.js';
+import { IngestError, runClean, runIngest, showSection } from '../core/ingest/index.js';
 
 const program = new Command();
 
@@ -44,6 +47,8 @@ Examples:
   $ sparrow init --tools all          Set up for all tools
   $ sparrow init --lang zh-Hans       Document language (BCP 47). Omit to use the OS UI language
   $ sparrow init --force              Wipe specs and reset sparrow-state.json (asks for confirmation)
+  $ sparrow ingest docs/prd.docx      Parse a requirement document into cached text and a read-plan
+  $ sparrow ingest show docs/prd.docx --section s-1
   $ sparrow update                   Check and update to the latest version
   $ sparrow --version                Show version
 
@@ -249,6 +254,55 @@ program
         process.exit(1);
       }
       throw e;
+    }
+  });
+
+function failIngest(error: unknown): never {
+  if (error instanceof IngestError) {
+    console.error(error.message);
+    process.exit(error.exitCode);
+  }
+  console.error('❌ Error:', error instanceof Error ? error.message : String(error));
+  process.exit(1);
+}
+
+const ingest = program
+  .command('ingest')
+  .description('Parse a requirement document into cached text and a read-plan');
+
+ingest
+  .command('show')
+  .description('Write one cached section window to stdout (no progress)')
+  .argument('<path>', 'Source document path')
+  .requiredOption('--section <id>', 'Section id (s-N, fig-N, or signals)')
+  .option('--offset <n>', 'Character offset', '0')
+  .action((docPath: string, options: { section: string; offset?: string }) => {
+    try {
+      const offset = Number.parseInt(options.offset ?? '0', 10);
+      showSection(docPath, options.section, Number.isFinite(offset) ? offset : 0);
+    } catch (error) {
+      failIngest(error);
+    }
+  });
+
+ingest
+  .command('clean')
+  .description('Delete the .sparrow/ingest cache directory')
+  .action(() => {
+    try {
+      runClean();
+    } catch (error) {
+      failIngest(error);
+    }
+  });
+
+ingest
+  .argument('<path>', 'Document path (.md, .markdown, .doc, .docx, .pdf)')
+  .action(async (docPath: string) => {
+    try {
+      await runIngest(docPath);
+    } catch (error) {
+      failIngest(error);
     }
   });
 
