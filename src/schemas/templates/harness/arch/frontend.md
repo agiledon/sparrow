@@ -20,7 +20,7 @@
 
 ## API 契约绑定纪律
 
-1. **业务服务是唯一真相源**：交互上下文和 BC 的 API 设计都从 \`requirement/business/catalog.md\` 与 \`services/*\` 推导，不互相依赖。
+1. **业务服务是唯一真相源**：交互上下文和 BC 的 API 设计都从 \`requirement/business/catalog.md\` 与其所链 \`business-services.md\` 推导，不互相依赖。
 2. **契约绑定表必须在 sparrow-arch 阶段生成**，写入 \`frontend.md\`，作为后续独立执行的基础。
 3. **绑定表内容**：每个 UI 交互操作 → 目标 BC → 业务服务 ID → 输入/输出字段 → 一致性标记。
 4. **一致性检查**：
@@ -32,7 +32,7 @@
 
 1. sparrow-arch 必须为交互上下文创建 \`design/{ui-slug}/spec.md\`。
 2. spec.md 包含所有 UI 交互相关的业务服务定义（输入/输出字段、来源 BC）。
-3. 交互上下文的 spec.md 与其他 BC 的 spec.md 来自同一套 \`catalog.md\` + \`services/*\`，确保一致性。
+3. 交互上下文的 spec.md 与其他 BC 的 spec.md 来自同一套 \`catalog.md\` + \`business-services.md\`，确保一致性。
 
 ## edge 层职责与语义
 

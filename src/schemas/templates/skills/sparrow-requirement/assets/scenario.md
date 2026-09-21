@@ -1,8 +1,8 @@
 # 场景：{中文名}
 
 **ID：** S-{slug}
-**所属能力：** C-{slug}（或内联于 SD-{slug}）
-**所属子领域：** SD-{slug}
+**所属能力：** [C-{slug}](../capability.md)（本 SD 省略能力层时写「本 SD 省略能力层」，删除能力链接）
+**所属子领域：** [SD-{slug}](../../subdomain.md)（省略能力层时为 `../subdomain.md`）
 
 ## 5W
 
@@ -16,6 +16,8 @@
 
 ## 关联业务服务
 
+本场景全部业务服务合并于 [business-services.md](./business-services.md)。
+
 | 序 | BS | 名称 | 在端到端流程中的位置 |
 |----|----|------|----------------------|
-| 1 | BS-{id} | {动宾名} | EBP-{id} 步骤 n |
+| 1 | [BS-{id}](./business-services.md#BS-{id}) | {动宾名} | EBP-{id} 步骤 n |

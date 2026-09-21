@@ -1,6 +1,6 @@
 # Sparrow 项目：{projectName}
 
-> 本文件由 Sparrow 自动生成和维护，作为项目的文档向导索引。
+> 本文件由 Sparrow 自动生成和维护，作为项目的文档向导索引。章节标题结构固定，禁止增删或改名本节。
 >
 > 最后更新：{now}
 > Sparrow 版本：{sparrowVersion}
@@ -22,18 +22,19 @@
 
 ## 文档索引
 
-### 1. 产品需求
+### 1. 产品需求（问题空间）
 
-#### 1.1 业务需求（问题空间）
+#### 1.1 业务需求
+
+问题空间业务需求四层：**子领域（SD）→ 能力（C，可选）→ 场景（S）→ 业务服务（BS）**。能力数量未达阈值（约 ≤3 个，或本 SD 仅 1 个 C）时省略能力层与 `capability.md`，场景直接挂在子领域目录下。
+
+本文件只链到目录；由 catalog 进入各层规格（子领域 → 能力或场景 → `business-services.md`）。
 
 - [ ] [需求目录 Catalog](./requirement/business/catalog.md) — *待生成 (sparrow-requirement)*
-- [ ] [子领域](./requirement/business/subdomains/) — *待生成 (sparrow-requirement)*
-- [ ] [场景](./requirement/business/scenarios/) — *待生成 (sparrow-requirement)*
-- [ ] [业务服务](./requirement/business/services/) — *待生成 (sparrow-requirement)*
 
 #### 1.2 质量属性
 
-- [ ] [系统质量属性](./requirement/quality/prd-quality.md) — *待生成 (sparrow-requirement)*
+- [ ] [系统质量属性](./requirement/quality/quality.md) — *待生成 (sparrow-requirement)*
 
 #### 1.3 UI 需求（可选）
 

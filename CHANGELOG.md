@@ -14,12 +14,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Requirement document ingest**: `sparrow ingest` parses `.md` / `.doc` / `.docx` / `.pdf` into a content-addressed cache (sections, verbatim `signals.md`, OCR'd figures, `read-plan.json`). `/sparrow-requirement @path` runs ingest and reads only the plan. Progress goes to stderr; stdout is a one-line summary.
   - **需求文档解析**：`sparrow ingest` 将 md/doc/docx/pdf 解析为缓存文本与 `read-plan.json`；requirement skill 只按清单阅读。进度在 stderr，不经过模型。
 
+### Changed
+
+- **Nested business-requirement tree**: Problem-space specs nest as `requirement/business/{sd-slug}/[{c-slug}/]{s-slug}/` with fixed filenames (`subdomain.md`, optional `capability.md`, `scenario.md`, `business-services.md`). Multiple BS under one scenario merge into that scenario's `business-services.md` (`## BS-{id}`). Omit the capability layer when that SD has about ≤3 capabilities or only 1 C. `project.md` §1 is a fixed template: **1. 产品需求（问题空间）**; §1.1 links only `catalog.md`. Arch `source` and workflow-block require `business-services.md`. Flat four-directory layouts migrate via `compat-migrate.md`.
+  - **业务需求嵌套目录**：按 SD→C（可选）→S 落盘；同场景 BS 合并为 `business-services.md`；`project.md` 1.1 只链 catalog。旧扁平四目录按 `compat-migrate.md` 迁移。
+
+- **Quality attributes path**: Renamed `requirement/quality/prd-quality.md` to `requirement/quality/quality.md` (skill asset `quality.md`). Migrate via `compat-migrate.md`.
+  - **质量属性路径**：`prd-quality.md` 更名为 `quality.md`。
+
+- **Removed deprecated skill asset** `prd-business.md` (legacy single-file business requirements). Use nested `catalog.md` + `business-services.md`; migrate existing repos via `compat-migrate.md`.
+  - **移除** 已弃用模板 `prd-business.md`；新产出使用嵌套业务需求树。
+
 ### Fixed
 
 - **Local `npm link` CLI**: `bin/sparrow.js` is a launcher that runs TypeScript source in a git checkout, so `sparrow init` writes the current skill templates without requiring a rebuild. Published installs still load `dist/sparrow.js`.
   - **本地链接**：开发目录下 `sparrow` 直接跑源码模板，避免 `init` 写出过期 skill。
-
-## [0.6.0] - 2026-09-21
 
 ## [0.6.0] - 2026-09-21
 

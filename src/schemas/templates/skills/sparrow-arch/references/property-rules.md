@@ -4,7 +4,7 @@
 
 ## 定义
 
-- **EARS**（问题空间）：`WHEN` / `IF … THEN` / `WHILE` + `THE system SHALL …`，写在 `services/{bs-id}.md`。
+- **EARS**（问题空间）：`WHEN` / `IF … THEN` / `WHILE` + `THE system SHALL …`，写在场景的 `business-services.md` 对应 `## BS-{id}` 块。
 - **Property（P）**（解空间）：普遍量化命题或不变量，句式倾向 **For any / For every**；挂在 BC 内该 BS 下。
 
 ## 转换示例

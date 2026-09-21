@@ -18,7 +18,7 @@
 2. **语义相关性分析优先于功能相关性分析**：同一组内的业务服务应围绕**同一个核心业务概念**展开。若多个名词之间存在明确的主从关系（如"订单"与"订单项"），应优先归类到一组。
 3. **从业务价值与功能角度划分**，而非技术实现角度。
 4. **子领域数量应尽可能少**（奥卡姆剃刀）：合并是默认选择，拆分必须有充分理由。
-5. **ID 使用 `SD-*`**，并写入 `requirement/business/catalog.md` 与 `subdomains/{sd-slug}.md`。
+5. **ID 使用 `SD-*`**，并写入 `requirement/business/catalog.md` 与 `requirement/business/{sd-slug}/subdomain.md`。
 
 ## 禁止（MUST NOT）
 

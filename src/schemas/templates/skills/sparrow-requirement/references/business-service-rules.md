@@ -52,7 +52,7 @@ WHILE payment is pending, THE system SHALL keep inventory reserved.
 - 步骤不含线下操作与前端操作；仅系统后端收到请求后的一次连续交互。
 - 名称用业务语言，避免技术术语。
 - 明确输入输出；一次独立请求，不聚合多个独立操作。
-- 写入 `requirement/business/services/{bs-id}.md`（不要再写入单文件 `prd-business.md` 作为主源）。
+- 写入该场景的 `requirement/business/{sd-slug}/[ {c-slug}/ ]{s-slug}/business-services.md`（`## BS-{id}` 块；不要再为每个 BS 单独建文件，也不要写入单文件 `prd-business.md` 作为主源）。
 
 ## 识别步骤
 

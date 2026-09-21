@@ -1,6 +1,13 @@
-# {服务名}
+# 业务服务：场景 {中文名}
 
-> 本文件是 **单个业务服务块** 的字段模板。落盘时写入场景目录的 `business-services.md`，标题为 `## BS-{id}`（见 `assets/business-services.md`）。不要再为每个 BS 单独建文件。
+**场景：** S-{slug}
+**所属子领域：** SD-{slug}
+**所属能力：** C-{slug}（本 SD 省略能力层时写「本 SD 省略能力层」）
+
+> 本文件合并本场景全部业务服务。每个 `## BS-{id}` 块的字段以 `assets/service.md` 为准。
+> arch 切片 `source` 指向本文件对应标题（`…/business-services.md#BS-{id}`）。
+
+## BS-{id}
 
 **服务编号：** BS-{id}
 **服务名：** {动词短语，动宾结构}
@@ -30,3 +37,5 @@
    THE system SHALL {可观察系统行为}。
 2. IF {前置条件}, THEN THE system SHALL {行为}。
 3. WHILE {状态}, THE system SHALL {行为}。
+
+（按本场景其余业务服务重复 `## BS-{id}` 块）

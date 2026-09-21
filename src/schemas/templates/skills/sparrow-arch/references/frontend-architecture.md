@@ -97,7 +97,7 @@ UI 规格尚未生成。询问用户：
 
 ##### 绑定规则
 
-1. **业务服务是唯一真相源**：所有契约定义来自 \`requirement/business/services/*\`（经 catalog 索引）。交互上下文的 BFF 聚合调用和 BC 的 API 端点都从同一个业务服务定义推导而来。
+1. **业务服务是唯一真相源**：所有契约定义来自 catalog 所链的 `business-services.md#BS-*`。交互上下文的 BFF 聚合调用和 BC 的 API 端点都从同一个业务服务定义推导而来。
 2. **请求一致性**：前端发起的请求参数名、类型、必填性必须与对应 BC 的业务服务输入定义完全一致。
 3. **响应一致性**：BC API 返回的数据字段必须覆盖 UI 页面的信息展示需求。
 4. **无需互读对方产物**：绑定表写入 \`frontend.md\` 后，交互上下文的 design 步骤从自身 \`spec.md\` 和 \`frontend.md\` 推导 BFF API，各 BC 的 design 步骤从自身 \`spec.md\` 推导 BC API。双方无需读取对方产物，契约自然一致。
@@ -105,7 +105,7 @@ UI 规格尚未生成。询问用户：
 ##### 绑定过程
 
 1. 读取 \`requirement/ui/ui-spec.md\`，提取所有 UI 页面和交互操作
-2. 读取 \`requirement/business/catalog.md\` 与相关 \`services/*.md\`，获取业务服务定义
+2. 读取 \`requirement/business/catalog.md\` 与其所链 \`business-services.md\`，获取业务服务定义
 3. 对于每个 UI 交互操作：
    - 匹配对应的业务服务（通过操作描述和触发事件匹配）
    - 确定该业务服务归属的限界上下文（从步骤二中已确定的 BC 映射）
@@ -203,7 +203,7 @@ edge/
 #### {SERVICE-ID} {服务名称}
 - **输入**：{输入字段}
 - **输出**：{输出字段}
-- **来源**：\`requirement/business/services/{bs-id}.md\`（薄投影；Properties 见本切片）
+- **来源**：\`requirement/business/.../business-services.md#BS-{id}\`（薄投影；Properties 见本切片；以 catalog 链接为准）
 ...
 \`\`\`
 

@@ -73,14 +73,14 @@ import _skill_sparrow_plan_assets_plan_md from './templates/skills/sparrow-plan/
 import _skill_sparrow_plan_references_interaction_plan_md from './templates/skills/sparrow-plan/references/interaction-plan.md';
 import _skill_sparrow_plan_references_module_layouts_md from './templates/skills/sparrow-plan/references/module-layouts.md';
 import _skill_sparrow_requirement_SKILL_md from './templates/skills/sparrow-requirement/SKILL.md';
+import _skill_sparrow_requirement_assets_business_services_md from './templates/skills/sparrow-requirement/assets/business-services.md';
 import _skill_sparrow_requirement_assets_capability_md from './templates/skills/sparrow-requirement/assets/capability.md';
 import _skill_sparrow_requirement_assets_catalog_md from './templates/skills/sparrow-requirement/assets/catalog.md';
 import _skill_sparrow_requirement_assets_component_library_md from './templates/skills/sparrow-requirement/assets/component-library.md';
 import _skill_sparrow_requirement_assets_design_tokens_md from './templates/skills/sparrow-requirement/assets/design-tokens.md';
-import _skill_sparrow_requirement_assets_prd_business_md from './templates/skills/sparrow-requirement/assets/prd-business.md';
-import _skill_sparrow_requirement_assets_prd_quality_md from './templates/skills/sparrow-requirement/assets/prd-quality.md';
 import _skill_sparrow_requirement_assets_proposal_md from './templates/skills/sparrow-requirement/assets/proposal.md';
 import _skill_sparrow_requirement_assets_prototype_index_html from './templates/skills/sparrow-requirement/assets/prototype-index.html';
+import _skill_sparrow_requirement_assets_quality_md from './templates/skills/sparrow-requirement/assets/quality.md';
 import _skill_sparrow_requirement_assets_scenario_md from './templates/skills/sparrow-requirement/assets/scenario.md';
 import _skill_sparrow_requirement_assets_service_md from './templates/skills/sparrow-requirement/assets/service.md';
 import _skill_sparrow_requirement_assets_subdomain_md from './templates/skills/sparrow-requirement/assets/subdomain.md';
@@ -152,14 +152,14 @@ export const skillExtras: Record<string, Record<string, string>> = {
     'references/module-layouts.md': _skill_sparrow_plan_references_module_layouts_md,
   },
   'sparrow-requirement': {
+    'assets/business-services.md': _skill_sparrow_requirement_assets_business_services_md,
     'assets/capability.md': _skill_sparrow_requirement_assets_capability_md,
     'assets/catalog.md': _skill_sparrow_requirement_assets_catalog_md,
     'assets/component-library.md': _skill_sparrow_requirement_assets_component_library_md,
     'assets/design-tokens.md': _skill_sparrow_requirement_assets_design_tokens_md,
-    'assets/prd-business.md': _skill_sparrow_requirement_assets_prd_business_md,
-    'assets/prd-quality.md': _skill_sparrow_requirement_assets_prd_quality_md,
     'assets/proposal.md': _skill_sparrow_requirement_assets_proposal_md,
     'assets/prototype-index.html': _skill_sparrow_requirement_assets_prototype_index_html,
+    'assets/quality.md': _skill_sparrow_requirement_assets_quality_md,
     'assets/scenario.md': _skill_sparrow_requirement_assets_scenario_md,
     'assets/service.md': _skill_sparrow_requirement_assets_service_md,
     'assets/subdomain.md': _skill_sparrow_requirement_assets_subdomain_md,

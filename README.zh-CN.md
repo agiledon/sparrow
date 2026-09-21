@@ -241,19 +241,19 @@ sparrow update
 
 **输入**：原始需求（`/sparrow-requirement @docs/prd.docx`）；**棕地**项目另需结合现有代码与运行行为  
 **输出**（均在变更工作区内）：
-- `requirement/business/catalog.md` — 索引 + 端到端业务流程（EBP→BS）
-- `requirement/business/subdomains/` · `capabilities/` · `scenarios/` · `services/` — 问题空间分层规格（服务验收用 EARS）
-- `requirement/quality/prd-quality.md` — 系统质量属性（性能、安全、高可用等）
+- `requirement/business/catalog.md` — 索引 + 端到端业务流程（EBP→BS）；`project.md` §1.1 的唯一入口
+- `requirement/business/{sd-slug}/[{c-slug}/]{s-slug}/` — 嵌套问题空间规格（`subdomain.md`、可选 `capability.md`、`scenario.md`、合并的 `business-services.md`；服务验收用 EARS）
+- `requirement/quality/quality.md` — 系统质量属性（性能、安全、高可用等）
 - `requirement/ui/` — \[可选\] UI 规格（操作流程 ← EBP）、设计令牌、组件库与 HTML 原型
 
 **Grill Me** 按问题空间层次（SD→C→S→EBP→BS）推进并做 EBP 覆盖；可选 UI 将 EBP 转为端到端操作流程。**版本迭代**时对照 `master/requirement/` 做增量；change 内规格**不写** `<!-- version -->` 元数据块。
 
 ### 步骤 2：sparrow-arch（产品级）
 
-**输入**：change 内 `requirement/business/`（catalog + services）+ \[可选\] `requirement/ui/`；只读参考 `master/`  
+**输入**：change 内 `requirement/business/`（catalog + 嵌套 `business-services.md`）+ \[可选\] `requirement/ui/`；只读参考 `master/`  
 **输出**（change 工作区）：
 - `architecture/bounded-contexts.md` — SD→BC 映射与上下文映射（不再单独产出「业务架构」文档）
-- `design/{slug}/spec.md` — 业务服务薄投影 + Properties（回链 `services/*`）
+- `design/{slug}/spec.md` — 业务服务薄投影 + Properties（回链 `business-services.md#BS-{id}`）
 - `architecture/frontend.md` — \[若有 UI\] 交互上下文、BFF、API 契约绑定表
 
 **若存在 UI 需求**，生成前端架构与绑定表，使 BC 与交互上下文后续 design/model/plan/apply 可并行、无互读依赖。BC 拓扑变更须在 **archive** 前经用户确认（见步骤 8）。
@@ -316,13 +316,13 @@ sparrow update
 **master 与 change 同构内容**（路径均相对于各自根）：
 
 ```
-project.md
+project.md                            # §1.1 只链 catalog.md
 requirement/business/catalog.md
-requirement/business/subdomains/…
-requirement/business/capabilities/…   # 能力少时可内联
-requirement/business/scenarios/…
-requirement/business/services/…
-requirement/quality/prd-quality.md
+requirement/business/{sd-slug}/subdomain.md
+requirement/business/{sd-slug}/{c-slug}/capability.md          # 未达阈值时省略能力层
+requirement/business/{sd-slug}/{c-slug}/{s-slug}/scenario.md
+requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md
+requirement/quality/quality.md
 requirement/ui/                    # 可选
 architecture/bounded-contexts.md
 architecture/frontend.md           # 可选
@@ -330,6 +330,8 @@ architecture/api.md                # 项目级 API 总目录（sparrow-design �
 design/{slug}/spec.md              # BS 薄投影 + Properties
 design/{slug}/api.md | tech.md | model.md
 ```
+
+省略能力层时去掉 `{c-slug}/`，使 `scenario.md` 与 `business-services.md` 直接挂在 `{sd-slug}/` 下。
 
 **仅 change 工作区额外包含**：`design/{slug}/plan.md`、`code_review.md`、`verify_report.md`、`proposal.md`。
 
@@ -351,8 +353,8 @@ your-project/
 │   ├── master/
 │   │   ├── project.md
 │   │   ├── requirement/
-│   │   │   ├── business/catalog.md、subdomains/、services/…
-│   │   │   ├── quality/prd-quality.md
+│   │   │   ├── business/catalog.md 与 {sd-slug}/[{c-slug}/]{s-slug}/…
+│   │   │   ├── quality/quality.md
 │   │   │   ├── ui/ …
 │   │   │   └── revision-history.md
 │   │   ├── architecture/

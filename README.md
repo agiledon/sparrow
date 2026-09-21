@@ -241,19 +241,19 @@ Detailed inputs, outputs, and behavior for each step in the [core workflow](#cor
 
 **Input**: Raw requirements (`/sparrow-requirement @docs/prd.docx`); for **brownfield**, also the running system and codebase  
 **Output** (under the change workspace):
-- `requirement/business/catalog.md` — index + end-to-end business processes (EBP→BS)
-- `requirement/business/subdomains/` · `capabilities/` · `scenarios/` · `services/` — hierarchical problem-space specs (EARS acceptance on services)
-- `requirement/quality/prd-quality.md` — quality attributes (performance, security, availability, etc.)
+- `requirement/business/catalog.md` — index + end-to-end business processes (EBP→BS); the only §1.1 link from `project.md`
+- `requirement/business/{sd-slug}/[{c-slug}/]{s-slug}/` — nested problem-space specs (`subdomain.md`, optional `capability.md`, `scenario.md`, merged `business-services.md`; EARS acceptance on services)
+- `requirement/quality/quality.md` — quality attributes (performance, security, availability, etc.)
 - `requirement/ui/` — \[optional\] UI specs (operation flows ← EBP), design tokens, components, HTML prototypes
 
 **Grill Me** follows problem-space layers then EBP coverage; optional UI converts EBP into end-to-end operation flows. For **iteration**, diff against `master/requirement/`. No `<!-- version -->` metadata blocks in the change workspace.
 
 ### Step 2: sparrow-arch (Product-level)
 
-**Input**: `requirement/business/` (catalog + services) + \[optional\] `requirement/ui/`; read-only `master/`  
+**Input**: `requirement/business/` (catalog + nested `business-services.md`) + \[optional\] `requirement/ui/`; read-only `master/`  
 **Output** (change workspace):
 - `architecture/bounded-contexts.md` — SD→BC map, context map (no separate “business architecture” doc)
-- `design/{slug}/spec.md` — thin BS projection + Properties (links back to `services/*`)
+- `design/{slug}/spec.md` — thin BS projection + Properties (links back to `business-services.md#BS-{id}`)
 - `architecture/frontend.md` — \[if UI\] Interaction Context, BFF, API binding tables
 
 With UI, generates binding tables so BC and Interaction Context pipelines stay orthogonal. BC topology changes require user confirmation before **archive** (see Step 8).
@@ -315,13 +315,13 @@ Specs use a **master (baseline)** vs **change (active/archive)** layout. `sparro
 **Shared tree** (relative to `master/` or `change/current/{change-id}/`):
 
 ```
-project.md
+project.md                            # §1.1 links only catalog.md
 requirement/business/catalog.md
-requirement/business/subdomains/…
-requirement/business/capabilities/…   # optional when inlined
-requirement/business/scenarios/…
-requirement/business/services/…
-requirement/quality/prd-quality.md
+requirement/business/{sd-slug}/subdomain.md
+requirement/business/{sd-slug}/{c-slug}/capability.md          # omit C layer when below threshold
+requirement/business/{sd-slug}/{c-slug}/{s-slug}/scenario.md
+requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md
+requirement/quality/quality.md
 requirement/ui/                    # optional
 architecture/bounded-contexts.md
 architecture/frontend.md           # optional
@@ -329,6 +329,8 @@ architecture/api.md                # project-level API catalog (sparrow-design)
 design/{slug}/spec.md              # thin BS projection + Properties
 design/{slug}/api.md | tech.md | model.md
 ```
+
+When the capability layer is omitted, drop `{c-slug}/` so `scenario.md` and `business-services.md` sit directly under `{sd-slug}/`.
 
 **Change workspace only**: `design/{slug}/plan.md`, `code_review.md`, `verify_report.md`, `proposal.md`.
 

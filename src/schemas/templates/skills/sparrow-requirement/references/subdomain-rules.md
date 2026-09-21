@@ -1,6 +1,6 @@
 # 子领域识别规则
 
-角色：业务架构师。在 sparrow-requirement 的 Grill Me「域与子领域」维度确认后，写入 `subdomains/` 与 catalog。
+角色：业务架构师。在 sparrow-requirement 的 Grill Me「域与子领域」维度确认后，写入 `{sd-slug}/subdomain.md` 与 catalog。
 
 ## 输入
 
@@ -19,7 +19,7 @@
 2. 对未归类项按业务目标做功能相关性合并（语义优先于功能）。
 3. 归纳共同特征，抽象为 SD 名称（名词），判定战略类型。
 4. 奥卡姆剃刀：尽量少 SD；拆分须满足 harness 充分理由。
-5. 写入 `subdomains/{sd-slug}.md` 与 `catalog.md`；能力少则内联 C。
+5. 写入 `{sd-slug}/subdomain.md` 与 `catalog.md`；能力未达阈值则省略能力层。
 
 ## 禁止
 

@@ -14,7 +14,7 @@
 ### BS-{id} {服务名称}
 
 - **参与者**：{角色}
-- **source**：`../../requirement/business/services/BS-{id}.md`
+- **source**：`../../requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md#BS-{id}`（省略能力层时去掉 `{c-slug}/`；以 catalog 链接为准）
 - **trace**：SD-{slug} / C-{slug} / S-{slug} / EBP-{id}#{n}
 - **properties**：
   - **P-{id}**：For any {量化范围}, {系统行为不变量}。（`from: EARS#1`）

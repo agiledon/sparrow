@@ -28,5 +28,7 @@ export const PRD_BUSINESS_REL = 'requirement/business/prd-business.md';
 export const BOUNDED_CONTEXTS_REL = 'architecture/bounded-contexts.md';
 /** @deprecated Use bounded-contexts.md */
 export const APPLICATION_ARCH_REL = 'architecture/application.md';
-export const PRD_QUALITY_REL = 'requirement/quality/prd-quality.md';
+export const QUALITY_REL = 'requirement/quality/quality.md';
+/** @deprecated Use QUALITY_REL */
+export const PRD_QUALITY_REL = QUALITY_REL;
 export const ARCHITECTURE_API_CATALOG_REL = 'architecture/api.md';

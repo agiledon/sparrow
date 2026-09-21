@@ -5,7 +5,7 @@
 ## 必须（MUST）
 
 1. **薄投影**：每个 BS 条目只写身份（id/名称/参与者）、`source` 链接、`trace`（SD/C/S/EBP）、以及 **Properties（P）**。
-2. **`source` 必须**指向 `requirement/business/services/{bs-id}.md`（或兼容期内已迁移的等价路径）。
+2. **`source` 必须**指向该 BS 所在场景的 `requirement/business/.../business-services.md#BS-{id}`（以 catalog 链接为准；兼容期内已迁移的等价路径亦可）。
 3. **EARS → Property**：将源 BS 的每条 EARS 验收标准抽取为 `P-*`（见 skill `references/property-rules.md`）。
 4. **一次请求 = 一个 BS = 下游一个 API**；切片不得合并或拆分 BS 粒度。
 5. 本 BC 的 BS 集合须与 `architecture/bounded-contexts.md` 归属一致，无遗漏、无重复。

@@ -63,24 +63,28 @@
         },
         {
           "asset": "subdomain.md",
-          "dest": "requirement/business/subdomains/{sd-slug}.md"
+          "dest": "requirement/business/{sd-slug}/subdomain.md"
         },
         {
           "asset": "capability.md",
-          "dest": "requirement/business/capabilities/{c-slug}.md",
+          "dest": "requirement/business/{sd-slug}/{c-slug}/capability.md",
           "optional": true
         },
         {
           "asset": "scenario.md",
-          "dest": "requirement/business/scenarios/{s-slug}.md"
+          "dest": "requirement/business/{sd-slug}/{c-slug}/{s-slug}/scenario.md"
+        },
+        {
+          "asset": "business-services.md",
+          "dest": "requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md"
         },
         {
           "asset": "service.md",
-          "dest": "requirement/business/services/{bs-id}.md"
+          "dest": "requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md#BS-{id}"
         },
         {
-          "asset": "prd-quality.md",
-          "dest": "requirement/quality/prd-quality.md"
+          "asset": "quality.md",
+          "dest": "requirement/quality/quality.md"
         },
         {
           "asset": "ui-spec.md",

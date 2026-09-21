@@ -13,7 +13,7 @@
 | 设计/架构修订历史 | `docs/sparrow/master/design/revision-history.md` |
 | BC 拓扑历史 | `docs/sparrow/master/architecture/bc-revision-history.md` |
 
-工作区与 master 同构（含 `architecture/api.md`）：`project.md`、`requirement/business/`（`catalog.md`、`subdomains/`、`capabilities/`、`scenarios/`、`services/`）、`requirement/quality/`、`requirement/ui/`、`architecture/`（`bounded-contexts.md` 等）、`design/{slug}/`（**仅 change 含** `plan.md`）。`design/{slug}/spec.md` 为该 BC 业务服务薄投影 + Properties。
+工作区与 master 同构（含 `architecture/api.md`）：`project.md`、`requirement/business/catalog.md` 与嵌套 `{sd-slug}/[ {c-slug}/ ]{s-slug}/`（固定文件名 `subdomain.md` / `capability.md` / `scenario.md` / `business-services.md`）、`requirement/quality/`、`requirement/ui/`、`architecture/`（`bounded-contexts.md` 等）、`design/{slug}/`（**仅 change 含** `plan.md`）。`design/{slug}/spec.md` 为该 BC 业务服务薄投影 + Properties（`source` 指向 `business-services.md#BS-{id}`）。
 
 **change 下禁止** `<!-- version: ... -->`。**development-mode** 以 `.sparrow/sparrow-state.json` 为准（`tbd` \| `greenfield` \| `iteration` \| `brownfield`）；`proposal.md` 抄写该值。`tbd` 时 `pipeline` 必须为空。
 

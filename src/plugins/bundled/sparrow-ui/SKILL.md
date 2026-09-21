@@ -21,7 +21,7 @@ docs/sparrow/requirement/ui/
 
 ## UI 需求分析
 
-根据 `requirement/business/services/*` 中的业务服务定义和 UI Grill Me（端到端操作流程）探索结果，分析和生成前端 UI 设计内容。
+根据 catalog 所链 `business-services.md` 中的业务服务定义和 UI Grill Me（端到端操作流程）探索结果，分析和生成前端 UI 设计内容。
 
 ---
 

@@ -29,10 +29,10 @@
 | 术语 | 英文 | 缩写 | 含义 |
 |------|------|------|------|
 | 领域 | domain | D | 整产品对应的问题域；通常不单独落文件。 |
-| 子领域 | subdomain | SD | L1 战略分区（Core / Supporting / Generic）。目录 `requirement/business/subdomains/`。 |
-| 能力 | capability | C | L2「能做什么」；可内联进 subdomain。 |
-| 场景 | scenario | S | L3 业务场景，采用 5W（Who/Why/When/What/Where）。**仅用于问题空间**。 |
-| 业务服务 | business service | BS | L4；一次请求 = 一个服务；验收标准用 EARS。 |
+| 子领域 | subdomain | SD | L1 战略分区（Core / Supporting / Generic）。目录 `requirement/business/{sd-slug}/`，规格文件 `subdomain.md`。 |
+| 能力 | capability | C | L2「能做什么」；超过阈值时目录 `{sd-slug}/{c-slug}/capability.md`，否则省略该层。 |
+| 场景 | scenario | S | L3 业务场景，采用 5W（Who/Why/When/What/Where）。**仅用于问题空间**。文件 `…/{s-slug}/scenario.md`。 |
+| 业务服务 | business service | BS | L4；一次请求 = 一个服务；验收标准用 EARS。同一场景全部 BS 写入该场景的 `business-services.md`。 |
 | 端到端业务流程 | end-to-end business process | EBP | 交付完整业务结果的有序步骤链；每个需系统处理的步骤对应一个 BS；索引写入 `catalog.md`。 |
 | 端到端操作流程 | end-to-end operation flow | — | 由 EBP 转换的 UI 操作序列；驱动页面识别，禁止另起脱节旅程。 |
 

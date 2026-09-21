@@ -13,7 +13,7 @@
 ### BS-{id} {服务名称}
 
 - **参与者**：{角色}
-- **source**：`../../requirement/business/services/BS-{id}.md`
+- **source**：`../../requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md#BS-{id}`（省略能力层时去掉 `{c-slug}/`；以 catalog 链接为准）
 - **trace**：SD-… / C-… / S-… / EBP-…
 - **目标 BC**：{slug}
 - **properties**：

@@ -13,7 +13,7 @@
 
 1. 读 `references/ubiquitous-language.md`。收集对话历史与 `git diff` / 相关实现。
 2. 读 change 工作区 `project.md`，只加载已存在的目标文件；输出已加载 / 已跳过。
-3. 分类：业务需求 → `requirement/business/`（catalog / services 等）；技术/NFR → api/tech/prd-quality；领域模型 → model.md；UI → `requirement/ui/**`；实现纪律 → harness。
+3. 分类：业务需求 → `requirement/business/`（catalog / business-services 等）；质量属性 → `requirement/quality/quality.md`；技术/NFR → api/tech；领域模型 → model.md；UI → `requirement/ui/**`；实现纪律 → harness。
 4. 规格 vs 约束：功能/接口/页面变化改规格；「必须/禁止」改 harness。各类规格未变而实现相对清晰规格漂移 → 约束缺口，补项目级 Must。
 5. 输出变更清单，确认后再写。读 `references/version-metadata.md` 与 `references/project-md-update.md`（只改时间戳与已改文档状态，不改 BC 列表）。
 

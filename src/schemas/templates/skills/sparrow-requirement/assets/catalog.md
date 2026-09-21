@@ -1,28 +1,33 @@
 # 业务需求目录（Catalog）
 
-> 索引：子领域 → 能力 → 场景 → 业务服务；以及端到端业务流程覆盖表。
-> 变更范围内条目勾选；上下文加载默认以本文件为入口。
+> 索引：子领域 → 能力（可选）→ 场景 → 业务服务；以及端到端业务流程覆盖表。
+> 入口：`project.md` §1.1 链到本文件；本文件必须能直接或经一层链接到达每个 SD / C / S / BS。
+> 变更范围内条目勾选。
 
 ## 1. 结构索引
 
+嵌套落盘（身份在目录名）：`requirement/business/{sd-slug}/[ {c-slug}/ ]{s-slug}/`。
+
 | SD | 战略类型 | C | S | BS（本 change） |
 |----|----------|---|---|-----------------|
-| SD-{slug} | Core \| Supporting \| Generic | C-… / （内联） | S-… | BS-… |
+| [SD-{slug}](./{sd-slug}/subdomain.md) | Core \| Supporting \| Generic | [C-…](./{sd-slug}/{c-slug}/capability.md) / 省略 | [S-…](./{sd-slug}/{c-slug}/{s-slug}/scenario.md) | [BS-…](./{sd-slug}/{c-slug}/{s-slug}/business-services.md#BS-{id}) |
+
+省略能力层时：C 列写「省略」；S / BS 链接去掉 `{c-slug}/`（场景直接在 `{sd-slug}/{s-slug}/`）。
 
 ## 2. 端到端业务流程（EBP）
 
 | EBP | 名称 | 涉及 S / SD | 步骤序 | 步骤说明 | 对应 BS | 非本系统？ |
 |-----|------|-------------|--------|----------|---------|------------|
-| EBP-{id} | {名称} | S-… / SD-… | 1 | {步骤} | BS-… | |
-| | | | 2 | {步骤} | BS-… | |
+| EBP-{id} | {名称} | S-… / SD-… | 1 | {步骤} | [BS-…](./{sd-slug}/…/business-services.md#BS-{id}) | |
+| | | | 2 | {步骤} | [BS-…](./{sd-slug}/…/business-services.md#BS-{id}) | |
 
 > 每个需目标系统处理的步骤必须有 BS；标明「非本系统」的步骤可不挂 BS。
 > 覆盖自检：链完整、无遗漏系统步骤、无孤儿 BS。
 
-## 3. 能力内联说明
+## 3. 能力层是否落盘
 
-- 若能力已内联进 `subdomains/{sd}.md`，上表 C 列写 `（内联 → subdomain#…）`。
-- 独立能力文件：`capabilities/{c-slug}.md`。
+- 该 SD 能力数 **多于 3 个且不止 1 个**：写 `{c-slug}/capability.md`，场景挂在能力目录下。
+- **约 ≤3 个，或本 SD 仅 1 个 C**：省略能力层与 `capability.md`；场景挂在子领域目录下。Grill Me 仍确认 C，但不落盘。
 
 ## 4. 缩写
 
@@ -38,4 +43,3 @@
 | EBP | End-to-end Business Process | 端到端业务流程 |
 | BC | Bounded Context | 限界上下文 |
 | P | Property | 属性 |
-
