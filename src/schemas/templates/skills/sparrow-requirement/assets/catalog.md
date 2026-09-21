@@ -23,3 +23,19 @@
 
 - 若能力已内联进 `subdomains/{sd}.md`，上表 C 列写 `（内联 → subdomain#…）`。
 - 独立能力文件：`capabilities/{c-slug}.md`。
+
+## 4. 缩写
+
+> 全项目缩写的英文全称只维护在本节。其它文档引用本节，不另建表。
+
+| 缩写 | 英文全称 | 中文 |
+|------|----------|------|
+| D | Domain | 领域 |
+| SD | Subdomain | 子领域 |
+| C | Capability | 能力 |
+| S | Scenario | 场景 |
+| BS | Business Service | 业务服务 |
+| EBP | End-to-end Business Process | 端到端业务流程 |
+| BC | Bounded Context | 限界上下文 |
+| P | Property | 属性 |
+

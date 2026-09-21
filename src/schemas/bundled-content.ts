@@ -203,6 +203,7 @@ import _h_arch_bounded_contexts_md from './templates/harness/arch/bounded-contex
 import _h_arch_frontend_md from './templates/harness/arch/frontend.md';
 import _h_arch_spec_slice_md from './templates/harness/arch/spec-slice.md';
 import _h_common_README_md from './templates/harness/common/README.md';
+import _h_common_always_document_language_md from './templates/harness/common/always/document-language.md';
 import _h_common_always_interactive_interaction_md from './templates/harness/common/always/interactive-interaction.md';
 import _h_common_conditional_brownfield_md from './templates/harness/common/conditional/brownfield.md';
 import _h_constitution_md from './templates/harness/constitution.md';
@@ -221,6 +222,7 @@ export const bundledHarnessBodies: Record<string, { title: string; body: string 
   'arch/frontend.md': { title: "前端架构约束（arch / frontend）", body: _h_arch_frontend_md },
   'arch/spec-slice.md': { title: "规格切片约束（arch / spec-slice）", body: _h_arch_spec_slice_md },
   'common/README.md': { title: "通用约束（common）", body: _h_common_README_md },
+  'common/always/document-language.md': { title: "文档语言（common / always / document-language）", body: _h_common_always_document_language_md },
   'common/always/interactive-interaction.md': { title: "互动式交互纪律（interactive-interaction）", body: _h_common_always_interactive_interaction_md },
   'common/conditional/brownfield.md': { title: "棕地项目约束（brownfield）", body: _h_common_conditional_brownfield_md },
   'constitution.md': { title: "Sparrow 约束资产宪法（Harness Constitution）", body: _h_constitution_md },

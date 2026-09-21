@@ -267,6 +267,8 @@ export interface ProjectContext {
   projectName: string;
   version: string;
   toolIds: string[];
+  /** BCP 47 document language. Defaults to zh-Hans when omitted. */
+  lang?: string;
 }
 
 /**
@@ -276,11 +278,15 @@ export function generateProjectConfig(ctx: ProjectContext): string {
   const { projectRoot, projectName, version, toolIds } = ctx;
   const existing = readProjectConfig(projectRoot);
   const existingPlugins = Array.isArray(existing.plugins) ? existing.plugins : [];
+  const lang =
+    ctx.lang ??
+    (typeof existing.lang === 'string' && existing.lang ? existing.lang : 'zh-Hans');
 
   const config = {
     version,
     tools: toolIds,
     projectName,
+    lang,
     createdAt: typeof existing.createdAt === 'string' ? existing.createdAt : new Date().toISOString(),
     outputBase: 'docs/sparrow',
     codeBase: 'backend',

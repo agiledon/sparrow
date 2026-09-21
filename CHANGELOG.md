@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Document language**: `sparrow-config.json` field `lang` (BCP 47). `sparrow init --lang` sets it; otherwise the OS UI language is detected (macOS `AppleLanguages`, Windows `CurrentUICulture`, Linux `LC_ALL` / `LC_MESSAGES` / `LANG`), falling back to `zh-Hans`. Always-harness `common/always/document-language.md` requires Markdown deliverables in that language (source and HTML prototypes excluded; EARS / property tokens stay in English).
+  - **文档语言**：`lang` 写入配置；`--lang` 优先，否则按操作系统探测，失败为简体中文。文档型交付物遵循该语言。
+
 ### Changed
 
 - **Problem-space hierarchy**: Requirement produces `catalog.md` + `subdomains/` / `capabilities/` / `scenarios/` / `services/` (EARS acceptance, EBP coverage). Subdomain partitioning moves out of arch. Grill Me aligns with SD→C→S→EBP→BS; UI converts EBP to end-to-end operation flows.

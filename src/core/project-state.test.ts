@@ -124,6 +124,7 @@ test('generateProjectConfig writes sparrow-config.json and removes sparrow.json'
   assert.ok(!existsSync(join(root, LEGACY_CONFIG_FILE)));
   const parsed = JSON.parse(readFileSync(path, 'utf-8'));
   assert.equal(parsed.plugins[0].name, 'archify');
+  assert.equal(parsed.lang, 'zh-Hans');
 });
 
 test('ensureProjectState does not overwrite existing state; wipeSpecs path resets it', () => {

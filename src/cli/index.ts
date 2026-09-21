@@ -19,6 +19,8 @@ import { renderWelcomePage, promptInput, promptToolSelection, promptConfirm } fr
 import { compareVersions } from '../core/version-compare.js';
 import { initializeSkills } from '../skills/index.js';
 import { readLocalVersion, fetchLatestVersion, syncAssets, installUpdate, UpdateError } from '../core/update.js';
+import { detectOsLocale, formatCommonLangs, resolveInitLang } from '../core/os-locale.js';
+import { readProjectConfig } from '../core/project-config.js';
 import { getSparrowVersion } from '../core/package-version.js';
 import { SkillRegistry } from '../core/skills.js';
 
@@ -40,6 +42,7 @@ Examples:
   $ sparrow init --tools claude     Set up for Claude Code only
   $ sparrow init --tools claude,opencode,cursor,pi  Set up for multiple tools
   $ sparrow init --tools all          Set up for all tools
+  $ sparrow init --lang zh-Hans       Document language (BCP 47). Omit to use the OS UI language
   $ sparrow init --force              Wipe specs and reset sparrow-state.json (asks for confirmation)
   $ sparrow update                   Check and update to the latest version
   $ sparrow --version                Show version
@@ -67,12 +70,21 @@ program
     'Comma-separated tool ids to set up (claude, opencode, cursor, pi), or "all"'
   )
   .option('--project-name <name>', 'Project name in English (used for code directory)')
+  .option(
+    '--lang <code>',
+    'BCP 47 language for document deliverables (default: OS UI language, fallback zh-Hans)\n' +
+      formatCommonLangs(),
+  )
   .option('--force', 'If sparrow-state.json exists: delete all specs under docs/sparrow/master and docs/sparrow/change, then reset state (requires confirmation)')
-  .action(async (options: { tools?: string; projectName?: string; force?: boolean }) => {
+  .action(async (options: { tools?: string; projectName?: string; force?: boolean; lang?: string }) => {
     const projectRoot = resolve(process.cwd());
 
     let selectedToolIds: string[];
     let projectName: string;
+    let lang: string;
+
+    const existingConfig = readProjectConfig(projectRoot);
+    const detected = options.lang ? null : detectOsLocale();
 
     // ── Interactive mode: no --tools flag ──────────────────────────
     if (!options.tools) {
@@ -88,6 +100,28 @@ program
         projectName = defaultName;
       }
       projectName = sanitizeProjectName(projectName);
+
+      console.log('');
+      console.log('Document language (BCP 47):');
+      console.log(formatCommonLangs());
+      console.log('');
+
+      if (options.lang) {
+        lang = resolveInitLang({ explicit: options.lang });
+      } else if (typeof existingConfig.lang === 'string' && existingConfig.lang) {
+        lang = resolveInitLang({ existing: existingConfig.lang });
+        console.log(`Keeping configured language: ${lang}`);
+      } else {
+        const suggested = detected ?? 'zh-Hans';
+        const entered = await promptInput(
+          'Document language code (Enter to accept):',
+          suggested,
+        );
+        lang = resolveInitLang({
+          explicit: entered && entered !== suggested ? entered : undefined,
+          detected: suggested,
+        });
+      }
 
       // 2. Show tool detection and let user select
       const detectedTools = detectInstalledTools(projectRoot);
@@ -105,6 +139,11 @@ program
     } else {
       // ── Non-interactive mode: --tools provided ───────────────────
       projectName = options.projectName || sanitizeProjectName(basename(projectRoot));
+      lang = resolveInitLang({
+        explicit: options.lang,
+        existing: existingConfig.lang,
+        detected,
+      });
 
       const detectedTools = detectInstalledTools(projectRoot);
       console.log('');
@@ -144,6 +183,7 @@ program
         force: options.force,
         wipeSpecs,
         projectName,
+        lang,
       }, registry);
 
       console.log(formatInitSummary(result));

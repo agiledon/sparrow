@@ -6,7 +6,8 @@
   "globalHarness": {
     "always": [
       "constitution.md",
-      "common/always/interactive-interaction.md"
+      "common/always/interactive-interaction.md",
+      "common/always/document-language.md"
     ],
     "conditional": [
       {

@@ -21,7 +21,7 @@
 - `assets/component-library.md` → `requirement/ui/components/component-library.md`
 - `assets/prototype-index.html` → `requirement/ui/prototypes/index.html`（及页面 html）
 
-不得改模板章节结构。未涉及的质量属性维度直接省略。**不要**再以 `prd-business.md` 作为主产出（迁移见 `references/compat-migrate.md`）。
+不得改模板章节结构。未涉及的质量属性维度直接省略。**不要**再以 `prd-business.md` 作为主产出（迁移见 `references/compat-migrate.md`）。正文语言遵循 harness `common/always/document-language.md`（`sparrow-config.json` 的 `lang`）。
 
 ## 步骤
 

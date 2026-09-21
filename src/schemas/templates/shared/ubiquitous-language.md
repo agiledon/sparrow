@@ -21,7 +21,7 @@
 | Grill Me | 决策访谈：每次一问、给推荐答案、收敛后再行动。互动纪律见 harness `common/always/interactive-interaction.md`。维度与顺序见 `grill-me.md`。 |
 | project.md（change） | `change/current/{id}/project.md`。工作区向导索引。 |
 | project.md（master） | `docs/sparrow/master/project.md`。promote 后的基线索引。 |
-| sparrow-config.json | `.sparrow/sparrow-config.json`。工具列表、项目名、版本、plugins。 |
+| sparrow-config.json | `.sparrow/sparrow-config.json`。工具列表、项目名、版本、plugins、`lang`（文档语言，BCP 47；缺省 `zh-Hans`）。 |
 | sparrow-state.json | `.sparrow/sparrow-state.json`。流水线状态源。 |
 
 ## 问题空间（requirement）

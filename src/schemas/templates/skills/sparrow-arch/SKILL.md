@@ -12,7 +12,7 @@
 - `assets/frontend.md` → `architecture/frontend.md`
 - `assets/spec-interaction.md` → `design/{ui-slug}/spec.md`
 
-更新 `project.md` 的 BC / 交互上下文索引。不得改模板章节结构。**不再**产出 `architecture/business.md`。
+更新 `project.md` 的 BC / 交互上下文索引。不得改模板章节结构。**不再**产出 `architecture/business.md`。正文语言遵循 harness `common/always/document-language.md`。
 
 ## 步骤
 

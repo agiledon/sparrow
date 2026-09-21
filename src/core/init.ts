@@ -28,6 +28,8 @@ export interface InitOptions {
   wipeSpecs?: boolean;
   /** Project name in English (used for code directory) */
   projectName: string;
+  /** BCP 47 language for document deliverables */
+  lang: string;
 }
 
 export interface InitResult {
@@ -72,6 +74,7 @@ export function executeInit(projectRoot: string, options: InitOptions, registry:
     projectName: options.projectName,
     version: getSparrowVersion(),
     toolIds: selectedToolIds,
+    lang: options.lang,
   };
   const configPath = generateProjectConfig(projectContext);
 

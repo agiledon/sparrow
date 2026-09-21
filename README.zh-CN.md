@@ -156,6 +156,9 @@ sparrow init --tools claude,opencode,cursor,pi
 
 # 配置所有支持的工具，无需交互
 sparrow init --tools all --force
+
+# 文档语言（BCP 47）。省略 --lang 时读取操作系统界面语言；失败则 zh-Hans
+sparrow init --tools cursor --lang en
 ```
 
 这将为每个所选工具创建 skill 与 command 文件：
@@ -441,7 +444,7 @@ harness/
 
 ### sparrow-config.json
 
-项目工具配置：Sparrow 版本、已选 AI 工具、项目名，以及可选的 plugins。生成路径为 `.sparrow/sparrow-config.json`（会迁移旧的 `sparrow.json`）。
+项目工具配置：Sparrow 版本、已选 AI 工具、项目名、文档语言（`lang`，BCP 47），以及可选的 plugins。生成路径为 `.sparrow/sparrow-config.json`（会迁移旧的 `sparrow.json`）。`lang` 由 `--lang` 指定；省略时读取操作系统界面语言，失败则为 `zh-Hans`。再次 init 且未传 `--lang` 时保留已有 `lang`。各阶段 Markdown 规格使用该语言；源代码与 HTML 原型除外。模板中的英文记号（EARS、`For any`、`Given`/`When`/`Then`）保持英文。
 
 `sparrow init` 后的典型示例：
 
@@ -450,6 +453,7 @@ harness/
   "version": "0.5.0",
   "tools": ["cursor", "claude"],
   "projectName": "my-project",
+  "lang": "zh-Hans",
   "createdAt": "2026-09-20T08:00:00.000Z",
   "outputBase": "docs/sparrow",
   "codeBase": "backend",

@@ -9,6 +9,7 @@ test('workflow schema validates structurally', () => {
   validateWorkflowSchema(schema);
   assert.equal(schema.coreStepCount, 8);
   assert.ok(schema.globalHarness.always.includes('common/always/interactive-interaction.md'));
+  assert.ok(schema.globalHarness.always.includes('common/always/document-language.md'));
   assert.equal(schema.globalHarness.conditional[0]?.path, 'common/conditional/brownfield.md');
   const requirement = schema.steps.find((s) => s.id === 'requirement');
   assert.ok(requirement?.outputs?.some((o) => o.dest === 'requirement/business/catalog.md'));

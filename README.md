@@ -156,6 +156,9 @@ sparrow init --tools claude,opencode,cursor,pi
 
 # Set up for all supported tools, no prompts
 sparrow init --tools all --force
+
+# Document language (BCP 47). Omit --lang to use the OS UI language; fallback zh-Hans
+sparrow init --tools cursor --lang en
 ```
 
 This creates skill and command files for each selected tool:
@@ -426,7 +429,7 @@ Both files live under `.sparrow/` in the project root. They are created by `spar
 
 ### sparrow-config.json
 
-Project tool config: Sparrow version, selected AI tools, project name, and optional plugins. Generated at `.sparrow/sparrow-config.json` (migrates leftover `sparrow.json`).
+Project tool config: Sparrow version, selected AI tools, project name, document language (`lang`, BCP 47), and optional plugins. Generated at `.sparrow/sparrow-config.json` (migrates leftover `sparrow.json`). `lang` is set by `--lang`, otherwise the OS UI language, otherwise `zh-Hans`. Re-init keeps an existing `lang` unless `--lang` is passed. Markdown specs follow `lang`; source code and HTML prototypes do not. English template tokens (EARS, `For any`, `Given`/`When`/`Then`) stay in English.
 
 Typical example after `sparrow init`:
 
@@ -435,6 +438,7 @@ Typical example after `sparrow init`:
   "version": "0.5.0",
   "tools": ["cursor", "claude"],
   "projectName": "my-project",
+  "lang": "zh-Hans",
   "createdAt": "2026-09-20T08:00:00.000Z",
   "outputBase": "docs/sparrow",
   "codeBase": "backend",

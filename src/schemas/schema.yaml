@@ -8,6 +8,7 @@ globalHarness:
   always:
     - constitution.md
     - common/always/interactive-interaction.md
+    - common/always/document-language.md
   conditional:
     - path: common/conditional/brownfield.md
       when: .sparrow/sparrow-state.json 的 development-mode 为 brownfield
