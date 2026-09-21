@@ -17,6 +17,11 @@
 5. **change-id 确认完成前禁止**在 `docs/sparrow/change/current/` 下创建子目录或文件。用户中止或未指定 change-id 时，**`current/` 必须保持为空**，并停止执行。
 6. **禁止**在 archive promote 之前向 `docs/sparrow/master/` 写入。首次归档前 master 保持为空。
 
+## 原始需求文档 ingest（MUST / MUST NOT）
+
+1. **必须**在项目根直接调用 Sparrow CLI：`sparrow ingest <path>`，再按 `read-plan.json` 的 `command` 执行 `sparrow ingest show …`（**不要**通过 skill `scripts/` 包装 ingest）。
+2. **禁止**用 Python、unzip 手工解 docx 或模型直接读二进制文档；`sparrow` 不可用时停止并提示安装/链接 CLI，不得改用手动解析。
+
 ## 分层产出（MUST）
 
 1. **必须**产出 `requirement/business/catalog.md`（含结构索引与 **EBP→BS** 表）。
