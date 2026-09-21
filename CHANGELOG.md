@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-09-21
+
 ### Added
 
 - **Document language**: `sparrow-config.json` field `lang` (BCP 47). `sparrow init --lang` sets it; otherwise the OS UI language is detected (macOS `AppleLanguages`, Windows `CurrentUICulture`, Linux `LC_ALL` / `LC_MESSAGES` / `LANG`), falling back to `zh-Hans`. Always-harness `common/always/document-language.md` requires Markdown deliverables in that language (source and HTML prototypes excluded; EARS / property tokens stay in English).
