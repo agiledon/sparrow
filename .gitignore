@@ -1,6 +1,6 @@
 node_modules/
 dist/
-bin/
+bin/*.map
 *.tsbuildinfo
 .env
 .DS_Store

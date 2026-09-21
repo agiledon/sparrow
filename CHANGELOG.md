@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Requirement document ingest**: `sparrow ingest` parses `.md` / `.doc` / `.docx` / `.pdf` into a content-addressed cache (sections, verbatim `signals.md`, OCR'd figures, `read-plan.json`). `/sparrow-requirement @path` runs ingest and reads only the plan. Progress goes to stderr; stdout is a one-line summary.
   - **需求文档解析**：`sparrow ingest` 将 md/doc/docx/pdf 解析为缓存文本与 `read-plan.json`；requirement skill 只按清单阅读。进度在 stderr，不经过模型。
 
+### Fixed
+
+- **Local `npm link` CLI**: `bin/sparrow.js` is a launcher that runs TypeScript source in a git checkout, so `sparrow init` writes the current skill templates without requiring a rebuild. Published installs still load `dist/sparrow.js`.
+  - **本地链接**：开发目录下 `sparrow` 直接跑源码模板，避免 `init` 写出过期 skill。
+
+## [0.6.0] - 2026-09-21
+
 ## [0.6.0] - 2026-09-21
 
 ### Added

@@ -96,3 +96,11 @@ test('slash command is a short pointer, not the full skill body', () => {
   assert.doesNotMatch(cmd, /业务服务识别规则/);
   assert.ok(cmd.split('\n').length < 40);
 });
+
+test('CLI launcher runs TypeScript source instead of a stale esbuild bundle', () => {
+  const launcher = readFileSync(join(process.cwd(), 'bin/sparrow.js'), 'utf-8');
+  assert.match(launcher, /const srcCli/);
+  assert.match(launcher, /register-assets\.mjs/);
+  assert.ok(launcher.length < 4000, 'launcher should not contain bundled skills');
+  assert.equal(launcher.includes('createProgress'), false);
+});

@@ -113,8 +113,7 @@ If you have cloned the Sparrow repository locally, you can install directly from
 # Option 1: Use npm link (recommended for development)
 cd /path/to/sparrow        # Navigate to the Sparrow project root
 npm install                # Install dependencies
-npm run build              # Build the project
-npm link                   # Link sparrow globally
+npm link                   # Link sparrow globally (runs source templates; no rebuild needed)
 
 # Then use it from any directory
 cd /path/to/your-project
@@ -125,11 +124,13 @@ npm unlink -g sparrow-ddd
 ```
 
 ```bash
-# Option 2: Install globally from local path
+# Option 2: Install globally from local path (packs dist/; run build first)
+npm run build
 npm install -g /path/to/sparrow
 
-# Option 3: Run the local build artifact directly with npx
-node /path/to/sparrow/bin/sparrow.js init --tools claude
+# Option 3: Run the local build artifact directly
+npm run build
+node /path/to/sparrow/dist/sparrow.js init --tools claude
 ```
 
 > **Note**: Local installation is primarily intended for developing and debugging the Sparrow framework itself. For everyday use, install the published version via npm.
@@ -554,7 +555,7 @@ npm test
 npm run dev -- init --tools claude --force
 
 # Run compiled binary
-node bin/sparrow.js init --tools claude
+node dist/sparrow.js init --tools claude
 
 # Clean build artifacts
 npm run clean

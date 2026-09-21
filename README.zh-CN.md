@@ -113,8 +113,7 @@ npx sparrow-ddd init
 # 方式 1：使用 npm link（开发推荐）
 cd /path/to/sparrow        # 进入 Sparrow 项目根目录
 npm install                # 安装依赖
-npm run build              # 构建项目
-npm link                   # 全局链接 sparrow
+npm link                   # 全局链接 sparrow（直接跑源码模板，不必先 build）
 
 # 然后在任意目录使用
 cd /path/to/your-project
@@ -125,11 +124,13 @@ npm unlink -g sparrow-ddd
 ```
 
 ```bash
-# 方式 2：从本地路径全局安装
+# 方式 2：从本地路径全局安装（打包 dist/，需先 build）
+npm run build
 npm install -g /path/to/sparrow
 
-# 方式 3：用 npx 直接运行本地构建产物
-node /path/to/sparrow/bin/sparrow.js init --tools claude
+# 方式 3：直接运行构建产物
+npm run build
+node /path/to/sparrow/dist/sparrow.js init --tools claude
 ```
 
 > **说明**：本地安装主要用于开发与调试 Sparrow 框架本身。日常使用请通过 npm 安装已发布版本。
@@ -567,7 +568,7 @@ npm run typecheck
 npm run dev -- init --tools claude --force
 
 # 运行编译后的二进制
-node bin/sparrow.js init --tools claude
+node dist/sparrow.js init --tools claude
 
 # 清理构建产物
 npm run clean

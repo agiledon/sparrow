@@ -16,7 +16,7 @@
   "scripts": {
     "build": "node build.js",
     "dev": "node --import ./scripts/register-assets.mjs --import tsx src/cli/index.ts",
-    "clean": "rm -rf dist bin/sparrow.js",
+    "clean": "rm -rf dist",
     "prepublishOnly": "npm run build",
     "typecheck": "tsc --noEmit",
     "sync-schema": "node scripts/sync-schema-json.mjs && node scripts/generate-sparrow-state-mjs.mjs && node scripts/generate-sparrow-promote-mjs.mjs && node scripts/sync-bundled-content.mjs",
