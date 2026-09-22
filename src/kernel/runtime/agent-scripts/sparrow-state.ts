@@ -4,7 +4,7 @@
  * Source of truth: src/kernel/runtime/project-state.ts (and related).
  * This file is the agent-facing CLI entry; bundled into
  * src/content/workflows/_shared/scripts/sparrow-state.mjs by
- * scripts/generate-sparrow-state-mjs.mjs — do not edit the .mjs by hand.
+ * src/kernel/runtime/agent-scripts/bundle-sparrow-state.mjs — do not edit the .mjs by hand.
  *
  *   node scripts/sparrow-state.mjs show
  *   node scripts/sparrow-state.mjs detect-mode
@@ -31,7 +31,7 @@ import {
   type DevelopmentMode,
   type PipelineStatus,
   type PipelineStep,
-} from '../kernel/runtime/project-state.js';
+} from '../project-state.js';
 
 const MODES = new Set<DevelopmentMode>(['tbd', 'greenfield', 'brownfield', 'iteration']);
 const STEPS = new Set<PipelineStep>([

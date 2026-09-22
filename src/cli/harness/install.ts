@@ -17,7 +17,7 @@ import {
   HARNESS_MANAGED_MARKER,
   HARNESS_VERSION,
   type HarnessFile,
-} from '../../harness/index.js';
+} from '../../content/harness/catalog.js';
 
 /** Version stamp file inside the harness directory. */
 const VERSION_FILE = '.version';

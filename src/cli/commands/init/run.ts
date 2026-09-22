@@ -11,7 +11,7 @@ import { initializeGlobalHarness, initializeProjectHarness } from '../../harness
 import { initializePluginRuntimes } from './plugin-init.js';
 import { getSparrowVersion } from '../../shell/package-version.js';
 import { detectInstalledTools, parseToolSelection } from '../../shell/tools.js';
-import type { SkillRegistry } from '../../../skills/registry.js';
+import type { SkillRegistry } from '../../../kernel/skill/registry.js';
 import { initializeSpecLayout } from '../../../kernel/runtime/spec-layout-init.js';
 import { SPARROW_DOCS } from '../../../kernel/runtime/spec-paths.js';
 import { ensureProjectState, resetProjectState, wipeSpecTrees } from '../../../kernel/runtime/project-state.js';

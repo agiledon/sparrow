@@ -5,7 +5,7 @@
 
 import { SPARROW_DIR } from '../../kernel/runtime/spec-paths.js';
 import { readProjectConfig, writeProjectConfig } from '../../kernel/runtime/project-config.js';
-import type { SkillDefinition, SkillRegistry } from '../../skills/registry.js';
+import type { SkillDefinition, SkillRegistry } from '../../kernel/skill/registry.js';
 import { installAgentSkills } from './install-agent-skills.js';
 import type { CommandContent } from '../adapters/types.js';
 import { getWorkflowStepBySkillId } from '../../kernel/content/skill-composition.js';

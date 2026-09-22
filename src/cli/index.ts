@@ -19,7 +19,7 @@ import { formatInitSummary, formatToolDetectionSummary } from './summary.js';
 import { getSupportedToolIds } from './shell/config.js';
 import { renderWelcomePage, promptInput, promptToolSelection, promptConfirm } from './shell/prompts.js';
 import { compareVersions } from './shell/version-compare.js';
-import { initializeSkills } from '../skills/index.js';
+import { initializeSkills } from './agent-skill/initialize-skills.js';
 import { readLocalVersion, fetchLatestVersion, syncAssets, installUpdate, UpdateError } from './commands/update/run.js';
 import { recordCliReadiness } from './shell/cli-readiness.js';
 import { SPARROW_DIR } from '../kernel/runtime/spec-paths.js';
@@ -28,7 +28,7 @@ import { join } from 'node:path';
 import { detectOsLocale, formatCommonLangs, resolveInitLang } from './shell/os-locale.js';
 import { readProjectConfig } from '../kernel/runtime/project-config.js';
 import { getSparrowVersion } from './shell/package-version.js';
-import { SkillRegistry } from '../skills/registry.js';
+import { SkillRegistry } from '../kernel/skill/registry.js';
 import { IngestError, runClean, runIngest, showSection } from './ingest/index.js';
 
 const program = new Command();

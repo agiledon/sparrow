@@ -13,7 +13,7 @@ export interface ProjectMdSection {
 }
 
 import { ARCHITECTURE_API_CATALOG_REL } from './spec-paths.js';
-import { sharedAssets } from '../../schemas/bundled-content.js';
+import { sharedAssets } from '../../content/bundled-content.js';
 
 /** Canonical path to the quality-attribute document (relative to master/ or change workspace root). */
 export const API_CATALOG_PATH = ARCHITECTURE_API_CATALOG_REL;

@@ -5,14 +5,14 @@ import {
   sharedAssets,
   sharedScripts,
   skillExtras,
-} from '../../schemas/bundled-content.js';
+} from '../../content/bundled-content.js';
 import { getContentStore } from './ContentStore.js';
 import {
   getWorkflowSchema as getKernelSchema,
   resolveStepHarnessPaths as resolveHarness,
   uniqueAssetNames as uniqueAssets,
 } from './schema.js';
-import type { SkillSpec } from '../../skills/registry.js';
+import type { SkillSpec } from '../skill/registry.js';
 
 export function getWorkflowSchema(): SparrowWorkflowSchema {
   return getKernelSchema();

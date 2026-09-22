@@ -7,7 +7,7 @@ import {
   sharedAssets,
   sharedScripts,
   skillExtras,
-} from '../../schemas/bundled-content.js';
+} from '../../content/bundled-content.js';
 import { HARNESS_TOKEN } from '../skill/HarnessToken.js';
 
 export class ContentStore {

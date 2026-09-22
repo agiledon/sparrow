@@ -3,15 +3,15 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { SkillRegistry } from '../../src/skills/registry.js';
-import { initializeSkills } from '../../src/skills/index.js';
+import { SkillRegistry } from '../../src/kernel/skill/registry.js';
+import { initializeSkills } from '../../src/cli/agent-skill/initialize-skills.js';
 import { generateSkillFiles } from '../../src/cli/agent-skill/generation.js';
 import {
   composeSkillBodyFromWorkflow,
   getWorkflowSchema,
   uniqueAssetNames,
 } from '../../src/kernel/content/skill-composition.js';
-import { skillExtras, sharedAssets, sharedReferences, sharedScripts, skillTemplates } from '../../src/schemas/bundled-content.js';
+import { skillExtras, sharedAssets, sharedReferences, sharedScripts, skillTemplates } from '../../src/content/bundled-content.js';
 
 const SKILL_MD_LINE_LIMIT = 500;
 

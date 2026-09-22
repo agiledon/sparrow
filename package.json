@@ -15,12 +15,12 @@
   ],
   "scripts": {
     "build": "node build.js",
-    "dev": "node --import ./scripts/register-assets.mjs --import tsx src/cli/index.ts",
+    "dev": "node --import ./src/cli/dev/register-assets.mjs --import tsx src/cli/index.ts",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run build",
     "typecheck": "tsc --noEmit",
-    "sync-schema": "node scripts/sync-schema-json.mjs && node scripts/generate-sparrow-state-mjs.mjs && node scripts/generate-sparrow-promote-mjs.mjs && node scripts/sync-bundled-content.mjs",
-    "test": "node --import ./scripts/register-assets.mjs --import tsx --test 'test/**/*.test.ts'"
+    "sync-schema": "node src/content/sync/sync-schema-json.mjs && node src/kernel/runtime/agent-scripts/bundle-sparrow-state.mjs && node src/kernel/runtime/agent-scripts/bundle-sparrow-promote.mjs && node src/content/sync/sync-bundled-content.mjs",
+    "test": "node --import ./src/cli/dev/register-assets.mjs --import tsx --test 'test/**/*.test.ts'"
   },
   "keywords": [
     "ddd",

@@ -7,4 +7,4 @@
  */
 
 export * from './tools.js';
-export * from '../../skills/registry.js';
+export { SkillRegistry, type SkillDefinition, type SkillSpec } from '../../kernel/skill/registry.js';

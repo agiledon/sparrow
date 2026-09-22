@@ -29,7 +29,7 @@ if (existsSync(srcCli)) {
       process.execPath,
       [
         '--import',
-        join(root, 'scripts', 'register-assets.mjs'),
+        join(root, 'src', 'cli', 'dev', 'register-assets.mjs'),
         '--import',
         tsx,
         srcCli,
