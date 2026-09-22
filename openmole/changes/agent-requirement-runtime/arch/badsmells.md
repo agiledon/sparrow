@@ -1,6 +1,6 @@
 # 坏味道规约文档（OpenMole Bad Smells）
 
-**版本**：0.1.3
+**版本**：0.1.4
 **状态**：草案
 **依据**：OpenMole 规约摘要（见 Skill 内嵌）；change 内 [tasks.md](./tasks.md)
 **修订日期**：2026-09-22
@@ -31,7 +31,7 @@
 
 | BS-ID | 类别 | 状态 | 说明 |
 |-------|------|------|------|
-| ARCH-BD-002 | 边界性 | 未清除 | init/update 不暴露 ingest CLI 就绪边界 |
+| ARCH-BD-002 | 边界性 | 已消除 | init/update 写入 `.sparrow/cli-readiness.json` |
 | ARCH-LY-002 | 层次性 | 已消除 | CLI `--project-root` + read-plan 自描述 |
 | ARCH-BD-003 | 边界性 | 已消除 | schema cliCommands + 生成 SKILL/斜杠命令可见 ingest CLI |
 | ARCH-CP-002 | 耦合性 | 已消除 | ensure-change-workspace 委托 sparrow-state.mjs |
@@ -98,3 +98,4 @@
 | 0.1.1 | 2026-09-22 | — | impl B-T04：ARCH-CP-002 → 已消除。 |
 | 0.1.2 | 2026-09-22 | — | impl B-T02/B-T03：ARCH-LY-002 → 已消除。 |
 | 0.1.3 | 2026-09-22 | — | arch B-T02：ARCH-BD-003 → 已消除。 |
+| 0.1.4 | 2026-09-22 | — | arch B-T03：ARCH-BD-002 → 已消除。 |

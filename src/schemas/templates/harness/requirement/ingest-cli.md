@@ -7,7 +7,7 @@
 1. 在**项目根**直接调用 **`sparrow ingest <path>`**（可按 `read-plan.json` 使用 **`--project-root`**）。
 2. 只读 **`.sparrow/ingest/`** 与该次 **`read-plan.json`**；对清单项 **原样执行** 各条 `command`（`sparrow ingest show …`）。
 3. ingest 进度只在 **stderr**；禁止用模型复述进度。
-4. 执行前确认 **`sparrow` 可用**（`sparrow --version` 或 `npx sparrow-ddd --version`）；不可用则停止并提示安装 `npm install -g sparrow-ddd` 或项目内 `npm install sparrow-ddd`。
+4. 执行前确认 **`sparrow` 可用**（`sparrow --version` 或 `npx sparrow-ddd --version`）；不可用则停止并提示安装 `npm install -g sparrow-ddd` 或项目内 `npm install sparrow-ddd`。可读取 **`.sparrow/cli-readiness.json`**（`sparrow init` / 在项目根 `sparrow update` 后写入）。
 
 ## MUST NOT
 

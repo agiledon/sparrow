@@ -48,6 +48,10 @@ export function formatInitSummary(result: InitResult): string {
   lines.push(`📋 Tools configured: ${result.tools.join(', ')}`);
   lines.push(`📄 Config: .sparrow/sparrow-config.json`);
   lines.push(`🧭 State: .sparrow/sparrow-state.json${result.stateCreated ? ' (created)' : result.specsWiped ? ' (reset)' : ''}`);
+  lines.push(`🛠️  CLI readiness: .sparrow/cli-readiness.json (${result.cliReadiness.ok ? `ok · ${result.cliReadiness.version ?? 'version unknown'}` : 'not ready'})`);
+  if (!result.cliReadiness.ok) {
+    lines.push(`   ⚠️  ${result.cliReadiness.hint}`);
+  }
   lines.push(`📑 Spec layout: ${result.projectMdPath}`);
   lines.push(`📁 Backend dir: backend/`);
   lines.push('');

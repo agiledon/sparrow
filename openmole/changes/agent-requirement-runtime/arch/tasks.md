@@ -71,7 +71,7 @@
 
 ### B-T03：init/update 暴露 CLI 就绪边界（消除 ARCH-BD-002）
 
-- [ ] **B-T03.** init/update 输出或写入 `.sparrow/` 就绪信息，含 sparrow CLI 探测
+- [x] **B-T03.** init/update 输出或写入 `.sparrow/` 就绪信息，含 sparrow CLI 探测
   - **依赖**：无。
   - **级别**：ARCH
   - **坏味道**：`badsmells.md` §2 / `ARCH-BD-002`。
@@ -118,3 +118,4 @@
 |------|------|----------|------|
 | 0.1.0 | 2026-09-22 | `461c270237ee49b2bc28bb4e9aa13986b88a911e` | 初版：B-T01~B-T04 对应 ARCH-LY/BD/BD/CP。 |
 | 0.1.1 | 2026-09-22 | — | B-T02 完成（ARCH-BD-003 已消除）。 |
+| 0.1.2 | 2026-09-22 | — | B-T03 完成（ARCH-BD-002 已消除）。 |

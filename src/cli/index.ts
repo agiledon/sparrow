@@ -21,6 +21,10 @@ import { renderWelcomePage, promptInput, promptToolSelection, promptConfirm } fr
 import { compareVersions } from '../core/version-compare.js';
 import { initializeSkills } from '../skills/index.js';
 import { readLocalVersion, fetchLatestVersion, syncAssets, installUpdate, UpdateError } from '../core/update.js';
+import { recordCliReadiness } from '../core/cli-readiness.js';
+import { SPARROW_DIR } from '../core/spec-paths.js';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import { detectOsLocale, formatCommonLangs, resolveInitLang } from '../core/os-locale.js';
 import { readProjectConfig } from '../core/project-config.js';
 import { getSparrowVersion } from '../core/package-version.js';
@@ -211,6 +215,16 @@ program
       console.log(`🌐 Latest version on npm: v${latestVersion}`);
 
       syncAssets();
+
+      const projectRoot = resolve(process.cwd());
+      if (existsSync(join(projectRoot, SPARROW_DIR))) {
+        const { readiness } = recordCliReadiness(projectRoot);
+        if (!readiness.ok) {
+          console.log('');
+          console.log(`⚠️  ${readiness.hint}`);
+          console.log('   See `.sparrow/cli-readiness.json` in this project.');
+        }
+      }
 
       if (localVersion === latestVersion) {
         console.log('✅ Your Sparrow is already up to date. No update needed.');

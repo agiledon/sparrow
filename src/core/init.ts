@@ -15,6 +15,7 @@ import type { SkillRegistry } from './skills.js';
 import { initializeSpecLayout } from './spec-layout-init.js';
 import { SPARROW_DOCS } from './spec-paths.js';
 import { ensureProjectState, resetProjectState, wipeSpecTrees } from './project-state.js';
+import { recordCliReadiness, type SparrowCliReadiness } from './cli-readiness.js';
 
 export interface InitOptions {
   /** Comma-separated tool ids or 'all' */
@@ -47,6 +48,9 @@ export interface InitResult {
   projectHarnessFiles: string[];
   /** Plugin runtime files installed during init */
   pluginRuntimeFiles: string[];
+  /** Sparrow CLI probe written for agents (`.sparrow/cli-readiness.json`) */
+  cliReadinessPath: string;
+  cliReadiness: SparrowCliReadiness;
 }
 
 /**
@@ -86,6 +90,8 @@ export function executeInit(projectRoot: string, options: InitOptions, registry:
   const projectHarnessFiles = initializeProjectHarness(projectRoot);
   const pluginRuntimeFiles = initializePluginRuntimes(projectRoot);
 
+  const { path: cliReadinessPath, readiness: cliReadiness } = recordCliReadiness(projectRoot);
+
   return {
     tools: selectedToolIds,
     projectName: options.projectName,
@@ -98,5 +104,7 @@ export function executeInit(projectRoot: string, options: InitOptions, registry:
     globalHarnessFiles,
     projectHarnessFiles,
     pluginRuntimeFiles,
+    cliReadinessPath,
+    cliReadiness,
   };
 }
