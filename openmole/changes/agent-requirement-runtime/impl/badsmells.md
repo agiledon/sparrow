@@ -1,6 +1,6 @@
 # 坏味道规约文档（OpenMole Bad Smells）
 
-**版本**：0.1.0
+**版本**：0.1.1
 **状态**：草案
 **依据**：OpenMole 规约摘要（见 Skill 内嵌）；change 内 [tasks.md](./tasks.md)
 **修订日期**：2026-09-22
@@ -26,7 +26,7 @@
 
 | BS-ID | 类别 | 状态 | 说明 |
 |-------|------|------|------|
-| IMPL-GEN-008 | 通用 | 未清除 | bin/sparrow.js tsx 缺失时静默降级 |
+| IMPL-GEN-008 | 通用 | 已消除 | bin/sparrow.js tsx 缺失时静默降级 |
 | IMPL-GEN-009 | 通用 | 未清除 | CLI 未暴露 projectRoot，与 IngestOptions 不对称 |
 | IMPL-GEN-010 | 通用 | 未清除 | ensure loadState 剪枝规则与 state 脚本分叉 |
 | IMPL-GEN-011 | 通用 | 未清除 | showCommand 硬编码 CLI 子命令字符串 |
@@ -90,3 +90,4 @@
 | 版本 | 日期 | 提交版本 | 说明 |
 |------|------|----------|------|
 | 0.1.0 | 2026-09-22 | `461c270237ee49b2bc28bb4e9aa13986b88a911e` | 初版：IMPL-GEN-008～011。 |
+| 0.1.1 | 2026-09-22 | — | mole-apply impl B-T01：IMPL-GEN-008 → 已消除。 |

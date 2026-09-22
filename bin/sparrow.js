@@ -39,6 +39,13 @@ if (existsSync(srcCli)) {
     );
     process.exit(result.status === null ? 1 : result.status);
   }
+
+  console.error(
+    'TypeScript CLI source found but `tsx` is not installed. Run: npm install',
+  );
+  if (existsSync(distCli)) {
+    console.error('Trying compiled bundle from dist/sparrow.js …');
+  }
 }
 
 if (!existsSync(distCli)) {
