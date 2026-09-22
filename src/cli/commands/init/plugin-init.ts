@@ -1,10 +1,10 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { getBundledPlugins } from '../plugins/index.js';
-import type { Plugin } from '../plugins/types.js';
-import { getGlobalConfigDir } from './harness-init.js';
-import { getPluginStatus, markPluginInstalled } from './global-config.js';
-import { readProjectConfig, writeProjectConfig } from './project-config.js';
+import { getBundledPlugins } from '../../../plugins/index.js';
+import type { Plugin } from '../../../plugins/types.js';
+import { getGlobalConfigDir } from '../../harness/install.js';
+import { getPluginStatus, markPluginInstalled } from '../../../core/global-config.js';
+import { readProjectConfig, writeProjectConfig } from '../../../kernel/runtime/project-config.js';
 
 const PLUGINS_SUBDIR = 'plugins';
 

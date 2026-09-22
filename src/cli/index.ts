@@ -12,22 +12,22 @@
 
 import { Command } from 'commander';
 import { resolve, basename } from 'node:path';
-import { executeInit } from '../core/init.js';
+import { executeInit } from './commands/init/run.js';
 import { projectStateExists } from '../kernel/runtime/project-state.js';
-import { detectInstalledTools } from '../core/tools.js';
+import { detectInstalledTools } from './shell/tools.js';
 import { formatInitSummary, formatToolDetectionSummary } from './summary.js';
-import { getSupportedToolIds } from '../core/config.js';
-import { renderWelcomePage, promptInput, promptToolSelection, promptConfirm } from '../core/prompts.js';
-import { compareVersions } from '../core/version-compare.js';
+import { getSupportedToolIds } from './shell/config.js';
+import { renderWelcomePage, promptInput, promptToolSelection, promptConfirm } from './shell/prompts.js';
+import { compareVersions } from './shell/version-compare.js';
 import { initializeSkills } from '../skills/index.js';
-import { readLocalVersion, fetchLatestVersion, syncAssets, installUpdate, UpdateError } from '../core/update.js';
-import { recordCliReadiness } from '../core/cli-readiness.js';
+import { readLocalVersion, fetchLatestVersion, syncAssets, installUpdate, UpdateError } from './commands/update/run.js';
+import { recordCliReadiness } from './shell/cli-readiness.js';
 import { SPARROW_DIR } from '../kernel/runtime/spec-paths.js';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { detectOsLocale, formatCommonLangs, resolveInitLang } from '../core/os-locale.js';
+import { detectOsLocale, formatCommonLangs, resolveInitLang } from './shell/os-locale.js';
 import { readProjectConfig } from '../kernel/runtime/project-config.js';
-import { getSparrowVersion } from '../core/package-version.js';
+import { getSparrowVersion } from './shell/package-version.js';
 import { SkillRegistry } from '../core/skills.js';
 import { IngestError, runClean, runIngest, showSection } from './ingest/index.js';
 

@@ -8,8 +8,8 @@
  */
 
 import type { CommandContent, ToolCommandAdapter } from './types.js';
-import { formatHarnessReference } from '../harness-init.js';
-import { writeSkill as writeAgentSkill, writeCommand as writeAgentCommand } from '../../cli/agent-skill/write-skill.js';
+import { formatHarnessReference } from '../harness/install.js';
+import { writeSkill as writeAgentSkill, writeCommand as writeAgentCommand } from '../agent-skill/write-skill.js';
 
 /**
  * Format a reference line to a constraint asset for a given scope.

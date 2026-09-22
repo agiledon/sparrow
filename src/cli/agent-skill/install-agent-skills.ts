@@ -1,8 +1,8 @@
 import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { getAdapter } from '../../core/adapters/index.js';
+import { getAdapter } from '../adapters/index.js';
 import type { SkillDefinition, SkillRegistry } from '../../core/skills.js';
-import { assembleSkillContent } from '../../core/skill-generation.js';
+import { assembleSkillContent } from './generation.js';
 import { WorkflowBuilderRegistry } from '../../kernel/workflow/builder/WorkflowBuilderRegistry.js';
 
 /** Workflow ids removed in prior releases; cleaned up on regenerate. */

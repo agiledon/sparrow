@@ -1,7 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import type { ToolCommandAdapter } from '../../core/adapters/types.js';
-import type { CommandContent } from '../../core/adapters/types.js';
+import type { ToolCommandAdapter, CommandContent } from '../adapters/types.js';
 import type { AgentSkillPackage } from '../../kernel/skill/types.js';
 import { HARNESS_TOKEN } from '../../kernel/skill/HarnessToken.js';
 import { buildHarnessSection } from './harness-section.js';

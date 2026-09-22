@@ -5,8 +5,8 @@
  * presentation concerns.
  */
 
-import { SUPPORTED_TOOLS, type ToolDefinition } from '../core/tools.js';
-import type { InitResult } from '../core/init.js';
+import { SUPPORTED_TOOLS, type ToolDefinition } from './shell/tools.js';
+import type { InitResult } from './commands/init/run.js';
 
 /**
  * Generate a summary table of detected tools for display.

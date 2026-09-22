@@ -1,5 +1,5 @@
 import { getWorkflowSchema } from '../../kernel/content/schema.js';
-import type { ToolCommandAdapter } from '../../core/adapters/types.js';
+import type { ToolCommandAdapter } from '../adapters/types.js';
 
 export function buildHarnessSection(
   adapter: ToolCommandAdapter,
