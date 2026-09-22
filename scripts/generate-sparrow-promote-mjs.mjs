@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const entry = join(root, 'src/agent-scripts/sparrow-promote.ts');
-const outfile = join(root, 'src/schemas/templates/shared/scripts/sparrow-promote.mjs');
+const outfile = join(root, 'src/content/workflows/_shared/scripts/sparrow-promote.mjs');
 
 const result = await esbuild.build({
   entryPoints: [entry],

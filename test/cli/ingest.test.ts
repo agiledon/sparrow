@@ -527,7 +527,7 @@ test('projectRoot uses same cache when cwd is a subdirectory', async () => {
 });
 
 test('generated skills do not bundle ingest parsers', () => {
-  const skillRoot = join(process.cwd(), 'src/schemas/templates/skills');
+  const skillRoot = join(process.cwd(), 'src/content/workflows');
   function walk(dir: string): string[] {
     const out: string[] = [];
     for (const name of readdirSync(dir)) {

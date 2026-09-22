@@ -3,7 +3,7 @@
  *
  * Source of truth: src/core/project-state.ts (and related).
  * This file is the agent-facing CLI entry; bundled into
- * src/schemas/templates/shared/scripts/sparrow-state.mjs by
+ * src/content/workflows/_shared/scripts/sparrow-state.mjs by
  * scripts/generate-sparrow-state-mjs.mjs — do not edit the .mjs by hand.
  *
  *   node scripts/sparrow-state.mjs show

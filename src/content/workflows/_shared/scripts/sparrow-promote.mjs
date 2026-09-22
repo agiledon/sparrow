@@ -32,10 +32,10 @@ var MASTER_DESIGN_HISTORY = `${MASTER_ROOT}/design/revision-history.md`;
 var MASTER_BC_HISTORY = `${MASTER_ROOT}/architecture/bc-revision-history.md`;
 var LEGACY_CHANGES_ROOT = `${SPARROW_DOCS}/changes`;
 
-// src/schemas/templates/skills/sparrow-archive/assets/revision-history.md
+// src/content/workflows/sparrow-archive/assets/revision-history.md
 var revision_history_default = "# \u4FEE\u8BA2\u5386\u53F2\n";
 
-// src/schemas/templates/skills/sparrow-archive/assets/revision-history-entry.md
+// src/content/workflows/sparrow-archive/assets/revision-history-entry.md
 var revision_history_entry_default = "## {changeId}\n\n- **synced-at**: {syncedAt}\n- **source**: {archiveRel}\n\n{deltaGroups}\n";
 
 // src/core/archive-promote-assets.ts

@@ -3,8 +3,8 @@
  * so agent scripts can bundle a small promote CLI).
  */
 
-import revisionHistoryMd from '../schemas/templates/skills/sparrow-archive/assets/revision-history.md';
-import revisionHistoryEntryMd from '../schemas/templates/skills/sparrow-archive/assets/revision-history-entry.md';
+import revisionHistoryMd from '../content/workflows/sparrow-archive/assets/revision-history.md';
+import revisionHistoryEntryMd from '../content/workflows/sparrow-archive/assets/revision-history-entry.md';
 
 const ASSETS: Record<string, string> = {
   'revision-history.md': revisionHistoryMd,

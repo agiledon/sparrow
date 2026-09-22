@@ -2,7 +2,7 @@
  * Mechanical promote helper for agents. Run from the project root.
  *
  * Source: src/core/spec-promote.ts. Bundled into
- * src/schemas/templates/shared/scripts/sparrow-promote.mjs by
+ * src/content/workflows/_shared/scripts/sparrow-promote.mjs by
  * scripts/generate-sparrow-promote-mjs.mjs — do not edit the .mjs by hand.
  *
  *   node scripts/sparrow-promote.mjs <change-id> <synced-at> [--source current|archive] [--folder <name>] [--slugs a,b]

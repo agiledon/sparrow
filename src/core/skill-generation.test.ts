@@ -118,11 +118,11 @@ test('ingest discipline single source ingest-cli.md is referenced consistently',
     'utf-8',
   );
   const skill = readFileSync(
-    join(process.cwd(), 'src/schemas/templates/skills/sparrow-requirement/SKILL.md'),
+    join(process.cwd(), 'src/content/workflows/sparrow-requirement/activity.md'),
     'utf-8',
   );
   const workflow = readFileSync(
-    join(process.cwd(), 'src/schemas/workflow-blocks/sparrow-requirement.md'),
+    join(process.cwd(), 'src/content/workflows/sparrow-requirement/guideline.md'),
     'utf-8',
   );
   for (const doc of [requirements, skill, workflow]) {
