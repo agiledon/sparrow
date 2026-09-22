@@ -19,6 +19,8 @@ export interface CommandContent {
   tags: string[];
   /** Tool-relative path to this skill's SKILL.md (for short command pointers) */
   skillRelPath?: string;
+  /** Lines for slash-command pointer (package CLI vs scripts/) */
+  packageCliLines?: string[];
 }
 
 export interface ToolCommandAdapter {

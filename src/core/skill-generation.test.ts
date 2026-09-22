@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { SkillRegistry } from './skills.js';
 import { initializeSkills } from '../skills/index.js';
 import { generateSkillFiles } from './skill-generation.js';
-import { getWorkflowSchema, uniqueAssetNames } from './workflow-schema/index.js';
+import { composeSkillBodyFromWorkflow, getWorkflowSchema, uniqueAssetNames } from './workflow-schema/index.js';
 import { skillExtras, sharedAssets, sharedReferences, sharedScripts, skillTemplates } from '../schemas/bundled-content.js';
 
 const SKILL_MD_LINE_LIMIT = 500;
@@ -95,6 +95,15 @@ test('slash command is a short pointer, not the full skill body', () => {
   assert.match(cmd, /\.cursor\/skills\/sparrow-requirement\/SKILL\.md/);
   assert.doesNotMatch(cmd, /业务服务识别规则/);
   assert.ok(cmd.split('\n').length < 40);
+  assert.match(cmd, /包 CLI · ingest/);
+});
+
+test('requirement step declares ingest as package CLI in schema and SKILL body', () => {
+  const step = getWorkflowSchema().steps.find((s) => s.skillId === 'sparrow-requirement');
+  assert.ok(step?.cliCommands?.some((c) => c.id === 'ingest' && c.usage.includes('sparrow ingest')));
+  const body = composeSkillBodyFromWorkflow('sparrow-requirement');
+  assert.match(body, /## 包 CLI/);
+  assert.match(body, /sparrow ingest <path>/);
 });
 
 test('CLI launcher runs TypeScript source instead of a stale esbuild bundle', () => {

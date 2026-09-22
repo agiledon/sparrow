@@ -110,6 +110,13 @@
       "scripts": [
         "ensure-change-workspace.mjs",
         "sparrow-state.mjs"
+      ],
+      "cliCommands": [
+        {
+          "id": "ingest",
+          "usage": "sparrow ingest <path>",
+          "note": "Then execute read-plan.json commands (sparrow ingest show …); optional --project-root"
+        }
       ]
     },
     {

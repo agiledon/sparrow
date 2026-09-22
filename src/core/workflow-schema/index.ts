@@ -13,6 +13,23 @@ import { HARNESS_TOKEN } from '../skill-tokens.js';
 
 let cached: SparrowWorkflowSchema | null = null;
 
+function renderCliCommandsBlock(step: WorkflowStep): string {
+  if (!step.cliCommands?.length) {
+    return '';
+  }
+  const lines = [
+    '## 包 CLI（非 skill/scripts）',
+    '',
+    '以下由 **Sparrow CLI** 在项目根提供；`scripts/` 仅含 state / ensure 等机械脚本，**不要**为 ingest 增加 skill 包装。',
+    '',
+  ];
+  for (const cmd of step.cliCommands) {
+    const note = cmd.note ? ` — ${cmd.note}` : '';
+    lines.push(`- **${cmd.id}**：\`${cmd.usage}\`${note}`);
+  }
+  return lines.join('\n');
+}
+
 export function getWorkflowSchema(): SparrowWorkflowSchema {
   if (!cached) {
     cached = schemaJson as SparrowWorkflowSchema;
@@ -48,6 +65,10 @@ export function composeSkillBodyFromWorkflow(skillId: string): string {
     if (block) {
       parts.push(block.replaceAll(HARNESS_TOKEN, '').trim());
     }
+  }
+  const cliBlock = renderCliCommandsBlock(step);
+  if (cliBlock) {
+    parts.push(cliBlock);
   }
   parts.push(getSkillTemplateBody(skillId).trim());
   let body = parts.join('\n\n');

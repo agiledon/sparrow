@@ -50,7 +50,7 @@
 
 ### B-T02：schema 声明 requirement 前置 CLI（消除 ARCH-BD-003）
 
-- [ ] **B-T02.** 在 schema 或生成管线中暴露 `ingest` 为包 CLI 能力，非 skill scripts
+- [x] **B-T02.** 在 schema 或生成管线中暴露 `ingest` 为包 CLI 能力，非 skill scripts
   - **依赖**：无（可与 B-T03 并行）。
   - **级别**：ARCH
   - **坏味道**：`badsmells.md` §2 / `ARCH-BD-003`。
@@ -117,3 +117,4 @@
 | 版本 | 日期 | 提交版本 | 摘要 |
 |------|------|----------|------|
 | 0.1.0 | 2026-09-22 | `461c270237ee49b2bc28bb4e9aa13986b88a911e` | 初版：B-T01~B-T04 对应 ARCH-LY/BD/BD/CP。 |
+| 0.1.1 | 2026-09-22 | — | B-T02 完成（ARCH-BD-003 已消除）。 |

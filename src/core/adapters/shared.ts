@@ -46,8 +46,11 @@ function formatCommandContent(content: CommandContent, style: 'standard' | 'pi')
     `读取并遵循 \`${skillPath}\`。`,
     '按需打开同目录 `references/`（过程规则）、`assets/`（产出模板）、`scripts/`（机械步骤）。',
     '不要把附属文件全文贴进本命令或对话。',
-  ].join('\n');
-  return `${fm}\n\n${body}\n`;
+  ];
+  if (content.packageCliLines?.length) {
+    body.push('', ...content.packageCliLines);
+  }
+  return `${fm}\n\n${body.join('\n')}\n`;
 }
 
 export interface AdapterConfig {

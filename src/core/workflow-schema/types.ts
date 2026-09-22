@@ -31,8 +31,18 @@ export interface WorkflowStep {
   assets?: string[];
   /** Mechanical scripts under templates/skills/<id>/scripts/ */
   scripts?: string[];
+  /** Sparrow package CLI (not copied into skill scripts/) */
+  cliCommands?: StepCliCommand[];
   /** Output templates and the workspace-relative dest they fill. */
   outputs?: ArtifactOutput[];
+}
+
+export interface StepCliCommand {
+  /** CLI capability id, e.g. ingest */
+  id: string;
+  /** Example invocation from project root */
+  usage: string;
+  note?: string;
 }
 
 export interface ArtifactOutput {

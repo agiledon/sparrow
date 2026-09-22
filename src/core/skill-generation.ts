@@ -131,6 +131,13 @@ export function assembleSkillContent(skill: SkillDefinition, registry: SkillRegi
 
   const body = templateFn();
 
+  const step = getWorkflowStepBySkillId(skill.id);
+  const packageCliLines =
+    step?.cliCommands?.map((c) => {
+      const note = c.note ? ` (${c.note})` : '';
+      return `包 CLI · ${c.id}：\`${c.usage}\`${note} — 勿用 skill/scripts 包装。`;
+    }) ?? [];
+
   return {
     id: skill.id,
     name: skill.name,
@@ -138,6 +145,7 @@ export function assembleSkillContent(skill: SkillDefinition, registry: SkillRegi
     category: skill.category,
     tags: ['sparrow', 'ddd', skill.kind, skill.phase === 'product' ? 'product-level' : 'team-level'],
     body,
+    ...(packageCliLines.length > 0 ? { packageCliLines } : {}),
   };
 }
 

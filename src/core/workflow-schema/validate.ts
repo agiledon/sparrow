@@ -21,6 +21,11 @@ export function validateWorkflowSchema(schema: SparrowWorkflowSchema): void {
         throw new Error(`Step ${step.id} outputs require asset and dest`);
       }
     }
+    for (const cli of step.cliCommands ?? []) {
+      if (!cli.id || !cli.usage) {
+        throw new Error(`Step ${step.id} cliCommands entries require id and usage`);
+      }
+    }
   }
   const core = schema.steps.filter((s) => s.kind === 'core' && s.order <= schema.coreStepCount);
   const orders = new Set(core.map((s) => s.order));
