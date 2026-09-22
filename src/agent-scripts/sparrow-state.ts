@@ -1,7 +1,7 @@
 /**
  * Mechanical sparrow-state.json helper. Run from the project root.
  *
- * Source of truth: src/core/project-state.ts (and related).
+ * Source of truth: src/kernel/runtime/project-state.ts (and related).
  * This file is the agent-facing CLI entry; bundled into
  * src/content/workflows/_shared/scripts/sparrow-state.mjs by
  * scripts/generate-sparrow-state-mjs.mjs — do not edit the .mjs by hand.
@@ -31,7 +31,7 @@ import {
   type DevelopmentMode,
   type PipelineStatus,
   type PipelineStep,
-} from '../core/project-state.js';
+} from '../kernel/runtime/project-state.js';
 
 const MODES = new Set<DevelopmentMode>(['tbd', 'greenfield', 'brownfield', 'iteration']);
 const STEPS = new Set<PipelineStep>([

@@ -1,6 +1,6 @@
 # Archive gate contract（权威）
 
-本文件为归档完成判定与 promote 命令的**单一叙述源**。实现以 `src/core/archive-readiness.ts` / `src/core/spec-promote.ts` 为准；agent 入口为 `scripts/sparrow-state.mjs` 与 `scripts/sparrow-promote.mjs`。
+本文件为归档完成判定与 promote 命令的**单一叙述源**。实现以 `src/kernel/runtime/archive-readiness.ts` / `src/kernel/runtime/spec-promote.ts` 为准；agent 入口为 `scripts/sparrow-state.mjs` 与 `scripts/sparrow-promote.mjs`。
 
 ## Slug 完成判定
 
