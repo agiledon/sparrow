@@ -1,5 +1,5 @@
 # OpenMole workspace config (managed by openmole init)
-current_change: null
+current_change: agent-requirement-runtime
 installed_ides:
   - pi
   - cursor

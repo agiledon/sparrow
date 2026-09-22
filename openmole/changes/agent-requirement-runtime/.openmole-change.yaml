@@ -1,0 +1,7 @@
+name: agent-requirement-runtime
+created: 2026-09-22
+scan_scope: .
+default_level: impl
+status: active
+detected_languages:
+  - typescript
