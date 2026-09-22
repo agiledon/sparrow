@@ -2,7 +2,7 @@ import { existsSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:
 import { basename, extname, isAbsolute, join, resolve } from 'node:path';
 import { CHAR_BUDGET, KEYWORD_RE } from './constants.js';
 import { IngestError } from './errors.js';
-import { createProgress } from './progress.js';
+import { createProgress, type IngestProgress } from './progress.js';
 import {
   cacheDirForHash,
   cleanupIngestCache,
@@ -15,7 +15,7 @@ import {
   writeJson,
   type SourceMeta,
 } from './cache.js';
-import { parseDocument, readSourceBuffer, type RawFigure } from './readers.js';
+import { parseDocument, readSourceBuffer, type ParsedDocument, type RawFigure } from './readers.js';
 import { extractSignals } from './signals.js';
 import { formatChunk, type SplitSection } from './split.js';
 import { decideFigure, formatFigureMarkdown } from './figures.js';
@@ -71,6 +71,26 @@ interface FigureRecord {
   textFile?: string;
 }
 
+interface ResolvedIngestSource {
+  abs: string;
+  buf: Buffer;
+  hash: string;
+  cacheDir: string;
+  st: ReturnType<typeof statSync>;
+}
+
+interface FigurePipelineResult {
+  figureRecords: FigureRecord[];
+  toKeep: { id: string; fig: RawFigure; record: FigureRecord }[];
+  ocrResults: { text: string; status: 'ok' | 'empty' }[];
+}
+
+interface SectionWriteResult {
+  outlineSections: OutlineSection[];
+  signalsText: string;
+  totalChars: number;
+}
+
 function emitSummary(stdout: NodeJS.WritableStream | undefined, summary: IngestSummary): void {
   if (!stdout) {
     return;
@@ -115,52 +135,69 @@ async function ocrFigure(
   }
 }
 
-export async function runIngest(path: string, options: IngestOptions = {}): Promise<IngestSummary> {
-  const projectRoot = options.projectRoot ?? process.cwd();
-  const progress = createProgress(options.stderr === null ? null : options.stderr ?? process.stderr);
+async function resolveIngestSource(path: string, projectRoot: string): Promise<ResolvedIngestSource> {
   const abs = resolveSource(path);
-  progress.file(abs);
   const buf = await readSourceBuffer(abs);
   const hash = sha256(buf);
-  const cacheDir = cacheDirForHash(projectRoot, hash);
-  const st = statSync(abs);
+  return {
+    abs,
+    buf,
+    hash,
+    cacheDir: cacheDirForHash(projectRoot, hash),
+    st: statSync(abs),
+  };
+}
 
-  if (isCacheComplete(cacheDir, hash)) {
-    const outline = JSON.parse(readFileSync(join(cacheDir, 'outline.json'), 'utf8')) as Outline;
-    const figuresJson = existsSync(join(cacheDir, 'figures.json'))
-      ? JSON.parse(readFileSync(join(cacheDir, 'figures.json'), 'utf8')) as { figures: FigureRecord[] }
-      : { figures: [] };
-    const kept = (figuresJson.figures ?? []).filter((f) => f.kept).length;
-    touchCache(cacheDir, options.now);
-    progress.cacheHit();
-    const summary: IngestSummary = {
-      cache: cacheDir,
-      sections: outline.sections.length,
-      figures: kept,
-      readPlan: join(cacheDir, 'read-plan.json'),
-      cacheHit: true,
-    };
-    emitSummary(options.stdout ?? process.stdout, summary);
-    return summary;
+function tryIngestCacheHit(
+  source: Pick<ResolvedIngestSource, 'cacheDir' | 'hash'>,
+  progress: IngestProgress,
+  options: IngestOptions,
+): IngestSummary | null {
+  if (!isCacheComplete(source.cacheDir, source.hash)) {
+    return null;
   }
+  const outline = JSON.parse(readFileSync(join(source.cacheDir, 'outline.json'), 'utf8')) as Outline;
+  const figuresJson = existsSync(join(source.cacheDir, 'figures.json'))
+    ? JSON.parse(readFileSync(join(source.cacheDir, 'figures.json'), 'utf8')) as { figures: FigureRecord[] }
+    : { figures: [] };
+  const kept = (figuresJson.figures ?? []).filter((f) => f.kept).length;
+  touchCache(source.cacheDir, options.now);
+  progress.cacheHit();
+  const summary: IngestSummary = {
+    cache: source.cacheDir,
+    sections: outline.sections.length,
+    figures: kept,
+    readPlan: join(source.cacheDir, 'read-plan.json'),
+    cacheHit: true,
+  };
+  emitSummary(options.stdout ?? process.stdout, summary);
+  return summary;
+}
 
+function prepareMissCacheDir(
+  source: Pick<ResolvedIngestSource, 'abs' | 'hash' | 'cacheDir'>,
+  projectRoot: string,
+  progress: IngestProgress,
+  options: IngestOptions,
+): void {
   progress.stage('打开文件');
   cleanupIngestCache({
     projectRoot,
-    currentPath: abs,
-    currentHash: hash,
-    exceptHash: hash,
+    currentPath: source.abs,
+    currentHash: source.hash,
+    exceptHash: source.hash,
     now: options.now,
   });
-
-  if (existsSync(cacheDir)) {
-    rmSync(cacheDir, { recursive: true, force: true });
+  if (existsSync(source.cacheDir)) {
+    rmSync(source.cacheDir, { recursive: true, force: true });
   }
+}
 
-  const parsed = await parseDocument(abs, buf, progress);
-  const ocr = options.ocr ?? defaultOcr;
-
-  const toKeep: { id: string; fig: RawFigure; record: FigureRecord }[] = [];
+function classifyFigures(parsed: ParsedDocument): {
+  figureRecords: FigureRecord[];
+  toKeep: FigurePipelineResult['toKeep'];
+} {
+  const toKeep: FigurePipelineResult['toKeep'] = [];
   const figureRecords: FigureRecord[] = [];
   parsed.figures.forEach((fig, i) => {
     const id = figureId(i + 1);
@@ -188,15 +225,25 @@ export async function runIngest(path: string, options: IngestOptions = {}): Prom
     }
     figureRecords.push(record);
   });
+  return { figureRecords, toKeep };
+}
 
+async function ocrKeptFigures(
+  toKeep: FigurePipelineResult['toKeep'],
+  ocr: OcrFn,
+  progress: IngestProgress,
+): Promise<FigurePipelineResult['ocrResults']> {
   progress.stage('OCR');
-  const ocrResults: { text: string; status: 'ok' | 'empty' }[] = [];
+  const ocrResults: FigurePipelineResult['ocrResults'] = [];
   for (let i = 0; i < toKeep.length; i++) {
     progress.ocr(i + 1, toKeep.length);
     ocrResults.push(await ocrFigure(toKeep[i]!.fig, ocr));
   }
   progress.finishTick();
+  return ocrResults;
+}
 
+function writeSectionChunks(cacheDir: string, parsed: ParsedDocument, progress: IngestProgress): SectionWriteResult {
   progress.stage('写入缓存');
   ensureDir(join(cacheDir, 'chunks'));
   const signalLines: string[] = [];
@@ -223,14 +270,21 @@ export async function runIngest(path: string, options: IngestOptions = {}): Prom
 
   const signalsText = signalLines.length > 0 ? `${signalLines.join('\n')}\n` : '';
   writeFileSync(join(cacheDir, 'signals.md'), signalsText);
+  return { outlineSections, signalsText, totalChars };
+}
 
+function writeFigureArtifacts(
+  cacheDir: string,
+  pipeline: Pick<FigurePipelineResult, 'toKeep' | 'ocrResults'>,
+): { keptIds: string[]; extraChars: number } {
   const keptIds: string[] = [];
-  if (toKeep.length > 0) {
+  let extraChars = 0;
+  if (pipeline.toKeep.length > 0) {
     ensureDir(join(cacheDir, 'images'));
     ensureDir(join(cacheDir, 'figures'));
   }
-  toKeep.forEach((item, i) => {
-    const result = ocrResults[i]!;
+  pipeline.toKeep.forEach((item, i) => {
+    const result = pipeline.ocrResults[i]!;
     const imageName = `images/${item.id}.${extForMime(item.fig.mime)}`;
     writeFileSync(join(cacheDir, imageName), item.fig.bytes);
     item.record.image = imageName;
@@ -239,8 +293,22 @@ export async function runIngest(path: string, options: IngestOptions = {}): Prom
     const md = formatFigureMarkdown(item.id, item.fig.caption, result.text);
     writeFileSync(join(cacheDir, item.record.textFile), md);
     keptIds.push(item.id);
-    totalChars += md.length;
+    extraChars += md.length;
   });
+  return { keptIds, extraChars };
+}
+
+function finalizeIngestCache(
+  source: ResolvedIngestSource,
+  parsed: ParsedDocument,
+  figureRecords: FigureRecord[],
+  sections: SectionWriteResult,
+  keptIds: string[],
+  totalChars: number,
+  options: IngestOptions,
+): IngestSummary {
+  const { cacheDir, abs, hash, st } = source;
+  const projectRoot = options.projectRoot ?? process.cwd();
 
   if (parsed.notes.length > 0) {
     writeFileSync(join(cacheDir, 'notes.md'), `${parsed.notes.join('\n')}\n`);
@@ -248,7 +316,7 @@ export async function runIngest(path: string, options: IngestOptions = {}): Prom
 
   const outline: Outline = {
     source: { path: abs, hash, ext: extname(abs).toLowerCase() },
-    sections: outlineSections,
+    sections: sections.outlineSections,
     notes: parsed.notes,
   };
   writeJson(join(cacheDir, 'outline.json'), outline);
@@ -257,9 +325,9 @@ export async function runIngest(path: string, options: IngestOptions = {}): Prom
   const plan = buildReadPlan({
     sourcePath: abs,
     totalChars,
-    sections: outlineSections,
+    sections: sections.outlineSections,
     figureIds: keptIds,
-    signalsChars: signalsText.length,
+    signalsChars: sections.signalsText.length,
     projectRoot,
   });
   writeJson(join(cacheDir, 'read-plan.json'), plan);
@@ -273,14 +341,43 @@ export async function runIngest(path: string, options: IngestOptions = {}): Prom
   };
   writeJson(join(cacheDir, 'source.json'), meta);
 
-  const keptCount = keptIds.length;
-  const summary: IngestSummary = {
+  return {
     cache: cacheDir,
-    sections: outlineSections.length,
-    figures: keptCount,
+    sections: sections.outlineSections.length,
+    figures: keptIds.length,
     readPlan: join(cacheDir, 'read-plan.json'),
     cacheHit: false,
   };
+}
+
+export async function runIngest(path: string, options: IngestOptions = {}): Promise<IngestSummary> {
+  const projectRoot = options.projectRoot ?? process.cwd();
+  const progress = createProgress(options.stderr === null ? null : options.stderr ?? process.stderr);
+  const source = await resolveIngestSource(path, projectRoot);
+  progress.file(source.abs);
+
+  const hit = tryIngestCacheHit(source, progress, options);
+  if (hit) {
+    return hit;
+  }
+
+  prepareMissCacheDir(source, projectRoot, progress, options);
+  const parsed = await parseDocument(source.abs, source.buf, progress);
+  const ocr = options.ocr ?? defaultOcr;
+
+  const { figureRecords, toKeep } = classifyFigures(parsed);
+  const ocrResults = await ocrKeptFigures(toKeep, ocr, progress);
+  const sections = writeSectionChunks(source.cacheDir, parsed, progress);
+  const { keptIds, extraChars } = writeFigureArtifacts(source.cacheDir, { toKeep, ocrResults });
+  const summary = finalizeIngestCache(
+    source,
+    parsed,
+    figureRecords,
+    sections,
+    keptIds,
+    sections.totalChars + extraChars,
+    options,
+  );
   progress.end(summary);
   emitSummary(options.stdout ?? process.stdout, summary);
   return summary;

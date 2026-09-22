@@ -1,7 +1,7 @@
 # 坏味道驱动重构任务（OpenMole Tasks）
 
-**版本**：0.1.0
-**状态**：草案
+**版本**：0.1.3
+**状态**：完成
 **依据**：[badsmells.md](./badsmells.md)
 **修订日期**：2026-09-22
 
@@ -88,7 +88,7 @@
 
 ### B-T04：拆分 runIngest 编排（消除 DESIGN-MO-002）
 
-- [ ] **B-T04.** 将 cache hit/miss、figures、read-plan 编排拆为命名阶段函数
+- [x] **B-T04.** 将 cache hit/miss、figures、read-plan 编排拆为命名阶段函数
   - **依赖**：`design` B-T01 完成后再动 read-plan 相关段（推荐）。
   - **级别**：DESIGN
   - **坏味道**：`badsmells.md` §2 / `DESIGN-MO-002`。
@@ -112,3 +112,5 @@
 |------|------|----------|------|
 | 0.1.0 | 2026-09-22 | `461c270237ee49b2bc28bb4e9aa13986b88a911e` | 初版：B-T01~B-T04 对应 DESIGN-RD/DF/EN/MO。 |
 | 0.1.1 | 2026-09-22 | — | B-T02 完成（DESIGN-DF-002 已消除）。 |
+| 0.1.2 | 2026-09-22 | — | B-T04 完成（DESIGN-MO-002 已消除）。 |
+| 0.1.3 | 2026-09-22 | `c0da40ab806d7929f6c25b1cb93c23bdf2e3b2ae` | mole-verify：全任务完成，与 badsmells 0.1.4 对齐。 |
