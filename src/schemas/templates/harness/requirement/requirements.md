@@ -19,8 +19,9 @@
 
 ## 原始需求文档 ingest（MUST / MUST NOT）
 
-1. **必须**在项目根直接调用 Sparrow CLI：`sparrow ingest <path>`，再按 `read-plan.json` 的 `command` 执行 `sparrow ingest show …`（**不要**通过 skill `scripts/` 包装 ingest）。
-2. **禁止**用 Python、unzip 手工解 docx 或模型直接读二进制文档；`sparrow` 不可用时停止并提示安装/链接 CLI，不得改用手动解析。
+**唯一条文源**：本目录 **`requirement/ingest-cli.md`**（与 workflow schema `cliCommands`、SKILL 步骤 4 同步；变更 ingest 纪律时只改该文件，再 `npm run sync-schema`）。
+
+执行 sparrow-requirement 前**必须**阅读 `ingest-cli.md` 全文并遵守。
 
 ## 分层产出（MUST）
 

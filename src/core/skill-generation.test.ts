@@ -101,9 +101,34 @@ test('slash command is a short pointer, not the full skill body', () => {
 test('requirement step declares ingest as package CLI in schema and SKILL body', () => {
   const step = getWorkflowSchema().steps.find((s) => s.skillId === 'sparrow-requirement');
   assert.ok(step?.cliCommands?.some((c) => c.id === 'ingest' && c.usage.includes('sparrow ingest')));
+  assert.ok((step?.harness ?? []).includes('requirement/ingest-cli.md'));
   const body = composeSkillBodyFromWorkflow('sparrow-requirement');
   assert.match(body, /## 包 CLI/);
   assert.match(body, /sparrow ingest <path>/);
+});
+
+test('ingest discipline single source ingest-cli.md is referenced consistently', () => {
+  const ingestCli = readFileSync(
+    join(process.cwd(), 'src/schemas/templates/harness/requirement/ingest-cli.md'),
+    'utf-8',
+  );
+  assert.match(ingestCli, /禁止.*scripts.*包装 ingest/);
+  const requirements = readFileSync(
+    join(process.cwd(), 'src/schemas/templates/harness/requirement/requirements.md'),
+    'utf-8',
+  );
+  const skill = readFileSync(
+    join(process.cwd(), 'src/schemas/templates/skills/sparrow-requirement/SKILL.md'),
+    'utf-8',
+  );
+  const workflow = readFileSync(
+    join(process.cwd(), 'src/schemas/workflow-blocks/sparrow-requirement.md'),
+    'utf-8',
+  );
+  for (const doc of [requirements, skill, workflow]) {
+    assert.match(doc, /ingest-cli\.md/);
+  }
+  assert.doesNotMatch(requirements, /Python、unzip 手工解 docx/);
 });
 
 test('CLI launcher runs TypeScript source instead of a stale esbuild bundle', () => {

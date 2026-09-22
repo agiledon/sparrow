@@ -31,10 +31,9 @@
 1. 读 `references/ubiquitous-language.md` 与 `references/spec-layout-guide.md`。运行 `scripts/sparrow-state.mjs show`。
 2. 若 `development-mode` 为 `tbd`：运行 `scripts/sparrow-state.mjs detect-mode`，再运行 `scripts/sparrow-state.mjs set-mode <detect-mode 输出的 mode>`。判定规则（脚本已实现）：archive 与 change 皆空且无源码 → `greenfield`；皆空且有源码 → `brownfield`；archive / change / master 已有规格 → `iteration`。
 3. 若模式为 `brownfield`：告知用户 Sparrow 暂不支持棕地核心流程，**停止**。不创建 change 工作区，不 Grill Me。`pipeline` 保持为空。
-4. `greenfield` 与 `iteration` 走同一套核心流程（iteration 仍按 revise / master diff）。收集本次需求分析输入（**ingest 只走 Sparrow CLI，不用 skill/scripts 包装**）：
-   - 在项目根确认 `sparrow` 可用（`sparrow --version` 或 `npx sparrow-ddd --version`；不可用则停止并提示安装 `npm install -g sparrow-ddd` 或项目内 `npm install sparrow-ddd`，**不得**自写 Python/unzip 解析 doc/docx/pdf）。
-   - 用户消息中的 `@path`（可多个）为显式输入，不全库搜索。对每个路径运行 `sparrow ingest <path>`（cwd=项目根；进度只在 **stderr**；禁止用模型复述进度）。只读 `.sparrow/ingest/` 与该次 `read-plan.json`；对清单项 **原样执行** 各条 `command`（`sparrow ingest show …`）。禁止打开清单外文件、禁止自摘要、禁止看图像素或模型描述图。
-   - 无 `@` 时：若用户已给提示词或显式文件路径，以用户输入为准；否则在仓库内搜索 PRD/SRS（排除 `docs/sparrow/`）。搜到的文件同样 `sparrow ingest` 后再读 plan。无输入则停止。
+4. `greenfield` 与 `iteration` 走同一套核心流程（iteration 仍按 revise / master diff）。收集需求输入时**必须**遵守 harness **`requirement/ingest-cli.md`** 与上文「包 CLI」节：
+   - 用户消息中的 `@path`（可多个）为显式输入，不全库搜索。对每个路径按 ingest-cli 运行 `sparrow ingest`。
+   - 无 `@` 时：若用户已给提示词或显式文件路径，以用户输入为准；否则在仓库内搜索 PRD/SRS（排除 `docs/sparrow/`）。搜到的文件同样 ingest 后再读 plan。无输入则停止。
 5. 从项目根运行 `scripts/ensure-change-workspace.mjs --check`。若退出码 1：按 `requirement/requirements.md`「活动变更 ID 确认纪律」只确认 change-id；用户中止则停止且不创建子目录。确认后运行 `scripts/ensure-change-workspace.mjs --create {change-id}`（经 `sparrow-state.mjs` 写入 active-change 并将 pipeline 的 requirement 设为 ongoing），再按 `assets/proposal.md` 填写 `proposal.md`（development-mode 用配置值）。禁止向 `master/` 写入。
 6. 读 `references/revise-gate.md`。无活动变更基线则走全量；有则对 master 需求做 ADDED / MODIFIED / REMOVED 增量，在 change 工作区更新，不写 version 元数据。若存在旧 `prd-business.md` 或扁平 `subdomains/` · `services/`，先按 `references/compat-migrate.md` 迁移。
 7. 读 `references/output-existence-check.md`，对本阶段已存在的 catalog / subdomain / business-services / quality 等做一次 skip / overwrite / update。

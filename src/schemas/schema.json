@@ -31,6 +31,7 @@
       "workflowBlock": "sparrow-requirement.md",
       "harness": [
         "requirement/requirements.md",
+        "requirement/ingest-cli.md",
         "requirement/subdomains.md"
       ],
       "requires": [],

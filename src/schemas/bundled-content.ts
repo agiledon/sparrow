@@ -211,6 +211,7 @@ import _h_design_api_design_md from './templates/harness/design/api-design.md';
 import _h_model_architecture_md from './templates/harness/model/architecture.md';
 import _h_model_domain_modeling_md from './templates/harness/model/domain-modeling.md';
 import _h_model_view_modeling_md from './templates/harness/model/view-modeling.md';
+import _h_requirement_ingest_cli_md from './templates/harness/requirement/ingest-cli.md';
 import _h_requirement_requirements_md from './templates/harness/requirement/requirements.md';
 import _h_requirement_subdomains_md from './templates/harness/requirement/subdomains.md';
 
@@ -230,6 +231,7 @@ export const bundledHarnessBodies: Record<string, { title: string; body: string 
   'model/architecture.md': { title: "领域建模架构约束（model / architecture）", body: _h_model_architecture_md },
   'model/domain-modeling.md': { title: "领域建模约束（model / domain-modeling）", body: _h_model_domain_modeling_md },
   'model/view-modeling.md': { title: "View Model 建模约束（model / view-modeling）", body: _h_model_view_modeling_md },
+  'requirement/ingest-cli.md': { title: "原始需求文档 ingest（requirement）", body: _h_requirement_ingest_cli_md },
   'requirement/requirements.md': { title: "需求约束（requirement / requirements）", body: _h_requirement_requirements_md },
   'requirement/subdomains.md': { title: "子领域约束（requirement / subdomains）", body: _h_requirement_subdomains_md },
 };

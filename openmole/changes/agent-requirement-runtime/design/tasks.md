@@ -47,7 +47,7 @@
 
 ### B-T02：ingest 纪律单源同步（消除 DESIGN-DF-002）
 
-- [ ] **B-T02.** 单源 Markdown 或 schema 驱动 SKILL + workflow-block + harness ingest 段
+- [x] **B-T02.** 单源 Markdown 或 schema 驱动 SKILL + workflow-block + harness ingest 段
   - **依赖**：`arch/tasks.md` B-T02（schema 元数据）推荐先做或同批。
   - **级别**：DESIGN
   - **坏味道**：`badsmells.md` §2 / `DESIGN-DF-002`。
@@ -111,3 +111,4 @@
 | 版本 | 日期 | 提交版本 | 摘要 |
 |------|------|----------|------|
 | 0.1.0 | 2026-09-22 | `461c270237ee49b2bc28bb4e9aa13986b88a911e` | 初版：B-T01~B-T04 对应 DESIGN-RD/DF/EN/MO。 |
+| 0.1.1 | 2026-09-22 | — | B-T02 完成（DESIGN-DF-002 已消除）。 |
