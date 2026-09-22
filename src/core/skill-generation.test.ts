@@ -109,12 +109,12 @@ test('requirement step declares ingest as package CLI in schema and SKILL body',
 
 test('ingest discipline single source ingest-cli.md is referenced consistently', () => {
   const ingestCli = readFileSync(
-    join(process.cwd(), 'src/schemas/templates/harness/requirement/ingest-cli.md'),
+    join(process.cwd(), 'src/content/harness/requirement/ingest-cli.md'),
     'utf-8',
   );
   assert.match(ingestCli, /禁止.*scripts.*包装 ingest/);
   const requirements = readFileSync(
-    join(process.cwd(), 'src/schemas/templates/harness/requirement/requirements.md'),
+    join(process.cwd(), 'src/content/harness/requirement/requirements.md'),
     'utf-8',
   );
   const skill = readFileSync(

@@ -16,9 +16,9 @@ import {
   showSection,
   splitMarkdown,
   zipStore,
-} from './ingest/index.js';
-import { DIAGRAM_RE, KEYWORD_RE } from './ingest/constants.js';
-import { encodePng } from './ingest/png.js';
+} from '../../src/cli/ingest/index.js';
+import { DIAGRAM_RE, KEYWORD_RE } from '../../src/cli/ingest/constants.js';
+import { encodePng } from '../../src/cli/ingest/png.js';
 
 function capture() {
   let text = '';

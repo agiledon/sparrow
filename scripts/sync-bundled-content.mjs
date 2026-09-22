@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Generate src/schemas/bundled-content.ts from templates, workflow-blocks, and harness files.
+ * Generate src/schemas/bundled-content.ts from content/harness, templates, and workflow-blocks.
  */
 import { readdirSync, readFileSync, statSync, writeFileSync, existsSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
@@ -118,12 +118,12 @@ for (const [name, id] of wf) emit(`  '${name}': ${id},`);
 emit('};');
 emit('');
 
-const harnessDir = join(templates, 'harness');
+const harnessDir = join(root, 'src', 'content', 'harness');
 const harness = [];
 for (const file of walk(harnessDir)) {
   const rel = posixRel(harnessDir, file);
   const id = importId(`h/${rel}`);
-  emit(`import ${id} from './templates/harness/${rel}';`);
+  emit(`import ${id} from '../content/harness/${rel}';`);
   const text = readFileSync(file, 'utf8');
   const heading = text.match(/^#\s+(.+)$/m)?.[1]?.trim() || rel;
   harness.push([rel, heading, id]);

@@ -29,7 +29,7 @@ import { detectOsLocale, formatCommonLangs, resolveInitLang } from '../core/os-l
 import { readProjectConfig } from '../core/project-config.js';
 import { getSparrowVersion } from '../core/package-version.js';
 import { SkillRegistry } from '../core/skills.js';
-import { IngestError, runClean, runIngest, showSection } from '../core/ingest/index.js';
+import { IngestError, runClean, runIngest, showSection } from './ingest/index.js';
 
 const program = new Command();
 

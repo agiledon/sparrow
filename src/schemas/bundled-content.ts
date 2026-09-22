@@ -198,22 +198,22 @@ export const workflowBlocks: Record<string, string> = {
   'sparrow-verify.md': _wf_sparrow_verify_md,
 };
 
-import _h_apply_implementation_md from './templates/harness/apply/implementation.md';
-import _h_arch_bounded_contexts_md from './templates/harness/arch/bounded-contexts.md';
-import _h_arch_frontend_md from './templates/harness/arch/frontend.md';
-import _h_arch_spec_slice_md from './templates/harness/arch/spec-slice.md';
-import _h_common_README_md from './templates/harness/common/README.md';
-import _h_common_always_document_language_md from './templates/harness/common/always/document-language.md';
-import _h_common_always_interactive_interaction_md from './templates/harness/common/always/interactive-interaction.md';
-import _h_common_conditional_brownfield_md from './templates/harness/common/conditional/brownfield.md';
-import _h_constitution_md from './templates/harness/constitution.md';
-import _h_design_api_design_md from './templates/harness/design/api-design.md';
-import _h_model_architecture_md from './templates/harness/model/architecture.md';
-import _h_model_domain_modeling_md from './templates/harness/model/domain-modeling.md';
-import _h_model_view_modeling_md from './templates/harness/model/view-modeling.md';
-import _h_requirement_ingest_cli_md from './templates/harness/requirement/ingest-cli.md';
-import _h_requirement_requirements_md from './templates/harness/requirement/requirements.md';
-import _h_requirement_subdomains_md from './templates/harness/requirement/subdomains.md';
+import _h_apply_implementation_md from '../content/harness/apply/implementation.md';
+import _h_arch_bounded_contexts_md from '../content/harness/arch/bounded-contexts.md';
+import _h_arch_frontend_md from '../content/harness/arch/frontend.md';
+import _h_arch_spec_slice_md from '../content/harness/arch/spec-slice.md';
+import _h_common_README_md from '../content/harness/common/README.md';
+import _h_common_always_document_language_md from '../content/harness/common/always/document-language.md';
+import _h_common_always_interactive_interaction_md from '../content/harness/common/always/interactive-interaction.md';
+import _h_common_conditional_brownfield_md from '../content/harness/common/conditional/brownfield.md';
+import _h_constitution_md from '../content/harness/constitution.md';
+import _h_design_api_design_md from '../content/harness/design/api-design.md';
+import _h_model_architecture_md from '../content/harness/model/architecture.md';
+import _h_model_domain_modeling_md from '../content/harness/model/domain-modeling.md';
+import _h_model_view_modeling_md from '../content/harness/model/view-modeling.md';
+import _h_requirement_ingest_cli_md from '../content/harness/requirement/ingest-cli.md';
+import _h_requirement_requirements_md from '../content/harness/requirement/requirements.md';
+import _h_requirement_subdomains_md from '../content/harness/requirement/subdomains.md';
 
 export interface BundledHarnessEntry { relPath: string; title: string; body: string; }
 
