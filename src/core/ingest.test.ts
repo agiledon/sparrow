@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync, existsSync, readdirSync, statSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { Writable } from 'node:stream';
@@ -476,6 +476,35 @@ test('cache hit prints 使用缓存 and skips restaging', async () => {
   assert.equal(summary.cacheHit, true);
   assert.match(stderr.text, /使用缓存/);
   assert.equal(stderr.text.includes('抽出文本'), false);
+});
+
+test('projectRoot uses same cache when cwd is a subdirectory', async () => {
+  const root = tmpProject();
+  const sub = join(root, 'nested');
+  mkdirSync(sub, { recursive: true });
+  const src = join(sub, 'a.md');
+  writeFileSync(src, '# A\n\nhello\n');
+  await runIngest(src, {
+    projectRoot: root,
+    stdout: capture().stream,
+    stderr: capture().stream,
+    ocr: stubOcr,
+  });
+  const prev = process.cwd();
+  process.chdir(sub);
+  try {
+    const stderr = capture();
+    const summary = await runIngest('a.md', {
+      projectRoot: root,
+      stdout: capture().stream,
+      stderr: stderr.stream,
+      ocr: stubOcr,
+    });
+    assert.equal(summary.cacheHit, true);
+    assert.match(stderr.text, /使用缓存/);
+  } finally {
+    process.chdir(prev);
+  }
 });
 
 test('generated skills do not bundle ingest parsers', () => {

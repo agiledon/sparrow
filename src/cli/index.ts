@@ -266,6 +266,15 @@ function failIngest(error: unknown): never {
   process.exit(1);
 }
 
+function ingestProjectRoot(raw?: string): string {
+  return resolve(raw ?? process.cwd());
+}
+
+const ingestProjectRootOption = {
+  flags: '--project-root <dir>',
+  description: 'Project root for .sparrow/ingest cache (default: cwd)',
+};
+
 const ingest = program
   .command('ingest')
   .description('Parse a requirement document into cached text and a read-plan');
@@ -276,10 +285,13 @@ ingest
   .argument('<path>', 'Source document path')
   .requiredOption('--section <id>', 'Section id (s-N, fig-N, or signals)')
   .option('--offset <n>', 'Character offset', '0')
-  .action((docPath: string, options: { section: string; offset?: string }) => {
+  .option(ingestProjectRootOption.flags, ingestProjectRootOption.description)
+  .action((docPath: string, options: { section: string; offset?: string; projectRoot?: string }) => {
     try {
       const offset = Number.parseInt(options.offset ?? '0', 10);
-      showSection(docPath, options.section, Number.isFinite(offset) ? offset : 0);
+      showSection(docPath, options.section, Number.isFinite(offset) ? offset : 0, {
+        projectRoot: ingestProjectRoot(options.projectRoot),
+      });
     } catch (error) {
       failIngest(error);
     }
@@ -288,9 +300,10 @@ ingest
 ingest
   .command('clean')
   .description('Delete the .sparrow/ingest cache directory')
-  .action(() => {
+  .option(ingestProjectRootOption.flags, ingestProjectRootOption.description)
+  .action((options: { projectRoot?: string }) => {
     try {
-      runClean();
+      runClean({ projectRoot: ingestProjectRoot(options.projectRoot) });
     } catch (error) {
       failIngest(error);
     }
@@ -298,9 +311,10 @@ ingest
 
 ingest
   .argument('<path>', 'Document path (.md, .markdown, .doc, .docx, .pdf)')
-  .action(async (docPath: string) => {
+  .option(ingestProjectRootOption.flags, ingestProjectRootOption.description)
+  .action(async (docPath: string, options: { projectRoot?: string }) => {
     try {
-      await runIngest(docPath);
+      await runIngest(docPath, { projectRoot: ingestProjectRoot(options.projectRoot) });
     } catch (error) {
       failIngest(error);
     }
