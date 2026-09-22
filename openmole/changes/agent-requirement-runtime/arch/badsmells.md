@@ -1,6 +1,6 @@
 # 坏味道规约文档（OpenMole Bad Smells）
 
-**版本**：0.1.0
+**版本**：0.1.2
 **状态**：草案
 **依据**：OpenMole 规约摘要（见 Skill 内嵌）；change 内 [tasks.md](./tasks.md)
 **修订日期**：2026-09-22
@@ -32,9 +32,9 @@
 | BS-ID | 类别 | 状态 | 说明 |
 |-------|------|------|------|
 | ARCH-BD-002 | 边界性 | 未清除 | init/update 不暴露 ingest CLI 就绪边界 |
-| ARCH-LY-002 | 层次性 | 未清除 | ingest 子命令隐式 `cwd` 作 projectRoot |
+| ARCH-LY-002 | 层次性 | 已消除 | CLI `--project-root` + read-plan 自描述 |
 | ARCH-BD-003 | 边界性 | 未清除 | schema scripts 无 ingest，agent 跨包调用 CLI |
-| ARCH-CP-002 | 耦合性 | 未清除 | ensure-change-workspace 第三次 state 片段复制 |
+| ARCH-CP-002 | 耦合性 | 已消除 | ensure-change-workspace 委托 sparrow-state.mjs |
 
 ---
 
@@ -95,3 +95,5 @@
 | 版本 | 日期 | 提交版本 | 说明 |
 |------|------|----------|------|
 | 0.1.0 | 2026-09-22 | `461c270237ee49b2bc28bb4e9aa13986b88a911e` | 初版：ARCH-BD-002、ARCH-LY-002、ARCH-BD-003、ARCH-CP-002。 |
+| 0.1.1 | 2026-09-22 | — | impl B-T04：ARCH-CP-002 → 已消除。 |
+| 0.1.2 | 2026-09-22 | — | impl B-T02/B-T03：ARCH-LY-002 → 已消除。 |

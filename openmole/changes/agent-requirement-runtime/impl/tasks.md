@@ -84,7 +84,7 @@
 
 ### B-T04：ensure 删除内联 loadState（消除 IMPL-GEN-010）
 
-- [ ] **B-T04.** ensure 通过 sparrow-state 脚本查询/写入，删除弱 normalize
+- [x] **B-T04.** ensure 通过 sparrow-state 脚本查询/写入，删除弱 normalize
   - **依赖**：`arch/tasks.md` B-T04 / `design` B-T03（同 refactor）。
   - **级别**：IMPL
   - **坏味道**：`badsmells.md` §2 / `IMPL-GEN-010`。
@@ -109,3 +109,4 @@
 | 0.1.1 | 2026-09-22 | — | B-T01 完成（IMPL-GEN-008 已消除）。 |
 | 0.1.2 | 2026-09-22 | — | B-T02 完成（CLI project-root；GEN-009 部分残余）。 |
 | 0.1.3 | 2026-09-22 | — | B-T03 完成（GEN-009/011 已消除）。 |
+| 0.1.4 | 2026-09-22 | — | B-T04 完成（GEN-010 已消除）。 |

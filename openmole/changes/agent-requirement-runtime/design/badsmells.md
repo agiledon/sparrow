@@ -1,6 +1,6 @@
 # 坏味道规约文档（OpenMole Bad Smells）
 
-**版本**：0.1.0
+**版本**：0.1.2
 **状态**：草案
 **依据**：OpenMole 规约摘要（见 Skill 内嵌）；change 内 [tasks.md](./tasks.md)
 **修订日期**：2026-09-22
@@ -28,9 +28,9 @@
 
 | BS-ID | 类别 | 状态 | 说明 |
 |-------|------|------|------|
-| DESIGN-RD-002 | 冗余 | 未清除 | read-plan command 与 CLI/projectRoot 假设重复且易漂移 |
+| DESIGN-RD-002 | 冗余 | 已消除 | read-plan projectRoot + command `--project-root` |
 | DESIGN-DF-002 | 数据泥团 | 未清除 | ingest 纪律三处 Markdown 无单一契约 |
-| DESIGN-EN-002 | 封装 | 未清除 | ensure-create 绕过 set-step 写 pipeline |
+| DESIGN-EN-002 | 封装 | 已消除 | ensure --create 经 set-change + set-step |
 | DESIGN-MO-002 | 模块化 | 未清除 | runIngest 编排过长 |
 
 ---
@@ -92,3 +92,5 @@
 | 版本 | 日期 | 提交版本 | 说明 |
 |------|------|----------|------|
 | 0.1.0 | 2026-09-22 | `461c270237ee49b2bc28bb4e9aa13986b88a911e` | 初版：DESIGN-RD-002、DESIGN-DF-002、DESIGN-EN-002、DESIGN-MO-002。 |
+| 0.1.1 | 2026-09-22 | — | impl B-T04：DESIGN-EN-002 → 已消除。 |
+| 0.1.2 | 2026-09-22 | — | impl B-T03：DESIGN-RD-002 → 已消除。 |

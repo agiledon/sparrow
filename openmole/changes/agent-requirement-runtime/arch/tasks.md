@@ -28,7 +28,7 @@
 
 ### B-T01：ingest 显式 projectRoot 架构面（消除 ARCH-LY-002）
 
-- [ ] **B-T01.** CLI 与 read-plan 以 `--project-root` 绑定 `.sparrow/ingest/`，不再仅靠 agent cwd 纪律
+- [x] **B-T01.** CLI 与 read-plan 以 `--project-root` 绑定 `.sparrow/ingest/`，不再仅靠 agent cwd 纪律
   - **依赖**：`impl/tasks.md` B-T02（CLI 接线）；`design/tasks.md` B-T01（read-plan 字段/command）。
   - **级别**：ARCH
   - **坏味道**：`badsmells.md` §2 / `ARCH-LY-002`。
@@ -92,7 +92,7 @@
 
 ### B-T04：ensure-change 委托 state 脚本（消除 ARCH-CP-002）
 
-- [ ] **B-T04.** 删除 ensure 内第三次 state 片段复制，统一 active-change / pipeline 写入
+- [x] **B-T04.** 删除 ensure 内第三次 state 片段复制，统一 active-change / pipeline 写入
   - **依赖**：建议在 `design` B-T03、`impl` B-T04 同主题任务一起规划 diff。
   - **级别**：ARCH
   - **坏味道**：`badsmells.md` §2 / `ARCH-CP-002`。

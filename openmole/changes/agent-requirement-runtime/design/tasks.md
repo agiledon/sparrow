@@ -26,7 +26,7 @@
 
 ### B-T01：read-plan 自描述 projectRoot（消除 DESIGN-RD-002）
 
-- [ ] **B-T01.** read-plan JSON 含 root 或 command 含 `--project-root`，与 SKILL cwd 纪律解耦
+- [x] **B-T01.** read-plan JSON 含 root 或 command 含 `--project-root`，与 SKILL cwd 纪律解耦
   - **依赖**：`impl/tasks.md` B-T02、B-T03。
   - **级别**：DESIGN
   - **坏味道**：`badsmells.md` §2 / `DESIGN-RD-002`。
@@ -67,7 +67,7 @@
 
 ### B-T03：ensure-create 经 set-step 写 pipeline（消除 DESIGN-EN-002）
 
-- [ ] **B-T03.** create 变更工作区后 pipeline 与 sparrow-state 封装一致
+- [x] **B-T03.** create 变更工作区后 pipeline 与 sparrow-state 封装一致
   - **依赖**：`arch/tasks.md` B-T04。
   - **级别**：DESIGN
   - **坏味道**：`badsmells.md` §2 / `DESIGN-EN-002`。

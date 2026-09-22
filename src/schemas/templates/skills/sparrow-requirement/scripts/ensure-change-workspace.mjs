@@ -7,12 +7,14 @@
  *
  * --check exits 1 when no change-id is confirmed and current/ has no subdirectory.
  * --create only after the user confirmed a kebab-case change-id.
+ * State changes go through scripts/sparrow-state.mjs (no direct JSON edits).
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 const CHANGE_CURRENT = join('docs', 'sparrow', 'change', 'current');
-const STATE = join('.sparrow', 'sparrow-state.json');
+const STATE_SCRIPT = join('scripts', 'sparrow-state.mjs');
 const WORKSPACE_DIRS = [
   'requirement/business',
   'requirement/quality',
@@ -21,43 +23,28 @@ const WORKSPACE_DIRS = [
   'design',
 ];
 
-function defaultState() {
-  return {
-    'active-change': { changeId: null },
-    'development-mode': 'tbd',
-    pipeline: null,
-  };
-}
-
-function loadState() {
-  if (!existsSync(STATE)) return defaultState();
-  try {
-    const data = JSON.parse(readFileSync(STATE, 'utf8'));
-    return {
-      'active-change': {
-        changeId:
-          typeof data?.['active-change']?.changeId === 'string' && data['active-change'].changeId.length > 0
-            ? data['active-change'].changeId
-            : null,
-      },
-      'development-mode': data['development-mode'] || 'tbd',
-      pipeline: data['development-mode'] === 'tbd' ? null : data.pipeline ?? null,
-    };
-  } catch {
-    return defaultState();
+function runState(args) {
+  if (!existsSync(STATE_SCRIPT)) {
+    console.error('Missing scripts/sparrow-state.mjs. Run sparrow init or sparrow update.');
+    process.exit(1);
   }
+  const result = spawnSync(process.execPath, [STATE_SCRIPT, ...args], {
+    encoding: 'utf8',
+    cwd: process.cwd(),
+  });
+  if (result.status !== 0) {
+    if (result.stderr) process.stderr.write(result.stderr);
+    if (result.stdout) process.stderr.write(result.stdout);
+    process.exit(result.status ?? 1);
+  }
+  return result.stdout;
 }
 
 function readActiveChangeId() {
-  return loadState()['active-change'].changeId;
-}
-
-function writeChangeId(id) {
-  const state = loadState();
-  state['active-change'] = { changeId: id };
-  if (state['development-mode'] === 'tbd') state.pipeline = null;
-  mkdirSync('.sparrow', { recursive: true });
-  writeFileSync(STATE, `${JSON.stringify(state, null, 2)}\n`);
+  const raw = runState(['show']);
+  const data = JSON.parse(raw);
+  const id = data?.['active-change']?.changeId;
+  return typeof id === 'string' && id.length > 0 ? id : null;
 }
 
 function listCurrent() {
@@ -86,6 +73,12 @@ if (cmd === '--check') {
     );
     process.exit(1);
   }
+  if (id && dirs.length > 0 && !dirs.includes(id)) {
+    console.error(
+      `active-change.changeId "${id}" does not match change/current/ (${dirs.join(', ')}).`
+    );
+    process.exit(1);
+  }
   process.stdout.write(`${id || dirs[0]}\n`);
   process.exit(0);
 }
@@ -101,7 +94,8 @@ if (cmd === '--create') {
   for (const dir of WORKSPACE_DIRS) {
     mkdirSync(join(root, dir), { recursive: true });
   }
-  writeChangeId(id);
+  runState(['set-change', id]);
+  runState(['set-step', 'requirement', 'ongoing']);
   process.stdout.write(`${root}\n`);
   process.exit(0);
 }
