@@ -1,4 +1,6 @@
+import { resolve } from 'node:path';
 import { CHAR_BUDGET } from './constants.js';
+import { formatIngestShowCommand } from './cli-strings.js';
 
 export interface ReadPlanItem {
   kind: 'chunk' | 'signals' | 'figure';
@@ -12,6 +14,8 @@ export interface ReadPlanItem {
 export interface ReadPlan {
   budget: number;
   totalChars: number;
+  /** Absolute project root used for `.sparrow/ingest/` when ingest ran. */
+  projectRoot?: string;
   items: ReadPlanItem[];
 }
 
@@ -36,10 +40,13 @@ export function offsetWindows(chars: number, budget = CHAR_BUDGET): { offset: nu
   return windows;
 }
 
-function showCommand(sourcePath: string, section: string, offset: number): string {
-  const quoted = /\s/.test(sourcePath) ? JSON.stringify(sourcePath) : sourcePath;
-  const extra = offset > 0 ? ` --offset ${offset}` : '';
-  return `sparrow ingest show ${quoted} --section ${section}${extra}`;
+function planShowCommand(
+  sourcePath: string,
+  section: string,
+  offset: number,
+  projectRoot?: string,
+): string {
+  return formatIngestShowCommand({ sourcePath, section, offset, projectRoot });
 }
 
 export function buildReadPlan(opts: {
@@ -49,8 +56,10 @@ export function buildReadPlan(opts: {
   figureIds: string[];
   signalsChars: number;
   budget?: number;
+  projectRoot?: string;
 }): ReadPlan {
   const budget = opts.budget ?? CHAR_BUDGET;
+  const projectRoot = opts.projectRoot ? resolve(opts.projectRoot) : undefined;
   const items: ReadPlanItem[] = [];
   const pushWindows = (kind: ReadPlanItem['kind'], id: string, file: string, chars: number): void => {
     for (const win of offsetWindows(chars, budget)) {
@@ -60,7 +69,7 @@ export function buildReadPlan(opts: {
         file,
         offset: win.offset,
         chars: win.chars,
-        command: showCommand(opts.sourcePath, id, win.offset),
+        command: planShowCommand(opts.sourcePath, id, win.offset, projectRoot),
       });
     }
   };
@@ -76,7 +85,7 @@ export function buildReadPlan(opts: {
         file: `figures/${id}.md`,
         offset: 0,
         chars: 0,
-        command: showCommand(opts.sourcePath, id, 0),
+        command: planShowCommand(opts.sourcePath, id, 0, projectRoot),
       });
     }
   } else {
@@ -95,7 +104,7 @@ export function buildReadPlan(opts: {
         file: `figures/${id}.md`,
         offset: 0,
         chars: 0,
-        command: showCommand(opts.sourcePath, id, 0),
+        command: planShowCommand(opts.sourcePath, id, 0, projectRoot),
       });
     }
   }
@@ -103,6 +112,7 @@ export function buildReadPlan(opts: {
   return {
     budget,
     totalChars: opts.totalChars,
+    ...(projectRoot ? { projectRoot } : {}),
     items,
   };
 }

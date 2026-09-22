@@ -8,6 +8,8 @@ import {
   buildReadPlan,
   decideFigure,
   extractSignals,
+  formatIngestShowCommand,
+  INGEST_SHOW_CMD,
   IngestError,
   noisyPng,
   runIngest,
@@ -307,6 +309,20 @@ test('over-budget read-plan uses signals and keyword sections with offsets', () 
   assert.ok(ids.includes('figure:fig-1:0'));
 });
 
+test('formatIngestShowCommand centralizes CLI text and project-root flag', () => {
+  assert.equal(INGEST_SHOW_CMD, 'sparrow ingest show');
+  const cmd = formatIngestShowCommand({
+    sourcePath: '/tmp/my prd.md',
+    section: 's-1',
+    offset: 24000,
+    projectRoot: '/tmp/project root',
+  });
+  assert.match(cmd, /^sparrow ingest show /);
+  assert.match(cmd, /--section s-1/);
+  assert.match(cmd, /--offset 24000/);
+  assert.match(cmd, /--project-root "\/tmp\/project root"/);
+});
+
 test('ingest markdown over budget writes offset windows in read-plan', async () => {
   const root = tmpProject();
   const src = join(root, 'big.md');
@@ -322,8 +338,11 @@ test('ingest markdown over budget writes offset windows in read-plan', async () 
   });
   const plan = JSON.parse(readFileSync(summary.readPlan, 'utf8')) as {
     totalChars: number;
-    items: { kind: string; id: string; offset: number }[];
+    projectRoot?: string;
+    items: { kind: string; id: string; offset: number; command: string }[];
   };
+  assert.equal(plan.projectRoot, root);
+  assert.ok(plan.items.every((i) => i.command.includes('--project-root')));
   assert.ok(plan.totalChars > 24000);
   assert.ok(plan.items.some((i) => i.kind === 'signals'));
   assert.ok(plan.items.some((i) => i.id === 's-3'));

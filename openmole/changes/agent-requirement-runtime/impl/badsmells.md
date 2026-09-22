@@ -1,6 +1,6 @@
 # 坏味道规约文档（OpenMole Bad Smells）
 
-**版本**：0.1.2
+**版本**：0.1.3
 **状态**：草案
 **依据**：OpenMole 规约摘要（见 Skill 内嵌）；change 内 [tasks.md](./tasks.md)
 **修订日期**：2026-09-22
@@ -27,9 +27,9 @@
 | BS-ID | 类别 | 状态 | 说明 |
 |-------|------|------|------|
 | IMPL-GEN-008 | 通用 | 已消除 | bin/sparrow.js tsx 缺失时静默降级 |
-| IMPL-GEN-009 | 通用 | 部分残余 | CLI 已暴露 `--project-root`；read-plan command 同步待 B-T03 / design B-T01 |
+| IMPL-GEN-009 | 通用 | 已消除 | CLI `--project-root` 与 read-plan command 同步 |
 | IMPL-GEN-010 | 通用 | 未清除 | ensure loadState 剪枝规则与 state 脚本分叉 |
-| IMPL-GEN-011 | 通用 | 未清除 | showCommand 硬编码 CLI 子命令字符串 |
+| IMPL-GEN-011 | 通用 | 已消除 | showCommand 硬编码 CLI 子命令字符串 |
 
 ---
 
@@ -92,3 +92,4 @@
 | 0.1.0 | 2026-09-22 | `461c270237ee49b2bc28bb4e9aa13986b88a911e` | 初版：IMPL-GEN-008～011。 |
 | 0.1.1 | 2026-09-22 | — | mole-apply impl B-T01：IMPL-GEN-008 → 已消除。 |
 | 0.1.2 | 2026-09-22 | — | mole-apply impl B-T02：CLI `--project-root`；IMPL-GEN-009 → 部分残余。 |
+| 0.1.3 | 2026-09-22 | — | mole-apply impl B-T03：cli-strings + read-plan projectRoot；GEN-009/011 已消除。 |

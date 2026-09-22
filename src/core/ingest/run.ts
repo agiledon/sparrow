@@ -260,6 +260,7 @@ export async function runIngest(path: string, options: IngestOptions = {}): Prom
     sections: outlineSections,
     figureIds: keptIds,
     signalsChars: signalsText.length,
+    projectRoot,
   });
   writeJson(join(cacheDir, 'read-plan.json'), plan);
 

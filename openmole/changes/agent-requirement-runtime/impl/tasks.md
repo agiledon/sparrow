@@ -65,7 +65,7 @@
 
 ### B-T03：read-plan 与 CLI 共享 show 命令常量（消除 IMPL-GEN-011）
 
-- [ ] **B-T03.** 导出 ingest show 命令前缀，read-plan 与 commander 同源
+- [x] **B-T03.** 导出 ingest show 命令前缀，read-plan 与 commander 同源
   - **依赖**：B-T02（若 command 含 `--project-root` 片段一并常量化）。
   - **级别**：IMPL
   - **坏味道**：`badsmells.md` §2 / `IMPL-GEN-011`。
@@ -108,3 +108,4 @@
 | 0.1.0 | 2026-09-22 | `461c270237ee49b2bc28bb4e9aa13986b88a911e` | 初版：B-T01~B-T04 对应 IMPL-GEN-008~011。 |
 | 0.1.1 | 2026-09-22 | — | B-T01 完成（IMPL-GEN-008 已消除）。 |
 | 0.1.2 | 2026-09-22 | — | B-T02 完成（CLI project-root；GEN-009 部分残余）。 |
+| 0.1.3 | 2026-09-22 | — | B-T03 完成（GEN-009/011 已消除）。 |
