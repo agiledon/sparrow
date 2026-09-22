@@ -1,5 +1,5 @@
 import type { SparrowWorkflowSchema } from './schema-types.js';
-import { validateWorkflowSchema } from '../../core/workflow-schema/validate.js';
+import { validateWorkflowSchema } from './validate-workflow-schema.js';
 import schemaJson from '../../content/schema/schema.json';
 
 let cached: SparrowWorkflowSchema | null = null;

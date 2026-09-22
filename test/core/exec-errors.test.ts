@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { isExecSyncTimeoutError } from '../../src/core/exec-errors.js';
+import { isExecSyncTimeoutError } from '../../src/cli/shell/exec-errors.js';
 
 test('status null + signal SIGTERM → true', () => {
   const e = Object.assign(new Error('timed out'), { status: null, signal: 'SIGTERM' });

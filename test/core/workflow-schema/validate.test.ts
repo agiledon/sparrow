@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { validateWorkflowSchema } from '../../../src/core/workflow-schema/validate.js';
-import type { SparrowWorkflowSchema } from '../../../src/core/workflow-schema/types.js';
+import { validateWorkflowSchema } from '../../../src/kernel/content/validate-workflow-schema.js';
+import type { SparrowWorkflowSchema } from '../../../src/kernel/content/schema-types.js';
 import schemaJson from '../../../src/content/schema/schema.json';
 
 test('workflow schema validates structurally', () => {

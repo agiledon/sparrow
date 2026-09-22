@@ -7,4 +7,4 @@
  */
 
 export * from './tools.js';
-export * from '../../core/skills.js';
+export * from '../../skills/registry.js';

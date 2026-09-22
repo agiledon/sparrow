@@ -1,4 +1,4 @@
-import type { SparrowWorkflowSchema } from './types.js';
+import type { SparrowWorkflowSchema } from './schema-types.js';
 
 export function validateWorkflowSchema(schema: SparrowWorkflowSchema): void {
   if (!schema.globalHarness?.always?.length) {

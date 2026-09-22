@@ -1,4 +1,4 @@
-import type { SparrowWorkflowSchema, WorkflowStep } from './types.js';
+import type { SparrowWorkflowSchema, WorkflowStep } from './schema-types.js';
 import {
   skillTemplates,
   sharedReferences,
@@ -6,8 +6,13 @@ import {
   sharedScripts,
   skillExtras,
 } from '../../schemas/bundled-content.js';
-import { getContentStore } from '../../kernel/content/ContentStore.js';
-import { getWorkflowSchema as getKernelSchema, resolveStepHarnessPaths as resolveHarness, uniqueAssetNames as uniqueAssets } from '../../kernel/content/schema.js';
+import { getContentStore } from './ContentStore.js';
+import {
+  getWorkflowSchema as getKernelSchema,
+  resolveStepHarnessPaths as resolveHarness,
+  uniqueAssetNames as uniqueAssets,
+} from './schema.js';
+import type { SkillSpec } from '../../skills/registry.js';
 
 export function getWorkflowSchema(): SparrowWorkflowSchema {
   return getKernelSchema();
@@ -57,7 +62,7 @@ export function uniqueAssetNames(step: WorkflowStep): string[] {
   return uniqueAssets(step);
 }
 
-export function workflowStepsToSkillSpecs(): import('../skills.js').SkillSpec[] {
+export function workflowStepsToSkillSpecs(): SkillSpec[] {
   return getWorkflowSchema().steps.map((step) => ({
     id: step.skillId,
     name: step.name,
@@ -73,4 +78,10 @@ export function workflowStepsToSkillSpecs(): import('../skills.js').SkillSpec[] 
   }));
 }
 
-export type { SparrowWorkflowSchema, WorkflowStep, ArtifactOutput, GlobalHarness, ConditionalHarnessEntry } from './types.js';
+export type {
+  SparrowWorkflowSchema,
+  WorkflowStep,
+  ArtifactOutput,
+  GlobalHarness,
+  ConditionalHarnessEntry,
+} from './schema-types.js';

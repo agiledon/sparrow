@@ -5,15 +5,15 @@
 
 import { SPARROW_DIR } from '../../kernel/runtime/spec-paths.js';
 import { readProjectConfig, writeProjectConfig } from '../../kernel/runtime/project-config.js';
-import type { SkillDefinition, SkillRegistry } from '../../core/skills.js';
+import type { SkillDefinition, SkillRegistry } from '../../skills/registry.js';
 import { installAgentSkills } from './install-agent-skills.js';
 import type { CommandContent } from '../adapters/types.js';
-import { getWorkflowStepBySkillId } from '../../core/workflow-schema/index.js';
+import { getWorkflowStepBySkillId } from '../../kernel/content/skill-composition.js';
 
 import type { Plugin } from '../../plugins/types.js';
-import { buildPluginSkillBody } from '../../core/plugin-generation.js';
+import { buildPluginSkillBody } from '../../plugins/skill-body.js';
 
-export { HARNESS_TOKEN } from '../../core/skill-tokens.js';
+export { HARNESS_TOKEN } from '../../kernel/skill/HarnessToken.js';
 
 /**
  * Assemble CommandContent for a plugin-contributed skill (registry template).

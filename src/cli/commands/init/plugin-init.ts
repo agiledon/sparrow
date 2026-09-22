@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { getBundledPlugins } from '../../../plugins/index.js';
 import type { Plugin } from '../../../plugins/types.js';
 import { getGlobalConfigDir } from '../../harness/install.js';
-import { getPluginStatus, markPluginInstalled } from '../../../core/global-config.js';
+import { getPluginStatus, markPluginInstalled } from '../../shell/global-config.js';
 import { readProjectConfig, writeProjectConfig } from '../../../kernel/runtime/project-config.js';
 
 const PLUGINS_SUBDIR = 'plugins';

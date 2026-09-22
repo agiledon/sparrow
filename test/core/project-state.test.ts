@@ -27,7 +27,7 @@ import {
   MASTER_ROOT,
   STATE_FILE,
 } from '../../src/kernel/runtime/spec-paths.js';
-import { generateProjectConfig } from '../../src/core/skill-generation.js';
+import { generateProjectConfig } from '../../src/cli/agent-skill/generation.js';
 
 function tmpRoot(prefix: string): string {
   return mkdtempSync(join(tmpdir(), prefix));

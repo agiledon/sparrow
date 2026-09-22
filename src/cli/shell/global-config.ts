@@ -1,7 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { getGlobalConfigDir } from '../cli/harness/install.js';
-import type { PluginEntry } from '../plugins/types.js';
+import { getGlobalConfigDir } from '../harness/install.js';
+import type { PluginEntry } from '../../plugins/types.js';
 
 export interface GlobalConfig {
   version: string;

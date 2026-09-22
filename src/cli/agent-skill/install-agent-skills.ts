@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { getAdapter } from '../adapters/index.js';
-import type { SkillDefinition, SkillRegistry } from '../../core/skills.js';
+import type { SkillDefinition, SkillRegistry } from '../../skills/registry.js';
 import { assembleSkillContent } from './generation.js';
 import { WorkflowBuilderRegistry } from '../../kernel/workflow/builder/WorkflowBuilderRegistry.js';
 

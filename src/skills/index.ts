@@ -1,11 +1,11 @@
-import type { SkillRegistry } from '../core/skills.js';
+import type { SkillRegistry } from './registry.js';
 import { getSkillPlugins } from '../plugins/index.js';
-import { registerPluginSkillTemplates } from '../core/skill-generation.js';
+import { registerPluginSkillTemplates } from '../cli/agent-skill/generation.js';
 import { loadBundledPlugins } from '../plugins/load.js';
 import {
   composeSkillBodyFromWorkflow,
   workflowStepsToSkillSpecs,
-} from '../core/workflow-schema/index.js';
+} from '../kernel/content/skill-composition.js';
 
 export function initializeSkills(registry: SkillRegistry): void {
   loadBundledPlugins();

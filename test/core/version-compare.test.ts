@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { compareVersions } from '../../src/core/version-compare.js';
+import { compareVersions } from '../../src/cli/shell/version-compare.js';
 
 test('相同版本 → false', () => {
   assert.equal(compareVersions('0.3.1', '0.3.1'), false);

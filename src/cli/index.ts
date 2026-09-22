@@ -28,7 +28,7 @@ import { join } from 'node:path';
 import { detectOsLocale, formatCommonLangs, resolveInitLang } from './shell/os-locale.js';
 import { readProjectConfig } from '../kernel/runtime/project-config.js';
 import { getSparrowVersion } from './shell/package-version.js';
-import { SkillRegistry } from '../core/skills.js';
+import { SkillRegistry } from '../skills/registry.js';
 import { IngestError, runClean, runIngest, showSection } from './ingest/index.js';
 
 const program = new Command();

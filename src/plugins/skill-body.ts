@@ -1,4 +1,4 @@
-import type { Plugin, ContributedSkill } from '../plugins/types.js';
+import type { Plugin, ContributedSkill } from './types.js';
 
 export function buildPluginSkillBody(skill: ContributedSkill, plugin: Plugin): string {
   return [

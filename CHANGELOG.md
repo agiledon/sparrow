@@ -45,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **解空间更名**：arch 产出 `bounded-contexts.md`；spec 为薄投影 + Property；harness 路径同步调整。
 - **Breaking paths**: Prefer new layout; migrate `prd-business.md`, `architecture/business.md`, `architecture/application.md` via skill `compat-migrate.md`. Re-run `sparrow init` / `sparrow update`.
   - **破坏性路径变更**：旧路径按 `compat-migrate.md` 迁移；重新执行 init/update 刷新 skill。
-- **Archive readiness gate**: `sparrow-state.mjs check-archive` / `prune-contexts` gate archive on per-slug `verify`+`done`. Full vs partial archive. Promote via generated `sparrow-promote.mjs` (**append-only delta**). Canonical narrative: skill `references/archive-gate.md`. State script is generated from `src/core/project-state*` (single source).
+- **Archive readiness gate**: `sparrow-state.mjs check-archive` / `prune-contexts` gate archive on per-slug `verify`+`done`. Full vs partial archive. Promote via generated `sparrow-promote.mjs` (**append-only delta**). Canonical narrative: skill `references/archive-gate.md`. State script is generated from `src/kernel/runtime/project-state*` (single source).
   - **归档门控**：按 slug 的 `verify`+`done`；完整/部分归档；`sparrow-promote.mjs` 只追加 delta；契约见 `archive-gate.md`。
 - **Core workflow levels**: `archive` is product-level (once per change, after all slugs). Team-level steps are design → verify (per slug). Product-level bookends are requirement → arch and archive.
   - **核心工作流层级**：`archive` 为产品级（每个 change 在全部 slug 完成后运行一次）。团队级为 design → verify（按 slug）。产品级两端为 requirement → arch 与 archive。
