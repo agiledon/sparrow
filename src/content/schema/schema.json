@@ -1,0 +1,534 @@
+{
+  "name": "sparrow-ddd",
+  "version": 1,
+  "description": "Sparrow core DDD pipeline — requirement through archive",
+  "coreStepCount": 8,
+  "globalHarness": {
+    "always": [
+      "constitution.md",
+      "common/always/interactive-interaction.md",
+      "common/always/document-language.md"
+    ],
+    "conditional": [
+      {
+        "path": "common/conditional/brownfield.md",
+        "when": ".sparrow/sparrow-state.json 的 development-mode 为 brownfield"
+      }
+    ]
+  },
+  "steps": [
+    {
+      "id": "requirement",
+      "skillId": "sparrow-requirement",
+      "name": "Sparrow Requirement",
+      "description": "Use when gathering or revising product requirements, partitioning subdomains/capabilities/scenarios, identifying business services along end-to-end processes, or exploring optional UI specs.",
+      "phase": "product",
+      "order": 1,
+      "nextSkill": "sparrow-arch",
+      "kind": "core",
+      "category": "DDD",
+      "template": "sparrow-requirement/SKILL.md",
+      "workflowBlock": "sparrow-requirement.md",
+      "harness": [
+        "requirement/requirements.md",
+        "requirement/ingest-cli.md",
+        "requirement/subdomains.md"
+      ],
+      "requires": [],
+      "share": [
+        "ubiquitous-language.md",
+        "output-existence-check.md",
+        "version-metadata.md",
+        "project-md-update.md",
+        "spec-layout-guide.md",
+        "grill-me.md",
+        "revise-gate.md"
+      ],
+      "references": [
+        "business-service-rules.md",
+        "subdomain-rules.md",
+        "compat-migrate.md"
+      ],
+      "outputs": [
+        {
+          "asset": "project.md",
+          "dest": "project.md"
+        },
+        {
+          "asset": "proposal.md",
+          "dest": "proposal.md"
+        },
+        {
+          "asset": "catalog.md",
+          "dest": "requirement/business/catalog.md"
+        },
+        {
+          "asset": "subdomain.md",
+          "dest": "requirement/business/{sd-slug}/subdomain.md"
+        },
+        {
+          "asset": "capability.md",
+          "dest": "requirement/business/{sd-slug}/{c-slug}/capability.md",
+          "optional": true
+        },
+        {
+          "asset": "scenario.md",
+          "dest": "requirement/business/{sd-slug}/{c-slug}/{s-slug}/scenario.md"
+        },
+        {
+          "asset": "business-services.md",
+          "dest": "requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md"
+        },
+        {
+          "asset": "service.md",
+          "dest": "requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md#BS-{id}"
+        },
+        {
+          "asset": "quality.md",
+          "dest": "requirement/quality/quality.md"
+        },
+        {
+          "asset": "ui-spec.md",
+          "dest": "requirement/ui/ui-spec.md",
+          "optional": true
+        },
+        {
+          "asset": "design-tokens.md",
+          "dest": "requirement/ui/design-tokens.md",
+          "optional": true
+        },
+        {
+          "asset": "component-library.md",
+          "dest": "requirement/ui/components/component-library.md",
+          "optional": true
+        },
+        {
+          "asset": "prototype-index.html",
+          "dest": "requirement/ui/prototypes/index.html",
+          "optional": true
+        }
+      ],
+      "scripts": [
+        "ensure-change-workspace.mjs",
+        "sparrow-state.mjs"
+      ],
+      "cliCommands": [
+        {
+          "id": "ingest",
+          "usage": "sparrow ingest <path>",
+          "note": "Then execute read-plan.json commands (sparrow ingest show …); optional --project-root"
+        }
+      ]
+    },
+    {
+      "id": "arch",
+      "skillId": "sparrow-arch",
+      "name": "Sparrow Arch",
+      "description": "Use when mapping subdomains to bounded contexts, defining context maps, slicing business services into design specs with properties, or interaction-context frontend architecture.",
+      "phase": "product",
+      "order": 2,
+      "nextSkill": "sparrow-design",
+      "kind": "core",
+      "category": "DDD",
+      "template": "sparrow-arch/SKILL.md",
+      "workflowBlock": "sparrow-arch.md",
+      "harness": [
+        "arch/bounded-contexts.md",
+        "arch/spec-slice.md",
+        "arch/frontend.md"
+      ],
+      "requires": [
+        "requirement"
+      ],
+      "share": [
+        "ubiquitous-language.md",
+        "output-existence-check.md",
+        "version-metadata.md",
+        "project-md-update.md",
+        "spec-layout-guide.md",
+        "revise-gate.md"
+      ],
+      "references": [
+        "react-mapping.md",
+        "property-rules.md",
+        "bc-tiers.md",
+        "frontend-architecture.md",
+        "compat-migrate.md"
+      ],
+      "outputs": [
+        {
+          "asset": "project.md",
+          "dest": "project.md"
+        },
+        {
+          "asset": "bounded-contexts.md",
+          "dest": "architecture/bounded-contexts.md"
+        },
+        {
+          "asset": "spec.md",
+          "dest": "design/{slug}/spec.md"
+        },
+        {
+          "asset": "frontend.md",
+          "dest": "architecture/frontend.md",
+          "optional": true
+        },
+        {
+          "asset": "spec-interaction.md",
+          "dest": "design/{ui-slug}/spec.md",
+          "optional": true
+        }
+      ],
+      "scripts": [
+        "sparrow-state.mjs"
+      ]
+    },
+    {
+      "id": "design",
+      "skillId": "sparrow-design",
+      "name": "Sparrow Design",
+      "description": "Use when defining API contracts and technology stack for a bounded context or interaction context.",
+      "phase": "team",
+      "order": 3,
+      "nextSkill": "sparrow-model",
+      "kind": "core",
+      "category": "DDD",
+      "template": "sparrow-design/SKILL.md",
+      "workflowBlock": "sparrow-design.md",
+      "scope": "slug",
+      "harness": [
+        "design/api-design.md"
+      ],
+      "requires": [
+        "arch"
+      ],
+      "share": [
+        "ubiquitous-language.md",
+        "output-existence-check.md",
+        "version-metadata.md",
+        "project-md-update.md",
+        "spec-layout-guide.md",
+        "revise-gate.md"
+      ],
+      "references": [
+        "api-design-rules.md",
+        "interaction-design.md"
+      ],
+      "outputs": [
+        {
+          "asset": "project.md",
+          "dest": "project.md"
+        },
+        {
+          "asset": "api.md",
+          "dest": "design/{slug}/api.md"
+        },
+        {
+          "asset": "tech.md",
+          "dest": "design/{slug}/tech.md"
+        },
+        {
+          "asset": "api-interaction.md",
+          "dest": "design/{slug}/api.md",
+          "optional": true
+        },
+        {
+          "asset": "tech-interaction.md",
+          "dest": "design/{slug}/tech.md",
+          "optional": true
+        },
+        {
+          "asset": "architecture-api.md",
+          "dest": "architecture/api.md"
+        }
+      ],
+      "scripts": [
+        "sparrow-state.mjs"
+      ]
+    },
+    {
+      "id": "model",
+      "skillId": "sparrow-model",
+      "name": "Sparrow Model",
+      "description": "Use when extracting the domain model or view-model for a bounded context or interaction context.",
+      "phase": "team",
+      "order": 4,
+      "nextSkill": "sparrow-plan",
+      "kind": "core",
+      "category": "DDD",
+      "template": "sparrow-model/SKILL.md",
+      "workflowBlock": "sparrow-model.md",
+      "scope": "slug",
+      "harness": [
+        "model/architecture.md",
+        "model/domain-modeling.md",
+        "model/view-modeling.md"
+      ],
+      "requires": [
+        "design"
+      ],
+      "share": [
+        "ubiquitous-language.md",
+        "output-existence-check.md",
+        "version-metadata.md",
+        "project-md-update.md",
+        "spec-layout-guide.md",
+        "revise-gate.md"
+      ],
+      "references": [
+        "domain-modeling-steps.md",
+        "view-modeling.md"
+      ],
+      "outputs": [
+        {
+          "asset": "project.md",
+          "dest": "project.md"
+        },
+        {
+          "asset": "model.md",
+          "dest": "design/{slug}/model.md"
+        },
+        {
+          "asset": "model-interaction.md",
+          "dest": "design/{slug}/model.md",
+          "optional": true
+        }
+      ],
+      "scripts": [
+        "sparrow-state.mjs"
+      ]
+    },
+    {
+      "id": "plan",
+      "skillId": "sparrow-plan",
+      "name": "Sparrow Plan",
+      "description": "Use when writing an implementation plan from spec, API, tech stack, and domain model.",
+      "phase": "team",
+      "order": 5,
+      "nextSkill": "sparrow-apply",
+      "kind": "core",
+      "category": "DDD",
+      "template": "sparrow-plan/SKILL.md",
+      "workflowBlock": "sparrow-plan.md",
+      "scope": "slug",
+      "harness": [],
+      "requires": [
+        "model"
+      ],
+      "share": [
+        "ubiquitous-language.md",
+        "output-existence-check.md",
+        "version-metadata.md",
+        "project-md-update.md",
+        "spec-layout-guide.md",
+        "revise-gate.md"
+      ],
+      "references": [
+        "module-layouts.md",
+        "interaction-plan.md"
+      ],
+      "outputs": [
+        {
+          "asset": "project.md",
+          "dest": "project.md"
+        },
+        {
+          "asset": "plan.md",
+          "dest": "design/{slug}/plan.md"
+        },
+        {
+          "asset": "plan-interaction.md",
+          "dest": "design/{slug}/plan.md",
+          "optional": true
+        }
+      ],
+      "scripts": [
+        "sparrow-state.mjs"
+      ]
+    },
+    {
+      "id": "apply",
+      "skillId": "sparrow-apply",
+      "name": "Sparrow Apply",
+      "description": "Use when executing the implementation plan and generating DDD-structured code for a slug.",
+      "phase": "team",
+      "order": 6,
+      "nextSkill": "sparrow-verify",
+      "kind": "core",
+      "category": "DDD",
+      "template": "sparrow-apply/SKILL.md",
+      "workflowBlock": "sparrow-apply.md",
+      "scope": "slug",
+      "harness": [
+        "apply/implementation.md"
+      ],
+      "requires": [
+        "plan"
+      ],
+      "share": [
+        "ubiquitous-language.md",
+        "output-existence-check.md",
+        "version-metadata.md",
+        "project-md-update.md",
+        "spec-layout-guide.md",
+        "revise-gate.md"
+      ],
+      "references": [
+        "apply-rules.md",
+        "interaction-apply.md"
+      ],
+      "outputs": [
+        {
+          "asset": "project.md",
+          "dest": "project.md"
+        },
+        {
+          "asset": "code_review.md",
+          "dest": "design/{slug}/code_review.md"
+        }
+      ],
+      "scripts": [
+        "sparrow-state.mjs"
+      ]
+    },
+    {
+      "id": "verify",
+      "skillId": "sparrow-verify",
+      "name": "Sparrow Verify",
+      "description": "Use when verifying bounded-context code against spec.md, api.md, tech.md, and model.md.",
+      "phase": "team",
+      "order": 7,
+      "nextSkill": "sparrow-archive",
+      "kind": "core",
+      "category": "DDD",
+      "template": "sparrow-verify/SKILL.md",
+      "workflowBlock": "sparrow-verify.md",
+      "scope": "slug",
+      "harness": [
+        "apply/implementation.md"
+      ],
+      "requires": [
+        "apply"
+      ],
+      "share": [
+        "ubiquitous-language.md",
+        "output-existence-check.md",
+        "version-metadata.md",
+        "project-md-update.md",
+        "spec-layout-guide.md",
+        "revise-gate.md"
+      ],
+      "outputs": [
+        {
+          "asset": "project.md",
+          "dest": "project.md"
+        },
+        {
+          "asset": "verify_report.md",
+          "dest": "design/{slug}/verify_report.md"
+        }
+      ],
+      "scripts": [
+        "sparrow-state.mjs"
+      ]
+    },
+    {
+      "id": "archive",
+      "skillId": "sparrow-archive",
+      "name": "Sparrow Archive",
+      "description": "Use when archiving a completed change and promoting specs into docs/sparrow/master/.",
+      "phase": "product",
+      "order": 8,
+      "nextSkill": null,
+      "kind": "core",
+      "category": "DDD",
+      "template": "sparrow-archive/SKILL.md",
+      "workflowBlock": "sparrow-archive.md",
+      "harness": [],
+      "requires": [
+        "verify"
+      ],
+      "share": [
+        "ubiquitous-language.md",
+        "version-metadata.md",
+        "project-md-update.md",
+        "spec-layout-guide.md",
+        "archive-gate.md"
+      ],
+      "outputs": [
+        {
+          "asset": "project.md",
+          "dest": "docs/sparrow/master/project.md"
+        },
+        {
+          "asset": "revision-history.md",
+          "dest": "docs/sparrow/master/requirement/revision-history.md"
+        },
+        {
+          "asset": "revision-history-entry.md",
+          "dest": "docs/sparrow/master/requirement/revision-history.md"
+        },
+        {
+          "asset": "revision-history.md",
+          "dest": "docs/sparrow/master/design/revision-history.md"
+        },
+        {
+          "asset": "revision-history-entry.md",
+          "dest": "docs/sparrow/master/design/revision-history.md"
+        },
+        {
+          "asset": "bc-revision-history.md",
+          "dest": "docs/sparrow/master/architecture/bc-revision-history.md",
+          "optional": true
+        },
+        {
+          "asset": "bc-revision-history-entry.md",
+          "dest": "docs/sparrow/master/architecture/bc-revision-history.md",
+          "optional": true
+        }
+      ],
+      "scripts": [
+        "sparrow-state.mjs",
+        "sparrow-promote.mjs"
+      ]
+    },
+    {
+      "id": "supporting-harness",
+      "skillId": "sparrow-supporting-harness",
+      "name": "Sparrow Harness",
+      "description": "Use when viewing, adding, or maintaining project constraint assets (harness).",
+      "phase": "product",
+      "order": 101,
+      "nextSkill": null,
+      "kind": "supporting",
+      "category": "DDD",
+      "template": "sparrow-supporting-harness/SKILL.md",
+      "workflowBlock": null,
+      "harness": [],
+      "requires": [],
+      "share": [
+        "ubiquitous-language.md"
+      ]
+    },
+    {
+      "id": "supporting-reconcile",
+      "skillId": "sparrow-supporting-reconcile",
+      "name": "Sparrow Reconcile",
+      "description": "Use when reconciling existing spec docs and harness constraints with current code and conversation history.",
+      "phase": "team",
+      "order": 102,
+      "nextSkill": null,
+      "kind": "supporting",
+      "category": "DDD",
+      "template": "sparrow-supporting-reconcile/SKILL.md",
+      "workflowBlock": null,
+      "harness": [],
+      "requires": [],
+      "share": [
+        "ubiquitous-language.md",
+        "version-metadata.md",
+        "project-md-update.md"
+      ]
+    }
+  ]
+}

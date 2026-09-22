@@ -9,6 +9,7 @@
 
 import type { CommandContent, ToolCommandAdapter } from './types.js';
 import { formatHarnessReference } from '../harness-init.js';
+import { writeSkill as writeAgentSkill, writeCommand as writeAgentCommand } from '../../cli/agent-skill/write-skill.js';
 
 /**
  * Format a reference line to a constraint asset for a given scope.
@@ -68,12 +69,16 @@ export interface AdapterConfig {
  * Build a tool adapter from a declarative config.
  */
 export function createAdapter(config: AdapterConfig): ToolCommandAdapter {
-  return {
+  const adapter: ToolCommandAdapter = {
     toolId: config.toolId,
     getSkillPath: config.skillPath,
     getCommandPath: config.commandPath,
     formatSkill: formatSkillContent,
     formatCommand: (content) => formatCommandContent(content, config.commandStyle ?? 'standard'),
     formatHarnessRef,
+    writeSkill: (projectRoot, pkg) => writeAgentSkill(projectRoot, adapter, pkg),
+    writeCommand: (projectRoot, pkg, skillRelPath) =>
+      writeAgentCommand(projectRoot, adapter, pkg, skillRelPath),
   };
+  return adapter;
 }

@@ -3,7 +3,11 @@ import yaml from "js-yaml";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const dir = join(dirname(fileURLToPath(import.meta.url)), "..", "src", "schemas");
-const data = yaml.load(readFileSync(join(dir, "schema.yaml"), "utf8"));
-writeFileSync(join(dir, "schema.json"), JSON.stringify(data, null, 2) + "\n");
-console.log("synced schema.json");
+const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const schemaYaml = join(root, "src", "content", "schema", "schema.yaml");
+const legacyDir = join(root, "src", "schemas");
+const data = yaml.load(readFileSync(schemaYaml, "utf8"));
+const json = JSON.stringify(data, null, 2) + "\n";
+writeFileSync(join(root, "src", "content", "schema", "schema.json"), json);
+writeFileSync(join(legacyDir, "schema.json"), json);
+console.log("synced schema.json (content/schema + src/schemas)");

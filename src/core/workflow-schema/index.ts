@@ -1,41 +1,16 @@
 import type { SparrowWorkflowSchema, WorkflowStep } from './types.js';
-import { validateWorkflowSchema } from './validate.js';
-import schemaJson from '../../schemas/schema.json';
 import {
   skillTemplates,
-  workflowBlocks,
   sharedReferences,
   sharedAssets,
   sharedScripts,
   skillExtras,
 } from '../../schemas/bundled-content.js';
-import { HARNESS_TOKEN } from '../skill-tokens.js';
-
-let cached: SparrowWorkflowSchema | null = null;
-
-function renderCliCommandsBlock(step: WorkflowStep): string {
-  if (!step.cliCommands?.length) {
-    return '';
-  }
-  const lines = [
-    '## 包 CLI（非 skill/scripts）',
-    '',
-    '以下由 **Sparrow CLI** 在项目根提供；`scripts/` 仅含 state / ensure 等机械脚本，**不要**为 ingest 增加 skill 包装。',
-    '',
-  ];
-  for (const cmd of step.cliCommands) {
-    const note = cmd.note ? ` — ${cmd.note}` : '';
-    lines.push(`- **${cmd.id}**：\`${cmd.usage}\`${note}`);
-  }
-  return lines.join('\n');
-}
+import { getContentStore } from '../../kernel/content/ContentStore.js';
+import { getWorkflowSchema as getKernelSchema, resolveStepHarnessPaths as resolveHarness, uniqueAssetNames as uniqueAssets } from '../../kernel/content/schema.js';
 
 export function getWorkflowSchema(): SparrowWorkflowSchema {
-  if (!cached) {
-    cached = schemaJson as SparrowWorkflowSchema;
-    validateWorkflowSchema(cached);
-  }
-  return cached;
+  return getKernelSchema();
 }
 
 export function getWorkflowStepBySkillId(skillId: string): WorkflowStep | undefined {
@@ -55,33 +30,11 @@ export function getSkillTemplateBody(skillId: string): string {
 }
 
 export function composeSkillBodyFromWorkflow(skillId: string): string {
-  const step = getWorkflowStepBySkillId(skillId);
-  if (!step) {
-    throw new Error(`No workflow step for skill: ${skillId}`);
-  }
-  const parts: string[] = [];
-  if (step.workflowBlock) {
-    const block = workflowBlocks[step.workflowBlock];
-    if (block) {
-      parts.push(block.replaceAll(HARNESS_TOKEN, '').trim());
-    }
-  }
-  const cliBlock = renderCliCommandsBlock(step);
-  if (cliBlock) {
-    parts.push(cliBlock);
-  }
-  parts.push(getSkillTemplateBody(skillId).trim());
-  let body = parts.join('\n\n');
-  if (!body.includes(HARNESS_TOKEN)) {
-    body = `${body}\n\n${HARNESS_TOKEN}\n`;
-  }
-  return body;
+  return getContentStore().composeSkillMarkdown(skillId);
 }
 
 export function resolveStepHarnessPaths(step: WorkflowStep): string[] {
-  const { globalHarness } = getWorkflowSchema();
-  const always = globalHarness?.always ?? [];
-  return [...always, ...step.harness];
+  return resolveHarness(step);
 }
 
 export function lookupSharedReference(name: string): string | undefined {
@@ -101,11 +54,7 @@ export function lookupSkillExtra(skillId: string, relPath: string): string | und
 }
 
 export function uniqueAssetNames(step: WorkflowStep): string[] {
-  const names = (step.outputs ?? []).map((o) => o.asset);
-  if (names.length === 0) {
-    return [...(step.assets ?? [])];
-  }
-  return [...new Set(names)];
+  return uniqueAssets(step);
 }
 
 export function workflowStepsToSkillSpecs(): import('../skills.js').SkillSpec[] {

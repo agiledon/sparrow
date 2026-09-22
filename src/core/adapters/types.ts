@@ -23,6 +23,8 @@ export interface CommandContent {
   packageCliLines?: string[];
 }
 
+import type { AgentSkillPackage } from '../../kernel/skill/types.js';
+
 export interface ToolCommandAdapter {
   /** The tool id this adapter handles */
   toolId: string;
@@ -36,4 +38,8 @@ export interface ToolCommandAdapter {
   formatCommand(content: CommandContent): string;
   /** Format a reference line to a constraint asset (harness) for a given scope */
   formatHarnessRef(harnessRelPath: string, scope: 'global' | 'project'): string;
+  /** Write SKILL.md and bundled files; calls AgentSkillPackage.generate() internally */
+  writeSkill(projectRoot: string, pkg: AgentSkillPackage): { skillRelPath: string; createdRelPaths: string[] };
+  /** Write slash command pointer when supported */
+  writeCommand(projectRoot: string, pkg: AgentSkillPackage, skillRelPath: string): string | null;
 }
