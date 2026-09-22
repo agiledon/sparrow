@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { initializeSpecLayout } from './spec-layout-init.js';
+import { initializeSpecLayout } from '../../src/kernel/runtime/spec-layout-init.js';
 import {
   MASTER_ROOT,
   CHANGE_ROOT,
@@ -11,8 +11,8 @@ import {
   CHANGE_ARCHIVE,
   SPARROW_DOCS,
   STATE_FILE,
-} from './spec-paths.js';
-import { ensureProjectState } from './project-state.js';
+} from '../../src/kernel/runtime/spec-paths.js';
+import { ensureProjectState } from '../../src/kernel/runtime/project-state.js';
 
 function listImmediate(dir: string): string[] {
   if (!existsSync(dir)) return [];

@@ -3,8 +3,8 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { promoteChangeToMaster, listCurrentChangeIds, classifyPromoteGroup, computeDeltas } from './spec-promote.js';
-import { MASTER_ROOT, CHANGE_CURRENT } from './spec-paths.js';
+import { promoteChangeToMaster, listCurrentChangeIds, classifyPromoteGroup, computeDeltas } from '../../src/kernel/runtime/spec-promote.js';
+import { MASTER_ROOT, CHANGE_CURRENT } from '../../src/kernel/runtime/spec-paths.js';
 
 function seedChange(root: string, changeId: string): string {
   const base = join(root, CHANGE_CURRENT, changeId);

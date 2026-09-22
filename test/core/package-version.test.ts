@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { readPackageVersion } from './package-version.js';
+import { readPackageVersion } from '../../src/core/package-version.js';
 
 test('读取存在的 package.json 版本', () => {
   const dir = mkdtempSync(join(tmpdir(), 'sparrow-pkg-'));

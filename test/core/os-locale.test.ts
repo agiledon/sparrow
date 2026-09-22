@@ -6,7 +6,7 @@ import {
   isValidLang,
   normalizeLocale,
   resolveInitLang,
-} from './os-locale.js';
+} from '../../src/core/os-locale.js';
 
 test('normalizeLocale maps OS strings to BCP 47', () => {
   assert.equal(normalizeLocale('zh-Hans-CN'), 'zh-Hans');

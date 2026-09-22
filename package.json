@@ -20,7 +20,7 @@
     "prepublishOnly": "npm run build",
     "typecheck": "tsc --noEmit",
     "sync-schema": "node scripts/sync-schema-json.mjs && node scripts/generate-sparrow-state-mjs.mjs && node scripts/generate-sparrow-promote-mjs.mjs && node scripts/sync-bundled-content.mjs",
-    "test": "node --import ./scripts/register-assets.mjs --import tsx --test 'test/**/*.test.ts' 'src/core/**/*.test.ts'"
+    "test": "node --import ./scripts/register-assets.mjs --import tsx --test 'test/**/*.test.ts'"
   },
   "keywords": [
     "ddd",

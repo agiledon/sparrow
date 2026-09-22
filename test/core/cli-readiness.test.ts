@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { probeSparrowCli, recordCliReadiness, CLI_READINESS_REL } from './cli-readiness.js';
+import { probeSparrowCli, recordCliReadiness, CLI_READINESS_REL } from '../../src/core/cli-readiness.js';
 
 test('probeSparrowCli records failure when sparrow is not on PATH', () => {
   const spawn = () => ({ status: 1, stdout: '', stderr: '' }) as ReturnType<typeof import('node:child_process').spawnSync>;

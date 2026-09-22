@@ -17,7 +17,7 @@ import {
   resetProjectState,
   saveProjectState,
   wipeSpecTrees,
-} from './project-state.js';
+} from '../../src/kernel/runtime/project-state.js';
 import {
   CHANGE_ARCHIVE,
   CHANGE_CURRENT,
@@ -26,8 +26,8 @@ import {
   LEGACY_CONFIG_FILE,
   MASTER_ROOT,
   STATE_FILE,
-} from './spec-paths.js';
-import { generateProjectConfig } from './skill-generation.js';
+} from '../../src/kernel/runtime/spec-paths.js';
+import { generateProjectConfig } from '../../src/core/skill-generation.js';
 
 function tmpRoot(prefix: string): string {
   return mkdtempSync(join(tmpdir(), prefix));
