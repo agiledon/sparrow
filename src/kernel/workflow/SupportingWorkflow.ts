@@ -4,18 +4,14 @@ import type { AgentSkillPackage, WorkflowPackageContext } from '../skill/types.j
 import type { WorkflowId } from './WorkflowId.js';
 import type { Workflow } from './Workflow.js';
 
-export abstract class SupportingWorkflow implements Workflow {
+/** Auxiliary workflow; behavior is driven by Sparrow schema and content store. */
+export class SupportingWorkflow implements Workflow {
   constructor(
     readonly id: WorkflowId,
-    protected readonly store: ContentStore,
+    private readonly store: ContentStore,
   ) {}
 
   createAgentSkillPackage(ctx?: WorkflowPackageContext): AgentSkillPackage {
-    this.assembleParts();
     return new StandardAgentSkillPackage(this.id, this.store, ctx);
-  }
-
-  protected assembleParts(): void {
-    /* default: schema-driven package */
   }
 }

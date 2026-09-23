@@ -3,7 +3,7 @@ import { dirname, join } from 'node:path';
 import { getAdapter } from '../adapters/index.js';
 import type { SkillDefinition, SkillRegistry } from '../../kernel/skill/registry.js';
 import { assembleSkillContent } from './generation.js';
-import { WorkflowBuilderRegistry } from '../../kernel/workflow/builder/WorkflowBuilderRegistry.js';
+import { createAllWorkflows } from '../../kernel/workflow/createAllWorkflows.js';
 
 /** Workflow ids removed in prior releases; cleaned up on regenerate. */
 const DEPRECATED_SKILL_IDS = [
@@ -68,8 +68,7 @@ export function installAgentSkills(
   toolIds: string[],
   registry: SkillRegistry,
 ): { toolId: string; files: string[] }[] {
-  const workflowRegistry = new WorkflowBuilderRegistry();
-  const workflows = workflowRegistry.buildAll();
+  const workflows = createAllWorkflows();
   const coreIds = new Set(workflows.map((w) => w.id as string));
 
   const pluginSkills = registry.getOrderedSkills().filter((s) => !coreIds.has(s.id));

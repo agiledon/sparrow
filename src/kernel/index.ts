@@ -9,7 +9,9 @@ export type { SparrowSchema, WorkflowSchema, CliCommand } from './content/schema
 export { validateSparrowSchema } from './content/validate-sparrow-schema.js';
 export { WorkflowId, allWorkflowIds } from './workflow/WorkflowId.js';
 export type { Workflow } from './workflow/Workflow.js';
-export { WorkflowBuilderRegistry } from './workflow/builder/WorkflowBuilderRegistry.js';
+export { ProcessWorkflow } from './workflow/ProcessWorkflow.js';
+export { SupportingWorkflow } from './workflow/SupportingWorkflow.js';
+export { createAllWorkflows } from './workflow/createAllWorkflows.js';
 export type { AgentSkillPackage, GeneratedSkillBundle } from './skill/types.js';
 export type { SkillDefinition, SkillSpec } from './skill/registry.js';
 export { SkillRegistry } from './skill/registry.js';
