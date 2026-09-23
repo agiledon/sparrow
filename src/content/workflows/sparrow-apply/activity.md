@@ -19,16 +19,3 @@
 5. revise 且档位 S4：按 apply-rules 中的代码动作映射执行，校验边界后再更新 code_review。
 6. 全部任务完成后按 `assets/code_review.md` 写评审报告。
 7. 读 `references/project-md-update.md`。运行 `scripts/sparrow-state.mjs set-context {slug} apply done`。
-
-## 检查清单
-
-- [ ] plan 步骤全部 `[x]`
-- [ ] 构建与测试通过
-- [ ] 代码与 model.md / api.md 对齐
-- [ ] code_review.md 已生成
-
-## 下一步
-
-执行 **sparrow-verify @{slug}**。
-
-{{HARNESS}}

@@ -1,6 +1,6 @@
 # 限界上下文约束（arch / bounded-contexts）
 
-本文件定义 sparrow-arch **必须遵守 / 禁止**的限界上下文与通信纪律。
+本文件定义 sparrow-architecture **必须遵守 / 禁止**的限界上下文与通信纪律。
 
 ## SD → BC 映射（MUST）
 

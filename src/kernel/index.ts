@@ -1,12 +1,12 @@
 export { getContentStore, ContentStore } from './content/ContentStore.js';
-export { getWorkflowSchema, getWorkflowStepBySkillId, resolveStepHarnessPaths, uniqueAssetNames } from './content/schema.js';
+export { getSparrowSchema, getWorkflowBySkillId, resolveWorkflowHarnessPaths, uniqueAssetNames } from './content/schema.js';
 export {
   composeSkillBodyFromWorkflow,
-  workflowStepsToSkillSpecs,
+  workflowsToSkillSpecs,
   getSkillTemplateBody,
 } from './content/skill-composition.js';
-export type { SparrowWorkflowSchema, WorkflowStep } from './content/schema-types.js';
-export { validateWorkflowSchema } from './content/validate-workflow-schema.js';
+export type { SparrowSchema, WorkflowSchema, CliCommand } from './content/schema-types.js';
+export { validateSparrowSchema } from './content/validate-sparrow-schema.js';
 export { SparrowWorkflowId, allWorkflowIds } from './workflow/SparrowWorkflowId.js';
 export type { Workflow } from './workflow/Workflow.js';
 export { WorkflowBuilderRegistry } from './workflow/builder/WorkflowBuilderRegistry.js';

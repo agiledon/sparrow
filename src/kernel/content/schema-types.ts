@@ -8,7 +8,7 @@ export interface GlobalHarness {
   conditional: ConditionalHarnessEntry[];
 }
 
-export interface WorkflowStep {
+export interface WorkflowSchema {
   id: string;
   skillId: string;
   name: string;
@@ -16,7 +16,7 @@ export interface WorkflowStep {
   phase: 'product' | 'team';
   order: number;
   nextSkill: string | null;
-  kind: 'core' | 'supporting';
+  kind: 'process' | 'supporting';
   category: string;
   template: string;
   workflowBlock: string | null;
@@ -32,12 +32,12 @@ export interface WorkflowStep {
   /** Mechanical scripts under templates/skills/<id>/scripts/ */
   scripts?: string[];
   /** Sparrow package CLI (not copied into skill scripts/) */
-  cliCommands?: StepCliCommand[];
+  cliCommands?: CliCommand[];
   /** Output templates and the workspace-relative dest they fill. */
   outputs?: ArtifactOutput[];
 }
 
-export interface StepCliCommand {
+export interface CliCommand {
   /** CLI capability id, e.g. ingest */
   id: string;
   /** Example invocation from project root */
@@ -57,11 +57,11 @@ export interface ArtifactOutput {
   optional?: boolean;
 }
 
-export interface SparrowWorkflowSchema {
+export interface SparrowSchema {
   name: string;
   version: number;
   description: string;
-  coreStepCount: number;
+  processWorkflowCount: number;
   globalHarness: GlobalHarness;
-  steps: WorkflowStep[];
+  workflows: WorkflowSchema[];
 }

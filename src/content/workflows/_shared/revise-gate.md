@@ -7,6 +7,6 @@
 - `docs/sparrow/change/current/` 含未归档变更文件夹（未归档 = 不在 `change/archive/` 下）
 - `change/current/{activeChangeId}/project.md` 的「变更管理」块中「当前活动 change-id」非空
 
-满足 → 读取 `proposal.md`，对已有产物做增量而非无差别全量重写。档位表与重构动作的权威定义在 **sparrow-arch** 的 `references/bc-tiers.md`。下游阶段按档位决定是否重跑。
+满足 → 读取 `proposal.md`，对已有产物做增量而非无差别全量重写。档位表与重构动作的权威定义在 **sparrow-architecture** 的 `references/bc-tiers.md`。下游阶段按档位决定是否重跑。
 
 完整约定见 `docs/prd/sparrow-change-management.md`。

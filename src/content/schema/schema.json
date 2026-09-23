@@ -2,7 +2,7 @@
   "name": "sparrow-ddd",
   "version": 1,
   "description": "Sparrow core DDD pipeline — requirement through archive",
-  "coreStepCount": 8,
+  "processWorkflowCount": 8,
   "globalHarness": {
     "always": [
       "constitution.md",
@@ -16,7 +16,7 @@
       }
     ]
   },
-  "steps": [
+  "workflows": [
     {
       "id": "requirement",
       "skillId": "sparrow-requirement",
@@ -24,8 +24,8 @@
       "description": "Use when gathering or revising product requirements, partitioning subdomains/capabilities/scenarios, identifying business services along end-to-end processes, or exploring optional UI specs.",
       "phase": "product",
       "order": 1,
-      "nextSkill": "sparrow-arch",
-      "kind": "core",
+      "nextSkill": "sparrow-architecture",
+      "kind": "process",
       "category": "DDD",
       "template": "sparrow-requirement/SKILL.md",
       "workflowBlock": "sparrow-requirement.md",
@@ -121,17 +121,17 @@
       ]
     },
     {
-      "id": "arch",
-      "skillId": "sparrow-arch",
-      "name": "Sparrow Arch",
+      "id": "architecture",
+      "skillId": "sparrow-architecture",
+      "name": "Sparrow Architecture",
       "description": "Use when mapping subdomains to bounded contexts, defining context maps, slicing business services into design specs with properties, or interaction-context frontend architecture.",
       "phase": "product",
       "order": 2,
       "nextSkill": "sparrow-design",
-      "kind": "core",
+      "kind": "process",
       "category": "DDD",
-      "template": "sparrow-arch/SKILL.md",
-      "workflowBlock": "sparrow-arch.md",
+      "template": "sparrow-architecture/SKILL.md",
+      "workflowBlock": "sparrow-architecture.md",
       "harness": [
         "arch/bounded-contexts.md",
         "arch/spec-slice.md",
@@ -191,7 +191,7 @@
       "phase": "team",
       "order": 3,
       "nextSkill": "sparrow-model",
-      "kind": "core",
+      "kind": "process",
       "category": "DDD",
       "template": "sparrow-design/SKILL.md",
       "workflowBlock": "sparrow-design.md",
@@ -200,7 +200,7 @@
         "design/api-design.md"
       ],
       "requires": [
-        "arch"
+        "architecture"
       ],
       "share": [
         "ubiquitous-language.md",
@@ -254,7 +254,7 @@
       "phase": "team",
       "order": 4,
       "nextSkill": "sparrow-plan",
-      "kind": "core",
+      "kind": "process",
       "category": "DDD",
       "template": "sparrow-model/SKILL.md",
       "workflowBlock": "sparrow-model.md",
@@ -306,7 +306,7 @@
       "phase": "team",
       "order": 5,
       "nextSkill": "sparrow-apply",
-      "kind": "core",
+      "kind": "process",
       "category": "DDD",
       "template": "sparrow-plan/SKILL.md",
       "workflowBlock": "sparrow-plan.md",
@@ -354,7 +354,7 @@
       "phase": "team",
       "order": 6,
       "nextSkill": "sparrow-verify",
-      "kind": "core",
+      "kind": "process",
       "category": "DDD",
       "template": "sparrow-apply/SKILL.md",
       "workflowBlock": "sparrow-apply.md",
@@ -399,7 +399,7 @@
       "phase": "team",
       "order": 7,
       "nextSkill": "sparrow-archive",
-      "kind": "core",
+      "kind": "process",
       "category": "DDD",
       "template": "sparrow-verify/SKILL.md",
       "workflowBlock": "sparrow-verify.md",
@@ -440,7 +440,7 @@
       "phase": "product",
       "order": 8,
       "nextSkill": null,
-      "kind": "core",
+      "kind": "process",
       "category": "DDD",
       "template": "sparrow-archive/SKILL.md",
       "workflowBlock": "sparrow-archive.md",

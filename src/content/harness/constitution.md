@@ -27,9 +27,9 @@
 |------|------|---------------------------|------|
 | 需求 | sparrow-requirement | requirement/requirements.md | 分层需求、EBP 覆盖、业务服务（EARS）、UI 操作流程 |
 | 需求 | sparrow-requirement | requirement/subdomains.md | 子领域划分（问题空间） |
-| 限界上下文 | sparrow-arch | arch/bounded-contexts.md | SD→BC 映射与上下文通信 |
-| 规格切片 | sparrow-arch | arch/spec-slice.md | BS 薄投影与 Property |
-| 前端架构（可选） | sparrow-arch（前端） | arch/frontend.md | 交互上下文 |
+| 限界上下文 | sparrow-architecture | arch/bounded-contexts.md | SD→BC 映射与上下文通信 |
+| 规格切片 | sparrow-architecture | arch/spec-slice.md | BS 薄投影与 Property |
+| 前端架构（可选） | sparrow-architecture（前端） | arch/frontend.md | 交互上下文 |
 | API 设计 | sparrow-design | design/api-design.md | 服务契约与 API |
 | 领域建模 | sparrow-model | model/architecture.md | DDD 四层与角色构造型 |
 | 领域建模 | sparrow-model | model/domain-modeling.md | 静态/动态建模与 OOP |

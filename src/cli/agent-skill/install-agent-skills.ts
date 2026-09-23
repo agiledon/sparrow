@@ -14,6 +14,7 @@ const DEPRECATED_SKILL_IDS = [
   'sparrow-helper-reconcile',
   'sparrow-helper-archive',
   'sparrow-supporting-archive',
+  'sparrow-arch',
 ];
 
 function removeDeprecatedSkillFiles(projectRoot: string, toolIds: string[]): void {

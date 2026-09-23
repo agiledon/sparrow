@@ -1,4 +1,4 @@
-import type { SparrowWorkflowSchema, WorkflowStep } from './schema-types.js';
+import type { SparrowSchema, WorkflowSchema } from './schema-types.js';
 import {
   skillTemplates,
   sharedReferences,
@@ -8,28 +8,28 @@ import {
 } from '../../content/bundled-content.js';
 import { getContentStore } from './ContentStore.js';
 import {
-  getWorkflowSchema as getKernelSchema,
-  resolveStepHarnessPaths as resolveHarness,
+  getSparrowSchema as getKernelSchema,
+  resolveWorkflowHarnessPaths as resolveHarness,
   uniqueAssetNames as uniqueAssets,
 } from './schema.js';
 import type { SkillSpec } from '../skill/registry.js';
 
-export function getWorkflowSchema(): SparrowWorkflowSchema {
+export function getSparrowSchema(): SparrowSchema {
   return getKernelSchema();
 }
 
-export function getWorkflowStepBySkillId(skillId: string): WorkflowStep | undefined {
-  return getWorkflowSchema().steps.find((s) => s.skillId === skillId);
+export function getWorkflowBySkillId(skillId: string): WorkflowSchema | undefined {
+  return getSparrowSchema().workflows.find((w) => w.skillId === skillId);
 }
 
 export function getSkillTemplateBody(skillId: string): string {
-  const step = getWorkflowStepBySkillId(skillId);
-  if (!step) {
-    throw new Error(`No workflow step for skill: ${skillId}`);
+  const workflow = getWorkflowBySkillId(skillId);
+  if (!workflow) {
+    throw new Error(`No workflow for skill: ${skillId}`);
   }
-  const tpl = skillTemplates[step.template];
+  const tpl = skillTemplates[workflow.template];
   if (tpl === undefined) {
-    throw new Error(`Missing skill template: ${step.template}`);
+    throw new Error(`Missing skill template: ${workflow.template}`);
   }
   return tpl;
 }
@@ -38,8 +38,8 @@ export function composeSkillBodyFromWorkflow(skillId: string): string {
   return getContentStore().composeSkillMarkdown(skillId);
 }
 
-export function resolveStepHarnessPaths(step: WorkflowStep): string[] {
-  return resolveHarness(step);
+export function resolveWorkflowHarnessPaths(workflow: WorkflowSchema): string[] {
+  return resolveHarness(workflow);
 }
 
 export function lookupSharedReference(name: string): string | undefined {
@@ -58,29 +58,30 @@ export function lookupSkillExtra(skillId: string, relPath: string): string | und
   return skillExtras[skillId]?.[relPath];
 }
 
-export function uniqueAssetNames(step: WorkflowStep): string[] {
-  return uniqueAssets(step);
+export function uniqueAssetNames(workflow: WorkflowSchema): string[] {
+  return uniqueAssets(workflow);
 }
 
-export function workflowStepsToSkillSpecs(): SkillSpec[] {
-  return getWorkflowSchema().steps.map((step) => ({
-    id: step.skillId,
-    name: step.name,
-    description: step.description,
-    phase: step.phase,
-    order: step.order,
-    nextSkill: step.nextSkill,
-    commandName: step.skillId,
-    kind: step.kind,
-    category: step.category,
-    harness: resolveStepHarnessPaths(step),
+export function workflowsToSkillSpecs(): SkillSpec[] {
+  return getSparrowSchema().workflows.map((workflow) => ({
+    id: workflow.skillId,
+    name: workflow.name,
+    description: workflow.description,
+    phase: workflow.phase,
+    order: workflow.order,
+    nextSkill: workflow.nextSkill,
+    commandName: workflow.skillId,
+    kind: workflow.kind,
+    category: workflow.category,
+    harness: resolveWorkflowHarnessPaths(workflow),
     body: '',
   }));
 }
 
 export type {
-  SparrowWorkflowSchema,
-  WorkflowStep,
+  SparrowSchema,
+  WorkflowSchema,
+  CliCommand,
   ArtifactOutput,
   GlobalHarness,
   ConditionalHarnessEntry,

@@ -2,7 +2,7 @@
 
 > **⚠️ 门控声明（向后兼容硬性约束）**：本节仅在**检测到活动变更**时进入。**若当前为首次需求、无活动变更，请忽略本节，完全按上文原始流程执行（即按 plan.md 正向生成代码），行为须与未引入本节前完全一致。**
 
-**触发条件**（同 sparrow-arch「变更处理 / revise」章节）：\`docs/sparrow/change/current/\` 含未归档变更文件夹，或 \`project.md\` 当前 change-id 非空。
+**触发条件**（同 sparrow-architecture「变更处理 / revise」章节）：\`docs/sparrow/change/current/\` 含未归档变更文件夹，或 \`project.md\` 当前 change-id 非空。
 
 **revise 行为总览**：本阶段只处理**档位 == S4（代码已生成）且被本次变更影响**的 BC。BC↔\`backend/\` 模块 1:1，因此 arch 记录的重构动作直接映射为代码动作。执行前先读取 \`change/current/{change-id}/\` 下 arch 写好的 ADR / 动作记录，确定每个受影响 slug 的目标拓扑。
 

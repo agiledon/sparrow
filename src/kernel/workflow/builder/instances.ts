@@ -2,7 +2,7 @@ import type { ContentStore } from '../../content/ContentStore.js';
 import type { WorkflowBuilder } from './WorkflowBuilder.js';
 import {
   ApplyWorkflow,
-  ArchWorkflow,
+  ArchitectureWorkflow,
   ArchiveWorkflow,
   DesignWorkflow,
   ModelWorkflow,
@@ -22,9 +22,9 @@ export class RequirementWorkflowBuilder extends ProcessWorkflowBuilder {
   }
 }
 
-export class ArchWorkflowBuilder extends ProcessWorkflowBuilder {
+export class ArchitectureWorkflowBuilder extends ProcessWorkflowBuilder {
   protected buildWorkflow(): Workflow {
-    return new ArchWorkflow(this.store);
+    return new ArchitectureWorkflow(this.store);
   }
 }
 
@@ -79,7 +79,7 @@ export class SupportingReconcileWorkflowBuilder extends SupportingWorkflowBuilde
 export function createDefaultWorkflowBuilders(store: ContentStore): WorkflowBuilder[] {
   return [
     new RequirementWorkflowBuilder(store),
-    new ArchWorkflowBuilder(store),
+    new ArchitectureWorkflowBuilder(store),
     new DesignWorkflowBuilder(store),
     new ModelWorkflowBuilder(store),
     new PlanWorkflowBuilder(store),

@@ -1,31 +1,31 @@
-import type { SparrowWorkflowSchema } from './schema-types.js';
-import { validateWorkflowSchema } from './validate-workflow-schema.js';
+import type { SparrowSchema, WorkflowSchema } from './schema-types.js';
+import { validateSparrowSchema } from './validate-sparrow-schema.js';
 import schemaJson from '../../content/schema/schema.json';
 
-let cached: SparrowWorkflowSchema | null = null;
+let cached: SparrowSchema | null = null;
 
-export function getWorkflowSchema(): SparrowWorkflowSchema {
+export function getSparrowSchema(): SparrowSchema {
   if (!cached) {
-    cached = schemaJson as SparrowWorkflowSchema;
-    validateWorkflowSchema(cached);
+    cached = schemaJson as SparrowSchema;
+    validateSparrowSchema(cached);
   }
   return cached;
 }
 
-export function getWorkflowStepBySkillId(skillId: string) {
-  return getWorkflowSchema().steps.find((s) => s.skillId === skillId);
+export function getWorkflowBySkillId(skillId: string) {
+  return getSparrowSchema().workflows.find((w) => w.skillId === skillId);
 }
 
-export function resolveStepHarnessPaths(step: import('./schema-types.js').WorkflowStep): string[] {
-  const { globalHarness } = getWorkflowSchema();
+export function resolveWorkflowHarnessPaths(workflow: WorkflowSchema): string[] {
+  const { globalHarness } = getSparrowSchema();
   const always = globalHarness?.always ?? [];
-  return [...always, ...step.harness];
+  return [...always, ...workflow.harness];
 }
 
-export function uniqueAssetNames(step: import('./schema-types.js').WorkflowStep): string[] {
-  const names = (step.outputs ?? []).map((o) => o.asset);
+export function uniqueAssetNames(workflow: WorkflowSchema): string[] {
+  const names = (workflow.outputs ?? []).map((o) => o.asset);
   if (names.length === 0) {
-    return [...(step.assets ?? [])];
+    return [...(workflow.assets ?? [])];
   }
   return [...new Set(names)];
 }

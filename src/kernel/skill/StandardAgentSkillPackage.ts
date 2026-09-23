@@ -16,9 +16,9 @@ export class StandardAgentSkillPackage implements AgentSkillPackage {
   }
 
   generate(): GeneratedSkillBundle {
-    const step = this.store.getStep(this.workflowId);
+    const workflow = this.store.getWorkflow(this.workflowId);
     const packageCliLines =
-      step.cliCommands?.map((c) => {
+      workflow.cliCommands?.map((c) => {
         const note = c.note ? ` (${c.note})` : '';
         return `包 CLI · ${c.id}：\`${c.usage}\`${note} — 勿用 skill/scripts 包装。`;
       }) ?? [];
@@ -30,15 +30,15 @@ export class StandardAgentSkillPackage implements AgentSkillPackage {
     return {
       skillMarkdown: this.store.composeSkillMarkdown(this.workflowId),
       metadata: {
-        id: step.skillId,
-        name: step.name,
-        description: step.description,
-        category: step.category,
+        id: workflow.skillId,
+        name: workflow.name,
+        description: workflow.description,
+        category: workflow.category,
         tags: [
           'sparrow',
           'ddd',
-          step.kind,
-          step.phase === 'product' ? 'product-level' : 'team-level',
+          workflow.kind,
+          workflow.phase === 'product' ? 'product-level' : 'team-level',
         ],
         ...(packageCliLines.length > 0 ? { packageCliLines } : {}),
         harnessRelPaths: this.store.resolveHarnessPaths(this.workflowId),
@@ -50,10 +50,10 @@ export class StandardAgentSkillPackage implements AgentSkillPackage {
   }
 
   private collectReferences(): BundledFile[] {
-    const step = this.store.getStep(this.workflowId);
+    const workflow = this.store.getWorkflow(this.workflowId);
     const out: BundledFile[] = [];
 
-    for (const name of step.share ?? []) {
+    for (const name of workflow.share ?? []) {
       const body = this.store.lookupSharedReference(name);
       if (body === undefined) {
         throw new Error(`Missing shared reference '${name}' for ${this.workflowId}`);
@@ -61,7 +61,7 @@ export class StandardAgentSkillPackage implements AgentSkillPackage {
       out.push({ relativePath: `references/${name}`, content: body });
     }
 
-    for (const name of step.references ?? []) {
+    for (const name of workflow.references ?? []) {
       const body = this.store.lookupWorkflowExtra(this.workflowId, `references/${name}`);
       if (body === undefined) {
         throw new Error(`Missing references/${name} for ${this.workflowId}`);
@@ -73,10 +73,10 @@ export class StandardAgentSkillPackage implements AgentSkillPackage {
   }
 
   private collectAssets(): BundledFile[] {
-    const step = this.store.getStep(this.workflowId);
+    const workflow = this.store.getWorkflow(this.workflowId);
     const out: BundledFile[] = [];
 
-    for (const name of this.store.uniqueAssetNames(step)) {
+    for (const name of this.store.uniqueAssetNames(workflow)) {
       const body =
         this.store.lookupWorkflowExtra(this.workflowId, `assets/${name}`) ??
         this.store.lookupSharedAsset(name);
@@ -90,10 +90,10 @@ export class StandardAgentSkillPackage implements AgentSkillPackage {
   }
 
   private collectScripts(): BundledFile[] {
-    const step = this.store.getStep(this.workflowId);
+    const workflow = this.store.getWorkflow(this.workflowId);
     const out: BundledFile[] = [];
 
-    for (const name of step.scripts ?? []) {
+    for (const name of workflow.scripts ?? []) {
       const body =
         this.store.lookupWorkflowExtra(this.workflowId, `scripts/${name}`) ??
         this.store.lookupSharedScript(name);

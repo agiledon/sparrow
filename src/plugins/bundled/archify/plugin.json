@@ -6,7 +6,7 @@
   "engines": { "sparrow": ">=0.3.0" },
   "contributes": {
     "augments": [
-      { "targetSkill": "sparrow-arch" },
+      { "targetSkill": "sparrow-architecture" },
       { "targetSkill": "sparrow-model" },
       { "targetSkill": "sparrow-design" }
     ],

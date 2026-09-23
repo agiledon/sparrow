@@ -8,7 +8,7 @@ import { readProjectConfig, writeProjectConfig } from '../../kernel/runtime/proj
 import type { SkillDefinition, SkillRegistry } from '../../kernel/skill/registry.js';
 import { installAgentSkills } from './install-agent-skills.js';
 import type { CommandContent } from '../adapters/types.js';
-import { getWorkflowStepBySkillId } from '../../kernel/content/skill-composition.js';
+import { getWorkflowBySkillId } from '../../kernel/content/skill-composition.js';
 
 import type { Plugin } from '../../plugins/types.js';
 import { buildPluginSkillBody } from '../../plugins/skill-body.js';
@@ -26,9 +26,9 @@ export function assembleSkillContent(skill: SkillDefinition, registry: SkillRegi
 
   const body = templateFn();
 
-  const step = getWorkflowStepBySkillId(skill.id);
+  const workflow = getWorkflowBySkillId(skill.id);
   const packageCliLines =
-    step?.cliCommands?.map((c) => {
+    workflow?.cliCommands?.map((c) => {
       const note = c.note ? ` (${c.note})` : '';
       return `包 CLI · ${c.id}：\`${c.usage}\`${note} — 勿用 skill/scripts 包装。`;
     }) ?? [];

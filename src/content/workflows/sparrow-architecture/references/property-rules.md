@@ -1,6 +1,6 @@
 # EARS → Property 抽取规则
 
-角色：架构师。在 sparrow-arch 切片 `design/{slug}/spec.md` 时，将问题空间业务服务的 **EARS 验收标准**抽取为解空间 **Property（P）**。
+角色：架构师。在 sparrow-architecture 切片 `design/{slug}/spec.md` 时，将问题空间业务服务的 **EARS 验收标准**抽取为解空间 **Property（P）**。
 
 ## 定义
 

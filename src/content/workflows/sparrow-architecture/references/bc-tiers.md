@@ -96,7 +96,7 @@ revise 模式下，对每个**受变更影响的 BC**，依据 \`project.md\` �
 <!--
   version: v1.1
   last-updated: {ISO_8601_TIMESTAMP}
-  generated-by: sparrow-arch
+  generated-by: sparrow-architecture
   sparrow-version: {从 .sparrow/sparrow-config.json 读取}
   change-id: {change-name}
   supersedes: v1.0        # 可选，被本变更取代的版本

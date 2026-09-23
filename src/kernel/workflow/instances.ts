@@ -9,9 +9,9 @@ export class RequirementWorkflow extends ProcessWorkflow {
   }
 }
 
-export class ArchWorkflow extends ProcessWorkflow {
+export class ArchitectureWorkflow extends ProcessWorkflow {
   constructor(store: ContentStore) {
-    super(SparrowWorkflowId.Arch, store);
+    super(SparrowWorkflowId.Architecture, store);
   }
 }
 

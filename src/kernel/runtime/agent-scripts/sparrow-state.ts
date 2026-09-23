@@ -36,7 +36,7 @@ import {
 const MODES = new Set<DevelopmentMode>(['tbd', 'greenfield', 'brownfield', 'iteration']);
 const STEPS = new Set<PipelineStep>([
   'requirement',
-  'arch',
+  'architecture',
   'design',
   'model',
   'plan',

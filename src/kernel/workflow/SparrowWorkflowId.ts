@@ -1,7 +1,7 @@
 /** Stable workflow ids (match /sparrow-* command names). */
 export enum SparrowWorkflowId {
   Requirement = 'sparrow-requirement',
-  Arch = 'sparrow-arch',
+  Architecture = 'sparrow-architecture',
   Design = 'sparrow-design',
   Model = 'sparrow-model',
   Plan = 'sparrow-plan',
@@ -14,7 +14,7 @@ export enum SparrowWorkflowId {
 
 const PROCESS_ORDER: SparrowWorkflowId[] = [
   SparrowWorkflowId.Requirement,
-  SparrowWorkflowId.Arch,
+  SparrowWorkflowId.Architecture,
   SparrowWorkflowId.Design,
   SparrowWorkflowId.Model,
   SparrowWorkflowId.Plan,

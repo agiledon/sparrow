@@ -24,18 +24,3 @@
 4. 交互上下文：读 `references/interaction-design.md`。不读取任何 BC 的 `api.md`。BFF 只聚合不写业务逻辑。
 5. 按 `assets/architecture-api.md` 更新项目级 API 总目录（无则创建）。
 6. 读 `references/project-md-update.md`，更新该 slug 的 api/tech 状态。运行 `scripts/sparrow-state.mjs set-context {slug} design done`。
-
-## 检查清单
-
-- [ ] API 数量 = spec.md 业务服务数（后端）或与 UI 页面对应（交互上下文）
-- [ ] 每个序列图中 actor 向当前上下文只发起一次请求
-- [ ] 组件图 provided/required 与 API 一致
-- [ ] `architecture/api.md` 已录入当前 slug
-- [ ] 交互上下文未读取 BC api.md
-
-## 下一步
-
-执行 **sparrow-model @{slug}**。
-
-{{PLUGIN:archify}}
-{{HARNESS}}

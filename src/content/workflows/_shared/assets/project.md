@@ -48,14 +48,14 @@
 
 ### 2. 系统架构（解空间）
 
-- [ ] [限界上下文与上下文映射](./architecture/bounded-contexts.md) — *待生成 (sparrow-arch)*
-- [ ] [前端架构](./architecture/frontend.md) — *待生成 (sparrow-arch)*
+- [ ] [限界上下文与上下文映射](./architecture/bounded-contexts.md) — *待生成 (sparrow-architecture)*
+- [ ] [前端架构](./architecture/frontend.md) — *待生成 (sparrow-architecture)*
 
 > 前端架构仅在项目有 UI 开发需求时提供。若无 UI 需求，该文档不会生成。
 
 ### 3. 限界上下文设计
 
-> 每个限界上下文的设计文档将在此列出。执行 `sparrow-arch` 后自动添加。
+> 每个限界上下文的设计文档将在此列出。执行 `sparrow-architecture` 后自动添加。
 
 ---
 
@@ -76,5 +76,5 @@
 ## 下一步
 
 1. 执行 **/sparrow-requirement** — 划分子领域/能力/场景，沿端到端业务流程识别业务服务（如有需要，继续 UI 设计探索）
-2. 执行 **/sparrow-arch** — 将子领域映射为限界上下文，切片 spec（含 Properties）；如有 UI 则同时生成前端架构
+2. 执行 **/sparrow-architecture** — 将子领域映射为限界上下文，切片 spec（含 Properties）；如有 UI 则同时生成前端架构
 3. 对每个 slug（限界上下文或交互上下文）依次执行：**design → model → plan → apply → verify**；全部完成后 **archive**（产品级）promote 交付规格至 `master/`

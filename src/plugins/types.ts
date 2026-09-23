@@ -6,7 +6,7 @@ export interface ContributedSkill {
   category: string;
   description: string;
   nextSkill: string | null;
-  kind?: 'core' | 'supporting';
+  kind?: 'process' | 'supporting';
 }
 
 export interface ContributedAugment {

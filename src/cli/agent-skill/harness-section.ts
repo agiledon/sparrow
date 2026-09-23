@@ -1,11 +1,11 @@
-import { getWorkflowSchema } from '../../kernel/content/schema.js';
+import { getSparrowSchema } from '../../kernel/content/schema.js';
 import type { ToolCommandAdapter } from '../adapters/types.js';
 
 export function buildHarnessSection(
   adapter: ToolCommandAdapter,
   harnessRelPaths: string[],
 ): string {
-  const conditional = getWorkflowSchema().globalHarness?.conditional ?? [];
+  const conditional = getSparrowSchema().globalHarness?.conditional ?? [];
   if (harnessRelPaths.length === 0 && conditional.length === 0) return '';
 
   const lines = [

@@ -6,7 +6,7 @@ export type DevelopmentMode = 'tbd' | 'greenfield' | 'brownfield' | 'iteration';
 export type PipelineStatus = 'ongoing' | 'done';
 export type PipelineStep =
   | 'requirement'
-  | 'arch'
+  | 'architecture'
   | 'design'
   | 'model'
   | 'plan'
@@ -40,7 +40,7 @@ export const DEFAULT_PROJECT_STATE: SparrowProjectState = {
 export const MODES = new Set<DevelopmentMode>(['tbd', 'greenfield', 'brownfield', 'iteration']);
 export const STEPS = new Set<PipelineStep>([
   'requirement',
-  'arch',
+  'architecture',
   'design',
   'model',
   'plan',

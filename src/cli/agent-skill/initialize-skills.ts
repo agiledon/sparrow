@@ -4,13 +4,13 @@ import { registerPluginSkillTemplates } from './generation.js';
 import { loadBundledPlugins } from '../../plugins/load.js';
 import {
   composeSkillBodyFromWorkflow,
-  workflowStepsToSkillSpecs,
+  workflowsToSkillSpecs,
 } from '../../kernel/content/skill-composition.js';
 
 export function initializeSkills(registry: SkillRegistry): void {
   loadBundledPlugins();
 
-  const coreSkillSpecs = workflowStepsToSkillSpecs();
+  const coreSkillSpecs = workflowsToSkillSpecs();
   for (const spec of coreSkillSpecs) {
     registry.registerTemplate(spec.id, () => composeSkillBodyFromWorkflow(spec.id));
     registry.registerHarness(spec.id, spec.harness);
@@ -27,7 +27,7 @@ export function initializeSkills(registry: SkillRegistry): void {
       order: s.order,
       nextSkill: s.nextSkill,
       commandName: s.commandName,
-      kind: s.kind ?? 'core',
+      kind: s.kind ?? 'process',
       category: s.category,
     }))
   );

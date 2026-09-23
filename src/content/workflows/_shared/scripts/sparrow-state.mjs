@@ -13,7 +13,7 @@ var DEFAULT_PROJECT_STATE = {
 var MODES = /* @__PURE__ */ new Set(["tbd", "greenfield", "brownfield", "iteration"]);
 var STEPS = /* @__PURE__ */ new Set([
   "requirement",
-  "arch",
+  "architecture",
   "design",
   "model",
   "plan",
@@ -328,7 +328,7 @@ function applyArchiveComplete(state) {
 var MODES2 = /* @__PURE__ */ new Set(["tbd", "greenfield", "brownfield", "iteration"]);
 var STEPS2 = /* @__PURE__ */ new Set([
   "requirement",
-  "arch",
+  "architecture",
   "design",
   "model",
   "plan",

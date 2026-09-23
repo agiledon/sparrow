@@ -1,6 +1,6 @@
 # 规格切片约束（arch / spec-slice）
 
-本文件定义 sparrow-arch 将业务服务切片到 `design/{slug}/spec.md` 时的纪律。
+本文件定义 sparrow-architecture 将业务服务切片到 `design/{slug}/spec.md` 时的纪律。
 
 ## 必须（MUST）
 
