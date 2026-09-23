@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **project.md at change-id confirmation**: `ensure-change-workspace.mjs` writes `change/current/{change-id}/project.md` from the shared template as soon as the change-id is confirmed (on `--create`, and on `--check` when the workspace already exists). Existing files are not overwritten. The requirement phase still updates checkbox status at the end.
+  - **确认 change-id 时生成 project.md**：工作区创建时即写入向导；已存在不覆盖。需求阶段结束时仍只更新勾选。
+
 - **Workflow taxonomy (docs)**: Sparrow **core workflows** are the full schema `workflows` set (process + supporting). Pipeline steps use `kind: process` (过程工作流); auxiliary commands use `kind: supporting` (支持工作流). README updated; replaces the old core-vs-supporting top-level split and `kind: core`.
   - **工作流分类（文档）**：**核心工作流** = schema 全部 workflow；**过程工作流**（`process`）与 **支持工作流**（`supporting`）为其下两类。
 

@@ -237,7 +237,7 @@ sparrow update
 
 ### 步骤 1：sparrow-requirement（产品级）
 
-**工作区**：`docs/sparrow/change/current/{change-id}/`（无 current 时由本步创建 change-id 与 `proposal.md`）
+**工作区**：`docs/sparrow/change/current/{change-id}/`（无 current 时由本步创建 change-id，并同时生成 `project.md` 与 `proposal.md`）
 
 **输入**：原始需求（`/sparrow-requirement @docs/prd.docx`）；**棕地**项目另需结合现有代码与运行行为  
 **输出**（均在变更工作区内）：

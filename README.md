@@ -237,7 +237,7 @@ Detailed inputs, outputs, and behavior for each step in the [process workflows](
 
 ### Step 1: sparrow-requirement (Product-level)
 
-**Workspace**: `docs/sparrow/change/current/{change-id}/` (creates `{change-id}` and `proposal.md` when no active change exists)
+**Workspace**: `docs/sparrow/change/current/{change-id}/` (when no active change exists, this step creates `{change-id}` and writes `project.md` together with `proposal.md`)
 
 **Input**: Raw requirements (`/sparrow-requirement @docs/prd.docx`); for **brownfield**, also the running system and codebase  
 **Output** (under the change workspace):

@@ -11,7 +11,7 @@
 - `assets/business-services.md` → `requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md`（省略能力层时去掉 `{c-slug}/`；本场景全部 BS 合并于此）
 - `assets/service.md` → 各服务块写入同一文件标题 `## BS-{id}`，路径 `requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md#BS-{id}`
 - `assets/quality.md` → `requirement/quality/quality.md`
-- 共享 `assets/project.md` → `project.md`（若不存在则按固定模板创建；§1.1 只链 catalog）
+- 共享 `assets/project.md` → `project.md`（change-id 确认、工作区创建时已按固定模板生成；本阶段结束时更新勾选；§1.1 只链 catalog）
 
 能力超过阈值时另写：`assets/capability.md` → `requirement/business/{sd-slug}/{c-slug}/capability.md`。未达阈值则省略能力层（不建 `{c-slug}/`、不写 `capability.md`）。
 
@@ -34,11 +34,11 @@
 4. `greenfield` 与 `iteration` 走同一套核心流程（iteration 仍按 revise / master diff）。收集需求输入时**必须**遵守 harness **`requirement/ingest-cli.md`** 与上文「包 CLI」节：
    - 用户消息中的 `@path`（可多个）为显式输入，不全库搜索。对每个路径按 ingest-cli 运行 `sparrow ingest`。
    - 无 `@` 时：若用户已给提示词或显式文件路径，以用户输入为准；否则在仓库内搜索 PRD/SRS（排除 `docs/sparrow/`）。搜到的文件同样 ingest 后再读 plan。无输入则停止。
-5. 从项目根运行 `scripts/ensure-change-workspace.mjs --check`。若退出码 1：按 `requirement/requirements.md`「活动变更 ID 确认纪律」只确认 change-id；用户中止则停止且不创建子目录。确认后运行 `scripts/ensure-change-workspace.mjs --create {change-id}`（经 `sparrow-state.mjs` 写入 active-change 并将 pipeline 的 requirement 设为 ongoing），再按 `assets/proposal.md` 填写 `proposal.md`（development-mode 用配置值）。禁止向 `master/` 写入。
+5. 从项目根运行 `scripts/ensure-change-workspace.mjs --check`。若退出码 1：按 `requirement/requirements.md`「活动变更 ID 确认纪律」只确认 change-id；用户中止则停止且不创建子目录。确认后运行 `scripts/ensure-change-workspace.mjs --create {change-id}`（经 `sparrow-state.mjs` 写入 active-change 并将 pipeline 的 requirement 设为 ongoing）。`--check`（工作区目录已存在）与 `--create` 都会在此时写入 `project.md`（已存在则不覆盖；占位符来自 `.sparrow/sparrow-config.json`），且发生在按 `assets/proposal.md` 填写 `proposal.md`（development-mode 用配置值）之前。禁止向 `master/` 写入。
 6. 读 `references/revise-gate.md`。无活动变更基线则走全量；有则对 master 需求做 ADDED / MODIFIED / REMOVED 增量，在 change 工作区内更新，不写 version 元数据。
 7. 读 `references/output-existence-check.md`，对本阶段已存在的 catalog / subdomain / business-services / quality 等做一次 skip / overwrite / update。
 8. 阶段一 Grill Me：读 `references/grill-me.md`「需求探索」，按 SD→C→S→EBP→BS→规则→质量推进，遵守互动纪律，覆盖全部维度后输出快速总结。
 9. 落盘结构：读 `references/subdomain-rules.md`，写 `catalog.md` 与嵌套树 `{sd-slug}/subdomain.md`；能力达阈值则写 `{c-slug}/capability.md` 且场景在能力下，否则场景直接在子领域下。
 10. 读 `references/business-service-rules.md`，沿 EBP 按场景合并写入各 `business-services.md`（块模板 `service.md`，EARS）；做 E2E 覆盖自检并更新 catalog。写 `quality.md`（仅涉及维度）。
 11. 询问是否做 UI 探索。否：跳过。是：读 `grill-me.md`「UI 探索」，将 EBP 转为端到端操作流程，再按 UI 模板写入 `requirement/ui/`。本阶段页面不关联 BC。
-12. 读 `references/project-md-update.md` 与 `references/version-metadata.md`，更新 change 工作区 `project.md`（§1.1 只勾选 catalog）。运行 `scripts/sparrow-state.mjs set-step requirement done`。
+12. 读 `references/project-md-update.md` 与 `references/version-metadata.md`，更新已存在的 change 工作区 `project.md`（§1.1 只勾选 catalog；不在此步才首次创建）。运行 `scripts/sparrow-state.mjs set-step requirement done`。

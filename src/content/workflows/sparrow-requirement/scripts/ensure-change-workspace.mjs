@@ -6,15 +6,21 @@
  *   node scripts/ensure-change-workspace.mjs --create <change-id>
  *
  * --check exits 1 when no change-id is confirmed and current/ has no subdirectory.
- * --create only after the user confirmed a kebab-case change-id.
+ * When --check exits 0 and the workspace directory already exists, it writes
+ * project.md from the shared template if that file is missing.
+ * --create only after the user confirmed a kebab-case change-id. It writes
+ * project.md in the same step (existing file is left untouched).
  * State changes go through scripts/sparrow-state.mjs (no direct JSON edits).
  */
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const CHANGE_CURRENT = join('docs', 'sparrow', 'change', 'current');
 const STATE_SCRIPT = join('scripts', 'sparrow-state.mjs');
+const CONFIG_FILE = join('.sparrow', 'sparrow-config.json');
+const PROJECT_MD_TEMPLATE = join(dirname(fileURLToPath(import.meta.url)), '..', 'assets', 'project.md');
 const WORKSPACE_DIRS = [
   'requirement/business',
   'requirement/quality',
@@ -55,6 +61,38 @@ function listCurrent() {
   });
 }
 
+function renderProjectMd() {
+  if (!existsSync(PROJECT_MD_TEMPLATE)) {
+    console.error(`Missing project.md template: ${PROJECT_MD_TEMPLATE}`);
+    process.exit(1);
+  }
+  let projectName = '';
+  let sparrowVersion = '';
+  let toolList = '';
+  if (existsSync(CONFIG_FILE)) {
+    const config = JSON.parse(readFileSync(CONFIG_FILE, 'utf8'));
+    if (typeof config.projectName === 'string') projectName = config.projectName;
+    if (typeof config.version === 'string') sparrowVersion = config.version;
+    if (Array.isArray(config.tools)) {
+      toolList = config.tools.filter((id) => typeof id === 'string').join(', ');
+    }
+  }
+  const now = new Date().toISOString().replace('T', ' ').slice(0, 19);
+  return readFileSync(PROJECT_MD_TEMPLATE, 'utf8')
+    .replaceAll('{projectName}', projectName)
+    .replaceAll('{sparrowVersion}', sparrowVersion)
+    .replaceAll('{toolList}', toolList)
+    .replaceAll('{now}', now);
+}
+
+function ensureProjectMd(changeId) {
+  const root = join(CHANGE_CURRENT, changeId);
+  if (!existsSync(root) || !statSync(root).isDirectory()) return;
+  const dest = join(root, 'project.md');
+  if (existsSync(dest)) return;
+  writeFileSync(dest, renderProjectMd(), 'utf8');
+}
+
 function failUsage() {
   console.error('Usage:');
   console.error('  node scripts/ensure-change-workspace.mjs --check');
@@ -79,7 +117,12 @@ if (cmd === '--check') {
     );
     process.exit(1);
   }
-  process.stdout.write(`${id || dirs[0]}\n`);
+  const resolved = id || dirs[0];
+  const root = join(CHANGE_CURRENT, resolved);
+  if (existsSync(root) && statSync(root).isDirectory()) {
+    ensureProjectMd(resolved);
+  }
+  process.stdout.write(`${resolved}\n`);
   process.exit(0);
 }
 
@@ -94,6 +137,7 @@ if (cmd === '--create') {
   for (const dir of WORKSPACE_DIRS) {
     mkdirSync(join(root, dir), { recursive: true });
   }
+  ensureProjectMd(id);
   runState(['set-change', id]);
   runState(['set-step', 'requirement', 'ongoing']);
   process.stdout.write(`${root}\n`);

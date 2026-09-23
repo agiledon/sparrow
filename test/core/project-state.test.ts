@@ -219,10 +219,10 @@ test('generated sparrow-state.mjs is bundled from agent-scripts (single source)'
   assert.doesNotMatch(body, /function checkArchive\(changeIdArg\)/);
 });
 
-test('ensure-change-workspace --create uses sparrow-state.mjs for change and pipeline', () => {
-  const root = tmpRoot('ensure-ws-');
+function installEnsureChangeWorkspace(root: string): string {
   const scriptsDir = join(root, 'scripts');
   mkdirSync(scriptsDir, { recursive: true });
+  mkdirSync(join(root, 'assets'), { recursive: true });
   copyFileSync(
     join(process.cwd(), 'src/content/workflows/_shared/scripts/sparrow-state.mjs'),
     join(scriptsDir, 'sparrow-state.mjs'),
@@ -234,21 +234,40 @@ test('ensure-change-workspace --create uses sparrow-state.mjs for change and pip
     ),
     join(scriptsDir, 'ensure-change-workspace.mjs'),
   );
+  copyFileSync(
+    join(process.cwd(), 'src/content/workflows/_shared/assets/project.md'),
+    join(root, 'assets', 'project.md'),
+  );
+  return join(scriptsDir, 'ensure-change-workspace.mjs');
+}
+
+function writeGreenfieldState(root: string, changeId: string | null): void {
   mkdirSync(join(root, '.sparrow'), { recursive: true });
   writeFileSync(
     join(root, STATE_FILE),
     `${JSON.stringify({
-      'active-change': { changeId: null },
+      'active-change': { changeId },
       'development-mode': 'greenfield',
       pipeline: { 'current-step': 'requirement', status: 'done', contexts: {} },
     })}\n`,
   );
+}
 
-  const create = spawnSync(
-    process.execPath,
-    [join(scriptsDir, 'ensure-change-workspace.mjs'), '--create', 'my-feature'],
-    { cwd: root, encoding: 'utf8' },
-  );
+test('ensure-change-workspace --create uses sparrow-state.mjs for change and pipeline', () => {
+  const root = tmpRoot('ensure-ws-');
+  const script = installEnsureChangeWorkspace(root);
+  writeGreenfieldState(root, null);
+  generateProjectConfig({
+    projectRoot: root,
+    projectName: 'Demo Shop',
+    version: '0.6.0',
+    toolIds: ['cursor', 'claude'],
+  });
+
+  const create = spawnSync(process.execPath, [script, '--create', 'my-feature'], {
+    cwd: root,
+    encoding: 'utf8',
+  });
   assert.equal(create.status, 0, create.stderr || create.stdout);
 
   const state = loadProjectState(root);
@@ -256,4 +275,74 @@ test('ensure-change-workspace --create uses sparrow-state.mjs for change and pip
   assert.equal(state.pipeline?.['current-step'], 'requirement');
   assert.equal(state.pipeline?.status, 'ongoing');
   assert.ok(existsSync(join(root, CHANGE_CURRENT, 'my-feature', 'requirement', 'business')));
+
+  const projectMd = readFileSync(join(root, CHANGE_CURRENT, 'my-feature', 'project.md'), 'utf8');
+  assert.match(projectMd, /Demo Shop/);
+  assert.match(projectMd, /0\.6\.0/);
+  assert.match(projectMd, /cursor, claude/);
+  assert.match(projectMd, /待生成 \(sparrow-requirement\)/);
+  assert.doesNotMatch(projectMd, /\{projectName\}|\{sparrowVersion\}|\{toolList\}|\{now\}/);
+});
+
+test('ensure-change-workspace does not overwrite an existing project.md', () => {
+  const root = tmpRoot('ensure-ws-keep-');
+  const script = installEnsureChangeWorkspace(root);
+  writeGreenfieldState(root, null);
+  generateProjectConfig({
+    projectRoot: root,
+    projectName: 'Demo Shop',
+    version: '0.6.0',
+    toolIds: ['cursor'],
+  });
+
+  const create = spawnSync(process.execPath, [script, '--create', 'my-feature'], {
+    cwd: root,
+    encoding: 'utf8',
+  });
+  assert.equal(create.status, 0, create.stderr || create.stdout);
+
+  const projectMdPath = join(root, CHANGE_CURRENT, 'my-feature', 'project.md');
+  writeFileSync(projectMdPath, 'kept-by-later-phase\n');
+
+  const again = spawnSync(process.execPath, [script, '--create', 'my-feature'], {
+    cwd: root,
+    encoding: 'utf8',
+  });
+  assert.equal(again.status, 0, again.stderr || again.stdout);
+  const checked = spawnSync(process.execPath, [script, '--check'], {
+    cwd: root,
+    encoding: 'utf8',
+  });
+  assert.equal(checked.status, 0, checked.stderr || checked.stdout);
+  assert.equal(readFileSync(projectMdPath, 'utf8'), 'kept-by-later-phase\n');
+});
+
+test('ensure-change-workspace --check writes a missing project.md without changing state', () => {
+  const root = tmpRoot('ensure-ws-check-');
+  const script = installEnsureChangeWorkspace(root);
+  writeGreenfieldState(root, 'my-feature');
+  generateProjectConfig({
+    projectRoot: root,
+    projectName: 'Demo Shop',
+    version: '0.6.0',
+    toolIds: ['cursor'],
+  });
+  mkdirSync(join(root, CHANGE_CURRENT, 'my-feature', 'requirement', 'business'), { recursive: true });
+
+  const before = loadProjectState(root);
+  const checked = spawnSync(process.execPath, [script, '--check'], {
+    cwd: root,
+    encoding: 'utf8',
+  });
+  assert.equal(checked.status, 0, checked.stderr || checked.stdout);
+  assert.equal(checked.stdout.trim(), 'my-feature');
+
+  const projectMd = readFileSync(join(root, CHANGE_CURRENT, 'my-feature', 'project.md'), 'utf8');
+  assert.match(projectMd, /Demo Shop/);
+  assert.match(projectMd, /待生成 \(sparrow-requirement\)/);
+
+  const after = loadProjectState(root);
+  assert.equal(after['active-change'].changeId, before['active-change'].changeId);
+  assert.equal(after.pipeline?.['current-step'], before.pipeline?.['current-step']);
+  assert.equal(after.pipeline?.status, before.pipeline?.status);
 });

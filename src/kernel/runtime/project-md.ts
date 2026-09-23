@@ -3,8 +3,8 @@
  *
  * project.md lives at docs/sparrow/change/current/{change-id}/project.md (change 工作区向导)
  * and, after archive promote, at docs/sparrow/master/project.md (基线索引).
- * The change-workspace copy is created by the requirement skill after the user
- * confirms a change-id — not by `sparrow init`.
+ * The change-workspace copy is written when the change-id is confirmed and the
+ * workspace is created (`ensure-change-workspace.mjs`) — not by `sparrow init`.
  */
 
 export interface ProjectMdSection {
