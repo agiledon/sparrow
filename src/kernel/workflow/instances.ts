@@ -1,64 +1,64 @@
 import type { ContentStore } from '../content/ContentStore.js';
-import { SparrowWorkflowId } from './SparrowWorkflowId.js';
+import { WorkflowId } from './WorkflowId.js';
 import { ProcessWorkflow } from './ProcessWorkflow.js';
 import { SupportingWorkflow } from './SupportingWorkflow.js';
 
 export class RequirementWorkflow extends ProcessWorkflow {
   constructor(store: ContentStore) {
-    super(SparrowWorkflowId.Requirement, store);
+    super(WorkflowId.Requirement, store);
   }
 }
 
 export class ArchitectureWorkflow extends ProcessWorkflow {
   constructor(store: ContentStore) {
-    super(SparrowWorkflowId.Architecture, store);
+    super(WorkflowId.Architecture, store);
   }
 }
 
 export class DesignWorkflow extends ProcessWorkflow {
   constructor(store: ContentStore) {
-    super(SparrowWorkflowId.Design, store);
+    super(WorkflowId.Design, store);
   }
 }
 
 export class ModelWorkflow extends ProcessWorkflow {
   constructor(store: ContentStore) {
-    super(SparrowWorkflowId.Model, store);
+    super(WorkflowId.Model, store);
   }
 }
 
 export class PlanWorkflow extends ProcessWorkflow {
   constructor(store: ContentStore) {
-    super(SparrowWorkflowId.Plan, store);
+    super(WorkflowId.Plan, store);
   }
 }
 
 export class ApplyWorkflow extends ProcessWorkflow {
   constructor(store: ContentStore) {
-    super(SparrowWorkflowId.Apply, store);
+    super(WorkflowId.Apply, store);
   }
 }
 
 export class VerifyWorkflow extends ProcessWorkflow {
   constructor(store: ContentStore) {
-    super(SparrowWorkflowId.Verify, store);
+    super(WorkflowId.Verify, store);
   }
 }
 
 export class ArchiveWorkflow extends ProcessWorkflow {
   constructor(store: ContentStore) {
-    super(SparrowWorkflowId.Archive, store);
+    super(WorkflowId.Archive, store);
   }
 }
 
 export class SupportingHarnessWorkflow extends SupportingWorkflow {
   constructor(store: ContentStore) {
-    super(SparrowWorkflowId.SupportingHarness, store);
+    super(WorkflowId.SupportingHarness, store);
   }
 }
 
 export class SupportingReconcileWorkflow extends SupportingWorkflow {
   constructor(store: ContentStore) {
-    super(SparrowWorkflowId.SupportingReconcile, store);
+    super(WorkflowId.SupportingReconcile, store);
   }
 }

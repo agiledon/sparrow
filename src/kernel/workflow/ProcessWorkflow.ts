@@ -1,12 +1,12 @@
 import type { ContentStore } from '../content/ContentStore.js';
 import { StandardAgentSkillPackage } from '../skill/StandardAgentSkillPackage.js';
 import type { AgentSkillPackage, WorkflowPackageContext } from '../skill/types.js';
-import type { SparrowWorkflowId } from './SparrowWorkflowId.js';
+import type { WorkflowId } from './WorkflowId.js';
 import type { Workflow } from './Workflow.js';
 
 export abstract class ProcessWorkflow implements Workflow {
   constructor(
-    readonly id: SparrowWorkflowId,
+    readonly id: WorkflowId,
     protected readonly store: ContentStore,
   ) {}
 

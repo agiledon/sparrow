@@ -7,7 +7,7 @@ export {
 } from './content/skill-composition.js';
 export type { SparrowSchema, WorkflowSchema, CliCommand } from './content/schema-types.js';
 export { validateSparrowSchema } from './content/validate-sparrow-schema.js';
-export { SparrowWorkflowId, allWorkflowIds } from './workflow/SparrowWorkflowId.js';
+export { WorkflowId, allWorkflowIds } from './workflow/WorkflowId.js';
 export type { Workflow } from './workflow/Workflow.js';
 export { WorkflowBuilderRegistry } from './workflow/builder/WorkflowBuilderRegistry.js';
 export type { AgentSkillPackage, GeneratedSkillBundle } from './skill/types.js';
