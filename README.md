@@ -12,7 +12,7 @@ English | [简体中文](./README.zh-CN.md)
 >
 > The npm package is published as **`sparrow-ddd`**.
 
-Sparrow transforms raw business requirements into production-ready code through a structured DDD process organized as **core workflows** (the sequential eight-step pipeline) and **supporting workflows** (auxiliary commands like harness and reconcile that assist the pipeline at any time). It introduces the concept of **Interaction Context** — a first-class architecture concept parallel to Bounded Contexts that handles all frontend UI and BFF aggregation. Both backend BCs and the Interaction Context share the same standardized `design → model → plan → apply` workflow, yet remain completely orthogonal — no mutual dependencies, capable of parallel execution.
+Sparrow transforms raw business requirements into production-ready code through a structured DDD process. Sparrow’s **core workflows** (every workflow skill defined in the schema and installed by `sparrow init`) comprise **process workflows** — the sequential eight-step pipeline — and **supporting workflows** — auxiliary commands like harness and reconcile that assist the pipeline at any time. It introduces the concept of **Interaction Context** — a first-class architecture concept parallel to Bounded Contexts that handles all frontend UI and BFF aggregation. Both backend BCs and the Interaction Context share the same standardized `design → model → plan → apply` workflow, yet remain completely orthogonal — no mutual dependencies, capable of parallel execution.
 
 > 📜 Version history and highlights: see the [CHANGELOG](./CHANGELOG.md) and [GitHub Releases](https://github.com/agiledon/sparrow/releases).
 
@@ -26,38 +26,38 @@ Sparrow transforms raw business requirements into production-ready code through 
 
 ## Development Workflows
 
-Sparrow organizes all AI-assisted development into two workflow categories. Each skill carries a `kind` field — `core` or `supporting` — that tells you how it fits into the overall DDD process:
+Sparrow’s **core workflows** are all bundled workflow skills (see schema `workflows`). Each skill has a `kind` field — `process` or `supporting` — that tells you how it fits into the overall DDD process:
 
 | Category | `kind` | Role | When to run |
 |----------|--------|------|-------------|
-| **Core workflows** | `core` | The sequential DDD pipeline — from requirements to verified, archivable code | In order; product-level requirement/arch once per change, team-level per context, product-level archive once to close |
+| **Process workflows** | `process` | The sequential DDD pipeline — from requirements to verified, archivable code | In order; product-level requirement/architecture once per change, team-level per context, product-level archive once to close |
 | **Supporting workflows** | `supporting` | Auxiliary capabilities that assist the DDD process without replacing the pipeline | Anytime, independent of pipeline position |
 
 ```mermaid
 flowchart LR
-  subgraph core ["Core Workflows (kind: core)"]
+  subgraph process ["Process workflows (kind: process)"]
     direction LR
-    R[requirement] --> A[arch] --> D[design] --> M[model] --> P[plan] --> AP[apply] --> V[verify] --> AR[archive]
+    R[requirement] --> A[architecture] --> D[design] --> M[model] --> P[plan] --> AP[apply] --> V[verify] --> AR[archive]
   end
 
-  subgraph supporting ["Supporting Workflows (kind: supporting)"]
+  subgraph supporting ["Supporting workflows (kind: supporting)"]
     direction TB
     H[harness]
-    R[reconcile]
+    RC[reconcile]
     MORE["…more coming"]
   end
 
-  core -.->|"assisted by"| supporting
+  process -.->|"assisted by"| supporting
 ```
 
-### Core Workflows
+### Process Workflows
 
-The **core workflow** is Sparrow's main spec-driven DDD pipeline — eight ordered steps that transform raw requirements into production-ready code. Every core skill reads artifacts from the previous step and writes version-controlled Markdown or code as output.
+The **process workflow** is Sparrow's main spec-driven DDD pipeline — eight ordered steps that transform raw requirements into production-ready code. Each process workflow skill reads artifacts from the previous step and writes version-controlled Markdown or code as output.
 
 | Step | Command | Level | What it does |
 |------|---------|-------|--------------|
 | 1 | `/sparrow-requirement` | Product | Hierarchical exploration (SD→C→S→EBP→BS via Grill Me) + quality docs + [optional] UI operation flows from EBP |
-| 2 | `/sparrow-arch` | Product | Map subdomains to bounded contexts (1:1 then adjust) + thin spec slices with Properties + [if UI] frontend / Interaction Context |
+| 2 | `/sparrow-architecture` | Product | Map subdomains to bounded contexts (1:1 then adjust) + thin spec slices with Properties + [if UI] frontend / Interaction Context |
 | 3 | `/sparrow-design @{slug}` | Team | Define API contracts and tech stack for a bounded context or Interaction Context |
 | 4 | `/sparrow-model @{slug}` | Team | Domain modeling (backend BC) or ViewModel + component modeling (Interaction Context) |
 | 5 | `/sparrow-plan @{slug}` | Team | Devise implementation plan with task checklist |
@@ -65,31 +65,31 @@ The **core workflow** is Sparrow's main spec-driven DDD pipeline — eight order
 | 7 | `/sparrow-verify @{slug}` | Team | Verify code implementation against spec.md, api.md, tech.md, and model.md |
 | 8 | `/sparrow-archive` | Product | Collect all slugs' delivery specs (not source code) and promote into `master/` for versioning |
 
-**How core workflows run:**
+**How process workflows run:**
 
-- **Product-level** `requirement` and `arch` (1–2) run **once** per change for the whole product — they establish shared requirements and architecture; arch defines bounded contexts and the Interaction Context.
+- **Product-level** `requirement` and `architecture` (1–2) run **once** per change for the whole product — they establish shared requirements and architecture; architecture defines bounded contexts and the Interaction Context.
 - **Team-level** steps (3–7) run **per slug** — once for each bounded context and Interaction Context. All contexts share the same commands and are fully orthogonal: no mutual dependencies, executable in any order or in parallel.
 - **Product-level** `archive` (8) runs **once** per change after all team-level slugs complete — it collects every slug's delivery specs (not source code) and promotes them into `master/` for versioning.
 - After any step, pause to review artifacts, refine through dialog, and re-run — the next step always reads the latest version.
 
-**Spec layout**: Active work happens under `docs/sparrow/change/current/{change-id}/`; the published baseline lives in `docs/sparrow/master/` (populated after the first **archive promote**). `development-mode` (`tbd` | `greenfield` | `iteration` | `brownfield`) is stored in `.sparrow/sparrow-state.json`. Brownfield core flow is not supported yet. See [Output Structure](#output-structure).
+**Spec layout**: Active work happens under `docs/sparrow/change/current/{change-id}/`; the published baseline lives in `docs/sparrow/master/` (populated after the first **archive promote**). `development-mode` (`tbd` | `greenfield` | `iteration` | `brownfield`) is stored in `.sparrow/sparrow-state.json`. Brownfield process pipeline is not supported yet. See [Output Structure](#output-structure).
 
-See [Core Workflow Reference](#core-workflow-reference) below for inputs, outputs, and details of each step.
+See [Process Workflow Reference](#process-workflow-reference) below for inputs, outputs, and details of each step.
 
 ### Supporting Workflows
 
-**Supporting workflows** are auxiliary commands that help you stay aligned with DDD discipline throughout the project lifecycle. They do **not** replace core pipeline steps and carry no ordering requirement — invoke them whenever the situation calls for it.
+**Supporting workflows** are auxiliary commands that help you stay aligned with DDD discipline throughout the project lifecycle. They do **not** replace process pipeline steps and carry no ordering requirement — invoke them whenever the situation calls for it.
 
 All supporting commands use the `sparrow-supporting-` prefix and the `kind: supporting` classification. More supporting workflows will be added over time to cover additional scenarios across the DDD development process (e.g. drift detection, migration assistance, cross-context consistency checks).
 
 | Workflow | Command | What it does |
 |----------|---------|--------------|
-| **Harness** | `/sparrow-supporting-harness` | View, add, and maintain constraint assets — the project-level "must / must not" DDD rules that core skills load before executing |
+| **Harness** | `/sparrow-supporting-harness` | View, add, and maintain constraint assets — the project-level "must / must not" DDD rules that process workflow skills load before executing |
 | **Reconcile** | `/sparrow-supporting-reconcile` | After vibe coding or bugfixes, reconcile **existing** spec docs and harness constraints with current code — without changing architecture or creating new spec files |
 
 **Typical supporting workflow usage:**
 
-- **Before or during core steps** — use **harness** to add project-specific constraints (coding standards, naming rules, integration policies) that every subsequent core skill will enforce.
+- **Before or during process steps** — use **harness** to add project-specific constraints (coding standards, naming rules, integration policies) that every subsequent process workflow skill will enforce.
 - **After ad-hoc changes** — use **reconcile** when code has drifted from specs (manual edits, quick fixes, exploratory coding) to bring documentation and constraints back in sync with reality.
 - **After verify failures** — when P0/P1 issues trace back to spec drift rather than code bugs, reconcile first, then re-run verify.
 
@@ -173,7 +173,7 @@ your-project/
 │   │   │   ├── references/
 │   │   │   ├── assets/
 │   │   │   └── scripts/
-│   │   ├── sparrow-arch/
+│   │   ├── sparrow-architecture/
 │   │   ├── sparrow-design/
 │   │   ├── sparrow-model/
 │   │   ├── sparrow-plan/
@@ -184,7 +184,7 @@ your-project/
 │   │   └── sparrow-supporting-reconcile/
 │   └── commands/sparrow/
 │       ├── sparrow-requirement.md
-│       ├── sparrow-arch.md
+│       ├── sparrow-architecture.md
 │       └── ...
 ├── .opencode/          # (if OpenCode selected)
 │   └── ...
@@ -216,12 +216,12 @@ This compares your local version against the npm registry and prompts you to upg
 
 ### 3. Run the workflows
 
-Invoke skills as slash commands in your AI tool. Sparrow provides two workflow categories — see [Development Workflows](#development-workflows) for the full picture:
+Invoke skills as slash commands in your AI tool. Sparrow’s core workflows split into two kinds — see [Development Workflows](#development-workflows):
 
-- **Core workflows** — run the eight-step pipeline in order: `/sparrow-requirement` → `/sparrow-arch` → `/sparrow-design @{slug}` → … → `/sparrow-verify @{slug}` → `/sparrow-archive`
+- **Process workflows** — run the eight-step pipeline in order: `/sparrow-requirement` → `/sparrow-architecture` → `/sparrow-design @{slug}` → … → `/sparrow-verify @{slug}` → `/sparrow-archive`
 - **Supporting workflows** — invoke anytime as needed: `/sparrow-supporting-harness`, `/sparrow-supporting-reconcile`
 
-> **Important**: Product-level `requirement` and `arch` (1–2) run once per change. Team-level core steps (3–7) run per slug — all contexts (backend BCs + Interaction Context) share the same commands and are fully orthogonal. Product-level `archive` (8) runs once per change after all slugs complete.
+> **Important**: Product-level `requirement` and `architecture` (1–2) run once per change. Team-level process steps (3–7) run per slug — all contexts (backend BCs + Interaction Context) share the same commands and are fully orthogonal. Product-level `archive` (8) runs once per change after all slugs complete.
 
 ### 4. Iterate and refine
 
@@ -231,9 +231,9 @@ After any step, you can:
 - Re-run the skill with modifications
 - Continue to the next step — it always reads the latest version
 
-## Core Workflow Reference
+## Process Workflow Reference
 
-Detailed inputs, outputs, and behavior for each step in the [core workflow](#core-workflows).
+Detailed inputs, outputs, and behavior for each step in the [process workflows](#process-workflows).
 
 ### Step 1: sparrow-requirement (Product-level)
 
@@ -248,7 +248,7 @@ Detailed inputs, outputs, and behavior for each step in the [core workflow](#cor
 
 **Grill Me** follows problem-space layers then EBP coverage; optional UI converts EBP into end-to-end operation flows. For **iteration**, diff against `master/requirement/`. No `<!-- version -->` metadata blocks in the change workspace.
 
-### Step 2: sparrow-arch (Product-level)
+### Step 2: sparrow-architecture (Product-level)
 
 **Input**: `requirement/business/` (catalog + nested `business-services.md`) + \[optional\] `requirement/ui/`; read-only `master/`  
 **Output** (change workspace):
@@ -366,8 +366,6 @@ your-project/
 └── integration-tests/{slug}/
 ```
 
-> **Legacy layout**: Flat `docs/sparrow/requirement/prd-business.md`, `architecture/business.md` / `application.md`, or `docs/sparrow/changes/` is deprecated — migrate per skill `compat-migrate.md` and `docs/prd/sparrow-change-management.md`.
-
 All bounded contexts share the same project root namespace, but each is an independent module with its own language-specific scaffold and dependency management.
 
 ## Constraint Assets (Harness)
@@ -409,7 +407,7 @@ harness/
 
 How it works:
 
-- Core skills list **always** and **conditional** harness paths before execution; when `development-mode` is `brownfield`, load **`common/conditional/brownfield.md`**.
+- Process workflow skills list **always** and **conditional** harness paths before execution; when `development-mode` is `brownfield`, load **`common/conditional/brownfield.md`**.
 - Use `/sparrow-supporting-harness` to manage project-level constraints.
 - Managed global templates refresh on upgrade; **user-edited files are never overwritten**.
 
@@ -460,7 +458,7 @@ Typical example after `sparrow init`:
 
 ### sparrow-state.json
 
-Pipeline state: active change-id, development mode, and step progress. Created by `sparrow init` when missing; core skills update it via `scripts/sparrow-state.mjs`.
+Pipeline state: active change-id, development mode, and step progress. Created by `sparrow init` when missing; process workflow skills update it via `scripts/sparrow-state.mjs`.
 
 Right after init (`development-mode` still unknown):
 
@@ -524,7 +522,7 @@ Each language has its own DDD directory layout, coding standards, and anti-patte
 
 ## How It Works
 
-1. **`sparrow init`** generates skill/command files into each AI tool's directory, plus global and project-level constraint assets (harness). Skills are classified as **core** (pipeline steps) or **supporting** (auxiliary workflows).
+1. **`sparrow init`** generates skill/command files into each AI tool's directory, plus global and project-level constraint assets (harness). Core workflow skills are classified as **process** (pipeline steps) or **supporting** (auxiliary workflows).
 2. Each **skill** is a directory (`SKILL.md` plus optional `references/`, `assets/`, `scripts/`):
    - `SKILL.md` — trigger description, completion criteria, ordered steps, next skill; harness refs last
    - `references/` — process rules loaded on demand (shared language, Grill Me, revise gates)

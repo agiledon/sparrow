@@ -22,7 +22,7 @@
 - `assets/component-library.md` → `requirement/ui/components/component-library.md`
 - `assets/prototype-index.html` → `requirement/ui/prototypes/index.html`（及页面 html）
 
-不得改模板章节结构。未涉及的质量属性维度直接省略。**不要**再以 `prd-business.md` 作为主产出（迁移见 `references/compat-migrate.md`）。正文语言遵循 harness `common/always/document-language.md`（`sparrow-config.json` 的 `lang`）。
+不得改模板章节结构。未涉及的质量属性维度直接省略。正文语言遵循 harness `common/always/document-language.md`（`sparrow-config.json` 的 `lang`）。
 
 ## 步骤
 
@@ -35,7 +35,7 @@
    - 用户消息中的 `@path`（可多个）为显式输入，不全库搜索。对每个路径按 ingest-cli 运行 `sparrow ingest`。
    - 无 `@` 时：若用户已给提示词或显式文件路径，以用户输入为准；否则在仓库内搜索 PRD/SRS（排除 `docs/sparrow/`）。搜到的文件同样 ingest 后再读 plan。无输入则停止。
 5. 从项目根运行 `scripts/ensure-change-workspace.mjs --check`。若退出码 1：按 `requirement/requirements.md`「活动变更 ID 确认纪律」只确认 change-id；用户中止则停止且不创建子目录。确认后运行 `scripts/ensure-change-workspace.mjs --create {change-id}`（经 `sparrow-state.mjs` 写入 active-change 并将 pipeline 的 requirement 设为 ongoing），再按 `assets/proposal.md` 填写 `proposal.md`（development-mode 用配置值）。禁止向 `master/` 写入。
-6. 读 `references/revise-gate.md`。无活动变更基线则走全量；有则对 master 需求做 ADDED / MODIFIED / REMOVED 增量，在 change 工作区内更新，不写 version 元数据。若存在旧 `prd-business.md` 或扁平 `subdomains/` · `services/`，先按 `references/compat-migrate.md` 迁移。
+6. 读 `references/revise-gate.md`。无活动变更基线则走全量；有则对 master 需求做 ADDED / MODIFIED / REMOVED 增量，在 change 工作区内更新，不写 version 元数据。
 7. 读 `references/output-existence-check.md`，对本阶段已存在的 catalog / subdomain / business-services / quality 等做一次 skip / overwrite / update。
 8. 阶段一 Grill Me：读 `references/grill-me.md`「需求探索」，按 SD→C→S→EBP→BS→规则→质量推进，遵守互动纪律，覆盖全部维度后输出快速总结。
 9. 落盘结构：读 `references/subdomain-rules.md`，写 `catalog.md` 与嵌套树 `{sd-slug}/subdomain.md`；能力达阈值则写 `{c-slug}/capability.md` 且场景在能力下，否则场景直接在子领域下。

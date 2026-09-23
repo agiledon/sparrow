@@ -49,7 +49,6 @@ import _wf_sparrow_architecture_assets_spec_md from './workflows/sparrow-archite
 import _wf_sparrow_architecture_checkpoint_md from './workflows/sparrow-architecture/checkpoint.md';
 import _wf_sparrow_architecture_guideline_md from './workflows/sparrow-architecture/guideline.md';
 import _wf_sparrow_architecture_references_bc_tiers_md from './workflows/sparrow-architecture/references/bc-tiers.md';
-import _wf_sparrow_architecture_references_compat_migrate_md from './workflows/sparrow-architecture/references/compat-migrate.md';
 import _wf_sparrow_architecture_references_frontend_architecture_md from './workflows/sparrow-architecture/references/frontend-architecture.md';
 import _wf_sparrow_architecture_references_property_rules_md from './workflows/sparrow-architecture/references/property-rules.md';
 import _wf_sparrow_architecture_references_react_mapping_md from './workflows/sparrow-architecture/references/react-mapping.md';
@@ -100,7 +99,6 @@ import _wf_sparrow_requirement_assets_ui_spec_md from './workflows/sparrow-requi
 import _wf_sparrow_requirement_checkpoint_md from './workflows/sparrow-requirement/checkpoint.md';
 import _wf_sparrow_requirement_guideline_md from './workflows/sparrow-requirement/guideline.md';
 import _wf_sparrow_requirement_references_business_service_rules_md from './workflows/sparrow-requirement/references/business-service-rules.md';
-import _wf_sparrow_requirement_references_compat_migrate_md from './workflows/sparrow-requirement/references/compat-migrate.md';
 import _wf_sparrow_requirement_references_subdomain_rules_md from './workflows/sparrow-requirement/references/subdomain-rules.md';
 import _wf_sparrow_requirement_scripts_ensure_change_workspace_mjs from './workflows/sparrow-requirement/scripts/ensure-change-workspace.mjs';
 import _wf_sparrow_supporting_harness_activity_md from './workflows/sparrow-supporting-harness/activity.md';
@@ -136,7 +134,6 @@ export const skillExtras: Record<string, Record<string, string>> = {
     'assets/spec.md': _wf_sparrow_architecture_assets_spec_md,
     'checkpoint.md': _wf_sparrow_architecture_checkpoint_md,
     'references/bc-tiers.md': _wf_sparrow_architecture_references_bc_tiers_md,
-    'references/compat-migrate.md': _wf_sparrow_architecture_references_compat_migrate_md,
     'references/frontend-architecture.md': _wf_sparrow_architecture_references_frontend_architecture_md,
     'references/property-rules.md': _wf_sparrow_architecture_references_property_rules_md,
     'references/react-mapping.md': _wf_sparrow_architecture_references_react_mapping_md,
@@ -187,7 +184,6 @@ export const skillExtras: Record<string, Record<string, string>> = {
     'assets/ui-spec.md': _wf_sparrow_requirement_assets_ui_spec_md,
     'checkpoint.md': _wf_sparrow_requirement_checkpoint_md,
     'references/business-service-rules.md': _wf_sparrow_requirement_references_business_service_rules_md,
-    'references/compat-migrate.md': _wf_sparrow_requirement_references_compat_migrate_md,
     'references/subdomain-rules.md': _wf_sparrow_requirement_references_subdomain_rules_md,
     'scripts/ensure-change-workspace.mjs': _wf_sparrow_requirement_scripts_ensure_change_workspace_mjs,
   },

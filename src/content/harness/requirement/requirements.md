@@ -27,7 +27,7 @@
 
 1. **必须**产出 `requirement/business/catalog.md`（含结构索引与 **EBP→BS** 表）。
 2. **必须**按 Grill Me 确认结果写出嵌套树 `{sd-slug}/subdomain.md` 与 `{s-slug}/scenario.md` + `business-services.md`。能力数多于 3 且不止 1 个时写 `{c-slug}/capability.md` 且场景挂在能力下；否则**省略能力层**（不写 `capability.md`、不建 `{c-slug}/`）。
-3. **禁止**以新建单文件 `prd-business.md` 作为主真相源（仅兼容迁移，见 `compat-migrate.md`）。
+3. **禁止**以单文件 `prd-business.md` 作为主真相源；使用嵌套 `catalog.md` 与 `business-services.md`。
 4. 场景**必须**含 5W；业务服务验收标准**必须**使用 EARS。
 
 ## 端到端业务流程覆盖（MUST）

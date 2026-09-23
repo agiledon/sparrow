@@ -12,7 +12,7 @@
 >
 > npm 包发布名为 **`sparrow-ddd`**。
 
-Sparrow 通过结构化的 DDD 流程，将原始业务需求转化为可投入生产的代码。流程分为 **核心工作流**（顺序执行的八步流水线）与 **支持工作流**（如 harness、reconcile 等随时可用的辅助命令）。它引入了 **交互上下文（Interaction Context）** 这一与限界上下文（Bounded Context）并列的一等架构概念，负责所有前端 UI 与 BFF 聚合。后端限界上下文与交互上下文共享同一套标准化的 `design → model → plan → apply` 工作流，且彼此完全正交——无相互依赖，可并行执行。
+Sparrow 通过结构化的 DDD 流程，将原始业务需求转化为可投入生产的代码。**核心工作流**指 Sparrow 在 schema 中定义、由 `sparrow init` 安装的全部 workflow skill，包含 **过程工作流**（顺序执行的八步流水线）与 **支持工作流**（如 harness、reconcile 等随时可用的辅助命令）。它引入了 **交互上下文（Interaction Context）** 这一与限界上下文（Bounded Context）并列的一等架构概念，负责所有前端 UI 与 BFF 聚合。后端限界上下文与交互上下文共享同一套标准化的 `design → model → plan → apply` 工作流，且彼此完全正交——无相互依赖，可并行执行。
 
 > 📜 版本历史与亮点：参见 [CHANGELOG](./CHANGELOG.md) 与 [GitHub Releases](https://github.com/agiledon/sparrow/releases)。
 
@@ -26,38 +26,38 @@ Sparrow 通过结构化的 DDD 流程，将原始业务需求转化为可投入�
 
 ## 开发工作流
 
-Sparrow 将所有 AI 辅助开发组织为两类工作流。每个 skill 都带有 `kind` 字段——`core` 或 `supporting`——表明它在整体 DDD 流程中的角色：
+Sparrow 的**核心工作流**即 schema 中 `workflows` 列出的全部 skill。每个 skill 带有 `kind` 字段——`process` 或 `supporting`——表明它在整体 DDD 流程中的角色：
 
 | 类别 | `kind` | 角色 | 运行时机 |
 |------|--------|------|----------|
-| **核心工作流** | `core` | 顺序执行的 DDD 流水线——从需求到可验证、可归档的代码 | 按序运行；产品级 requirement/arch 每个 change 一次，团队级按上下文，产品级 archive 收束一次 |
+| **过程工作流** | `process` | 顺序执行的 DDD 流水线——从需求到可验证、可归档的代码 | 按序运行；产品级 requirement/architecture 每个 change 一次，团队级按上下文，产品级 archive 收束一次 |
 | **支持工作流** | `supporting` | 辅助 DDD 流程的附加能力，不替代流水线本身 | 随时调用，与流水线位置无关 |
 
 ```mermaid
 flowchart LR
-  subgraph core ["核心工作流 (kind: core)"]
+  subgraph process ["过程工作流 (kind: process)"]
     direction LR
-    R[requirement] --> A[arch] --> D[design] --> M[model] --> P[plan] --> AP[apply] --> V[verify] --> AR[archive]
+    R[requirement] --> A[architecture] --> D[design] --> M[model] --> P[plan] --> AP[apply] --> V[verify] --> AR[archive]
   end
 
   subgraph supporting ["支持工作流 (kind: supporting)"]
     direction TB
     H[harness]
-    R[reconcile]
+    RC[reconcile]
     MORE["…更多即将推出"]
   end
 
-  core -.->|"由支持工作流辅助"| supporting
+  process -.->|"由支持工作流辅助"| supporting
 ```
 
-### 核心工作流
+### 过程工作流
 
-**核心工作流**是 Sparrow 的主规格驱动 DDD 流水线——八个有序步骤，将原始需求转化为可投入生产的代码。每个核心 skill 读取上一步的制品，输出可版本控制的 Markdown 或代码。
+**过程工作流**是 Sparrow 的主规格驱动 DDD 流水线——八个有序步骤，将原始需求转化为可投入生产的代码。每个过程工作流 skill 读取上一步的制品，输出可版本控制的 Markdown 或代码。
 
 | 步骤 | 命令 | 层级 | 作用 |
 |------|------|------|------|
 | 1 | `/sparrow-requirement` | 产品级 | 分层探索（SD→C→S→EBP→BS，Grill Me）+ 质量属性 + [可选] 由 EBP 转换的 UI 操作流程 |
-| 2 | `/sparrow-arch` | 产品级 | 子领域映射为限界上下文（先一对一再调整）+ 薄投影 spec（含 Property）+ [若有 UI] 前端/交互上下文 |
+| 2 | `/sparrow-architecture` | 产品级 | 子领域映射为限界上下文（先一对一再调整）+ 薄投影 spec（含 Property）+ [若有 UI] 前端/交互上下文 |
 | 3 | `/sparrow-design @{slug}` | 团队级 | 为限界上下文或交互上下文定义 API 契约与技术栈 |
 | 4 | `/sparrow-model @{slug}` | 团队级 | 领域建模（后端 BC）或 ViewModel + 组件建模（交互上下文） |
 | 5 | `/sparrow-plan @{slug}` | 团队级 | 制定含任务清单的实施计划 |
@@ -65,31 +65,31 @@ flowchart LR
 | 7 | `/sparrow-verify @{slug}` | 团队级 | 对照 spec.md、api.md、tech.md、model.md 验证代码实现 |
 | 8 | `/sparrow-archive` | 产品级 | 收束全部 slug 的交付规格（不含源代码）并 promote 至 `master/` 做版本管理 |
 
-**核心工作流运行规则：**
+**过程工作流运行规则：**
 
-- **产品级** `requirement` 与 `arch`（1–2）每个 change **运行一次**，面向整个产品——建立共享的需求与架构基线；arch 划定限界上下文与交互上下文。
+- **产品级** `requirement` 与 `architecture`（1–2）每个 change **运行一次**，面向整个产品——建立共享的需求与架构基线；architecture 划定限界上下文与交互上下文。
 - **团队级**步骤（3–7）**按 slug 运行**——每个限界上下文与交互上下文各跑一遍。所有上下文共用同一套命令且完全正交：无相互依赖，可按任意顺序或并行执行。
 - **产品级** `archive`（8）每个 change 在全部团队级 slug 完成后 **运行一次**——收束每个 slug 的交付规格（不含源代码）并 promote 至 `master/` 做版本管理。
 - 任一步骤完成后可暂停审阅、对话 refine 并重新运行——下一步始终读取最新版本。
 
-**规格布局**：活动变更在 `docs/sparrow/change/current/{change-id}/` 读写；已发布基线在 `docs/sparrow/master/`（首次 **archive promote** 后才有内容）。`development-mode`（`tbd` | `greenfield` | `iteration` | `brownfield`）写在 `.sparrow/sparrow-state.json`。棕地核心流程暂不支持。详见 [输出结构](#输出结构)。
+**规格布局**：活动变更在 `docs/sparrow/change/current/{change-id}/` 读写；已发布基线在 `docs/sparrow/master/`（首次 **archive promote** 后才有内容）。`development-mode`（`tbd` | `greenfield` | `iteration` | `brownfield`）写在 `.sparrow/sparrow-state.json`。棕地过程流水线暂不支持。详见 [输出结构](#输出结构)。
 
-各步骤的输入、输出与细节见下文 [核心工作流参考](#核心工作流参考)。
+各步骤的输入、输出与细节见下文 [过程工作流参考](#过程工作流参考)。
 
 ### 支持工作流
 
-**支持工作流**是在项目全生命周期中帮助你保持 DDD 纪律的辅助命令。它们**不替代**核心流水线步骤，也**无顺序要求**——在需要时随时调用即可。
+**支持工作流**是在项目全生命周期中帮助你保持 DDD 纪律的辅助命令。它们**不替代**过程流水线步骤，也**无顺序要求**——在需要时随时调用即可。
 
 所有支持命令使用 `sparrow-supporting-` 前缀，并标记为 `kind: supporting`。未来将陆续增加更多支持工作流，覆盖 DDD 开发流程中的更多场景（如漂移检测、迁移辅助、跨上下文一致性检查等）。
 
 | 工作流 | 命令 | 作用 |
 |--------|------|------|
-| **Harness** | `/sparrow-supporting-harness` | 查看、添加与维护约束资产——项目级「必须 / 禁止」DDD 规则，核心 skill 执行前会加载 |
+| **Harness** | `/sparrow-supporting-harness` | 查看、添加与维护约束资产——项目级「必须 / 禁止」DDD 规则，过程工作流 skill 执行前会加载 |
 | **Reconcile** | `/sparrow-supporting-reconcile` | vibe coding 或 bugfix 后，将**现有**规格文档与 harness 约束与当前代码对齐——不改变架构、不新建规格文件 |
 
 **支持工作流典型用法：**
 
-- **核心步骤之前或期间** — 用 **harness** 添加项目专属约束（编码规范、命名规则、集成策略等），后续每个核心 skill 都会强制执行。
+- **过程步骤之前或期间** — 用 **harness** 添加项目专属约束（编码规范、命名规则、集成策略等），后续每个过程工作流 skill 都会强制执行。
 - **临时改动之后** — 当代码与规格出现漂移（手工修改、快速修复、探索性编码）时，用 **reconcile** 将文档与约束拉回与实现一致。
 - **verify 失败之后** — 若 P0/P1 问题源于规格漂移而非代码缺陷，先 reconcile，再重新运行 verify。
 
@@ -173,7 +173,7 @@ your-project/
 │   │   │   ├── references/
 │   │   │   ├── assets/
 │   │   │   └── scripts/
-│   │   ├── sparrow-arch/
+│   │   ├── sparrow-architecture/
 │   │   ├── sparrow-design/
 │   │   ├── sparrow-model/
 │   │   ├── sparrow-plan/
@@ -184,7 +184,7 @@ your-project/
 │   │   └── sparrow-supporting-reconcile/
 │   └── commands/sparrow/
 │       ├── sparrow-requirement.md
-│       ├── sparrow-arch.md
+│       ├── sparrow-architecture.md
 │       └── ...
 ├── .opencode/          #（若选择了 OpenCode）
 │   └── ...
@@ -218,10 +218,10 @@ sparrow update
 
 在 AI 工具中以斜杠命令调用 skill。Sparrow 提供两类工作流——完整说明见 [开发工作流](#开发工作流)：
 
-- **核心工作流** — 按序运行八步流水线：`/sparrow-requirement` → `/sparrow-arch` → `/sparrow-design @{slug}` → … → `/sparrow-verify @{slug}` → `/sparrow-archive`
+- **过程工作流** — 按序运行八步流水线：`/sparrow-requirement` → `/sparrow-architecture` → `/sparrow-design @{slug}` → … → `/sparrow-verify @{slug}` → `/sparrow-archive`
 - **支持工作流** — 按需随时调用：`/sparrow-supporting-harness`、`/sparrow-supporting-reconcile`
 
-> **重要**：产品级 `requirement` 与 `arch`（1–2）每个 change 运行一次。团队级核心步骤（3–7）按 slug 运行——所有上下文（后端 BC + 交互上下文）共用同一套命令且完全正交。产品级 `archive`（8）在全部 slug 完成后每个 change 运行一次。
+> **重要**：产品级 `requirement` 与 `architecture`（1–2）每个 change 运行一次。团队级过程步骤（3–7）按 slug 运行——所有上下文（后端 BC + 交互上下文）共用同一套命令且完全正交。产品级 `archive`（8）在全部 slug 完成后每个 change 运行一次。
 
 ### 4. 迭代与 refine
 
@@ -231,9 +231,9 @@ sparrow update
 - 带修改重新运行 skill
 - 继续下一步——下一步始终读取最新版本
 
-## 核心工作流参考
+## 过程工作流参考
 
-[核心工作流](#核心工作流) 各步骤的输入、输出与行为细节。
+[过程工作流](#过程工作流) 各步骤的输入、输出与行为细节。
 
 ### 步骤 1：sparrow-requirement（产品级）
 
@@ -248,7 +248,7 @@ sparrow update
 
 **Grill Me** 按问题空间层次（SD→C→S→EBP→BS）推进并做 EBP 覆盖；可选 UI 将 EBP 转为端到端操作流程。**版本迭代**时对照 `master/requirement/` 做增量；change 内规格**不写** `<!-- version -->` 元数据块。
 
-### 步骤 2：sparrow-arch（产品级）
+### 步骤 2：sparrow-architecture（产品级）
 
 **输入**：change 内 `requirement/business/`（catalog + 嵌套 `business-services.md`）+ \[可选\] `requirement/ui/`；只读参考 `master/`  
 **输出**（change 工作区）：
@@ -381,8 +381,6 @@ your-project/
 └── integration-tests/{slug}/
 ```
 
-> **旧布局**：根下直接的 `docs/sparrow/requirement/prd-business.md`、`architecture/business.md` / `application.md` 或 `docs/sparrow/changes/` 已废弃，请按 skill `compat-migrate.md` 与 `docs/prd/sparrow-change-management.md` 迁移。
-
 所有限界上下文共享同一项目根命名空间，但各自为独立模块，拥有专属语言脚手架与依赖管理。
 
 ## 约束资产（Harness）
@@ -424,7 +422,7 @@ harness/
 
 工作机制：
 
-- 各核心 skill 在 `📐 约束资产（Harness）` 章节列出 **always** 与 **conditional** 路径；`development-mode` 为 `brownfield` 时**必须**加载 `common/conditional/brownfield.md`。
+- 各过程工作流 skill 在 `📐 约束资产（Harness）` 章节列出 **always** 与 **conditional** 路径；`development-mode` 为 `brownfield` 时**必须**加载 `common/conditional/brownfield.md`。
 - 通过 [**harness 支持工作流**](#支持工作流)（`/sparrow-supporting-harness`）查看索引，增删改项目级约束。
 - 受管全局模板在版本升级时会刷新，**用户编辑过的文件不会被覆盖**。
 
@@ -475,7 +473,7 @@ harness/
 
 ### sparrow-state.json
 
-流水线状态：活动 change-id、开发模式与阶段进度。文件不存在时由 `sparrow init` 创建；核心 skill 通过 `scripts/sparrow-state.mjs` 更新。
+流水线状态：活动 change-id、开发模式与阶段进度。文件不存在时由 `sparrow init` 创建；过程工作流 skill 通过 `scripts/sparrow-state.mjs` 更新。
 
 刚完成 init（`development-mode` 尚未确定）时：
 
@@ -510,7 +508,7 @@ harness/
 | `development-mode` | `tbd` \| `greenfield` \| `iteration` \| `brownfield`（在 `/sparrow-requirement` 探测前为 `tbd`） |
 | `pipeline` | **`development-mode` 为 `tbd` 时必须为 `null`**。否则为顶层 `current-step` + `status`（`ongoing` \| `done`）；团队级步骤另填 `contexts.<slug>` |
 
-棕地会被探测到，随后终止（核心流程暂不支持）。`/sparrow-archive` 成功后会清空 `changeId`，`greenfield` 变为 `iteration`，`pipeline` 置为 `null`。
+棕地会被探测到，随后终止（过程流水线暂不支持）。`/sparrow-archive` 成功后会清空 `changeId`，`greenfield` 变为 `iteration`，`pipeline` 置为 `null`。
 
 ### 覆盖输出路径
 
@@ -539,7 +537,7 @@ paths:
 
 ## 工作原理
 
-1. **`sparrow init`** 向各 AI 工具目录生成 skill/command 文件，以及全局与项目级约束资产（harness）。Skill 分为 **core**（流水线步骤）与 **supporting**（辅助工作流）两类。
+1. **`sparrow init`** 向各 AI 工具目录生成 skill/command 文件，以及全局与项目级约束资产（harness）。核心工作流 skill 在 schema 上分为 **process**（过程流水线）与 **supporting**（支持工作流）两类。
 2. 每个 **skill** 是一个目录（`SKILL.md` 加可选的 `references/`、`assets/`、`scripts/`）：
    - `SKILL.md` — 触发条件、完成标准、有序步骤、下一 skill；harness 引用在文末
    - `references/` — 按需加载的过程规则（统一语言、Grill Me、revise 门控）

@@ -74,7 +74,6 @@ var MASTER_PROJECT_MD = `${MASTER_ROOT}/project.md`;
 var MASTER_REQUIREMENT_HISTORY = `${MASTER_ROOT}/requirement/revision-history.md`;
 var MASTER_DESIGN_HISTORY = `${MASTER_ROOT}/design/revision-history.md`;
 var MASTER_BC_HISTORY = `${MASTER_ROOT}/architecture/bc-revision-history.md`;
-var LEGACY_CHANGES_ROOT = `${SPARROW_DOCS}/changes`;
 
 // src/kernel/runtime/project-state-io.ts
 function stateAbsPath(projectRoot) {

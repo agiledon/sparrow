@@ -30,7 +30,6 @@ var MASTER_PROJECT_MD = `${MASTER_ROOT}/project.md`;
 var MASTER_REQUIREMENT_HISTORY = `${MASTER_ROOT}/requirement/revision-history.md`;
 var MASTER_DESIGN_HISTORY = `${MASTER_ROOT}/design/revision-history.md`;
 var MASTER_BC_HISTORY = `${MASTER_ROOT}/architecture/bc-revision-history.md`;
-var LEGACY_CHANGES_ROOT = `${SPARROW_DOCS}/changes`;
 
 // src/content/workflows/sparrow-archive/assets/revision-history.md
 var revision_history_default = "# \u4FEE\u8BA2\u5386\u53F2\n";

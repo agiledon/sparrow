@@ -41,6 +41,5 @@ export {
   generateProjectMdContent,
   API_CATALOG_PATH,
   QUALITY_PATH,
-  PRD_QUALITY_PATH,
   type ProjectMdSection,
 } from './project-md.js';

@@ -12,12 +12,12 @@
 - `assets/frontend.md` → `architecture/frontend.md`
 - `assets/spec-interaction.md` → `design/{ui-slug}/spec.md`
 
-更新 `project.md` 的 BC / 交互上下文索引。不得改模板章节结构。**不再**产出 `architecture/business.md`。正文语言遵循 harness `common/always/document-language.md`。
+更新 `project.md` 的 BC / 交互上下文索引。不得改模板章节结构。正文语言遵循 harness `common/always/document-language.md`。
 
 ## 步骤
 
 1. 运行本 skill 的 `scripts/sparrow-state.mjs show`。`development-mode` 为 `tbd` 则先 **sparrow-requirement**；为 `brownfield` 则停止（暂不支持）。通过后 `set-step architecture ongoing`。
-2. 读 `references/ubiquitous-language.md`、`references/spec-layout-guide.md`、`references/revise-gate.md`、`references/compat-migrate.md`。确认 `requirement/business/catalog.md` 与至少一份 `business-services.md` 存在；否则先 requirement。
+2. 读 `references/ubiquitous-language.md`、`references/spec-layout-guide.md`、`references/revise-gate.md`。确认 `requirement/business/catalog.md` 与至少一份 `business-services.md` 存在；否则先 requirement。
 3. 读 `references/output-existence-check.md`，对 bounded-contexts.md / 已有 spec.md 做一次 skip / overwrite / update。
 4. **映射**：读取 catalog 与各 `{sd-slug}/subdomain.md`。先将每个 SD **一对一**映射为 BC，再按 ReAct（`references/react-mapping.md`）识别拆分/合并等调整；遵守 harness `arch/bounded-contexts.md`。写入 `architecture/bounded-contexts.md`。
 5. **切片**：为每个 BC 创建 `design/{slug}/`，按归属把 BS 薄投影写入 `spec.md`；读 `references/property-rules.md` 与 harness `arch/spec-slice.md`，从 EARS 抽取 Properties。

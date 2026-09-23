@@ -80,7 +80,7 @@ test('schema extras resolve in bundled content', () => {
   }
 });
 
-test('output dest paths are declared on each core skill and listed in SKILL.md', () => {
+test('output dest paths are declared on each process workflow skill and listed in SKILL.md', () => {
   const schema = getSparrowSchema();
   const processWorkflows = schema.workflows.filter((s) => s.kind === 'process');
   for (const workflow of processWorkflows) {

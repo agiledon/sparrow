@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Workflow taxonomy (docs)**: Sparrow **core workflows** are the full schema `workflows` set (process + supporting). Pipeline steps use `kind: process` (过程工作流); auxiliary commands use `kind: supporting` (支持工作流). README updated; replaces the old core-vs-supporting top-level split and `kind: core`.
+  - **工作流分类（文档）**：**核心工作流** = schema 全部 workflow；**过程工作流**（`process`）与 **支持工作流**（`supporting`）为其下两类。
+
 ### Added
 
 - **Requirement document ingest**: `sparrow ingest` parses `.md` / `.doc` / `.docx` / `.pdf` into a content-addressed cache (sections, verbatim `signals.md`, OCR'd figures, `read-plan.json`). `/sparrow-requirement @path` runs ingest and reads only the plan. Progress goes to stderr; stdout is a one-line summary.

@@ -1,6 +1,6 @@
 /**
  * Skill generation — plugin assembly helpers and init config.
- * Core workflow skills are installed via install-agent-skills (kernel Workflow → AgentSkillPackage).
+ * Sparrow core workflow skills (process + supporting) install via install-agent-skills (Workflow → AgentSkillPackage).
  */
 
 import { SPARROW_DIR } from '../../kernel/runtime/spec-paths.js';

@@ -46,8 +46,7 @@
       ],
       "references": [
         "business-service-rules.md",
-        "subdomain-rules.md",
-        "compat-migrate.md"
+        "subdomain-rules.md"
       ],
       "outputs": [
         {
@@ -152,8 +151,7 @@
         "react-mapping.md",
         "property-rules.md",
         "bc-tiers.md",
-        "frontend-architecture.md",
-        "compat-migrate.md"
+        "frontend-architecture.md"
       ],
       "outputs": [
         {

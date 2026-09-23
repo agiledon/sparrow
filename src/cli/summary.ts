@@ -91,9 +91,9 @@ export function formatInitSummary(result: InitResult): string {
   lines.push('   3. For each bounded context or Interaction Context: /sparrow-design → /sparrow-model → /sparrow-plan → /sparrow-apply → /sparrow-verify');
   lines.push('   4. /sparrow-archive (product-level) collects all slugs\' delivery specs into master/');
   lines.push('');
-  lines.push('   Supporting: /sparrow-supporting-harness | /sparrow-supporting-reconcile');
+  lines.push('   Supporting workflows: /sparrow-supporting-harness | /sparrow-supporting-reconcile');
   lines.push('');
-  lines.push('   Full pipeline: requirement → arch → design → model → plan → apply → verify → archive');
+  lines.push('   Process pipeline: requirement → architecture → design → model → plan → apply → verify → archive');
 
   return lines.join('\n');
 }

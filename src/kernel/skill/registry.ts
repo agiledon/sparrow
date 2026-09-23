@@ -11,7 +11,7 @@ export interface SkillDefinition {
   description: string;
   /** Execution phase for ordering */
   phase: 'product' | 'team';
-  /** Position in the execution order (1-8 for core, 101+ for supporting) */
+  /** Position in the execution order (1-8 for process workflows, 101+ for supporting) */
   order: number;
   /** The next skill to run (null for the last skill) */
   nextSkill: string | null;
@@ -38,7 +38,7 @@ export type SkillTemplateFn = () => string;
 
 /**
  * Skill registry — owns all skill-related state (templates, harness assets,
- * core and plugin skill metadata). Created by the composition root and passed
+ * Sparrow workflow and plugin skill metadata). Created by the composition root and passed
  * explicitly, so no module-level mutable singletons.
  */
 export class SkillRegistry {

@@ -5,17 +5,8 @@ import type { SkillDefinition, SkillRegistry } from '../../kernel/skill/registry
 import { assembleSkillContent } from './generation.js';
 import { createAllWorkflows } from '../../kernel/workflow/createAllWorkflows.js';
 
-/** Workflow ids removed in prior releases; cleaned up on regenerate. */
-const DEPRECATED_SKILL_IDS = [
-  'sparrow-explore',
-  'sparrow-harness',
-  'sparrow-helper-sync',
-  'sparrow-helper-harness',
-  'sparrow-helper-reconcile',
-  'sparrow-helper-archive',
-  'sparrow-supporting-archive',
-  'sparrow-arch',
-];
+/** Renamed skills removed on regenerate (sparrow update / init). */
+const DEPRECATED_SKILL_IDS = ['sparrow-arch', 'sparrow-explore', 'sparrow-harness'];
 
 function removeDeprecatedSkillFiles(projectRoot: string, toolIds: string[]): void {
   for (const toolId of toolIds) {
@@ -61,7 +52,7 @@ function writePluginSkill(
 }
 
 /**
- * Generate agent skill files for selected tools (core workflows + plugin skills).
+ * Generate agent skill files for selected tools (Sparrow core workflows + plugin skills).
  */
 export function installAgentSkills(
   projectRoot: string,
@@ -69,9 +60,9 @@ export function installAgentSkills(
   registry: SkillRegistry,
 ): { toolId: string; files: string[] }[] {
   const workflows = createAllWorkflows();
-  const coreIds = new Set(workflows.map((w) => w.id as string));
+  const sparrowWorkflowSkillIds = new Set(workflows.map((w) => w.id as string));
 
-  const pluginSkills = registry.getOrderedSkills().filter((s) => !coreIds.has(s.id));
+  const pluginSkills = registry.getOrderedSkills().filter((s) => !sparrowWorkflowSkillIds.has(s.id));
 
   const results: { toolId: string; files: string[] }[] = [];
 

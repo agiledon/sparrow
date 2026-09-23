@@ -18,8 +18,6 @@ import { sharedAssets } from '../../content/bundled-content.js';
 /** Canonical path to the quality-attribute document (relative to master/ or change workspace root). */
 export const API_CATALOG_PATH = ARCHITECTURE_API_CATALOG_REL;
 export const QUALITY_PATH = 'requirement/quality/quality.md';
-/** @deprecated Use QUALITY_PATH */
-export const PRD_QUALITY_PATH = QUALITY_PATH;
 
 /**
  * Generate project.md content for a change workspace (or promoted master copy).
