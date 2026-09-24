@@ -14,4 +14,5 @@ export const kiroAdapter = createAdapter({
   toolId: 'kiro',
   skillPath: (skillId) => `.kiro/skills/${skillId}/SKILL.md`,
   commandPath: () => null,
+  interaction: '在对话里把可选项分行编号（`1`、`2`、`3`…），最后一行是「自定义输入」，用户输入序号。推荐项放在第一位。',
 });

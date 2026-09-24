@@ -10,7 +10,7 @@
 - `requirement/business/{sd-slug}/{c-slug}/{s-slug}/scenario.md`（省略能力层时去掉 `{c-slug}/`）
 - `requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md`（本场景全部 BS 合并于此）
 - `requirement/quality/quality.md`
-- `project.md`（change-id 确认时已生成；本阶段结束时更新勾选；§1.1 只链 catalog）
+- `project.md`（change-id 确认时已生成；本阶段结束时更新勾选；§1.2 只链 catalog）
 
 能力超过阈值时另写 `{c-slug}/capability.md`。未达阈值则省略能力层（不建 `{c-slug}/`）。
 

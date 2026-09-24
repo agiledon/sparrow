@@ -4,7 +4,7 @@
 
 import { bundledHarnessBodies } from '../bundled-content.js';
 
-export const HARNESS_VERSION = '1.0.16';
+export const HARNESS_VERSION = '1.0.19';
 
 export const HARNESS_MANAGED_MARKER = 'sparrow-harness: managed';
 

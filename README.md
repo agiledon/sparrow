@@ -241,7 +241,7 @@ Detailed inputs, outputs, and behavior for each step in the [process workflows](
 
 **Input**: Raw requirements (`/sparrow-requirement @docs/prd.docx`); for **brownfield**, also the running system and codebase  
 **Output** (under the change workspace):
-- `requirement/business/catalog.md` — index + end-to-end business processes (EBP→BS); the only §1.1 link from `project.md`
+- `requirement/business/catalog.md` — index + end-to-end business processes (EBP→BS); the only §1.2 link from `project.md`
 - `requirement/business/{sd-slug}/[{c-slug}/]{s-slug}/` — nested problem-space specs (`subdomain.md`, optional `capability.md`, `scenario.md`, merged `business-services.md`; EARS acceptance on services)
 - `requirement/quality/quality.md` — quality attributes (performance, security, availability, etc.)
 - `requirement/ui/` — \[optional\] UI specs (operation flows ← EBP), design tokens, components, HTML prototypes
@@ -315,7 +315,7 @@ Specs use a **master (baseline)** vs **change (active/archive)** layout. `sparro
 **Shared tree** (relative to `master/` or `change/current/{change-id}/`):
 
 ```
-project.md                            # §1.1 links only catalog.md
+project.md                            # §1.2 links only catalog.md
 requirement/business/catalog.md
 requirement/business/{sd-slug}/subdomain.md
 requirement/business/{sd-slug}/{c-slug}/capability.md          # omit C layer when below threshold

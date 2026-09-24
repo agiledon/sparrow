@@ -116,6 +116,15 @@ test('skill routers do not name references or assets up front', () => {
   assert.match(readFileSync(join(reqDir, 'steps/09-ui.md'), 'utf-8'), /ui-spec\.md/);
 });
 
+test('cursor skills declare AskQuestion and a numbered fallback', () => {
+  const root = generateCursorSkills();
+  const text = readFileSync(join(root, '.cursor/skills/sparrow-requirement/SKILL.md'), 'utf-8');
+  assert.match(text, /AskQuestion/);
+  assert.match(text, /分行编号/);
+  assert.match(text, /自定义输入/);
+  assert.doesNotMatch(text, /请自行判断是否支持光标/);
+});
+
 test('slash command is a short pointer, not the full skill body', () => {
   const root = generateCursorSkills();
   const cmd = readFileSync(join(root, '.cursor/commands/sparrow-requirement.md'), 'utf-8');

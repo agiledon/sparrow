@@ -7,7 +7,7 @@
 - [ ] 场景含 5W；同场景 BS 合于 `business-services.md`；验收为 EARS；一次请求一个服务；名称动宾
 - [ ] 质量属性无空章节
 - [ ] 若做了 UI：操作流程回溯 EBP、无孤儿页面、原型可走通
-- [ ] `project.md` 已更新且 §1.1 只链 catalog；pipeline `requirement` 为 `done`
+- [ ] `project.md` 已更新且 §1.2 只链 catalog；pipeline `requirement` 为 `done`
 
 ## 下一步
 

@@ -34,16 +34,18 @@ function fullFrontmatter(content: CommandContent): string {
   ]);
 }
 
-function formatSkillContent(content: CommandContent): string {
-  return `${fullFrontmatter(content)}\n\n${content.body}`;
+function formatSkillContent(content: CommandContent, interaction: string): string {
+  return `${fullFrontmatter(content)}\n\n${interaction}\n\n${content.body}`;
 }
 
-function formatCommandContent(content: CommandContent, style: 'standard' | 'pi'): string {
+function formatCommandContent(content: CommandContent, style: 'standard' | 'pi', interaction: string): string {
   const fm = style === 'pi'
     ? frontmatter([`description: ${content.description}`])
     : fullFrontmatter(content);
   const skillPath = content.skillRelPath ?? `skills/${content.id}/SKILL.md`;
   const body = [
+    interaction,
+    '',
     `读取并遵循 \`${skillPath}\`。`,
     '只读取该 SKILL 点名的当前步骤文件。',
     '禁止列举或批量读取同目录 `references/`、`assets/`、`steps/`。',
@@ -64,6 +66,8 @@ export interface AdapterConfig {
   commandPath: (skillId: string) => string | null;
   /** Command frontmatter style; 'pi' emits only `description` */
   commandStyle?: 'standard' | 'pi';
+  /** Native question method for this tool, written at the top of skills and commands */
+  interaction: string;
 }
 
 /**
@@ -74,8 +78,8 @@ export function createAdapter(config: AdapterConfig): ToolCommandAdapter {
     toolId: config.toolId,
     getSkillPath: config.skillPath,
     getCommandPath: config.commandPath,
-    formatSkill: formatSkillContent,
-    formatCommand: (content) => formatCommandContent(content, config.commandStyle ?? 'standard'),
+    formatSkill: (content) => formatSkillContent(content, config.interaction),
+    formatCommand: (content) => formatCommandContent(content, config.commandStyle ?? 'standard', config.interaction),
     formatHarnessRef,
     writeSkill: (projectRoot, pkg) => writeAgentSkill(projectRoot, adapter, pkg),
     writeCommand: (projectRoot, pkg, skillRelPath) =>

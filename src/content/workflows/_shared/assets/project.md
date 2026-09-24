@@ -24,7 +24,13 @@
 
 ### 1. 产品需求（问题空间）
 
-#### 1.1 业务需求
+#### 1.1 变更提案
+
+写明本次变更的意图（Intent）、范围（Scope）与原因（Why），并抄写 `development-mode`。
+
+- [ ] [变更提案](./proposal.md) — *待生成 (sparrow-requirement)*
+
+#### 1.2 业务需求
 
 问题空间业务需求四层：**子领域（SD）→ 能力（C，可选）→ 场景（S）→ 业务服务（BS）**。能力数量未达阈值（约 ≤3 个，或本 SD 仅 1 个 C）时省略能力层与 `capability.md`，场景直接挂在子领域目录下。
 
@@ -32,11 +38,11 @@
 
 - [ ] [需求目录 Catalog](./requirement/business/catalog.md) — *待生成 (sparrow-requirement)*
 
-#### 1.2 质量属性
+#### 1.3 质量属性
 
 - [ ] [系统质量属性](./requirement/quality/quality.md) — *待生成 (sparrow-requirement)*
 
-#### 1.3 UI 需求（可选）
+#### 1.4 UI 需求（可选）
 
 > 如果项目需要前端界面，请在执行 `/sparrow-requirement` 时选择继续 UI 设计探索。
 > UI 规格在变更工作区 `change/current/{activeChangeId}/requirement/ui/`。

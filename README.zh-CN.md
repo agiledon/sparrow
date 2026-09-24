@@ -241,7 +241,7 @@ sparrow update
 
 **输入**：原始需求（`/sparrow-requirement @docs/prd.docx`）；**棕地**项目另需结合现有代码与运行行为  
 **输出**（均在变更工作区内）：
-- `requirement/business/catalog.md` — 索引 + 端到端业务流程（EBP→BS）；`project.md` §1.1 的唯一入口
+- `requirement/business/catalog.md` — 索引 + 端到端业务流程（EBP→BS）；`project.md` §1.2 的唯一入口
 - `requirement/business/{sd-slug}/[{c-slug}/]{s-slug}/` — 嵌套问题空间规格（`subdomain.md`、可选 `capability.md`、`scenario.md`、合并的 `business-services.md`；服务验收用 EARS）
 - `requirement/quality/quality.md` — 系统质量属性（性能、安全、高可用等）
 - `requirement/ui/` — \[可选\] UI 规格（操作流程 ← EBP）、设计令牌、组件库与 HTML 原型
@@ -316,7 +316,7 @@ sparrow update
 **master 与 change 同构内容**（路径均相对于各自根）：
 
 ```
-project.md                            # §1.1 只链 catalog.md
+project.md                            # §1.2 只链 catalog.md
 requirement/business/catalog.md
 requirement/business/{sd-slug}/subdomain.md
 requirement/business/{sd-slug}/{c-slug}/capability.md          # 未达阈值时省略能力层
