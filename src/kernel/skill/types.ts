@@ -20,6 +20,7 @@ export interface GeneratedSkillBundle {
   references?: BundledFile[];
   assets?: BundledFile[];
   scripts?: BundledFile[];
+  steps?: BundledFile[];
 }
 
 export interface WorkflowPackageContext {

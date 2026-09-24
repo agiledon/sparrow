@@ -85,11 +85,35 @@ test('output dest paths are declared on each process workflow skill and listed i
   const processWorkflows = schema.workflows.filter((s) => s.kind === 'process');
   for (const workflow of processWorkflows) {
     assert.ok((workflow.outputs ?? []).length > 0, `${workflow.skillId} missing outputs catalog`);
-    const body = composeSkillBodyFromWorkflow(workflow.skillId);
+    const body = [
+      composeSkillBodyFromWorkflow(workflow.skillId),
+      ...Object.entries(skillExtras[workflow.skillId] ?? {})
+        .filter(([rel]) => rel.startsWith('steps/'))
+        .map(([, content]) => content),
+    ].join('\n');
     for (const output of workflow.outputs ?? []) {
-      assert.ok(body.includes(output.dest), `${workflow.skillId} SKILL.md missing dest ${output.dest}`);
+      assert.ok(body.includes(output.dest), `${workflow.skillId} missing dest ${output.dest}`);
     }
   }
+});
+
+test('skill routers do not name references or assets up front', () => {
+  const root = generateCursorSkills();
+  const schema = getSparrowSchema();
+  for (const workflow of schema.workflows) {
+    const text = readFileSync(join(root, '.cursor/skills', workflow.skillId, 'SKILL.md'), 'utf-8');
+    assert.doesNotMatch(text, /references\//, `${workflow.skillId} SKILL.md names references/`);
+    assert.doesNotMatch(text, /assets\//, `${workflow.skillId} SKILL.md names assets/`);
+    assert.ok(existsSync(join(root, '.cursor/skills', workflow.skillId, 'steps')), `${workflow.skillId} missing steps/`);
+  }
+  const reqDir = join(root, '.cursor/skills/sparrow-requirement');
+  const reqSkill = readFileSync(join(reqDir, 'SKILL.md'), 'utf-8');
+  assert.doesNotMatch(reqSkill, /grill-me\.md/);
+  assert.doesNotMatch(reqSkill, /assets\/ui-spec\.md/);
+  assert.match(reqSkill, /steps\/01-mode\.md/);
+  assert.ok(existsSync(join(reqDir, 'steps/01-mode.md')));
+  assert.match(readFileSync(join(reqDir, 'steps/06-grill.md'), 'utf-8'), /grill-me\.md/);
+  assert.match(readFileSync(join(reqDir, 'steps/09-ui.md'), 'utf-8'), /ui-spec\.md/);
 });
 
 test('slash command is a short pointer, not the full skill body', () => {
@@ -120,15 +144,11 @@ test('ingest discipline single source ingest-cli.md is referenced consistently',
     join(process.cwd(), 'src/content/harness/requirement/requirements.md'),
     'utf-8',
   );
-  const skill = readFileSync(
-    join(process.cwd(), 'src/content/workflows/sparrow-requirement/activity.md'),
+  const ingestStep = readFileSync(
+    join(process.cwd(), 'src/content/workflows/sparrow-requirement/steps/02-input.md'),
     'utf-8',
   );
-  const workflow = readFileSync(
-    join(process.cwd(), 'src/content/workflows/sparrow-requirement/guideline.md'),
-    'utf-8',
-  );
-  for (const doc of [requirements, skill, workflow]) {
+  for (const doc of [requirements, ingestStep]) {
     assert.match(doc, /ingest-cli\.md/);
   }
   assert.doesNotMatch(requirements, /Python、unzip 手工解 docx/);

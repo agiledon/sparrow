@@ -41,6 +41,12 @@ import _wf_sparrow_apply_checkpoint_md from './workflows/sparrow-apply/checkpoin
 import _wf_sparrow_apply_guideline_md from './workflows/sparrow-apply/guideline.md';
 import _wf_sparrow_apply_references_apply_rules_md from './workflows/sparrow-apply/references/apply-rules.md';
 import _wf_sparrow_apply_references_interaction_apply_md from './workflows/sparrow-apply/references/interaction-apply.md';
+import _wf_sparrow_apply_steps_01_gate_md from './workflows/sparrow-apply/steps/01-gate.md';
+import _wf_sparrow_apply_steps_02_context_md from './workflows/sparrow-apply/steps/02-context.md';
+import _wf_sparrow_apply_steps_03_rules_md from './workflows/sparrow-apply/steps/03-rules.md';
+import _wf_sparrow_apply_steps_04_interaction_md from './workflows/sparrow-apply/steps/04-interaction.md';
+import _wf_sparrow_apply_steps_05_review_md from './workflows/sparrow-apply/steps/05-review.md';
+import _wf_sparrow_apply_steps_06_index_md from './workflows/sparrow-apply/steps/06-index.md';
 import _wf_sparrow_architecture_activity_md from './workflows/sparrow-architecture/activity.md';
 import _wf_sparrow_architecture_assets_bounded_contexts_md from './workflows/sparrow-architecture/assets/bounded-contexts.md';
 import _wf_sparrow_architecture_assets_frontend_md from './workflows/sparrow-architecture/assets/frontend.md';
@@ -52,6 +58,14 @@ import _wf_sparrow_architecture_references_bc_tiers_md from './workflows/sparrow
 import _wf_sparrow_architecture_references_frontend_architecture_md from './workflows/sparrow-architecture/references/frontend-architecture.md';
 import _wf_sparrow_architecture_references_property_rules_md from './workflows/sparrow-architecture/references/property-rules.md';
 import _wf_sparrow_architecture_references_react_mapping_md from './workflows/sparrow-architecture/references/react-mapping.md';
+import _wf_sparrow_architecture_steps_01_gate_md from './workflows/sparrow-architecture/steps/01-gate.md';
+import _wf_sparrow_architecture_steps_02_layout_md from './workflows/sparrow-architecture/steps/02-layout.md';
+import _wf_sparrow_architecture_steps_03_existence_md from './workflows/sparrow-architecture/steps/03-existence.md';
+import _wf_sparrow_architecture_steps_04_map_md from './workflows/sparrow-architecture/steps/04-map.md';
+import _wf_sparrow_architecture_steps_05_slice_md from './workflows/sparrow-architecture/steps/05-slice.md';
+import _wf_sparrow_architecture_steps_06_ui_md from './workflows/sparrow-architecture/steps/06-ui.md';
+import _wf_sparrow_architecture_steps_07_revise_md from './workflows/sparrow-architecture/steps/07-revise.md';
+import _wf_sparrow_architecture_steps_08_index_md from './workflows/sparrow-architecture/steps/08-index.md';
 import _wf_sparrow_archive_activity_md from './workflows/sparrow-archive/activity.md';
 import _wf_sparrow_archive_assets_bc_revision_history_entry_md from './workflows/sparrow-archive/assets/bc-revision-history-entry.md';
 import _wf_sparrow_archive_assets_bc_revision_history_md from './workflows/sparrow-archive/assets/bc-revision-history.md';
@@ -59,6 +73,15 @@ import _wf_sparrow_archive_assets_revision_history_entry_md from './workflows/sp
 import _wf_sparrow_archive_assets_revision_history_md from './workflows/sparrow-archive/assets/revision-history.md';
 import _wf_sparrow_archive_checkpoint_md from './workflows/sparrow-archive/checkpoint.md';
 import _wf_sparrow_archive_guideline_md from './workflows/sparrow-archive/guideline.md';
+import _wf_sparrow_archive_steps_01_gate_md from './workflows/sparrow-archive/steps/01-gate.md';
+import _wf_sparrow_archive_steps_02_select_md from './workflows/sparrow-archive/steps/02-select.md';
+import _wf_sparrow_archive_steps_03_check_md from './workflows/sparrow-archive/steps/03-check.md';
+import _wf_sparrow_archive_steps_04_confirm_md from './workflows/sparrow-archive/steps/04-confirm.md';
+import _wf_sparrow_archive_steps_05_topology_md from './workflows/sparrow-archive/steps/05-topology.md';
+import _wf_sparrow_archive_steps_06_archive_md from './workflows/sparrow-archive/steps/06-archive.md';
+import _wf_sparrow_archive_steps_07_promote_md from './workflows/sparrow-archive/steps/07-promote.md';
+import _wf_sparrow_archive_steps_08_baseline_md from './workflows/sparrow-archive/steps/08-baseline.md';
+import _wf_sparrow_archive_steps_09_done_md from './workflows/sparrow-archive/steps/09-done.md';
 import _wf_sparrow_design_activity_md from './workflows/sparrow-design/activity.md';
 import _wf_sparrow_design_assets_api_interaction_md from './workflows/sparrow-design/assets/api-interaction.md';
 import _wf_sparrow_design_assets_api_md from './workflows/sparrow-design/assets/api.md';
@@ -69,6 +92,12 @@ import _wf_sparrow_design_checkpoint_md from './workflows/sparrow-design/checkpo
 import _wf_sparrow_design_guideline_md from './workflows/sparrow-design/guideline.md';
 import _wf_sparrow_design_references_api_design_rules_md from './workflows/sparrow-design/references/api-design-rules.md';
 import _wf_sparrow_design_references_interaction_design_md from './workflows/sparrow-design/references/interaction-design.md';
+import _wf_sparrow_design_steps_01_gate_md from './workflows/sparrow-design/steps/01-gate.md';
+import _wf_sparrow_design_steps_02_context_md from './workflows/sparrow-design/steps/02-context.md';
+import _wf_sparrow_design_steps_03_backend_md from './workflows/sparrow-design/steps/03-backend.md';
+import _wf_sparrow_design_steps_03_interaction_md from './workflows/sparrow-design/steps/03-interaction.md';
+import _wf_sparrow_design_steps_04_catalog_md from './workflows/sparrow-design/steps/04-catalog.md';
+import _wf_sparrow_design_steps_05_index_md from './workflows/sparrow-design/steps/05-index.md';
 import _wf_sparrow_model_activity_md from './workflows/sparrow-model/activity.md';
 import _wf_sparrow_model_assets_model_interaction_md from './workflows/sparrow-model/assets/model-interaction.md';
 import _wf_sparrow_model_assets_model_md from './workflows/sparrow-model/assets/model.md';
@@ -76,6 +105,11 @@ import _wf_sparrow_model_checkpoint_md from './workflows/sparrow-model/checkpoin
 import _wf_sparrow_model_guideline_md from './workflows/sparrow-model/guideline.md';
 import _wf_sparrow_model_references_domain_modeling_steps_md from './workflows/sparrow-model/references/domain-modeling-steps.md';
 import _wf_sparrow_model_references_view_modeling_md from './workflows/sparrow-model/references/view-modeling.md';
+import _wf_sparrow_model_steps_01_gate_md from './workflows/sparrow-model/steps/01-gate.md';
+import _wf_sparrow_model_steps_02_context_md from './workflows/sparrow-model/steps/02-context.md';
+import _wf_sparrow_model_steps_03_backend_md from './workflows/sparrow-model/steps/03-backend.md';
+import _wf_sparrow_model_steps_03_interaction_md from './workflows/sparrow-model/steps/03-interaction.md';
+import _wf_sparrow_model_steps_04_index_md from './workflows/sparrow-model/steps/04-index.md';
 import _wf_sparrow_plan_activity_md from './workflows/sparrow-plan/activity.md';
 import _wf_sparrow_plan_assets_plan_interaction_md from './workflows/sparrow-plan/assets/plan-interaction.md';
 import _wf_sparrow_plan_assets_plan_md from './workflows/sparrow-plan/assets/plan.md';
@@ -83,6 +117,12 @@ import _wf_sparrow_plan_checkpoint_md from './workflows/sparrow-plan/checkpoint.
 import _wf_sparrow_plan_guideline_md from './workflows/sparrow-plan/guideline.md';
 import _wf_sparrow_plan_references_interaction_plan_md from './workflows/sparrow-plan/references/interaction-plan.md';
 import _wf_sparrow_plan_references_module_layouts_md from './workflows/sparrow-plan/references/module-layouts.md';
+import _wf_sparrow_plan_steps_01_gate_md from './workflows/sparrow-plan/steps/01-gate.md';
+import _wf_sparrow_plan_steps_02_context_md from './workflows/sparrow-plan/steps/02-context.md';
+import _wf_sparrow_plan_steps_03_backend_md from './workflows/sparrow-plan/steps/03-backend.md';
+import _wf_sparrow_plan_steps_03_interaction_md from './workflows/sparrow-plan/steps/03-interaction.md';
+import _wf_sparrow_plan_steps_04_check_md from './workflows/sparrow-plan/steps/04-check.md';
+import _wf_sparrow_plan_steps_05_index_md from './workflows/sparrow-plan/steps/05-index.md';
 import _wf_sparrow_requirement_activity_md from './workflows/sparrow-requirement/activity.md';
 import _wf_sparrow_requirement_assets_business_services_md from './workflows/sparrow-requirement/assets/business-services.md';
 import _wf_sparrow_requirement_assets_capability_md from './workflows/sparrow-requirement/assets/capability.md';
@@ -101,11 +141,34 @@ import _wf_sparrow_requirement_guideline_md from './workflows/sparrow-requiremen
 import _wf_sparrow_requirement_references_business_service_rules_md from './workflows/sparrow-requirement/references/business-service-rules.md';
 import _wf_sparrow_requirement_references_subdomain_rules_md from './workflows/sparrow-requirement/references/subdomain-rules.md';
 import _wf_sparrow_requirement_scripts_ensure_change_workspace_mjs from './workflows/sparrow-requirement/scripts/ensure-change-workspace.mjs';
+import _wf_sparrow_requirement_steps_01_mode_md from './workflows/sparrow-requirement/steps/01-mode.md';
+import _wf_sparrow_requirement_steps_02_input_md from './workflows/sparrow-requirement/steps/02-input.md';
+import _wf_sparrow_requirement_steps_03_change_id_md from './workflows/sparrow-requirement/steps/03-change-id.md';
+import _wf_sparrow_requirement_steps_04_revise_md from './workflows/sparrow-requirement/steps/04-revise.md';
+import _wf_sparrow_requirement_steps_05_existence_md from './workflows/sparrow-requirement/steps/05-existence.md';
+import _wf_sparrow_requirement_steps_06_grill_md from './workflows/sparrow-requirement/steps/06-grill.md';
+import _wf_sparrow_requirement_steps_07_structure_md from './workflows/sparrow-requirement/steps/07-structure.md';
+import _wf_sparrow_requirement_steps_08_services_md from './workflows/sparrow-requirement/steps/08-services.md';
+import _wf_sparrow_requirement_steps_09_ui_md from './workflows/sparrow-requirement/steps/09-ui.md';
+import _wf_sparrow_requirement_steps_10_index_md from './workflows/sparrow-requirement/steps/10-index.md';
 import _wf_sparrow_supporting_harness_activity_md from './workflows/sparrow-supporting-harness/activity.md';
+import _wf_sparrow_supporting_harness_steps_01_read_md from './workflows/sparrow-supporting-harness/steps/01-read.md';
+import _wf_sparrow_supporting_harness_steps_02_edit_md from './workflows/sparrow-supporting-harness/steps/02-edit.md';
 import _wf_sparrow_supporting_reconcile_activity_md from './workflows/sparrow-supporting-reconcile/activity.md';
+import _wf_sparrow_supporting_reconcile_steps_01_collect_md from './workflows/sparrow-supporting-reconcile/steps/01-collect.md';
+import _wf_sparrow_supporting_reconcile_steps_02_load_md from './workflows/sparrow-supporting-reconcile/steps/02-load.md';
+import _wf_sparrow_supporting_reconcile_steps_03_classify_md from './workflows/sparrow-supporting-reconcile/steps/03-classify.md';
+import _wf_sparrow_supporting_reconcile_steps_04_constraint_md from './workflows/sparrow-supporting-reconcile/steps/04-constraint.md';
+import _wf_sparrow_supporting_reconcile_steps_05_write_md from './workflows/sparrow-supporting-reconcile/steps/05-write.md';
 import _wf_sparrow_verify_activity_md from './workflows/sparrow-verify/activity.md';
 import _wf_sparrow_verify_assets_verify_report_md from './workflows/sparrow-verify/assets/verify_report.md';
 import _wf_sparrow_verify_guideline_md from './workflows/sparrow-verify/guideline.md';
+import _wf_sparrow_verify_steps_01_gate_md from './workflows/sparrow-verify/steps/01-gate.md';
+import _wf_sparrow_verify_steps_02_language_md from './workflows/sparrow-verify/steps/02-language.md';
+import _wf_sparrow_verify_steps_03_ready_md from './workflows/sparrow-verify/steps/03-ready.md';
+import _wf_sparrow_verify_steps_04_compare_md from './workflows/sparrow-verify/steps/04-compare.md';
+import _wf_sparrow_verify_steps_05_report_md from './workflows/sparrow-verify/steps/05-report.md';
+import _wf_sparrow_verify_steps_06_index_md from './workflows/sparrow-verify/steps/06-index.md';
 
 export const skillTemplates: Record<string, string> = {
   'sparrow-apply/SKILL.md': _wf_sparrow_apply_activity_md,
@@ -126,6 +189,12 @@ export const skillExtras: Record<string, Record<string, string>> = {
     'checkpoint.md': _wf_sparrow_apply_checkpoint_md,
     'references/apply-rules.md': _wf_sparrow_apply_references_apply_rules_md,
     'references/interaction-apply.md': _wf_sparrow_apply_references_interaction_apply_md,
+    'steps/01-gate.md': _wf_sparrow_apply_steps_01_gate_md,
+    'steps/02-context.md': _wf_sparrow_apply_steps_02_context_md,
+    'steps/03-rules.md': _wf_sparrow_apply_steps_03_rules_md,
+    'steps/04-interaction.md': _wf_sparrow_apply_steps_04_interaction_md,
+    'steps/05-review.md': _wf_sparrow_apply_steps_05_review_md,
+    'steps/06-index.md': _wf_sparrow_apply_steps_06_index_md,
   },
   'sparrow-architecture': {
     'assets/bounded-contexts.md': _wf_sparrow_architecture_assets_bounded_contexts_md,
@@ -137,6 +206,14 @@ export const skillExtras: Record<string, Record<string, string>> = {
     'references/frontend-architecture.md': _wf_sparrow_architecture_references_frontend_architecture_md,
     'references/property-rules.md': _wf_sparrow_architecture_references_property_rules_md,
     'references/react-mapping.md': _wf_sparrow_architecture_references_react_mapping_md,
+    'steps/01-gate.md': _wf_sparrow_architecture_steps_01_gate_md,
+    'steps/02-layout.md': _wf_sparrow_architecture_steps_02_layout_md,
+    'steps/03-existence.md': _wf_sparrow_architecture_steps_03_existence_md,
+    'steps/04-map.md': _wf_sparrow_architecture_steps_04_map_md,
+    'steps/05-slice.md': _wf_sparrow_architecture_steps_05_slice_md,
+    'steps/06-ui.md': _wf_sparrow_architecture_steps_06_ui_md,
+    'steps/07-revise.md': _wf_sparrow_architecture_steps_07_revise_md,
+    'steps/08-index.md': _wf_sparrow_architecture_steps_08_index_md,
   },
   'sparrow-archive': {
     'assets/bc-revision-history-entry.md': _wf_sparrow_archive_assets_bc_revision_history_entry_md,
@@ -144,6 +221,15 @@ export const skillExtras: Record<string, Record<string, string>> = {
     'assets/revision-history-entry.md': _wf_sparrow_archive_assets_revision_history_entry_md,
     'assets/revision-history.md': _wf_sparrow_archive_assets_revision_history_md,
     'checkpoint.md': _wf_sparrow_archive_checkpoint_md,
+    'steps/01-gate.md': _wf_sparrow_archive_steps_01_gate_md,
+    'steps/02-select.md': _wf_sparrow_archive_steps_02_select_md,
+    'steps/03-check.md': _wf_sparrow_archive_steps_03_check_md,
+    'steps/04-confirm.md': _wf_sparrow_archive_steps_04_confirm_md,
+    'steps/05-topology.md': _wf_sparrow_archive_steps_05_topology_md,
+    'steps/06-archive.md': _wf_sparrow_archive_steps_06_archive_md,
+    'steps/07-promote.md': _wf_sparrow_archive_steps_07_promote_md,
+    'steps/08-baseline.md': _wf_sparrow_archive_steps_08_baseline_md,
+    'steps/09-done.md': _wf_sparrow_archive_steps_09_done_md,
   },
   'sparrow-design': {
     'assets/api-interaction.md': _wf_sparrow_design_assets_api_interaction_md,
@@ -154,6 +240,12 @@ export const skillExtras: Record<string, Record<string, string>> = {
     'checkpoint.md': _wf_sparrow_design_checkpoint_md,
     'references/api-design-rules.md': _wf_sparrow_design_references_api_design_rules_md,
     'references/interaction-design.md': _wf_sparrow_design_references_interaction_design_md,
+    'steps/01-gate.md': _wf_sparrow_design_steps_01_gate_md,
+    'steps/02-context.md': _wf_sparrow_design_steps_02_context_md,
+    'steps/03-backend.md': _wf_sparrow_design_steps_03_backend_md,
+    'steps/03-interaction.md': _wf_sparrow_design_steps_03_interaction_md,
+    'steps/04-catalog.md': _wf_sparrow_design_steps_04_catalog_md,
+    'steps/05-index.md': _wf_sparrow_design_steps_05_index_md,
   },
   'sparrow-model': {
     'assets/model-interaction.md': _wf_sparrow_model_assets_model_interaction_md,
@@ -161,6 +253,11 @@ export const skillExtras: Record<string, Record<string, string>> = {
     'checkpoint.md': _wf_sparrow_model_checkpoint_md,
     'references/domain-modeling-steps.md': _wf_sparrow_model_references_domain_modeling_steps_md,
     'references/view-modeling.md': _wf_sparrow_model_references_view_modeling_md,
+    'steps/01-gate.md': _wf_sparrow_model_steps_01_gate_md,
+    'steps/02-context.md': _wf_sparrow_model_steps_02_context_md,
+    'steps/03-backend.md': _wf_sparrow_model_steps_03_backend_md,
+    'steps/03-interaction.md': _wf_sparrow_model_steps_03_interaction_md,
+    'steps/04-index.md': _wf_sparrow_model_steps_04_index_md,
   },
   'sparrow-plan': {
     'assets/plan-interaction.md': _wf_sparrow_plan_assets_plan_interaction_md,
@@ -168,6 +265,12 @@ export const skillExtras: Record<string, Record<string, string>> = {
     'checkpoint.md': _wf_sparrow_plan_checkpoint_md,
     'references/interaction-plan.md': _wf_sparrow_plan_references_interaction_plan_md,
     'references/module-layouts.md': _wf_sparrow_plan_references_module_layouts_md,
+    'steps/01-gate.md': _wf_sparrow_plan_steps_01_gate_md,
+    'steps/02-context.md': _wf_sparrow_plan_steps_02_context_md,
+    'steps/03-backend.md': _wf_sparrow_plan_steps_03_backend_md,
+    'steps/03-interaction.md': _wf_sparrow_plan_steps_03_interaction_md,
+    'steps/04-check.md': _wf_sparrow_plan_steps_04_check_md,
+    'steps/05-index.md': _wf_sparrow_plan_steps_05_index_md,
   },
   'sparrow-requirement': {
     'assets/business-services.md': _wf_sparrow_requirement_assets_business_services_md,
@@ -186,13 +289,36 @@ export const skillExtras: Record<string, Record<string, string>> = {
     'references/business-service-rules.md': _wf_sparrow_requirement_references_business_service_rules_md,
     'references/subdomain-rules.md': _wf_sparrow_requirement_references_subdomain_rules_md,
     'scripts/ensure-change-workspace.mjs': _wf_sparrow_requirement_scripts_ensure_change_workspace_mjs,
+    'steps/01-mode.md': _wf_sparrow_requirement_steps_01_mode_md,
+    'steps/02-input.md': _wf_sparrow_requirement_steps_02_input_md,
+    'steps/03-change-id.md': _wf_sparrow_requirement_steps_03_change_id_md,
+    'steps/04-revise.md': _wf_sparrow_requirement_steps_04_revise_md,
+    'steps/05-existence.md': _wf_sparrow_requirement_steps_05_existence_md,
+    'steps/06-grill.md': _wf_sparrow_requirement_steps_06_grill_md,
+    'steps/07-structure.md': _wf_sparrow_requirement_steps_07_structure_md,
+    'steps/08-services.md': _wf_sparrow_requirement_steps_08_services_md,
+    'steps/09-ui.md': _wf_sparrow_requirement_steps_09_ui_md,
+    'steps/10-index.md': _wf_sparrow_requirement_steps_10_index_md,
   },
   'sparrow-supporting-harness': {
+    'steps/01-read.md': _wf_sparrow_supporting_harness_steps_01_read_md,
+    'steps/02-edit.md': _wf_sparrow_supporting_harness_steps_02_edit_md,
   },
   'sparrow-supporting-reconcile': {
+    'steps/01-collect.md': _wf_sparrow_supporting_reconcile_steps_01_collect_md,
+    'steps/02-load.md': _wf_sparrow_supporting_reconcile_steps_02_load_md,
+    'steps/03-classify.md': _wf_sparrow_supporting_reconcile_steps_03_classify_md,
+    'steps/04-constraint.md': _wf_sparrow_supporting_reconcile_steps_04_constraint_md,
+    'steps/05-write.md': _wf_sparrow_supporting_reconcile_steps_05_write_md,
   },
   'sparrow-verify': {
     'assets/verify_report.md': _wf_sparrow_verify_assets_verify_report_md,
+    'steps/01-gate.md': _wf_sparrow_verify_steps_01_gate_md,
+    'steps/02-language.md': _wf_sparrow_verify_steps_02_language_md,
+    'steps/03-ready.md': _wf_sparrow_verify_steps_03_ready_md,
+    'steps/04-compare.md': _wf_sparrow_verify_steps_04_compare_md,
+    'steps/05-report.md': _wf_sparrow_verify_steps_05_report_md,
+    'steps/06-index.md': _wf_sparrow_verify_steps_06_index_md,
   },
 };
 

@@ -26,6 +26,7 @@ export class StandardAgentSkillPackage implements AgentSkillPackage {
     const references = this.collectReferences();
     const assets = this.collectAssets();
     const scripts = this.collectScripts();
+    const steps = this.collectSteps();
 
     return {
       skillMarkdown: this.store.composeSkillMarkdown(this.workflowId),
@@ -46,6 +47,7 @@ export class StandardAgentSkillPackage implements AgentSkillPackage {
       ...(references.length > 0 ? { references } : {}),
       ...(assets.length > 0 ? { assets } : {}),
       ...(scripts.length > 0 ? { scripts } : {}),
+      ...(steps.length > 0 ? { steps } : {}),
     };
   }
 
@@ -104,5 +106,12 @@ export class StandardAgentSkillPackage implements AgentSkillPackage {
     }
 
     return out;
+  }
+
+  private collectSteps(): BundledFile[] {
+    return this.store.listWorkflowExtras(this.workflowId, 'steps/').map((file) => ({
+      relativePath: file.relPath,
+      content: file.content,
+    }));
   }
 }

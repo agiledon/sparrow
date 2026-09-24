@@ -78,6 +78,11 @@ export function writeSkill(
     writeBundleFile(join(projectRoot, rel), file.content);
     createdRelPaths.push(rel);
   }
+  for (const file of bundle.steps ?? []) {
+    const rel = join(skillDir, file.relativePath);
+    writeBundleFile(join(projectRoot, rel), file.content);
+    createdRelPaths.push(rel);
+  }
 
   return { skillRelPath, createdRelPaths };
 }

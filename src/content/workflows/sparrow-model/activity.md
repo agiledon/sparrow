@@ -4,15 +4,19 @@
 
 相对 `docs/sparrow/change/current/{activeChangeId}/`：
 
-- 后端：`assets/model.md` → `design/{slug}/model.md`
-- 交互上下文：`assets/model-interaction.md` → `design/{slug}/model.md`（仍为单文件 `model.md`，不拆 view-model.md）
+- 后端或交互上下文都写入 `design/{slug}/model.md`（交互上下文仍为单文件，不拆 view-model）
 
 不得改模板章节。
 
+## 按需加载
+
+现在只读取 `steps/01-gate.md`，并只执行该文件。
+禁止列举或预读步骤目录及其附属文件。
+未进入的步骤、被跳过的分支，不得读取其文件。
+
 ## 步骤
 
-1. 运行本 skill 的 `scripts/sparrow-state.mjs show`。`tbd` 则先 **sparrow-requirement**；`brownfield` 则停止。确定 slug 后 `set-context {slug} model ongoing`。缺 api.md/tech.md 则先 **sparrow-design @{slug}**。
-2. 读 `references/ubiquitous-language.md`、`references/revise-gate.md`、`references/output-existence-check.md`。
-3. 后端：读 `references/domain-modeling-steps.md` 与 harness `model/*`，按三阶段写入 `assets/model.md`。命名 UML 风格（PascalCase 类、camelCase 方法）。
-4. 交互上下文：读 `references/view-modeling.md`。ViewModel ≠ 领域模型；不读任何 BC 的 model.md。
-5. 读 `references/project-md-update.md`，更新该 slug 的 model 状态。运行 `scripts/sparrow-state.mjs set-context {slug} model done`。
+1. 确认状态与 slug
+2. 读取上下文并分支
+3. 后端模型或视图模型
+4. 更新项目向导

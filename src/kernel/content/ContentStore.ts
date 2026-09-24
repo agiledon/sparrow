@@ -108,6 +108,13 @@ export class ContentStore {
     return skillExtras[workflowId]?.[relPath];
   }
 
+  listWorkflowExtras(workflowId: string, prefix: string): { relPath: string; content: string }[] {
+    const extras = skillExtras[workflowId] ?? {};
+    return Object.entries(extras)
+      .filter(([relPath]) => relPath.startsWith(prefix))
+      .map(([relPath, content]) => ({ relPath, content }));
+  }
+
   uniqueAssetNames(workflow: WorkflowSchema): string[] {
     const names = (workflow.outputs ?? []).map((o) => o.asset);
     if (names.length === 0) {

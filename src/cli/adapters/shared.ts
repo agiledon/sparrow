@@ -45,7 +45,8 @@ function formatCommandContent(content: CommandContent, style: 'standard' | 'pi')
   const skillPath = content.skillRelPath ?? `skills/${content.id}/SKILL.md`;
   const body = [
     `读取并遵循 \`${skillPath}\`。`,
-    '按需打开同目录 `references/`（过程规则）、`assets/`（产出模板）、`scripts/`（机械步骤）。',
+    '只读取该 SKILL 点名的当前步骤文件。',
+    '禁止列举或批量读取同目录 `references/`、`assets/`、`steps/`。',
     '不要把附属文件全文贴进本命令或对话。',
   ];
   if (content.packageCliLines?.length) {

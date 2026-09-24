@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **On-demand skill files**: Each skill's `SKILL.md` names only the first `steps/` file. References and assets are named inside the step that uses them, so later files (such as Grill Me or UI templates) are not read at the start.
+  - **技能按需加载**：`SKILL.md` 只点名第一步；`references` 与 `assets` 留在对应步骤文件中，避免一开始读完全部附属文件。
+
 - **project.md at change-id confirmation**: `ensure-change-workspace.mjs` writes `change/current/{change-id}/project.md` from the shared template as soon as the change-id is confirmed (on `--create`, and on `--check` when the workspace already exists). Existing files are not overwritten. The requirement phase still updates checkbox status at the end.
   - **确认 change-id 时生成 project.md**：工作区创建时即写入向导；已存在不覆盖。需求阶段结束时仍只更新勾选。
 

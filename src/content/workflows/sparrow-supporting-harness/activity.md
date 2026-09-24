@@ -6,29 +6,13 @@
 
 按用户意图查看、添加、更新或删除 **项目级** `docs/sparrow/harness/` 中的 Must / Must Not 约束；需要时同步 `constitution.md` 索引。
 
+## 按需加载
+
+现在只读取 `steps/01-read.md`，并只执行该文件。
+禁止列举或预读步骤目录及其附属文件。
+未进入的步骤、被跳过的分支，不得读取其文件。
+
 ## 步骤
 
-1. 读 `references/ubiquitous-language.md` 与 `docs/sparrow/harness/constitution.md`。
-2. 查看：列出项目级与全局级文件。添加/更新/删除：写入对应阶段文件。用户未指定阶段时按内容自动分类。
-3. 格式：Must / Must Not；同一文件内按必须 / 禁止 / 判断标准分组。
-
-## 分类
-
-| 约束内容 | 目标文件 |
-|---------|---------|
-| 业务服务 / Grill Me / EBP / EARS / UI 操作流程 | requirement/requirements.md |
-| 子领域划分 | requirement/subdomains.md |
-| 限界上下文 / SD→BC 映射 | arch/bounded-contexts.md |
-| 规格切片 / Property | arch/spec-slice.md |
-| 交互上下文 / 前端 | arch/frontend.md |
-| API / 序列图 | design/api-design.md |
-| DDD 四层 / 角色 | model/architecture.md |
-| 聚合 / 建模 | model/domain-modeling.md |
-| 代码生成 / 反模式 | apply/implementation.md |
-| 跨阶段索引 | constitution.md |
-| 跨阶段 always | common/always/*.md |
-| 跨阶段 conditional | common/conditional/*.md |
-
-优先级：项目级 > 全局级。新增约束对后续阶段命令即时生效。
-
-{{HARNESS}}
+1. 读取术语与索引
+2. 查看或修改约束

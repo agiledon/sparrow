@@ -9,14 +9,18 @@
 - 变更清单经用户确认后写入
 - 规格未变但实现漂移时，更新项目级 harness，不改规格
 
-## 步骤
-
-1. 读 `references/ubiquitous-language.md`。收集对话历史与 `git diff` / 相关实现。
-2. 读 change 工作区 `project.md`，只加载已存在的目标文件；输出已加载 / 已跳过。
-3. 分类：业务需求 → `requirement/business/`（catalog / business-services 等）；质量属性 → `requirement/quality/quality.md`；技术/NFR → api/tech；领域模型 → model.md；UI → `requirement/ui/**`；实现纪律 → harness。
-4. 规格 vs 约束：功能/接口/页面变化改规格；「必须/禁止」改 harness。各类规格未变而实现相对清晰规格漂移 → 约束缺口，补项目级 Must。
-5. 输出变更清单，确认后再写。读 `references/version-metadata.md` 与 `references/project-md-update.md`（只改时间戳与已改文档状态，不改 BC 列表）。
-
 若 `change/current/` 有未归档变更：提示架构级变更应走 revise；reconcile 不替代 revise。
 
-{{HARNESS}}
+## 按需加载
+
+现在只读取 `steps/01-collect.md`，并只执行该文件。
+禁止列举或预读步骤目录及其附属文件。
+未进入的步骤、被跳过的分支，不得读取其文件。
+
+## 步骤
+
+1. 收集差异
+2. 只加载已有目标
+3. 分类
+4. 区分规格与约束
+5. 确认后写入

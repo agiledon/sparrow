@@ -4,21 +4,25 @@
 
 相对 `docs/sparrow/change/current/{activeChangeId}/`：
 
-- `assets/verify_report.md` → `design/{slug}/verify_report.md`，问题按 P0–P3 分级并给出建议
+- 写入 `design/{slug}/verify_report.md`，问题按 P0–P3 分级并给出建议
 - 更新 `project.md`
+
+## 按需加载
+
+现在只读取 `steps/01-gate.md`，并只执行该文件。
+禁止列举或预读步骤目录及其附属文件。
+未进入的步骤、被跳过的分支，不得读取其文件。
 
 ## 步骤
 
-1. 运行本 skill 的 `scripts/sparrow-state.mjs show`。`tbd` 则先 **sparrow-requirement**；`brownfield` 则停止。未指定 slug 时从 `project.md` 列出，可选单个、多个或全部。对每个 slug：`set-context {slug} verify ongoing`。
-2. 读 `references/ubiquitous-language.md`。
-3. 门禁：该 slug 须已 apply（`plan.md` 全 `[x]` 且 `code_review.md` 存在）；否则提示并跳过。
-4. 对照 `spec.md`、`api.md`、`tech.md`、`model.md` 与代码，按完整性 / 正确性 / 一致性检查。
-5. 分级：P0 阻塞、P1 严重、P2 一般、P3 建议。按模板写入报告。
-6. 读 `references/project-md-update.md`。该 slug 无 P0/P1 时 `set-context {slug} verify done`。
+1. 确认状态与 slug
+2. 读取术语
+3. 检查是否已实现
+4. 对照规格与代码
+5. 写入报告
+6. 更新项目向导
 
 ## 下一步
 
 - 存在 P0 或 P1：列出阻塞项，不提示 archive；修复后重新 verify。
 - 无 P0/P1：该 slug 通过。全部相关 slug 通过后，revise 模式执行 **sparrow-archive**。
-
-{{HARNESS}}
