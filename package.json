@@ -20,7 +20,7 @@
     "prepublishOnly": "npm run build",
     "typecheck": "tsc --noEmit",
     "sync-schema": "node src/content/sync/sync-schema-json.mjs && node src/kernel/runtime/agent-scripts/bundle-sparrow-state.mjs && node src/kernel/runtime/agent-scripts/bundle-sparrow-promote.mjs && node src/content/sync/sync-bundled-content.mjs",
-    "test": "node --import ./src/cli/dev/register-assets.mjs --import tsx --test 'test/**/*.test.ts'"
+    "test": "node --import ./src/cli/dev/register-assets.mjs --import tsx --test $(find test -name '*.test.ts' | sort)"
   },
   "keywords": [
     "ddd",
