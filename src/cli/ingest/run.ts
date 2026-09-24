@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, statSync, writeFileSync, type Stats } from 'node:fs';
 import { basename, extname, isAbsolute, join, resolve } from 'node:path';
 import { CHAR_BUDGET, KEYWORD_RE } from './constants.js';
 import { IngestError } from './errors.js';
@@ -15,7 +15,7 @@ import {
   writeJson,
   type SourceMeta,
 } from './cache.js';
-import { parseDocument, readSourceBuffer, type ParsedDocument, type RawFigure } from './readers.js';
+import { parseDocument, readSourceBuffer, type ParseResult, type RawFigure } from './readers.js';
 import { extractSignals } from './signals.js';
 import { formatChunk, type SplitSection } from './split.js';
 import { decideFigure, formatFigureMarkdown } from './figures.js';
@@ -76,7 +76,7 @@ interface ResolvedIngestSource {
   buf: Buffer;
   hash: string;
   cacheDir: string;
-  st: ReturnType<typeof statSync>;
+  st: Stats;
 }
 
 interface FigurePipelineResult {
@@ -193,7 +193,7 @@ function prepareMissCacheDir(
   }
 }
 
-function classifyFigures(parsed: ParsedDocument): {
+function classifyFigures(parsed: ParseResult): {
   figureRecords: FigureRecord[];
   toKeep: FigurePipelineResult['toKeep'];
 } {
@@ -243,7 +243,7 @@ async function ocrKeptFigures(
   return ocrResults;
 }
 
-function writeSectionChunks(cacheDir: string, parsed: ParsedDocument, progress: IngestProgress): SectionWriteResult {
+function writeSectionChunks(cacheDir: string, parsed: ParseResult, progress: IngestProgress): SectionWriteResult {
   progress.stage('写入缓存');
   ensureDir(join(cacheDir, 'chunks'));
   const signalLines: string[] = [];
@@ -300,7 +300,7 @@ function writeFigureArtifacts(
 
 function finalizeIngestCache(
   source: ResolvedIngestSource,
-  parsed: ParsedDocument,
+  parsed: ParseResult,
   figureRecords: FigureRecord[],
   sections: SectionWriteResult,
   keptIds: string[],
