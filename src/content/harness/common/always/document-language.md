@@ -8,19 +8,12 @@
 
 **排除**：源代码；`requirement/ui/prototypes/*.html` 等静态页面。
 
-## 必须保留的英文模板术语
-
-不翻译、不改写下列记号：
-
-- EARS：`WHEN` / `IF` / `THEN` / `WHILE` / `WHERE` / `THE system SHALL`
-- 属性句式：`For any` / `For every`
-- `Given` / `When` / `Then`
-- ID 前缀：`SD-`、`C-`、`S-`、`BS-`、`EBP-`、`P-` 等
-
 ## 专业术语
 
 当 `lang` 不是 `en` 时，业务专业术语与计算机专业术语在**首次出现**处用括号附英文，例如「限界上下文（Bounded Context）」。
 
 ## 缩写
 
-缩写（`SD`、`BC`、`EBP` 等）的英文全称**只写在** `requirement/business/catalog.md` 的「缩写」节。其它文档不另建缩写表，需要时引用该节。
+缩写只出现在编号里：`SD-`、`C-`、`S-`、`BS-`、`EBP-`、`P-`。标题、字段名和句子用全称：子领域、能力、场景、业务服务、端到端业务流程、限界上下文、属性。
+
+这些缩写的英文全称**只写在** `requirement/business/catalog.md` 的「缩写」节。其它文档不另建缩写表，需要时引用该节。

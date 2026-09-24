@@ -445,7 +445,7 @@ harness/
 
 ### sparrow-config.json
 
-项目工具配置：Sparrow 版本、已选 AI 工具、项目名、文档语言（`lang`，BCP 47），以及可选的 plugins。生成路径为 `.sparrow/sparrow-config.json`（会迁移旧的 `sparrow.json`）。`lang` 由 `--lang` 指定；省略时读取操作系统界面语言，失败则为 `zh-Hans`。再次 init 且未传 `--lang` 时保留已有 `lang`。各阶段 Markdown 规格使用该语言；源代码与 HTML 原型除外。模板中的英文记号（EARS、`For any`、`Given`/`When`/`Then`）保持英文。
+项目工具配置：Sparrow 版本、已选 AI 工具、项目名、文档语言（`lang`，BCP 47），以及可选的 plugins。生成路径为 `.sparrow/sparrow-config.json`（会迁移旧的 `sparrow.json`）。`lang` 由 `--lang` 指定；省略时读取操作系统界面语言，失败则为 `zh-Hans`。再次 init 且未传 `--lang` 时保留已有 `lang`。各阶段 Markdown 规格使用该语言；源代码与 HTML 原型除外。`SD-`、`BS-` 这类缩写只出现在编号里。
 
 `sparrow init` 后的典型示例：
 

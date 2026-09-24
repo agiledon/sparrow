@@ -36,15 +36,14 @@
 5. 触发事件
 6. 基本流程：成功主路径，编号列表
 7. 替代流程：失败路径，编号+字母（1a、2a）
-8. **验收标准（EARS）**：可普遍量化的命题，例如：
+8. **验收标准**：每条单独编号并换行。写出可观察的系统行为。句式只用下面五种：
 
 ```text
-WHEN a user adds a car to favorites,
-THE system SHALL display that car in the favorites list.
-
-IF the order is invalid, THEN THE system SHALL reject the submit and return a reason.
-
-WHILE payment is pending, THE system SHALL keep inventory reserved.
+1. 当用户把车辆加入收藏时，系统应当在收藏列表中显示该车辆。
+2. 如果订单无效，系统应当拒绝提交并返回原因。
+3. 在支付未完成期间，系统应当保持库存占用。
+4. 系统应当拒绝缺少必填项的提交。
+5. 在促销开启的情况下，当用户提交订单时，系统应当按促销价计算应付金额。
 ```
 
 ## 约束
@@ -58,5 +57,5 @@ WHILE payment is pending, THE system SHALL keep inventory reserved.
 
 1. 读 catalog 中已确认的 EBP 表与场景 5W。
 2. 沿每条 EBP 逐步判断：该步是否向本系统发起一次独立请求 → 是则识别为 BS。
-3. 为每个 BS 补全组成元素（含 EARS）。
+3. 为每个业务服务补全组成元素（含验收标准）。
 4. E2E 覆盖自检后更新 catalog。

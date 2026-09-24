@@ -430,7 +430,7 @@ Both files live under `.sparrow/` in the project root. They are created by `spar
 
 ### sparrow-config.json
 
-Project tool config: Sparrow version, selected AI tools, project name, document language (`lang`, BCP 47), and optional plugins. Generated at `.sparrow/sparrow-config.json` (migrates leftover `sparrow.json`). `lang` is set by `--lang`, otherwise the OS UI language, otherwise `zh-Hans`. Re-init keeps an existing `lang` unless `--lang` is passed. Markdown specs follow `lang`; source code and HTML prototypes do not. English template tokens (EARS, `For any`, `Given`/`When`/`Then`) stay in English.
+Project tool config: Sparrow version, selected AI tools, project name, document language (`lang`, BCP 47), and optional plugins. Generated at `.sparrow/sparrow-config.json` (migrates leftover `sparrow.json`). `lang` is set by `--lang`, otherwise the OS UI language, otherwise `zh-Hans`. Re-init keeps an existing `lang` unless `--lang` is passed. Markdown specs follow `lang`; source code and HTML prototypes do not. Abbreviations such as `SD-` and `BS-` appear only inside identifiers.
 
 Typical example after `sparrow init`:
 

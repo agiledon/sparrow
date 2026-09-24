@@ -1,33 +1,34 @@
-# EARS → Property 抽取规则
+# 验收标准 → 属性 抽取规则
 
-角色：架构师。在 sparrow-architecture 切片 `design/{slug}/spec.md` 时，将问题空间业务服务的 **EARS 验收标准**抽取为解空间 **Property（P）**。
+角色：架构师。在 sparrow-architecture 切片 `design/{slug}/spec.md` 时，将问题空间业务服务的**验收标准**抽取为解空间**属性（P）**。
 
 ## 定义
 
-- **EARS**（问题空间）：`WHEN` / `IF … THEN` / `WHILE` + `THE system SHALL …`，写在场景的 `business-services.md` 对应 `## BS-{id}` 块。
-- **Property（P）**（解空间）：普遍量化命题或不变量，句式倾向 **For any / For every**；挂在 BC 内该 BS 下。
+- **验收标准**（问题空间）：写在场景的 `business-services.md` 对应 `## BS-{id}` 块。句式为「当…时，系统应当…」「如果…，系统应当…」「在…期间，系统应当…」「系统应当…」「在…下，当…时，系统应当…」。
+- **属性（P）**（解空间）：挂在限界上下文内该业务服务下。每条属性分四行：范围、应当、核对、来源。编号为 `P-{id}`。
 
 ## 转换示例
 
 ```text
-EARS:
-  WHEN user submits valid credentials,
-  THE system SHALL return a JWT
+验收标准第 1 条：
+  当用户提交有效凭证时，系统应当返回结构合法的令牌。
 
-Property P-login-token:
-  For any valid credential pair, the login function returns a token with valid structure.
-  (from: EARS#1)
+属性 P-login-token：
+  范围：任意一对有效凭证
+  应当：返回结构合法的令牌
+  核对：凭证有效且返回令牌结构合法则成立；凭证有效但无令牌或结构非法则失败
+  来源：验收标准第 1 条
 ```
 
 ## 规则
 
-1. 每条可量化的 EARS **必须**生成至少一条 `P-*`，并注明 `from: EARS#n`。
-2. 优先表达不变量、往返、幂等、保序等「形状」，而非再写一条 WHEN/SHALL。
-3. 不能普遍量化的 EARS 标为 `example-only`，仍保留可测试断言句，**禁止**伪造成虚假的 For any。
-4. Property id 稳定（`P-{kebab}`）；下游 design / model / apply / 测试以 P 为验收锚点。
-5. **不**在 spec 中保留 EARS 全文副本（可一行引用编号）；叙事细节回链 `source` BS 文件。
+1. 每条可量化的验收标准**必须**生成至少一条 `P-*`，并注明来源是验收标准第几条。
+2. 「应当」写可观察的结果。「核对」写怎样算成立、怎样算失败。
+3. 不能推广到所有情况时，「范围」只写这一例，并加一行「推广：不能推广到所有情况」。禁止写成虚假的「任意」。
+4. 属性编号稳定（`P-{kebab}`）；下游设计、模型、实现与测试以该编号为验收锚点。
+5. **不**在切片中复制验收标准全文；叙事细节回来源业务服务文件。
 
 ## 下游消费
 
-- **design**：API 行为须满足相关 P。
-- **model / apply / verify**：实现与测试核对 P；无需在解空间再造 scenario 术语。
+- **设计**：接口行为须满足相关属性。
+- **模型 / 实现 / 验证**：实现与测试核对属性。

@@ -32,7 +32,7 @@
 
 #### 1.2 业务需求
 
-问题空间业务需求四层：**子领域（SD）→ 能力（C，可选）→ 场景（S）→ 业务服务（BS）**。能力数量未达阈值（约 ≤3 个，或本 SD 仅 1 个 C）时省略能力层与 `capability.md`，场景直接挂在子领域目录下。
+问题空间业务需求四层：**子领域 → 能力（可选）→ 场景 → 业务服务**。能力数量未达阈值（约 ≤3 个，或本子领域仅 1 个能力）时省略能力层与 `capability.md`，场景直接挂在子领域目录下。
 
 本文件只链到目录；由 catalog 进入各层规格（子领域 → 能力或场景 → `business-services.md`）。
 
@@ -82,5 +82,5 @@
 ## 下一步
 
 1. 执行 **/sparrow-requirement** — 划分子领域/能力/场景，沿端到端业务流程识别业务服务（如有需要，继续 UI 设计探索）
-2. 执行 **/sparrow-architecture** — 将子领域映射为限界上下文，切片 spec（含 Properties）；如有 UI 则同时生成前端架构
+2. 执行 **/sparrow-architecture** — 将子领域映射为限界上下文，切片 spec（含属性）；如有 UI 则同时生成前端架构
 3. 对每个 slug（限界上下文或交互上下文）依次执行：**design → model → plan → apply → verify**；全部完成后 **archive**（产品级）promote 交付规格至 `master/`
