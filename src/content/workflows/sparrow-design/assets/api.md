@@ -1,4 +1,4 @@
-# 服务契约 — {限界上下文中文名}
+# 服务契约 — {限界上下文（Bounded Context）中文名}
 
 ## 1. 限界上下文概述
 
@@ -34,7 +34,7 @@
 @startuml
 !theme plain
 
-component "{当前BC中文名}" as CurrentBC
+component "{当前限界上下文中文名}" as CurrentBC
 component "{协作BC1中文名}" as BC1
 () "POST /api/v1/resource" as API_Example
 CurrentBC -right-( API_Example

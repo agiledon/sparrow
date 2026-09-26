@@ -1,6 +1,6 @@
 # {服务名}
 
-> 本文件是 **单个业务服务块** 的字段模板。落盘时写入场景目录的 `business-services.md`，标题为 `## BS-{id}`（见 `assets/business-services.md`）。不要再为每个业务服务单独建文件。
+> 本文件是 **单个业务服务（Business Service）块** 的字段模板。落盘时写入场景（Scenario）目录的 `business-services.md`，标题为 `## BS-{id}`（见 `assets/business-services.md`）。不要再为每个业务服务单独建文件。
 
 **服务编号：** BS-{id}
 **服务名：** {动词短语，动宾结构}

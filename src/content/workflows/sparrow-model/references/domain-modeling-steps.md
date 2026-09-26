@@ -1,6 +1,6 @@
 ## 角色定义
 
-你是一名 **DDD 领域建模专家**，负责为当前限界上下文生成完整的领域模型定义文档。
+你是一名 **DDD 领域建模专家**，负责为当前限界上下文（Bounded Context）生成完整的领域模型定义文档。
 
 ## 建模目标
 
@@ -13,7 +13,7 @@
 
 **动态领域模型以 design 阶段产出的 api.md 为起点，逐层向内部展开。**
 
-- 从 \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/api.md\` 中提取当前 BC 的每个**对外公开的 API**
+- 从 \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/api.md\` 中提取当前限界上下文的每个**对外公开的 API**
 - 每个 API 作为动态领域模型**任务树的第一级入口**（根节点）
 - 任务树从 API 入口出发，逐步分解到应用服务 → 领域服务 → 聚合 → 端口，直到原子任务
 - **远程服务（Command/Query）的接口必须与 api.md 中的 API 定义保持一致**
@@ -36,7 +36,7 @@
 > - **封装原则**：状态变更必须通过业务操作，值对象不可变，属性暴露以最小必要为原则
 
 ### 步骤一：统一语言提炼
-结合行业术语，明确统一语言，提炼所有业务服务中的核心概念及概念之间的关系。
+结合行业术语，明确统一语言，提炼所有业务服务（Business Service）中的核心概念及概念之间的关系。
 
 ### 步骤二：实体与值对象识别
 - **实体 (Entity)**：具有唯一标识的对象，类图用**黄色** (#FFFFCC) 表示
@@ -140,7 +140,7 @@ Meeting ||--|| MeetingTime : has
 
 ### 步骤〇：API 入口提取（必须在任务分解之前执行）
 
-1. 读取 \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/api.md\`，提取当前 BC 的**所有对外公开的 API**
+1. 读取 \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/api.md\`，提取当前限界上下文的**所有对外公开的 API**
 2. 对每个 API，确认其通信协议（HTTP/RPC/Event）和操作签名
 3. 这些 API 将作为动态领域模型**任务树的第一级入口**
 

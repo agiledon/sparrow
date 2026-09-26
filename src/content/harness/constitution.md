@@ -25,10 +25,10 @@
 
 | 阶段 | 命令 | 约束文件（`step.harness`） | 说明 |
 |------|------|---------------------------|------|
-| 需求 | sparrow-requirement | requirement/requirements.md | 分层需求、EBP 覆盖、业务服务（EARS）、UI 操作流程 |
-| 需求 | sparrow-requirement | requirement/subdomains.md | 子领域划分（问题空间） |
-| 限界上下文 | sparrow-architecture | arch/bounded-contexts.md | SD→BC 映射与上下文通信 |
-| 规格切片 | sparrow-architecture | arch/spec-slice.md | BS 薄投影与 Property |
+| 需求 | sparrow-requirement | requirement/requirements.md | 分层需求、EBP 覆盖、业务服务（Business Service，EARS）、UI 操作流程 |
+| 需求 | sparrow-requirement | requirement/subdomains.md | 子领域（Subdomain）划分（问题空间） |
+| 限界上下文（Bounded Context） | sparrow-architecture | arch/bounded-contexts.md | 子领域→限界上下文映射与上下文通信 |
+| 规格切片 | sparrow-architecture | arch/spec-slice.md | 业务服务薄投影与 Property |
 | 前端架构（可选） | sparrow-architecture（前端） | arch/frontend.md | 交互上下文 |
 | API 设计 | sparrow-design | design/api-design.md | 服务契约与 API |
 | 领域建模 | sparrow-model | model/architecture.md | DDD 四层与角色构造型 |

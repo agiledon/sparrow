@@ -1,6 +1,6 @@
-# {交互上下文名称} 业务服务切片
+# {交互上下文名称} 业务服务（Business Service）切片
 
-## 关联限界上下文
+## 关联限界上下文（Bounded Context）
 
 | 限界上下文 | 目录名 | 关联的业务服务数 |
 |------------|--------|------------------|
@@ -13,7 +13,7 @@
 ### BS-{id} {服务名称}
 
 - **参与者**：{角色}
-- **来源**：`../../requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md#BS-{id}`（省略能力层时去掉 `{c-slug}/`；以目录链接为准）
+- **来源**：`../../requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md#BS-{id}`（省略能力（Capability）层时去掉 `{c-slug}/`；以目录链接为准）
 - **追溯**：SD-… / C-… / S-… / EBP-…
 - **目标限界上下文**：{slug}
 - **属性**：

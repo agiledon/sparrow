@@ -1,1 +1,1 @@
-# BC 拓扑修订历史
+# 限界上下文（Bounded Context）拓扑修订历史

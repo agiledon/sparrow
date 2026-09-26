@@ -12,7 +12,7 @@ English | [简体中文](./README.zh-CN.md)
 >
 > The npm package is published as **`sparrow-ddd`**.
 
-Sparrow transforms raw business requirements into production-ready code through a structured DDD process. Sparrow’s **core workflows** (every workflow skill defined in the schema and installed by `sparrow init`) comprise **process workflows** — the sequential eight-step pipeline — and **supporting workflows** — auxiliary commands like harness and reconcile that assist the pipeline at any time. It introduces the concept of **Interaction Context** — a first-class architecture concept parallel to Bounded Contexts that handles all frontend UI and BFF aggregation. Both backend BCs and the Interaction Context share the same standardized `design → model → plan → apply` workflow, yet remain completely orthogonal — no mutual dependencies, capable of parallel execution.
+Sparrow transforms raw business requirements into production-ready code through a structured DDD process. Sparrow’s **core workflows** (every workflow skill defined in the schema and installed by `sparrow init`) comprise **process workflows** — the sequential eight-step pipeline — and **supporting workflows** — auxiliary commands like harness and reconcile that assist the pipeline at any time. It introduces the concept of **Interaction Context** — a first-class architecture concept parallel to Bounded Contexts that handles all frontend UI and BFF aggregation. Both backend bounded contexts and the Interaction Context share the same standardized `design → model → plan → apply` workflow, yet remain completely orthogonal — no mutual dependencies, capable of parallel execution.
 
 > 📜 Version history and highlights: see the [CHANGELOG](./CHANGELOG.md) and [GitHub Releases](https://github.com/agiledon/sparrow/releases).
 
@@ -56,10 +56,10 @@ The **process workflow** is Sparrow's main spec-driven DDD pipeline — eight or
 
 | Step | Command | Level | What it does |
 |------|---------|-------|--------------|
-| 1 | `/sparrow-requirement` | Product | Hierarchical exploration (SD→C→S→EBP→BS via Grill Me) + quality docs + [optional] UI operation flows from EBP |
+| 1 | `/sparrow-requirement` | Product | Hierarchical exploration (subdomain → capability → scenario → end-to-end business process → business service, via Grill Me) + quality docs + [optional] UI operation flows from end-to-end business processes |
 | 2 | `/sparrow-architecture` | Product | Map subdomains to bounded contexts (1:1 then adjust) + thin spec slices with Properties + [if UI] frontend / Interaction Context |
 | 3 | `/sparrow-design @{slug}` | Team | Define API contracts and tech stack for a bounded context or Interaction Context |
-| 4 | `/sparrow-model @{slug}` | Team | Domain modeling (backend BC) or ViewModel + component modeling (Interaction Context) |
+| 4 | `/sparrow-model @{slug}` | Team | Domain modeling (backend bounded context) or ViewModel + component modeling (Interaction Context) |
 | 5 | `/sparrow-plan @{slug}` | Team | Devise implementation plan with task checklist |
 | 6 | `/sparrow-apply @{slug}` | Team | Generate DDD-structured code (backend) or frontend + BFF code (Interaction Context) |
 | 7 | `/sparrow-verify @{slug}` | Team | Verify code implementation against spec.md, api.md, tech.md, and model.md |
@@ -221,7 +221,7 @@ Invoke skills as slash commands in your AI tool. Sparrow’s core workflows spli
 - **Process workflows** — run the eight-step pipeline in order: `/sparrow-requirement` → `/sparrow-architecture` → `/sparrow-design @{slug}` → … → `/sparrow-verify @{slug}` → `/sparrow-archive`
 - **Supporting workflows** — invoke anytime as needed: `/sparrow-supporting-harness`, `/sparrow-supporting-reconcile`
 
-> **Important**: Product-level `requirement` and `architecture` (1–2) run once per change. Team-level process steps (3–7) run per slug — all contexts (backend BCs + Interaction Context) share the same commands and are fully orthogonal. Product-level `archive` (8) runs once per change after all slugs complete.
+> **Important**: Product-level `requirement` and `architecture` (1–2) run once per change. Team-level process steps (3–7) run per slug — all contexts (backend bounded contexts + Interaction Context) share the same commands and are fully orthogonal. Product-level `archive` (8) runs once per change after all slugs complete.
 
 ### 4. Iterate and refine
 
@@ -241,7 +241,7 @@ Detailed inputs, outputs, and behavior for each step in the [process workflows](
 
 **Input**: Raw requirements (`/sparrow-requirement @docs/prd.docx`); for **brownfield**, also the running system and codebase  
 **Output** (under the change workspace):
-- `requirement/business/catalog.md` — index + end-to-end business processes (EBP→BS); the only §1.2 link from `project.md`
+- `requirement/business/catalog.md` — index + end-to-end business processes mapped to business services; the only §1.2 link from `project.md`
 - `requirement/business/{sd-slug}/[{c-slug}/]{s-slug}/` — nested problem-space specs (`subdomain.md`, optional `capability.md`, `scenario.md`, merged `business-services.md`; EARS acceptance on services)
 - `requirement/quality/quality.md` — quality attributes (performance, security, availability, etc.)
 - `requirement/ui/` — \[optional\] UI specs (operation flows ← EBP), design tokens, components, HTML prototypes
@@ -252,25 +252,25 @@ Detailed inputs, outputs, and behavior for each step in the [process workflows](
 
 **Input**: `requirement/business/` (catalog + nested `business-services.md`) + \[optional\] `requirement/ui/`; read-only `master/`  
 **Output** (change workspace):
-- `architecture/bounded-contexts.md` — SD→BC map, context map (no separate “business architecture” doc)
-- `design/{slug}/spec.md` — thin BS projection + Properties (links back to `business-services.md#BS-{id}`)
+- `architecture/bounded-contexts.md` — subdomain-to-bounded-context map, context map (no separate “business architecture” doc)
+- `design/{slug}/spec.md` — thin business-service projection + Properties (links back to `business-services.md#BS-{id}`)
 - `architecture/frontend.md` — \[if UI\] Interaction Context, BFF, API binding tables
 
-With UI, generates binding tables so BC and Interaction Context pipelines stay orthogonal. BC topology changes require user confirmation before **archive** (see Step 8).
+With UI, generates binding tables so bounded-context and Interaction Context pipelines stay orthogonal. Bounded-context topology changes require user confirmation before **archive** (see Step 8).
 
 ### Step 3: sparrow-design (Team-level, per context)
 
 **Input**: `design/{slug}/spec.md` + architecture docs  
 **Output**: `design/{slug}/api.md`, `design/{slug}/tech.md` (per-slug contracts)
 
-Also maintains the project-level catalog at `architecture/api.md` under the change workspace. Interaction Context design does not read BC `api.md` files — consistency comes from `frontend.md` binding tables.
+Also maintains the project-level catalog at `architecture/api.md` under the change workspace. Interaction Context design does not read a bounded context's `api.md` — consistency comes from `frontend.md` binding tables.
 
 ### Step 4: sparrow-model (Team-level, per context)
 
 **Input**: `spec.md` + `api.md` + `tech.md`  
 **Output**: `design/{slug}/model.md`
 
-Backend BCs: static + dynamic domain modeling. Interaction Context: ViewModel and component/data-flow models.
+Backend bounded contexts: static + dynamic domain modeling. Interaction Context: ViewModel and component/data-flow models.
 
 ### Step 5: sparrow-plan (Team-level, per context)
 
@@ -326,7 +326,7 @@ requirement/ui/                    # optional
 architecture/bounded-contexts.md
 architecture/frontend.md           # optional
 architecture/api.md                # project-level API catalog (sparrow-design)
-design/{slug}/spec.md              # thin BS projection + Properties
+design/{slug}/spec.md              # thin business-service projection + Properties
 design/{slug}/api.md | tech.md | model.md
 ```
 
@@ -338,7 +338,7 @@ When the capability layer is omitted, drop `{c-slug}/` so `scenario.md` and `bus
 
 - `master/requirement/revision-history.md` — requirement / shared product-level (each entry has **synced-at**)
 - `master/design/revision-history.md` — architecture + per-slug `design/{slug}/` deltas
-- `master/architecture/bc-revision-history.md` — BC topology (user-confirmed)
+- `master/architecture/bc-revision-history.md` — bounded-context topology (user-confirmed)
 
 **Example project tree**:
 

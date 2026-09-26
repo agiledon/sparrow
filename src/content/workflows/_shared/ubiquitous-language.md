@@ -14,7 +14,7 @@
 | archive | `docs/sparrow/change/archive/YYYY-MM-DD-{changeId}/`。归档快照。 |
 | development-mode | `.sparrow/sparrow-state.json` 的 `tbd` \| `greenfield` \| `iteration` \| `brownfield`。`tbd` 表示尚未探测；此时 `pipeline` 必须为空。proposal.md 只抄写该值。 |
 | pipeline | `.sparrow/sparrow-state.json` 的阶段进度：`current-step` + `status`（`ongoing` \| `done`）；团队级另有 `contexts.<slug>`。 |
-| slug | 限界上下文或交互上下文的英文目录名，位于 `design/{slug}/`。 |
+| slug | 限界上下文（Bounded Context）或交互上下文的英文目录名，位于 `design/{slug}/`。 |
 | 全局级 harness | `~/.config/sparrow/harness/`（Windows：`%APPDATA%/sparrow/harness/`）。框架维护的 DDD 纪律。 |
 | 项目级 harness | `docs/sparrow/harness/`。本项目约束，优先级高于全局级。 |
 | common harness | harness 下的 `common/`：跨阶段纪律（always / conditional）。不是「全局级」的同义词。 |
@@ -29,11 +29,11 @@
 | 术语 | 英文 | 缩写 | 含义 |
 |------|------|------|------|
 | 领域 | domain | D | 整产品对应的问题域；通常不单独落文件。 |
-| 子领域 | subdomain | SD | L1 战略分区（Core / Supporting / Generic）。目录 `requirement/business/{sd-slug}/`，规格文件 `subdomain.md`。 |
-| 能力 | capability | C | L2「能做什么」；超过阈值时目录 `{sd-slug}/{c-slug}/capability.md`，否则省略该层。 |
-| 场景 | scenario | S | L3 业务场景，采用 5W（Who/Why/When/What/Where）。**仅用于问题空间**。文件 `…/{s-slug}/scenario.md`。 |
-| 业务服务 | business service | BS | L4；一次请求 = 一个服务；验收标准用 EARS。同一场景全部 BS 写入该场景的 `business-services.md`。 |
-| 端到端业务流程 | end-to-end business process | EBP | 交付完整业务结果的有序步骤链；每个需系统处理的步骤对应一个 BS；索引写入 `catalog.md`。 |
+| 子领域（Subdomain） | subdomain | SD | L1 战略分区（Core / Supporting / Generic）。目录 `requirement/business/{sd-slug}/`，规格文件 `subdomain.md`。 |
+| 能力（Capability） | capability | C | L2「能做什么」；超过阈值时目录 `{sd-slug}/{c-slug}/capability.md`，否则省略该层。 |
+| 场景（Scenario） | scenario | S | L3 业务场景，采用场景五问（谁、为何、何时、做什么、何处）。**仅用于问题空间**。文件 `…/{s-slug}/scenario.md`。 |
+| 业务服务（Business Service） | business service | BS | L4；一次请求 = 一个服务；验收标准用中文句式。同一场景的全部业务服务写入该场景的 `business-services.md`。 |
+| 端到端业务流程 | end-to-end business process | EBP | 交付完整业务结果的有序步骤链；每个需系统处理的步骤对应一个业务服务；索引写入 `catalog.md`。 |
 | 端到端操作流程 | end-to-end operation flow | — | 由 EBP 转换的 UI 操作序列；驱动页面识别，禁止另起脱节旅程。 |
 
 ID 前缀：`SD-*`、`C-*`、`S-*`、`BS-*`、`EBP-*`。
@@ -42,10 +42,10 @@ ID 前缀：`SD-*`、`C-*`、`S-*`、`BS-*`、`EBP-*`。
 
 | 术语 | 英文 | 缩写 | 含义 |
 |------|------|------|------|
-| 限界上下文 | bounded context | BC | 后端解空间边界；先由 SD 一对一映射，再识别调整。 |
-| 交互上下文 | interaction context | — | 与 BC 同级的前端+BFF 上下文；`project.md` 中标注 `— *交互上下文*`。 |
-| 属性 | property | P | 从 EARS 抽取的普遍量化命题/不变量；挂在 BC 内某 BS 下。 |
+| 限界上下文 | bounded context | BC | 后端解空间边界；先由子领域一对一映射，再识别调整。正文不写 `BC`，编号用 slug。 |
+| 交互上下文 | interaction context | — | 与限界上下文同级的前端+BFF 上下文；`project.md` 中标注 `— *交互上下文*`。 |
+| 属性 | property | P | 从验收标准抽取的普遍量化命题/不变量；挂在限界上下文内某业务服务下。 |
 
-ID 前缀：`P-*`；BC 用 slug（目录名）。
+ID 前缀：`P-*`。限界上下文用 slug（目录名），正文不写 `BC`。
 
-**禁止**：用「业务架构」「应用架构」指代产出物；在解空间用「scenario」指代验收片段（与问题空间 S 撞名）。
+**禁止**：用「业务架构」「应用架构」指代产出物；在解空间用「场景」指代验收片段（与问题空间的场景编号 `S-*` 撞名）。

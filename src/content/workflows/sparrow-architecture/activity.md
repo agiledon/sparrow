@@ -1,15 +1,15 @@
-# Sparrow Arch — 限界上下文与规格切片
+# Sparrow Arch — 限界上下文（Bounded Context）与规格切片
 
 ## 完成标准
 
 相对 `docs/sparrow/change/current/{activeChangeId}/`，写满必填块：
 
-- `architecture/bounded-contexts.md`（含 SD→BC 一对一映射表，再记调整）
-- 每个后端 BC：`design/{slug}/spec.md`（薄投影 + Properties）
+- `architecture/bounded-contexts.md`（含子领域（Subdomain）→限界上下文一对一映射表，再记调整）
+- 每个后端限界上下文：`design/{slug}/spec.md`（薄投影 + Properties）
 
 有 UI 时另写 `architecture/frontend.md` 与 `design/{ui-slug}/spec.md`。无 UI 则不写这两份。
 
-更新 `project.md` 的 BC / 交互上下文索引。不得改模板章节结构。正文语言遵循 harness `common/always/document-language.md`。
+更新 `project.md` 的限界上下文 / 交互上下文索引。不得改模板章节结构。正文语言遵循 harness `common/always/document-language.md`。
 
 ## 按需加载
 

@@ -32,7 +32,7 @@
 
 #### 1.2 业务需求
 
-问题空间业务需求四层：**子领域 → 能力（可选）→ 场景 → 业务服务**。能力数量未达阈值（约 ≤3 个，或本子领域仅 1 个能力）时省略能力层与 `capability.md`，场景直接挂在子领域目录下。
+问题空间业务需求四层：**子领域（Subdomain） → 能力（Capability，可选）→ 场景（Scenario） → 业务服务（Business Service）**。能力数量未达阈值（约 ≤3 个，或本子领域仅 1 个能力）时省略能力层与 `capability.md`，场景直接挂在子领域目录下。
 
 本文件只链到目录；由 catalog 进入各层规格（子领域 → 能力或场景 → `business-services.md`）。
 
@@ -54,7 +54,7 @@
 
 ### 2. 系统架构（解空间）
 
-- [ ] [限界上下文与上下文映射](./architecture/bounded-contexts.md) — *待生成 (sparrow-architecture)*
+- [ ] [限界上下文（Bounded Context）与上下文映射](./architecture/bounded-contexts.md) — *待生成 (sparrow-architecture)*
 - [ ] [前端架构](./architecture/frontend.md) — *待生成 (sparrow-architecture)*
 
 > 前端架构仅在项目有 UI 开发需求时提供。若无 UI 需求，该文档不会生成。

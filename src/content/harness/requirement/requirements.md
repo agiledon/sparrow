@@ -1,9 +1,9 @@
 # 需求约束（requirement / requirements）
 
-本文件定义 sparrow-requirement 阶段**必须遵守 / 禁止**的分层需求、业务服务识别、端到端覆盖及 UI 探索纪律。
+本文件定义 sparrow-requirement 阶段**必须遵守 / 禁止**的分层需求、业务服务（Business Service）识别、端到端覆盖及 UI 探索纪律。
 
 > 逐题确认、Grill Me 等互动行为须遵守 **`common/always/interactive-interaction.md`**；本文件不重复该纪律全文。
-> 子领域划分纪律见 **`requirement/subdomains.md`**。
+> 子领域（Subdomain）划分纪律见 **`requirement/subdomains.md`**。
 > Grill Me 维度顺序见共享 **`grill-me.md`**。
 
 ## 活动变更 ID 确认纪律
@@ -26,7 +26,7 @@
 ## 分层产出（MUST）
 
 1. **必须**产出 `requirement/business/catalog.md`（含结构索引与端到端业务流程到业务服务的表）。
-2. **必须**按 Grill Me 确认结果写出嵌套树 `{sd-slug}/subdomain.md` 与 `{s-slug}/scenario.md` + `business-services.md`。能力数多于 3 且不止 1 个时写 `{c-slug}/capability.md` 且场景挂在能力下；否则**省略能力层**（不写 `capability.md`、不建 `{c-slug}/`）。
+2. **必须**按 Grill Me 确认结果写出嵌套树 `{sd-slug}/subdomain.md` 与 `{s-slug}/scenario.md` + `business-services.md`。能力（Capability）数多于 3 且不止 1 个时写 `{c-slug}/capability.md` 且场景（Scenario）挂在能力下；否则**省略能力层**（不写 `capability.md`、不建 `{c-slug}/`）。
 3. **禁止**以单文件 `prd-business.md` 作为主真相源；使用嵌套 `catalog.md` 与 `business-services.md`。
 4. 场景**必须**含谁、为何、何时、做什么、何处；业务服务验收标准**必须**使用中文句式（当…时／如果…／在…期间／系统应当…）。
 
@@ -57,7 +57,7 @@
 
 ## Grill Me 提问纪律（阶段一）
 
-1. 遵守 **`common/always/interactive-interaction.md`** 与共享 **`grill-me.md`** 的维度顺序（SD→C→S→EBP→BS→规则→质量）。
+1. 遵守 **`common/always/interactive-interaction.md`** 与共享 **`grill-me.md`** 的维度顺序（子领域→能力→场景→端到端业务流程→业务服务→规则→质量）。
 2. **不为了提问而提问**：某一维度已经清晰时不再追问。
 
 ## Grill Me 提问纪律（阶段三 · UI，可选）
@@ -80,10 +80,10 @@
 
 ### 端到端操作流程纪律
 
-1. **必须**从 catalog 中的 EBP 转换为操作流程（用户操作 + 系统反馈 + 对应 BS + 页面触点）。
+1. **必须**从 catalog 中的 EBP 转换为操作流程（用户操作 + 系统反馈 + 对应业务服务 + 页面触点）。
 2. 每条操作流程**必须**可回溯到 `EBP-*`。
-3. **禁止**与业务流程无关的页面；**禁止**为尚不存在的 BS 设计页面。
-4. **禁止**在 UI 中关联限界上下文（BC 尚未在 arch 定义）。
+3. **禁止**与业务流程无关的页面；**禁止**为尚不存在的业务服务设计页面。
+4. **禁止**在 UI 中关联限界上下文（Bounded Context，此时尚未在 arch 定义）。
 5. **必须确保**页面间可导航；原型能走通对应操作流程。
 
 ### 原型页面纪律

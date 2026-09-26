@@ -1,20 +1,20 @@
-# {限界上下文中文名} 业务服务切片
+# {限界上下文（Bounded Context）中文名} 业务服务（Business Service）切片
 
 ## 映射
 
-| 子领域 | 限界上下文目录名 | 备注 |
+| 子领域（Subdomain） | 限界上下文目录名 | 备注 |
 |--------|------------------|------|
 | SD-{slug} | {slug} | 一对一 / 调整理由 |
 
 ## 业务服务
 
 > 薄投影：叙事全文见来源链接；本文件只保留身份、追溯与属性。
-> 禁止复制用户故事 / 基本·替代流程全文；禁止用「场景」指代验收片段。
+> 禁止复制用户故事 / 基本·替代流程全文；禁止用「场景（Scenario）」指代验收片段。
 
 ### BS-{id} {服务名称}
 
 - **参与者**：{角色}
-- **来源**：`../../requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md#BS-{id}`（省略能力层时去掉 `{c-slug}/`；以目录链接为准）
+- **来源**：`../../requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md#BS-{id}`（省略能力（Capability）层时去掉 `{c-slug}/`；以目录链接为准）
 - **追溯**：SD-{slug} / C-{slug} / S-{slug} / EBP-{id}#{n}
 - **属性**：
 

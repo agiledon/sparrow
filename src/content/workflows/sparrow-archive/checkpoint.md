@@ -2,7 +2,7 @@
 
 - [ ] change-id 已选；`check-archive` 已确认
 - [ ] 未完成 slug 未归档/promote（部分时）
-- [ ] BC 拓扑已确认（若适用）
+- [ ] 限界上下文（Bounded Context）拓扑已确认（若适用）
 - [ ] archive + `sparrow-promote.mjs` 已执行
 - [ ] 未 promote 源代码
 - [ ] 完整 → `archive-done`；部分 → `prune-contexts` 保留 changeId

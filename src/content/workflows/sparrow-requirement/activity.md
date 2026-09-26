@@ -1,14 +1,14 @@
-# Sparrow Requirement — 分层需求与业务服务识别
+# Sparrow Requirement — 分层需求与业务服务（Business Service）识别
 
 ## 完成标准
 
 下列路径已写满必填块（相对 `docs/sparrow/change/current/{activeChangeId}/`）：
 
 - `proposal.md`（`development-mode` 抄自 `.sparrow/sparrow-state.json`）
-- `requirement/business/catalog.md`（含 EBP→BS 表与嵌套链接）
+- `requirement/business/catalog.md`（含 端到端业务流程→业务服务表与嵌套链接）
 - `requirement/business/{sd-slug}/subdomain.md`
-- `requirement/business/{sd-slug}/{c-slug}/{s-slug}/scenario.md`（省略能力层时去掉 `{c-slug}/`）
-- `requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md`（本场景全部 BS 合并于此）
+- `requirement/business/{sd-slug}/{c-slug}/{s-slug}/scenario.md`（省略能力（Capability）层时去掉 `{c-slug}/`）
+- `requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md`（本场景（Scenario）全部业务服务合并于此）
 - `requirement/quality/quality.md`
 - `project.md`（change-id 确认时已生成；本阶段结束时更新勾选；§1.2 只链 catalog）
 
@@ -32,7 +32,7 @@
 4. 判断是否增量修订
 5. 检查已有产出
 6. Grill Me 需求探索
-7. 落盘子领域结构
+7. 落盘子领域（Subdomain）结构
 8. 落盘业务服务与质量属性
 9. 可选 UI 探索
 10. 更新项目向导

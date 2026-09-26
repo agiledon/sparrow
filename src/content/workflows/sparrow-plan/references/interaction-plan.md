@@ -4,7 +4,7 @@
 
 ### 任务组织原则
 
-1. **以页面/交互上下文的用户旅程为粒度**，不以 BC 为粒度
+1. **以页面/交互上下文的用户旅程为粒度**，不以限界上下文（Bounded Context）为粒度
 2. 任务按"基础设施 → BFF → 页面 → 集成"的顺序排列
 3. 同一页面内的前后端任务可以标注并行
 
@@ -34,12 +34,12 @@
 - [ ] 配置 HTTP 客户端
 - [ ] 定义 BFF 南向网关 port 接口（依据契约绑定表）
 
-## 任务 3：BC API 契约桩（MockClient）
+## 任务 3：限界上下文 API 契约桩（MockClient）
 
 **执行方**：\`dev\`
 **可并行**：\`是\`（可与任务 1/2 并行）
 
-- [ ] 依据契约绑定表为每个下游 BC API 生成 MockClient（fixture）
+- [ ] 依据契约绑定表为每个下游限界上下文 API 生成 MockClient（fixture）
 - [ ] 依据项目级 \`docs/sparrow/change/current/{activeChangeId}/architecture/api.md\` 预留 RealClient 端点映射（ACL）
 - [ ] 配置装配层切换开关（如 \`BC_ADAPTER=mock|real\`）
 
@@ -77,10 +77,10 @@
 ## 任务 8：契约桩切换（联调）
 
 **执行方**：\`dev\`
-**依赖**：本交互上下文聚合的所有目标 BC 的 apply 均完成（其公开 API 已进项目级 \`docs/sparrow/change/current/{activeChangeId}/architecture/api.md\`）
+**依赖**：本交互上下文聚合的所有目标限界上下文的 apply 均完成（其公开 API 已进项目级 \`docs/sparrow/change/current/{activeChangeId}/architecture/api.md\`）
 **可并行**：\`否\`（跨上下文串行，排在最后）
 
-- [ ] 运行契约测试，验证真实 BC 实现满足契约绑定表
+- [ ] 运行契约测试，验证真实限界上下文实现满足契约绑定表
 - [ ] 通过后切换 \`BC_ADAPTER=real\`，装配 RealClient
 - [ ] 验证无残留桩（MockClient 未在生产启用）
 
@@ -96,5 +96,5 @@
 - \`[P]\` 标记：可独立并行执行的任务
 - 不同页面模块天然可并行
 - BFF 聚合端点开发可与其调用的页面模块并行
-- **契约桩切换（联调）是唯一的跨上下文串行节点**：依赖所有目标 BC 完成，排在最后
+- **契约桩切换（联调）是唯一的跨上下文串行节点**：依赖所有目标限界上下文完成，排在最后
 

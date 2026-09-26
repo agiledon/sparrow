@@ -1,4 +1,4 @@
-# 技术选型 — {限界上下文中文名} ({english-slug})
+# 技术选型 — {限界上下文（Bounded Context）中文名} ({english-slug})
 
 ## 1. 概述与选型结论
 

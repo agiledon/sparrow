@@ -1,8 +1,8 @@
-# 业务服务：场景 {中文名}
+# 业务服务（Business Service）：场景（Scenario） {中文名}
 
 **场景：** S-{slug}
-**所属子领域：** SD-{slug}
-**所属能力：** C-{slug}（本子领域省略能力层时写「本子领域省略能力层」）
+**所属子领域（Subdomain）：** SD-{slug}
+**所属能力（Capability）：** C-{slug}（本子领域省略能力层时写「本子领域省略能力层」）
 
 > 本文件合并本场景全部业务服务。每个 `## BS-{id}` 块的字段以 `assets/service.md` 为准。
 > 架构切片的来源指向本文件对应标题（`…/business-services.md#BS-{id}`）。

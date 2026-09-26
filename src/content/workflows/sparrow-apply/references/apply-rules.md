@@ -4,28 +4,28 @@
 
 **触发条件**（同 sparrow-architecture「变更处理 / revise」章节）：\`docs/sparrow/change/current/\` 含未归档变更文件夹，或 \`project.md\` 当前 change-id 非空。
 
-**revise 行为总览**：本阶段只处理**档位 == S4（代码已生成）且被本次变更影响**的 BC。BC↔\`backend/\` 模块 1:1，因此 arch 记录的重构动作直接映射为代码动作。执行前先读取 \`change/current/{change-id}/\` 下 arch 写好的 ADR / 动作记录，确定每个受影响 slug 的目标拓扑。
+**revise 行为总览**：本阶段只处理**档位 == S4（代码已生成）且被本次变更影响**的限界上下文（Bounded Context）。限界上下文↔\`backend/\` 模块 1:1，因此 arch 记录的重构动作直接映射为代码动作。执行前先读取 \`change/current/{change-id}/\` 下 arch 写好的 ADR / 动作记录，确定每个受影响 slug 的目标拓扑。
 
 ### 代码动作映射（仅 S4 执行）
 
-- **新增 BC（新建 slug）**：按正常正向流程跑 apply，在 \`backend/\` 下新建模块。
+- **新增限界上下文（新建 slug）**：按正常正向流程跑 apply，在 \`backend/\` 下新建模块。
 - **合并 A+B→C（Strangler 式）**：
   1. 保留 A、B 现有模块不动；新建吸收/目标模块 C（若 C 为新 slug，正向 apply；若 C 即 A 或 B 之一，则在原模块上扩展）。
   2. 将待合并的行为与数据迁入 C；A、B 通过 facade / 协调层 / ACL 委派到 C（并存期）。
   3. **cutover**（破坏性，需用户确认）：将调用方重定向到 C。
   4. **退役**：移除 A、B 的 \`backend/\` 模块；若有外部调用方，先保留薄兼容 shim/ACL，确认无调用后再删。
-- **删除 BC**：行为已并入吸收方后，移除非空模块；外部调用方经薄 shim/ACL 过渡后退役。
-- **移动聚合（X 从 A→B）**：将 \`domain/aggregate|entity|valueobject/\` 与 \`infrastructure/port|adapter/\` 从 A 模块搬迁到 B 模块；同步 A、B 的 \`api/model\`；跨 BC 调用方经 ACL 保持聚合外部契约稳定。
+- **删除限界上下文**：行为已并入吸收方后，移除非空模块；外部调用方经薄 shim/ACL 过渡后退役。
+- **移动聚合（X 从 A→B）**：将 \`domain/aggregate|entity|valueobject/\` 与 \`infrastructure/port|adapter/\` 从 A 模块搬迁到 B 模块；同步 A、B 的 \`api/model\`；跨限界上下文调用方经 ACL 保持聚合外部契约稳定。
 - **防腐层 ACL**：仅新增 \`infrastructure/adapter/acl/\`（或独立 ACL 模块），做上游模型→本地模型翻译，**不改动本地领域模型**。
 - **绞杀者 Strangler**：旧模块保留，新模块并行构建，经 facade / 特性开关路由；并存期双写或事件桥接；cutover 后退役旧模块。
-- **数据迁移**：若 \`tech.md\` 标明「每 BC 独立 schema」，合并/拆分即跨模块 schema 迁表，并存期双写/CDC，再 cutover。
+- **数据迁移**：若 \`tech.md\` 标明「每限界上下文独立 schema」，合并/拆分即跨模块 schema 迁表，并存期双写/CDC，再 cutover。
 
 ### 架构边界回归校验（fitness function）
 
 每次代码迁移后，执行轻量边界校验，确保新模块边界未退化（呼应演进式架构「恰当耦合」支柱）：
-1. 每个 BC 模块只 import 自身 \`domain/\`、\`application/\`、\`api/\`、\`infrastructure/\` 内部类型；不得直接 import 另一 BC 模块的领域类型（须经其公开 API / ACL）。
-2. 若 \`tech.md\` 声明「每 BC 独立 schema」，各模块不得直接访问他模块的数据表。
-3. 跨 BC 调用一律经 \`api/\` 或 \`infrastructure/adapter/\`（ACL）边界。
+1. 每个限界上下文模块只 import 自身 \`domain/\`、\`application/\`、\`api/\`、\`infrastructure/\` 内部类型；不得直接 import 另一限界上下文模块的领域类型（须经其公开 API / ACL）。
+2. 若 \`tech.md\` 声明「每限界上下文独立 schema」，各模块不得直接访问他模块的数据表。
+3. 跨限界上下文调用一律经 \`api/\` 或 \`infrastructure/adapter/\`（ACL）边界。
 4. 公开 API 契约（来自 \`api.md\`）在迁移前后保持一致（除非本次变更显式修改）。
 
 校验不通过则停下并报告，不得带病推进。
@@ -35,14 +35,14 @@
 - 受影响模块代码版本递增（在 \`project.md\` 或模块说明中记录），元数据块追加 \`change-id\`。
 - 全部受影响 S4 slug 完成后，提示用户依次执行 **sparrow-verify** 验证，验证通过后执行 **sparrow-archive** 归档本次变更。
 
-> 完整 BC→代码映射与数据迁移策略见 \`docs/prd/sparrow-change-management.md\` 第 6 节。
+> 完整限界上下文→代码映射与数据迁移策略见 \`docs/prd/sparrow-change-management.md\` 第 6 节。
 
 ---
 
 ## 必读规约
 
 - \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/plan.md\` — 执行计划（以 plan 为准的执行顺序）
-- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/spec.md\` — 场景与验收
+- \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/spec.md\` — 场景（Scenario）与验收
 - \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/api.md\` — 对外契约
 - \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/tech.md\` — 技术栈与工具链
 - \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/model.md\` — 领域模型（静态 + 动态）
@@ -97,13 +97,13 @@
 
 ---
 
-## 跨 BC 通信（与限界上下文纪律一致）
+## 跨限界上下文通信（与限界上下文纪律一致）
 
-> 📐 跨 BC 通信纪律与 arch 阶段（\`arch/bounded-contexts.md\`）完全一致：
-> - **同一进程**：通过下游 BC 的南向网关 Client 调用上游 BC 的北向网关本地服务
+> 📐 跨限界上下文通信纪律与 arch 阶段（\`arch/bounded-contexts.md\`）完全一致：
+> - **同一进程**：通过下游限界上下文的南向网关 Client 调用上游限界上下文的北向网关本地服务
 > - **不同进程**：通过公开 API 或领域事件通信
-> - **无论是否同一进程，禁止直接跨 BC 访问领域对象**；跨 BC 调用一律经 \`api/\` 或 \`infrastructure/adapter/\`（ACL）边界
-> - 每个 BC 模块不得直接 import 另一 BC 模块的领域类型
+> - **无论是否同一进程，禁止直接跨限界上下文访问领域对象**；跨限界上下文调用一律经 \`api/\` 或 \`infrastructure/adapter/\`（ACL）边界
+> - 每个限界上下文模块不得直接 import 另一限界上下文模块的领域类型
 
 ---
 

@@ -15,12 +15,12 @@
 4. **infrastructure 层（南向网关）**：\`infrastructure/port/\`（接口）、\`infrastructure/adapter/\`（实现）
 5. 依赖方向：外层依赖内层，**领域层零框架依赖**（不依赖 Spring Data / FastAPI / Express / database/sql 等具体类型）。
 
-## 跨 BC 通信（与限界上下文纪律一致）
+## 跨限界上下文（Bounded Context）通信（与限界上下文纪律一致）
 
-1. **同一进程**：通过下游 BC 的南向网关 Client 调用上游 BC 的北向网关本地服务。
+1. **同一进程**：通过下游限界上下文的南向网关 Client 调用上游限界上下文的北向网关本地服务。
 2. **不同进程**：通过公开 API 或领域事件通信。
-3. **无论是否同一进程，禁止直接跨 BC 访问领域对象**；跨 BC 调用一律经 \`api/\` 或 \`infrastructure/adapter/\`（ACL）边界。
-4. 每个 BC 模块不得直接 import 另一 BC 模块的领域类型（须经其公开 API / ACL）。
+3. **无论是否同一进程，禁止直接跨限界上下文访问领域对象**；跨限界上下文调用一律经 \`api/\` 或 \`infrastructure/adapter/\`（ACL）边界。
+4. 每个限界上下文模块不得直接 import 另一限界上下文模块的领域类型（须经其公开 API / ACL）。
 
 ## 领域 TDD
 
@@ -96,7 +96,7 @@
 ## 数据库迁移
 
 1. 数据库结构变更使用**版本化迁移工具**（如 Flyway / Liquibase），**禁止手写 DDL 直接执行**。
-2. 若 \`tech.md\` 标明"每 BC 独立 schema"，各模块不得直接访问他模块的数据表。
+2. 若 \`tech.md\` 标明"每限界上下文独立 schema"，各模块不得直接访问他模块的数据表。
 
 ## 依赖安装纪律
 
@@ -120,7 +120,7 @@
    - **部署方式由用户确定**：是否同进程部署（前后端同进程 vs 分离）不代用户决策，须给出多种选项并说明利弊（如同进程·进程内 BFF / 不同进程·本地 HTTP / 进程间通信），由用户确认后按选定方式实现。
    - **无 CSS 时遵循 QT 最佳实践**：见下方「桌面窗体端（QT）最佳实践」。
 5. **禁止**将样式与 UI 页面、窗体及前端代码耦合：设计令牌 / 主题 / QSS / 样式表须与页面结构、组件逻辑解耦，便于主题切换与复用。
-6. **禁止**前端直接调用 BC API——必须经 \`edge/bff/\` 聚合层。
+6. **禁止**前端直接调用限界上下文 API——必须经 \`edge/bff/\` 聚合层。
 
 ### UI 视觉保真（颜色 / 位置 / 大小 / 布局）
 
@@ -136,11 +136,11 @@
 
 ### 契约桩（BFF 南向网关）
 
-1. BFF 南向网关 port 接口与 MockClient / RealClient **均由交互上下文定义与实现**；后端 BC 团队不写 BFF 代码。
+1. BFF 南向网关 port 接口与 MockClient / RealClient **均由交互上下文定义与实现**；后端限界上下文团队不写 BFF 代码。
 2. **MockClient**：不发出真实调用，返回契约形状的固定假数据（fixture），用于开发期与契约 / E2E 测试。
-3. **RealClient**：发出真实调用（HTTP / RPC / 进程内），对接真实 BC 公开端点（从项目级 \`docs/sparrow/change/current/{activeChangeId}/architecture/api.md\` 读取），做 ACL 映射与序列化 / 超时 / 重试 / 错误处理。
+3. **RealClient**：发出真实调用（HTTP / RPC / 进程内），对接真实限界上下文公开端点（从项目级 \`docs/sparrow/change/current/{activeChangeId}/architecture/api.md\` 读取），做 ACL 映射与序列化 / 超时 / 重试 / 错误处理。
 4. 切换在装配 / 配置层（如环境变量 \`BC_ADAPTER=mock|real\`），不改前端 / BFF 端点业务代码。
-5. **切换门禁**：目标 BC apply 完成 + 契约测试通过，方可切到 RealClient；切换是 plan 的终态联调任务。
+5. **切换门禁**：目标限界上下文 apply 完成 + 契约测试通过，方可切到 RealClient；切换是 plan 的终态联调任务。
 6. **禁止**桩残留：联调后必须确认 MockClient 未在生产启用。
 
 ### 桌面窗体端（QT）最佳实践

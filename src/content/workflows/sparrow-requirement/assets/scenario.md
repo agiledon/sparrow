@@ -1,7 +1,7 @@
-# 场景：{中文名}
+# 场景（Scenario）：{中文名}
 
 **ID：** S-{slug}
-**所属能力：** [C-{slug}](../capability.md)（本子领域省略能力层时写「本子领域省略能力层」，删除能力链接）
+**所属能力（Capability）：** [C-{slug}](../capability.md)（本子领域（Subdomain）省略能力层时写「本子领域省略能力层」，删除能力链接）
 **所属子领域：** [SD-{slug}](../../subdomain.md)（省略能力层时为 `../subdomain.md`）
 
 ## 场景五问
@@ -14,7 +14,7 @@
 | **做什么** | {要完成的业务结果} |
 | **何处** | {业务边界 / 触点：渠道、系统边界；非技术部署} |
 
-## 关联业务服务
+## 关联业务服务（Business Service）
 
 本场景全部业务服务合并于 [business-services.md](./business-services.md)。
 

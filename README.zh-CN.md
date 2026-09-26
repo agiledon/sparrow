@@ -20,7 +20,7 @@ Sparrow 通过结构化的 DDD 流程，将原始业务需求转化为可投入�
 
 - **无厂商锁定**：开箱即用支持 Claude Code、OpenCode、Cursor 和 Pi。使用各工具原生 AI——无需 CrewAI、LangChain 或其他 Agent 框架。
 - **规格驱动**：每一步都产出具体、可版本控制的 Markdown 制品。你始终清楚做了什么决策以及原因。
-- **原生 DDD**：端到端遵循领域驱动设计：业务服务 → 子域 → 限界上下文 → 领域模型 → 代码。
+- **原生 DDD**：端到端遵循领域驱动设计：业务服务（Business Service） → 子领域（Subdomain） → 限界上下文 → 领域模型 → 代码。
 - **多语言支持**：支持 Java、Python、Node.js/TypeScript、Go、Rust 和 C++。每个限界上下文可使用不同技术栈。
 - **增量与对话式**：可在任意步骤暂停，通过对话 refine 制品，然后继续。每个 skill 都会读取上一步的最新输出。
 
@@ -56,10 +56,10 @@ flowchart LR
 
 | 步骤 | 命令 | 层级 | 作用 |
 |------|------|------|------|
-| 1 | `/sparrow-requirement` | 产品级 | 分层探索（SD→C→S→EBP→BS，Grill Me）+ 质量属性 + [可选] 由 EBP 转换的 UI 操作流程 |
+| 1 | `/sparrow-requirement` | 产品级 | 分层探索（子领域→能力（Capability）→场景（Scenario）→端到端业务流程→业务服务，Grill Me）+ 质量属性 + [可选] 由 EBP 转换的 UI 操作流程 |
 | 2 | `/sparrow-architecture` | 产品级 | 子领域映射为限界上下文（先一对一再调整）+ 薄投影 spec（含 Property）+ [若有 UI] 前端/交互上下文 |
 | 3 | `/sparrow-design @{slug}` | 团队级 | 为限界上下文或交互上下文定义 API 契约与技术栈 |
-| 4 | `/sparrow-model @{slug}` | 团队级 | 领域建模（后端 BC）或 ViewModel + 组件建模（交互上下文） |
+| 4 | `/sparrow-model @{slug}` | 团队级 | 领域建模（后端限界上下文）或 ViewModel + 组件建模（交互上下文） |
 | 5 | `/sparrow-plan @{slug}` | 团队级 | 制定含任务清单的实施计划 |
 | 6 | `/sparrow-apply @{slug}` | 团队级 | 生成 DDD 结构化代码（后端）或前端 + BFF 代码（交互上下文） |
 | 7 | `/sparrow-verify @{slug}` | 团队级 | 对照 spec.md、api.md、tech.md、model.md 验证代码实现 |
@@ -221,13 +221,13 @@ sparrow update
 - **过程工作流** — 按序运行八步流水线：`/sparrow-requirement` → `/sparrow-architecture` → `/sparrow-design @{slug}` → … → `/sparrow-verify @{slug}` → `/sparrow-archive`
 - **支持工作流** — 按需随时调用：`/sparrow-supporting-harness`、`/sparrow-supporting-reconcile`
 
-> **重要**：产品级 `requirement` 与 `architecture`（1–2）每个 change 运行一次。团队级过程步骤（3–7）按 slug 运行——所有上下文（后端 BC + 交互上下文）共用同一套命令且完全正交。产品级 `archive`（8）在全部 slug 完成后每个 change 运行一次。
+> **重要**：产品级 `requirement` 与 `architecture`（1–2）每个 change 运行一次。团队级过程步骤（3–7）按 slug 运行——所有上下文（后端限界上下文 + 交互上下文）共用同一套命令且完全正交。产品级 `archive`（8）在全部 slug 完成后每个 change 运行一次。
 
 ### 4. 迭代与 refine
 
 任一步骤完成后，你可以：
 - 审阅生成的 Markdown 制品
-- 与 AI 讨论修改（「更新子域分类……」）
+- 与 AI 讨论修改（「更新子领域分类……」）
 - 带修改重新运行 skill
 - 继续下一步——下一步始终读取最新版本
 
@@ -241,49 +241,49 @@ sparrow update
 
 **输入**：原始需求（`/sparrow-requirement @docs/prd.docx`）；**棕地**项目另需结合现有代码与运行行为  
 **输出**（均在变更工作区内）：
-- `requirement/business/catalog.md` — 索引 + 端到端业务流程（EBP→BS）；`project.md` §1.2 的唯一入口
+- `requirement/business/catalog.md` — 索引 + 端到端业务流程（端到端业务流程→业务服务）；`project.md` §1.2 的唯一入口
 - `requirement/business/{sd-slug}/[{c-slug}/]{s-slug}/` — 嵌套问题空间规格（`subdomain.md`、可选 `capability.md`、`scenario.md`、合并的 `business-services.md`；服务验收用 EARS）
 - `requirement/quality/quality.md` — 系统质量属性（性能、安全、高可用等）
 - `requirement/ui/` — \[可选\] UI 规格（操作流程 ← EBP）、设计令牌、组件库与 HTML 原型
 
-**Grill Me** 按问题空间层次（SD→C→S→EBP→BS）推进并做 EBP 覆盖；可选 UI 将 EBP 转为端到端操作流程。**版本迭代**时对照 `master/requirement/` 做增量；change 内规格**不写** `<!-- version -->` 元数据块。
+**Grill Me** 按问题空间层次（子领域→能力→场景→端到端业务流程→业务服务）推进并做 EBP 覆盖；可选 UI 将 EBP 转为端到端操作流程。**版本迭代**时对照 `master/requirement/` 做增量；change 内规格**不写** `<!-- version -->` 元数据块。
 
 ### 步骤 2：sparrow-architecture（产品级）
 
 **输入**：change 内 `requirement/business/`（catalog + 嵌套 `business-services.md`）+ \[可选\] `requirement/ui/`；只读参考 `master/`  
 **输出**（change 工作区）：
-- `architecture/bounded-contexts.md` — SD→BC 映射与上下文映射（不再单独产出「业务架构」文档）
+- `architecture/bounded-contexts.md` — 子领域→限界上下文映射与上下文映射（不再单独产出「业务架构」文档）
 - `design/{slug}/spec.md` — 业务服务薄投影 + Properties（回链 `business-services.md#BS-{id}`）
 - `architecture/frontend.md` — \[若有 UI\] 交互上下文、BFF、API 契约绑定表
 
-**若存在 UI 需求**，生成前端架构与绑定表，使 BC 与交互上下文后续 design/model/plan/apply 可并行、无互读依赖。BC 拓扑变更须在 **archive** 前经用户确认（见步骤 8）。
+**若存在 UI 需求**，生成前端架构与绑定表，使限界上下文与交互上下文后续 design/model/plan/apply 可并行、无互读依赖。限界上下文拓扑变更须在 **archive** 前经用户确认（见步骤 8）。
 
 ### 步骤 3：sparrow-design（团队级，按上下文）
 
 **输入**：`design/{slug}/spec.md` + 架构文档  
 **输出**：`design/{slug}/api.md`、`design/{slug}/tech.md`
 
-**后端 BC**：技术栈与 REST/gRPC 等选型。**交互上下文**：BFF 与 ViewModel 接口；不读取 BC 的 api.md，契约由 `frontend.md` 绑定表保证。
+**后端限界上下文**：技术栈与 REST/gRPC 等选型。**交互上下文**：BFF 与 ViewModel 接口；不读取限界上下文的 api.md，契约由 `frontend.md` 绑定表保证。
 
 ### 步骤 4：sparrow-model（团队级，按上下文）
 
 **输入**：`spec.md` + `api.md` + `tech.md`  
 **输出**：`design/{slug}/model.md`
 
-**后端 BC**：静态类图 + 动态时序 + 集成。**交互上下文**：ViewModel 与组件树/数据流模型。
+**后端限界上下文**：静态类图 + 动态时序 + 集成。**交互上下文**：ViewModel 与组件树/数据流模型。
 
 ### 步骤 5：sparrow-plan（团队级，按上下文）
 
 **输入**：`spec.md` + `api.md` + `tech.md` + `model.md`  
 **输出**：`design/{slug}/plan.md`（**仅存在于 change 工作区**，不 promote 到 master）
 
-**后端 BC**：按 DDD 层组织任务。**棕地**（`development-mode=brownfield`）：用户选择 **solidify**（仅测试计划）或 **refactor**（测试 + 重构计划）。
+**后端限界上下文**：按 DDD 层组织任务。**棕地**（`development-mode=brownfield`）：用户选择 **solidify**（仅测试计划）或 **refactor**（测试 + 重构计划）。
 
 ### 步骤 6：sparrow-apply（团队级，按上下文）
 
 **输入**：`plan.md`  
 **输出**：
-- `backend/{slug}/` — 后端 BC 四层模块
+- `backend/{slug}/` — 后端限界上下文四层模块
 - `integration-tests/{slug}/`
 - `change/.../design/{slug}/code_review.md`
 
@@ -327,7 +327,7 @@ requirement/ui/                    # 可选
 architecture/bounded-contexts.md
 architecture/frontend.md           # 可选
 architecture/api.md                # 项目级 API 总目录（sparrow-design 维护）
-design/{slug}/spec.md              # BS 薄投影 + Properties
+design/{slug}/spec.md              # 业务服务薄投影 + Properties
 design/{slug}/api.md | tech.md | model.md
 ```
 
@@ -417,7 +417,7 @@ harness/
 | development-mode | conditional 额外加载 |
 |------------------|----------------------|
 | `greenfield`（绿地） | 无 |
-| `iteration`（版本迭代） | 无（arch 侧重 BC 归属与拓扑确认） |
+| `iteration`（版本迭代） | 无（arch 侧重限界上下文归属与拓扑确认） |
 | `brownfield`（棕地） | **`common/conditional/brownfield.md`**；requirement/arch/model 以现有系统取证为主，plan 必须走 solidify 或 refactor |
 
 工作机制：

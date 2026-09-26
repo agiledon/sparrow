@@ -4,7 +4,7 @@
 
 相对 `docs/sparrow/change/current/{activeChangeId}/`：
 
-- 后端 BC：`design/{slug}/api.md`、`design/{slug}/tech.md`
+- 后端限界上下文（Bounded Context）：`design/{slug}/api.md`、`design/{slug}/tech.md`
 - 交互上下文：同样落入 `design/{slug}/api.md` 与 `design/{slug}/tech.md`
 - 创建或更新 `architecture/api.md`
 

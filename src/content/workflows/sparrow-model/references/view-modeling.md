@@ -16,7 +16,7 @@
 
 1. **ViewModel ≠ 领域模型**：ViewModel 关注用户体验和页面布局，不关注业务规则。与 DDD 的领域模型彻底分离。
 2. **页面为粒度**：每个 UI 页面对应一个或多个 ViewModel
-3. **不读 BC 产物**：交互上下文的 model 从自身 api.md 出发，不依赖任何 BC 的领域模型
+3. **不读限界上下文（Bounded Context）产物**：交互上下文的 model 从自身 api.md 出发，不依赖任何限界上下文的领域模型
 
 ### 输入文档
 
@@ -104,7 +104,7 @@ graph LR
 {组件树}
 
 ## 3. 数据流模型
-{BFF ↔ 各 BC 数据流图}
+{BFF ↔ 各限界上下文数据流图}
 
 ## 4. ViewModel ↔ BFF 端点映射
 | ViewModel | BFF 端点 | 说明 |

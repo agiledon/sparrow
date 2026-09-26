@@ -18,7 +18,7 @@
 | 消息契约 | api → DTO；infrastructure → PO | api 层：Command / Query / Request / Response / ApplicationEvent；infrastructure 层：PersistentObject（持久化对象） |
 | 领域服务 | domain | DomainService，封装不自然属于任何单一聚合的领域逻辑，无状态 |
 | 聚合 | domain | AggregateRoot + Entity + ValueObject，持有业务状态和行为 |
-| 端口 | infrastructure/port | 抽象接口定义：Repository（数据库/存储）、Client（跨 BC/外部系统调用）、Publisher（事件发布） |
+| 端口 | infrastructure/port | 抽象接口定义：Repository（数据库/存储）、Client（跨限界上下文（Bounded Context）/外部系统调用）、Publisher（事件发布） |
 | 适配器 | infrastructure/adapter | 端口的具体实现（如 JPA Repository、HTTP Client、MQ Publisher） |
 
 ## 持久化对象（PO）纪律

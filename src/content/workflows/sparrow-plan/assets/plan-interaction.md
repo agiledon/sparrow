@@ -25,14 +25,14 @@
 - [ ] 配置 HTTP 客户端
 - [ ] 定义 BFF 南向网关 port 接口（依据契约绑定表）
 
-## 任务 3：BC API 契约桩（MockClient）
+## 任务 3：限界上下文（Bounded Context） API 契约桩（MockClient）
 
 **执行方**：`dev`
 **可并行**：`是`（可与任务 1/2 并行）
 
 ### 步骤
 
-- [ ] 依据契约绑定表为每个下游 BC API 生成 MockClient（fixture）
+- [ ] 依据契约绑定表为每个下游限界上下文 API 生成 MockClient（fixture）
 - [ ] 依据项目级 `architecture/api.md` 预留 RealClient 端点映射（ACL）
 - [ ] 配置装配层切换开关（如 `BC_ADAPTER=mock|real`）
 
@@ -73,12 +73,12 @@
 ## 任务 7：契约桩切换（联调）
 
 **执行方**：`dev`
-**依赖**：本交互上下文聚合的所有目标 BC 的 apply 均完成
+**依赖**：本交互上下文聚合的所有目标限界上下文的 apply 均完成
 **可并行**：`否`
 
 ### 步骤
 
-- [ ] 运行契约测试，验证真实 BC 实现满足契约绑定表
+- [ ] 运行契约测试，验证真实限界上下文实现满足契约绑定表
 - [ ] 通过后切换 `BC_ADAPTER=real`，装配 RealClient
 - [ ] 验证无残留桩（MockClient 未在生产启用）
 

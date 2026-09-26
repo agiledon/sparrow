@@ -6,9 +6,9 @@
 
 | 约束内容 | 目标文件 |
 |---------|---------|
-| 业务服务 / Grill Me / EBP / EARS / UI 操作流程 | requirement/requirements.md |
-| 子领域划分 | requirement/subdomains.md |
-| 限界上下文 / SD→BC 映射 | arch/bounded-contexts.md |
+| 业务服务（Business Service） / Grill Me / EBP / EARS / UI 操作流程 | requirement/requirements.md |
+| 子领域（Subdomain）划分 | requirement/subdomains.md |
+| 限界上下文（Bounded Context） / 子领域→限界上下文映射 | arch/bounded-contexts.md |
 | 规格切片 / Property | arch/spec-slice.md |
 | 交互上下文 / 前端 | arch/frontend.md |
 | API / 序列图 | design/api-design.md |

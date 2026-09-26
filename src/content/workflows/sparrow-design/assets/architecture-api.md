@@ -1,6 +1,6 @@
 # API 目录 — {项目名称}
 
-> 本文件由 Sparrow 自动维护，汇总所有限界上下文的公开 API。
+> 本文件由 Sparrow 自动维护，汇总所有限界上下文（Bounded Context）的公开 API。
 > 每完成一个限界上下文的 sparrow-design 操作后更新。
 
 ## {限界上下文1中文名} (`{slug1}`)
