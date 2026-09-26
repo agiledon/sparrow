@@ -6,15 +6,17 @@
  * src/content/workflows/_shared/scripts/sparrow-state.mjs by
  * src/kernel/runtime/agent-scripts/bundle-sparrow-state.mjs — do not edit the .mjs by hand.
  *
- *   node scripts/sparrow-state.mjs show
- *   node scripts/sparrow-state.mjs detect-mode
- *   node scripts/sparrow-state.mjs set-mode <tbd|greenfield|brownfield|iteration>
- *   node scripts/sparrow-state.mjs set-change <id|null>
- *   node scripts/sparrow-state.mjs set-step <step> <ongoing|done>
- *   node scripts/sparrow-state.mjs set-context <slug> <step> <ongoing|done>
- *   node scripts/sparrow-state.mjs check-archive [change-id]
- *   node scripts/sparrow-state.mjs prune-contexts <slug> [slug...]
- *   node scripts/sparrow-state.mjs archive-done
+ * Run with cwd = project root. Do not copy this file to <project>/scripts/.
+ *
+ *   node <skill>/scripts/sparrow-state.mjs show
+ *   node <skill>/scripts/sparrow-state.mjs detect-mode
+ *   node <skill>/scripts/sparrow-state.mjs set-mode <tbd|greenfield|brownfield|iteration>
+ *   node <skill>/scripts/sparrow-state.mjs set-change <id|null>
+ *   node <skill>/scripts/sparrow-state.mjs set-step <step> <ongoing|done>
+ *   node <skill>/scripts/sparrow-state.mjs set-context <slug> <step> <ongoing|done>
+ *   node <skill>/scripts/sparrow-state.mjs check-archive [change-id]
+ *   node <skill>/scripts/sparrow-state.mjs prune-contexts <slug> [slug...]
+ *   node <skill>/scripts/sparrow-state.mjs archive-done
  */
 
 import {
@@ -48,15 +50,15 @@ const STATUSES = new Set<PipelineStatus>(['ongoing', 'done']);
 
 function failUsage(): never {
   console.error('Usage:');
-  console.error('  node scripts/sparrow-state.mjs show');
-  console.error('  node scripts/sparrow-state.mjs detect-mode');
-  console.error('  node scripts/sparrow-state.mjs set-mode <tbd|greenfield|brownfield|iteration>');
-  console.error('  node scripts/sparrow-state.mjs set-change <id|null>');
-  console.error('  node scripts/sparrow-state.mjs set-step <step> <ongoing|done>');
-  console.error('  node scripts/sparrow-state.mjs set-context <slug> <step> <ongoing|done>');
-  console.error('  node scripts/sparrow-state.mjs check-archive [change-id]');
-  console.error('  node scripts/sparrow-state.mjs prune-contexts <slug> [slug...]');
-  console.error('  node scripts/sparrow-state.mjs archive-done');
+  console.error('  node <skill>/scripts/sparrow-state.mjs show');
+  console.error('  node <skill>/scripts/sparrow-state.mjs detect-mode');
+  console.error('  node <skill>/scripts/sparrow-state.mjs set-mode <tbd|greenfield|brownfield|iteration>');
+  console.error('  node <skill>/scripts/sparrow-state.mjs set-change <id|null>');
+  console.error('  node <skill>/scripts/sparrow-state.mjs set-step <step> <ongoing|done>');
+  console.error('  node <skill>/scripts/sparrow-state.mjs set-context <slug> <step> <ongoing|done>');
+  console.error('  node <skill>/scripts/sparrow-state.mjs check-archive [change-id]');
+  console.error('  node <skill>/scripts/sparrow-state.mjs prune-contexts <slug> [slug...]');
+  console.error('  node <skill>/scripts/sparrow-state.mjs archive-done');
   process.exit(2);
 }
 

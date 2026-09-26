@@ -5,7 +5,9 @@
  * src/content/workflows/_shared/scripts/sparrow-promote.mjs by
  * src/kernel/runtime/agent-scripts/bundle-sparrow-promote.mjs — do not edit the .mjs by hand.
  *
- *   node scripts/sparrow-promote.mjs <change-id> <synced-at> [--source current|archive] [--folder <name>] [--slugs a,b]
+ * Run with cwd = project root. Do not copy this file to <project>/scripts/.
+ *
+ *   node <skill>/scripts/sparrow-promote.mjs <change-id> <synced-at> [--source current|archive] [--folder <name>] [--slugs a,b]
  */
 
 import { promoteChangeToMaster, type PromoteOptions } from '../spec-promote.js';
@@ -13,7 +15,7 @@ import { promoteChangeToMaster, type PromoteOptions } from '../spec-promote.js';
 function failUsage(): never {
   console.error('Usage:');
   console.error(
-    '  node scripts/sparrow-promote.mjs <change-id> <synced-at> [--source current|archive] [--folder <archiveFolderName>] [--slugs slug1,slug2]'
+    '  node <skill>/scripts/sparrow-promote.mjs <change-id> <synced-at> [--source current|archive] [--folder <archiveFolderName>] [--slugs slug1,slug2]'
   );
   process.exit(2);
 }

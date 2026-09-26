@@ -338,15 +338,15 @@ var STEPS2 = /* @__PURE__ */ new Set([
 var STATUSES2 = /* @__PURE__ */ new Set(["ongoing", "done"]);
 function failUsage() {
   console.error("Usage:");
-  console.error("  node scripts/sparrow-state.mjs show");
-  console.error("  node scripts/sparrow-state.mjs detect-mode");
-  console.error("  node scripts/sparrow-state.mjs set-mode <tbd|greenfield|brownfield|iteration>");
-  console.error("  node scripts/sparrow-state.mjs set-change <id|null>");
-  console.error("  node scripts/sparrow-state.mjs set-step <step> <ongoing|done>");
-  console.error("  node scripts/sparrow-state.mjs set-context <slug> <step> <ongoing|done>");
-  console.error("  node scripts/sparrow-state.mjs check-archive [change-id]");
-  console.error("  node scripts/sparrow-state.mjs prune-contexts <slug> [slug...]");
-  console.error("  node scripts/sparrow-state.mjs archive-done");
+  console.error("  node <skill>/scripts/sparrow-state.mjs show");
+  console.error("  node <skill>/scripts/sparrow-state.mjs detect-mode");
+  console.error("  node <skill>/scripts/sparrow-state.mjs set-mode <tbd|greenfield|brownfield|iteration>");
+  console.error("  node <skill>/scripts/sparrow-state.mjs set-change <id|null>");
+  console.error("  node <skill>/scripts/sparrow-state.mjs set-step <step> <ongoing|done>");
+  console.error("  node <skill>/scripts/sparrow-state.mjs set-context <slug> <step> <ongoing|done>");
+  console.error("  node <skill>/scripts/sparrow-state.mjs check-archive [change-id]");
+  console.error("  node <skill>/scripts/sparrow-state.mjs prune-contexts <slug> [slug...]");
+  console.error("  node <skill>/scripts/sparrow-state.mjs archive-done");
   process.exit(2);
 }
 function printJson(value) {

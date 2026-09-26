@@ -297,7 +297,7 @@ Runs after apply for the selected slug(s).
 
 ### Step 8: sparrow-archive (Product-level)
 
-**Input / rules**: See generated skill `references/archive-gate.md` (slug complete iff `verify`+`done`; full vs partial archive; required `scripts/sparrow-promote.mjs` append-only delta).  
+**Input / rules**: See generated skill `references/archive-gate.md` (slug complete iff `verify`+`done`; full vs partial archive; required skill-local `sparrow-promote.mjs` append-only delta).  
 **Output**: Archive under `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/`, promote into `docs/sparrow/master/`, then `archive-done` or `prune-contexts`. Source code is not versioned by archive.
 
 Requires user confirmation after `check-archive`. First greenfield delivery also fills `master/` via archive.
@@ -458,7 +458,7 @@ Typical example after `sparrow init`:
 
 ### sparrow-state.json
 
-Pipeline state: active change-id, development mode, and step progress. Created by `sparrow init` when missing; process workflow skills update it via `scripts/sparrow-state.mjs`.
+Pipeline state: active change-id, development mode, and step progress. Created by `sparrow init` when missing; process workflow skills update it by running the skill-local `sparrow-state.mjs` from the project root.
 
 Right after init (`development-mode` still unknown):
 

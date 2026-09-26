@@ -2,15 +2,16 @@
 /**
  * Mechanical change-workspace helper. Run from the project root.
  *
- *   node scripts/ensure-change-workspace.mjs --check
- *   node scripts/ensure-change-workspace.mjs --create <change-id>
+ *   node <skill>/scripts/ensure-change-workspace.mjs --check
+ *   node <skill>/scripts/ensure-change-workspace.mjs --create <change-id>
  *
+ * Run with cwd = project root. Do not copy this file to <project>/scripts/.
  * --check exits 1 when no change-id is confirmed and current/ has no subdirectory.
  * When --check exits 0 and the workspace directory already exists, it writes
  * project.md from the shared template if that file is missing.
  * --create only after the user confirmed a kebab-case change-id. It writes
  * project.md in the same step (existing file is left untouched).
- * State changes go through scripts/sparrow-state.mjs (no direct JSON edits).
+ * State changes go through the sibling sparrow-state.mjs (no direct JSON edits).
  */
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
@@ -18,9 +19,10 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const CHANGE_CURRENT = join('docs', 'sparrow', 'change', 'current');
-const STATE_SCRIPT = join('scripts', 'sparrow-state.mjs');
+const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
+const STATE_SCRIPT = join(SCRIPT_DIR, 'sparrow-state.mjs');
 const CONFIG_FILE = join('.sparrow', 'sparrow-config.json');
-const PROJECT_MD_TEMPLATE = join(dirname(fileURLToPath(import.meta.url)), '..', 'assets', 'project.md');
+const PROJECT_MD_TEMPLATE = join(SCRIPT_DIR, '..', 'assets', 'project.md');
 const WORKSPACE_DIRS = [
   'requirement/business',
   'requirement/quality',
@@ -31,7 +33,7 @@ const WORKSPACE_DIRS = [
 
 function runState(args) {
   if (!existsSync(STATE_SCRIPT)) {
-    console.error('Missing scripts/sparrow-state.mjs. Run sparrow init or sparrow update.');
+    console.error(`Missing ${STATE_SCRIPT}. Run sparrow init or sparrow update.`);
     process.exit(1);
   }
   const result = spawnSync(process.execPath, [STATE_SCRIPT, ...args], {
@@ -95,8 +97,8 @@ function ensureProjectMd(changeId) {
 
 function failUsage() {
   console.error('Usage:');
-  console.error('  node scripts/ensure-change-workspace.mjs --check');
-  console.error('  node scripts/ensure-change-workspace.mjs --create <change-id>');
+  console.error('  node <skill>/scripts/ensure-change-workspace.mjs --check');
+  console.error('  node <skill>/scripts/ensure-change-workspace.mjs --create <change-id>');
   process.exit(2);
 }
 

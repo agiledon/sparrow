@@ -298,7 +298,7 @@ sparrow update
 
 ### 步骤 8：sparrow-archive（产品级）
 
-**输入 / 规则**：见生成 skill 的 `references/archive-gate.md`（slug 完成 = `verify`+`done`；完整/部分归档；必跑 `scripts/sparrow-promote.mjs` append-only delta）。  
+**输入 / 规则**：见生成 skill 的 `references/archive-gate.md`（slug 完成 = `verify`+`done`；完整/部分归档；必跑技能目录内的 `sparrow-promote.mjs`，append-only delta）。  
 **输出**：归档至 `docs/sparrow/change/archive/YYYY-MM-DD-{change-id}/`，promote 至 `docs/sparrow/master/`，再 `archive-done` 或 `prune-contexts`。源代码不由 archive 版本管理。
 
 须在 `check-archive` 后经用户确认。绿地首次交付亦通过 archive 填充 master。
@@ -473,7 +473,7 @@ harness/
 
 ### sparrow-state.json
 
-流水线状态：活动 change-id、开发模式与阶段进度。文件不存在时由 `sparrow init` 创建；过程工作流 skill 通过 `scripts/sparrow-state.mjs` 更新。
+流水线状态：活动 change-id、开发模式与阶段进度。文件不存在时由 `sparrow init` 创建；过程工作流 skill 在项目根运行技能目录内的 `sparrow-state.mjs` 来更新。
 
 刚完成 init（`development-mode` 尚未确定）时：
 

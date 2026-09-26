@@ -1,6 +1,6 @@
 # Archive gate contract（权威）
 
-本文件为归档完成判定与 promote 命令的**单一叙述源**。实现以 `src/kernel/runtime/archive-readiness.ts` / `src/kernel/runtime/spec-promote.ts` 为准；agent 入口为 `scripts/sparrow-state.mjs` 与 `scripts/sparrow-promote.mjs`。
+本文件为归档完成判定与 promote 命令的**单一叙述源**。实现以 `src/kernel/runtime/archive-readiness.ts` / `src/kernel/runtime/spec-promote.ts` 为准。agent 在项目根执行本 skill 目录下的 `scripts/sparrow-state.mjs` 与 `scripts/sparrow-promote.mjs`，不要把它们复制到项目根。
 
 ## Slug 完成判定
 
@@ -11,7 +11,7 @@ AND pipeline.contexts[slug].status === "done"
 
 Slug 清单 = `pipeline.contexts` keys ∪ `change/current/{change-id}/design/*`。仅有目录无 state → **未完成**。
 
-查询：`node scripts/sparrow-state.mjs check-archive [change-id]`
+查询：`node <本 skill 目录>/scripts/sparrow-state.mjs check-archive [change-id]`
 
 ## 归档形态
 
@@ -24,7 +24,7 @@ Slug 清单 = `pipeline.contexts` keys ∪ `change/current/{change-id}/design/*`
 ## Promote（必做、append-only）
 
 ```text
-node scripts/sparrow-promote.mjs <change-id> <synced-at> [--source archive|current] [--folder <name>] [--slugs a,b]
+node <本 skill 目录>/scripts/sparrow-promote.mjs <change-id> <synced-at> [--source archive|current] [--folder <name>] [--slugs a,b]
 ```
 
 - **ADDED**：新建；**MODIFIED**：文末追加 delta；**REMOVED**：仅记历史，不删 master 文件

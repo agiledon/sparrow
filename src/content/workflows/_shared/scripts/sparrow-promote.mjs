@@ -277,7 +277,7 @@ function promoteChangeToMaster(projectRoot, changeId2, syncedAt2, options2 = {})
 function failUsage() {
   console.error("Usage:");
   console.error(
-    "  node scripts/sparrow-promote.mjs <change-id> <synced-at> [--source current|archive] [--folder <archiveFolderName>] [--slugs slug1,slug2]"
+    "  node <skill>/scripts/sparrow-promote.mjs <change-id> <synced-at> [--source current|archive] [--folder <archiveFolderName>] [--slugs slug1,slug2]"
   );
   process.exit(2);
 }
