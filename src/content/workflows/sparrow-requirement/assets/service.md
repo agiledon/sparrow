@@ -1,10 +1,10 @@
 # {服务名}
 
-> 本文件是 **单个业务服务（Business Service）块** 的字段模板。落盘时写入场景（Scenario）目录的 `business-services.md`，标题为 `## BS-{id}`（见 `assets/business-services.md`）。不要再为每个业务服务单独建文件。
+> 本文件是 **单个业务服务（Business Service）块** 的字段模板。落盘时写入 `business-services.md`，标题为 `## BS-{id}`（见 `assets/business-services.md`）。两层路径为 `{sd-slug}/business-services.md`；四层路径为 `{sd-slug}/{c-slug}/{s-slug}/business-services.md`。不要再为每个业务服务单独建文件。
 
 **服务编号：** BS-{id}
 **服务名：** {动词短语，动宾结构}
-**追溯：** SD-{slug} / C-{slug} / S-{slug}
+**追溯：** SD-{slug} / C-{slug} / S-{slug}（两层时只写 SD-{slug}）
 **端到端流程：** EBP-{id} 步骤 {n}
 
 **服务描述：**

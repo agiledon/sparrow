@@ -1,17 +1,17 @@
-# 业务服务（Business Service）：场景（Scenario） {中文名}
+# 业务服务（Business Service）：{子领域或场景中文名}
 
-**场景：** S-{slug}
 **所属子领域（Subdomain）：** SD-{slug}
-**所属能力（Capability）：** C-{slug}（本子领域省略能力层时写「本子领域省略能力层」）
+**所属能力（Capability）：** C-{slug}（两层时写「省略」）
+**场景（Scenario）：** S-{slug}（两层时写「省略」）
 
-> 本文件合并本场景全部业务服务。每个 `## BS-{id}` 块的字段以 `assets/service.md` 为准。
+> 两层时本文件合并该子领域全部业务服务，放在 `{sd-slug}/business-services.md`。四层时合并该场景全部业务服务，放在 `{sd-slug}/{c-slug}/{s-slug}/business-services.md`。每个 `## BS-{id}` 块的字段以 `assets/service.md` 为准。
 > 架构切片的来源指向本文件对应标题（`…/business-services.md#BS-{id}`）。
 
 ## BS-{id}
 
 **服务编号：** BS-{id}
 **服务名：** {动词短语，动宾结构}
-**追溯：** SD-{slug} / C-{slug} / S-{slug}
+**追溯：** SD-{slug} / C-{slug} / S-{slug}（两层时只写 SD-{slug}，能力与场景写「省略」）
 **端到端流程：** EBP-{id} 步骤 {n}
 
 **服务描述：**
@@ -39,4 +39,4 @@
 4. 系统应当{没有额外条件时始终成立的行为}。
 5. 在{可选范围}下，当{触发事件}时，系统应当{可观察的行为}。
 
-（按本场景其余业务服务重复 `## BS-{id}` 块）
+（按其余业务服务重复 `## BS-{id}` 块）

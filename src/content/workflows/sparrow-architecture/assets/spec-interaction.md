@@ -13,8 +13,8 @@
 ### BS-{id} {服务名称}
 
 - **参与者**：{角色}
-- **来源**：`../../requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md#BS-{id}`（省略能力（Capability）层时去掉 `{c-slug}/`；以目录链接为准）
-- **追溯**：SD-… / C-… / S-… / EBP-…
+- **来源**：四层为 `../../requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md#BS-{id}`；两层为 `../../requirement/business/{sd-slug}/business-services.md#BS-{id}`
+- **追溯**：四层为 SD-… / C-… / S-… / EBP-…；两层为 SD-… / EBP-…
 - **目标限界上下文**：{slug}
 - **属性**：
 

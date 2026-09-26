@@ -32,9 +32,9 @@
 
 #### 1.2 业务需求
 
-问题空间业务需求四层：**子领域（Subdomain） → 能力（Capability，可选）→ 场景（Scenario） → 业务服务（Business Service）**。能力数量未达阈值（约 ≤3 个，或本子领域仅 1 个能力）时省略能力层与 `capability.md`，场景直接挂在子领域目录下。
+问题空间业务需求完整四层：**子领域（Subdomain） → 能力（Capability） → 场景（Scenario） → 业务服务（Business Service）**。未达问题空间复杂度阈值（Problem-space Complexity Threshold）时只落子领域与业务服务；达到该阈值才落能力与场景。阈值见 harness `requirement/requirements.md`。
 
-本文件只链到目录；由 catalog 进入各层规格（子领域 → 能力或场景 → `business-services.md`）。
+本文件只链到目录；由 catalog 进入各层规格。
 
 - [ ] [需求目录 Catalog](./requirement/business/catalog.md) — *待生成 (sparrow-requirement)*
 

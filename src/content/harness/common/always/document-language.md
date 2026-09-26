@@ -4,7 +4,7 @@
 
 ## 适用范围
 
-**必须**使用 `lang` 对应语言撰写正文：需求（catalog、子领域（Subdomain）、能力（Capability）、场景（Scenario）、业务服务（Business Service）、质量属性）、架构、限界上下文（Bounded Context）、`design/{slug}/` 下的 spec / api / tech / model / plan、修订历史、`project.md`、proposal 等 Markdown 规格。
+**必须**使用 `lang` 对应语言撰写正文：需求（catalog）、子领域（Subdomain）、能力（Capability）、场景（Scenario）、业务服务（Business Service）、质量属性、架构、限界上下文（Bounded Context）、`design/{slug}/` 下的 spec / api / tech / model / plan、修订历史、`project.md`、proposal 等 Markdown 规格。
 
 **排除**：源代码；`requirement/ui/prototypes/*.html` 等静态页面。
 

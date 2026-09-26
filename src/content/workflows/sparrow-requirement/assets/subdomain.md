@@ -2,20 +2,19 @@
 
 **ID：** SD-{slug}
 **战略类型：** Core | Supporting | Generic
-**一句话定义：** {该子领域的业务目标}
+**一句话定义：** {该子领域要解决的业务问题与目标}
 
-## 能力（Capability）
+## 能力（Capability）（四层时使用）
 
-> 能力数多于 3 且不止 1 个时，下列只给链接，规格在 `{c-slug}/capability.md`。
-> 约 ≤3 个或仅 1 个能力时：**省略能力层**（不建 `{c-slug}/`、不写 `capability.md`），改用下一节列出场景（Scenario）。
+> 达到问题空间复杂度阈值（Problem-space Complexity Threshold，见 harness `requirement/requirements.md`）时保留本节，并删除下一节。
 
 - [{能力名}](./{c-slug}/capability.md) — C-{slug} — {一句话}
 
-## 场景（省略能力层时使用）
+## 业务服务（两层时使用）
 
-> 有能力层时删除本节；场景由各 `capability.md` 链接。
+> 未达问题空间复杂度阈值时保留本节，并删除上一节。规格在 [business-services.md](./business-services.md)。
 
-- [{场景名}](./{s-slug}/scenario.md) — S-{slug} — {一句话}
+- [BS-{id}](./business-services.md#BS-{id}) — {动宾名}
 
 ## 边界与说明
 

@@ -18,7 +18,7 @@
 | 全局级 harness | `~/.config/sparrow/harness/`（Windows：`%APPDATA%/sparrow/harness/`）。框架维护的 DDD 纪律。 |
 | 项目级 harness | `docs/sparrow/harness/`。本项目约束，优先级高于全局级。 |
 | common harness | harness 下的 `common/`：跨阶段纪律（always / conditional）。不是「全局级」的同义词。 |
-| Grill Me | 决策访谈：每次一问、给推荐答案、收敛后再行动。互动纪律见 harness `common/always/interactive-interaction.md`。维度与顺序见 `grill-me.md`。 |
+| Grill Me | 决策访谈：每次一问、给推荐答案、收敛后再行动。互动纪律见 harness `common/always/interactive-interaction.md`。需求探索顺序见 harness `requirement/requirements.md`「需求结构 V 模型」，展开见 `grill-me.md`。 |
 | project.md（change） | `change/current/{id}/project.md`。工作区向导索引。 |
 | project.md（master） | `docs/sparrow/master/project.md`。promote 后的基线索引。 |
 | sparrow-config.json | `.sparrow/sparrow-config.json`。工具列表、项目名、版本、plugins、`lang`（文档语言，BCP 47；缺省 `zh-Hans`）。 |
@@ -28,12 +28,15 @@
 
 | 术语 | 英文 | 缩写 | 含义 |
 |------|------|------|------|
+| 利益相关者（Stakeholder） | stakeholder | — | 先识别利益相关者，再确定参与者，包括外部客户和内部用户。 |
+| 价值流（Value Stream） | value stream | — | 一组端到端活动，为外部客户或内部用户创造一个有价值的结果。写入 `catalog.md`，并作为端到端业务流程的分组。不单独建文件。 |
 | 领域 | domain | D | 整产品对应的问题域；通常不单独落文件。 |
-| 子领域（Subdomain） | subdomain | SD | L1 战略分区（Core / Supporting / Generic）。目录 `requirement/business/{sd-slug}/`，规格文件 `subdomain.md`。 |
-| 能力（Capability） | capability | C | L2「能做什么」；超过阈值时目录 `{sd-slug}/{c-slug}/capability.md`，否则省略该层。 |
-| 场景（Scenario） | scenario | S | L3 业务场景，采用场景五问（谁、为何、何时、做什么、何处）。**仅用于问题空间**。文件 `…/{s-slug}/scenario.md`。 |
-| 业务服务（Business Service） | business service | BS | L4；一次请求 = 一个服务；验收标准用中文句式。同一场景的全部业务服务写入该场景的 `business-services.md`。 |
-| 端到端业务流程 | end-to-end business process | EBP | 交付完整业务结果的有序步骤链；每个需系统处理的步骤对应一个业务服务；索引写入 `catalog.md`。 |
+| 子领域（Subdomain） | subdomain | SD | L1。从业务问题和目标归纳（两层时直接由业务服务归纳）。类别为核心（Core）、支撑（Supporting）或通用（Generic）。目录 `requirement/business/{sd-slug}/`，规格文件 `subdomain.md`。 |
+| 问题空间复杂度阈值（Problem-space Complexity Threshold） | problem-space complexity threshold | — | 决定落两层还是四层。当前取值只写在 harness `requirement/requirements.md`「问题空间复杂度阈值」。其它文档不重复该数字。 |
+| 能力（Capability） | capability | C | L2。仅当达到问题空间复杂度阈值时，由场景归纳并写入 `{sd-slug}/{c-slug}/capability.md`。 |
+| 场景（Scenario） | scenario | S | L3。仅四层时使用场景五问，文件 `{sd-slug}/{c-slug}/{s-slug}/scenario.md`。**仅用于问题空间**。 |
+| 业务服务（Business Service） | business service | BS | L4；一次请求 = 一个服务；验收标准用中文句式。未达问题空间复杂度阈值时写入 `{sd-slug}/business-services.md`；达到该阈值时写入该场景目录的 `business-services.md`。 |
+| 端到端业务流程 | end-to-end business process | EBP | 从参与系统的利益相关者出发、在价值流指导下整理的旅程；每个需系统处理的步骤对应一个业务服务；索引写入 `catalog.md`。 |
 | 端到端操作流程 | end-to-end operation flow | — | 由 EBP 转换的 UI 操作序列；驱动页面识别，禁止另起脱节旅程。 |
 
 ID 前缀：`SD-*`、`C-*`、`S-*`、`BS-*`、`EBP-*`。

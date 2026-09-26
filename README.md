@@ -56,7 +56,7 @@ The **process workflow** is Sparrow's main spec-driven DDD pipeline — eight or
 
 | Step | Command | Level | What it does |
 |------|---------|-------|--------------|
-| 1 | `/sparrow-requirement` | Product | Hierarchical exploration (subdomain → capability → scenario → end-to-end business process → business service, via Grill Me) + quality docs + [optional] UI operation flows from end-to-end business processes |
+| 1 | `/sparrow-requirement` | Product | V-model exploration (stakeholders → value stream → end-to-end business process → business service, then bottom-up induction, via Grill Me) + quality docs + [optional] UI operation flows from end-to-end business processes |
 | 2 | `/sparrow-architecture` | Product | Map subdomains to bounded contexts (1:1 then adjust) + thin spec slices with Properties + [if UI] frontend / Interaction Context |
 | 3 | `/sparrow-design @{slug}` | Team | Define API contracts and tech stack for a bounded context or Interaction Context |
 | 4 | `/sparrow-model @{slug}` | Team | Domain modeling (backend bounded context) or ViewModel + component modeling (Interaction Context) |
@@ -241,12 +241,13 @@ Detailed inputs, outputs, and behavior for each step in the [process workflows](
 
 **Input**: Raw requirements (`/sparrow-requirement @docs/prd.docx`); for **brownfield**, also the running system and codebase  
 **Output** (under the change workspace):
-- `requirement/business/catalog.md` — index + end-to-end business processes mapped to business services; the only §1.2 link from `project.md`
-- `requirement/business/{sd-slug}/[{c-slug}/]{s-slug}/` — nested problem-space specs (`subdomain.md`, optional `capability.md`, `scenario.md`, merged `business-services.md`; EARS acceptance on services)
+- `requirement/business/catalog.md` — value streams, structure index, and end-to-end business processes mapped to business services; the only §1.2 link from `project.md`
+- Below the problem-space complexity threshold: `requirement/business/{sd-slug}/subdomain.md` and `{sd-slug}/business-services.md` (no scenario or capability files)
+- At or above that threshold: `requirement/business/{sd-slug}/{c-slug}/{s-slug}/` (`subdomain.md`, `capability.md`, `scenario.md`, merged `business-services.md`; Chinese acceptance sentences on services)
 - `requirement/quality/quality.md` — quality attributes (performance, security, availability, etc.)
 - `requirement/ui/` — \[optional\] UI specs (operation flows ← EBP), design tokens, components, HTML prototypes
 
-**Grill Me** follows problem-space layers then EBP coverage; optional UI converts EBP into end-to-end operation flows. For **iteration**, diff against `master/requirement/`. No `<!-- version -->` metadata blocks in the change workspace.
+**Grill Me** follows the requirement V-model: stakeholders, value stream, end-to-end business process, and business service, then bottom-up induction. Optional UI converts those processes into end-to-end operation flows. For **iteration**, diff against `master/requirement/`. No `<!-- version -->` metadata blocks in the change workspace.
 
 ### Step 2: sparrow-architecture (Product-level)
 
@@ -318,7 +319,8 @@ Specs use a **master (baseline)** vs **change (active/archive)** layout. `sparro
 project.md                            # §1.2 links only catalog.md
 requirement/business/catalog.md
 requirement/business/{sd-slug}/subdomain.md
-requirement/business/{sd-slug}/{c-slug}/capability.md          # omit C layer when below threshold
+requirement/business/{sd-slug}/business-services.md            # below the problem-space complexity threshold
+requirement/business/{sd-slug}/{c-slug}/capability.md          # at or above that threshold
 requirement/business/{sd-slug}/{c-slug}/{s-slug}/scenario.md
 requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md
 requirement/quality/quality.md
@@ -330,7 +332,7 @@ design/{slug}/spec.md              # thin business-service projection + Properti
 design/{slug}/api.md | tech.md | model.md
 ```
 
-When the capability layer is omitted, drop `{c-slug}/` so `scenario.md` and `business-services.md` sit directly under `{sd-slug}/`.
+Below the problem-space complexity threshold, keep only the subdomain and `business-services.md`. At or above that threshold, use the full four-layer paths. The numeric threshold is defined once in the requirement harness.
 
 **Change workspace only**: `design/{slug}/plan.md`, `code_review.md`, `verify_report.md`, `proposal.md`.
 

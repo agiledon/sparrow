@@ -1,8 +1,8 @@
 # 场景（Scenario）：{中文名}
 
 **ID：** S-{slug}
-**所属能力（Capability）：** [C-{slug}](../capability.md)（本子领域（Subdomain）省略能力层时写「本子领域省略能力层」，删除能力链接）
-**所属子领域：** [SD-{slug}](../../subdomain.md)（省略能力层时为 `../subdomain.md`）
+**所属能力（Capability）：** [C-{slug}](../capability.md)
+**所属子领域（Subdomain）：** [SD-{slug}](../../subdomain.md)
 
 ## 场景五问
 

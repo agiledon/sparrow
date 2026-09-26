@@ -56,7 +56,7 @@ flowchart LR
 
 | 步骤 | 命令 | 层级 | 作用 |
 |------|------|------|------|
-| 1 | `/sparrow-requirement` | 产品级 | 分层探索（子领域→能力（Capability）→场景（Scenario）→端到端业务流程→业务服务，Grill Me）+ 质量属性 + [可选] 由 EBP 转换的 UI 操作流程 |
+| 1 | `/sparrow-requirement` | 产品级 | V 模型探索（利益相关者（Stakeholder）→ 价值流（Value Stream）→ 端到端业务流程 → 业务服务，再自底向上归纳，Grill Me）+ 质量属性 + [可选] 由端到端业务流程转换的 UI 操作流程 |
 | 2 | `/sparrow-architecture` | 产品级 | 子领域映射为限界上下文（先一对一再调整）+ 薄投影 spec（含 Property）+ [若有 UI] 前端/交互上下文 |
 | 3 | `/sparrow-design @{slug}` | 团队级 | 为限界上下文或交互上下文定义 API 契约与技术栈 |
 | 4 | `/sparrow-model @{slug}` | 团队级 | 领域建模（后端限界上下文）或 ViewModel + 组件建模（交互上下文） |
@@ -241,12 +241,13 @@ sparrow update
 
 **输入**：原始需求（`/sparrow-requirement @docs/prd.docx`）；**棕地**项目另需结合现有代码与运行行为  
 **输出**（均在变更工作区内）：
-- `requirement/business/catalog.md` — 索引 + 端到端业务流程（端到端业务流程→业务服务）；`project.md` §1.2 的唯一入口
-- `requirement/business/{sd-slug}/[{c-slug}/]{s-slug}/` — 嵌套问题空间规格（`subdomain.md`、可选 `capability.md`、`scenario.md`、合并的 `business-services.md`；服务验收用 EARS）
+- `requirement/business/catalog.md` — 价值流、结构索引，以及端到端业务流程到业务服务的表；`project.md` §1.2 的唯一入口
+- 未达问题空间复杂度阈值（Problem-space Complexity Threshold）：`requirement/business/{sd-slug}/subdomain.md` 与 `{sd-slug}/business-services.md`（不写场景与能力文件）
+- 达到该阈值：`requirement/business/{sd-slug}/{c-slug}/{s-slug}/`（`subdomain.md`、`capability.md`、`scenario.md`、合并的 `business-services.md`；服务验收用中文句式）。数字只写在需求 harness。
 - `requirement/quality/quality.md` — 系统质量属性（性能、安全、高可用等）
 - `requirement/ui/` — \[可选\] UI 规格（操作流程 ← EBP）、设计令牌、组件库与 HTML 原型
 
-**Grill Me** 按问题空间层次（子领域→能力→场景→端到端业务流程→业务服务）推进并做 EBP 覆盖；可选 UI 将 EBP 转为端到端操作流程。**版本迭代**时对照 `master/requirement/` 做增量；change 内规格**不写** `<!-- version -->` 元数据块。
+**Grill Me** 按需求结构 V 模型推进：利益相关者、价值流、端到端业务流程、业务服务，再自底向上归纳，并做端到端覆盖；可选 UI 将端到端业务流程转为操作流程。**版本迭代**时对照 `master/requirement/` 做增量；change 内规格**不写** `<!-- version -->` 元数据块。
 
 ### 步骤 2：sparrow-architecture（产品级）
 
@@ -319,7 +320,8 @@ sparrow update
 project.md                            # §1.2 只链 catalog.md
 requirement/business/catalog.md
 requirement/business/{sd-slug}/subdomain.md
-requirement/business/{sd-slug}/{c-slug}/capability.md          # 未达阈值时省略能力层
+requirement/business/{sd-slug}/business-services.md            # 未达问题空间复杂度阈值
+requirement/business/{sd-slug}/{c-slug}/capability.md          # 达到该阈值
 requirement/business/{sd-slug}/{c-slug}/{s-slug}/scenario.md
 requirement/business/{sd-slug}/{c-slug}/{s-slug}/business-services.md
 requirement/quality/quality.md
@@ -331,7 +333,7 @@ design/{slug}/spec.md              # 业务服务薄投影 + Properties
 design/{slug}/api.md | tech.md | model.md
 ```
 
-省略能力层时去掉 `{c-slug}/`，使 `scenario.md` 与 `business-services.md` 直接挂在 `{sd-slug}/` 下。
+未达问题空间复杂度阈值时只保留子领域与 `business-services.md`。达到该阈值时使用完整四层路径。数字只写在需求 harness。
 
 **仅 change 工作区额外包含**：`design/{slug}/plan.md`、`code_review.md`、`verify_report.md`、`proposal.md`。
 
@@ -353,7 +355,7 @@ your-project/
 │   ├── master/
 │   │   ├── project.md
 │   │   ├── requirement/
-│   │   │   ├── business/catalog.md 与 {sd-slug}/[{c-slug}/]{s-slug}/…
+│   │   │   ├── business/catalog.md 与 {sd-slug}/（未达问题空间复杂度阈值）或 {sd-slug}/{c-slug}/{s-slug}/…
 │   │   │   ├── quality/quality.md
 │   │   │   ├── ui/ …
 │   │   │   └── revision-history.md
