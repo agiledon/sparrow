@@ -4,6 +4,8 @@ import { getAdapter } from '../adapters/index.js';
 import type { SkillDefinition, SkillRegistry } from '../../kernel/skill/registry.js';
 import { assembleSkillContent } from './generation.js';
 import { createAllWorkflows } from '../../kernel/workflow/createAllWorkflows.js';
+import { getBundledPlugins } from '../../plugins/index.js';
+import { isPluginEnabled } from '../plugins/plugin-switch.js';
 
 /** Renamed skills removed on regenerate (sparrow update / init). */
 const DEPRECATED_SKILL_IDS = ['sparrow-arch', 'sparrow-explore', 'sparrow-harness'];
@@ -24,6 +26,33 @@ function removeDeprecatedSkillFiles(projectRoot: string, toolIds: string[]): voi
           rmSync(commandPath, { force: true });
         }
       }
+    }
+  }
+}
+
+function pluginNameForSkill(skillId: string): string | undefined {
+  for (const plugin of getBundledPlugins()) {
+    const skills = plugin.manifest.contributes.skills ?? [];
+    if (skills.some((skill) => skill.id === skillId)) return plugin.manifest.name;
+  }
+  return undefined;
+}
+
+function removePluginSkillFiles(
+  projectRoot: string,
+  adapter: ReturnType<typeof getAdapter>,
+  skillId: string,
+): void {
+  const skillPath = join(projectRoot, adapter.getSkillPath(skillId));
+  const skillDir = dirname(skillPath);
+  if (existsSync(skillDir)) {
+    rmSync(skillDir, { recursive: true, force: true });
+  }
+  const commandRelPath = adapter.getCommandPath(skillId);
+  if (commandRelPath !== null) {
+    const commandPath = join(projectRoot, commandRelPath);
+    if (existsSync(commandPath)) {
+      rmSync(commandPath, { force: true });
     }
   }
 }
@@ -81,6 +110,11 @@ export function installAgentSkills(
     }
 
     for (const skill of pluginSkills) {
+      const pluginName = pluginNameForSkill(skill.id);
+      if (pluginName && !isPluginEnabled(projectRoot, pluginName)) {
+        removePluginSkillFiles(projectRoot, adapter, skill.id);
+        continue;
+      }
       createdFiles.push(...writePluginSkill(projectRoot, adapter, skill, registry));
     }
 

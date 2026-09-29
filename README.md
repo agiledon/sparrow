@@ -456,7 +456,7 @@ Typical example after `sparrow init`:
 }
 ```
 
-`plugins` is omitted when none are installed. Skills and version metadata read Sparrow’s version from this file.
+`plugins` is omitted when none are installed. Set `enabled` to `false` to turn a plugin off; omit it or set `true` to leave the plugin on. Re-running `sparrow init` keeps the stored `enabled` value and rewrites skills from that switch: a disabled plugin is not injected, and any skill it contributes is not installed. Skills and version metadata read Sparrow’s version from this file.
 
 ### sparrow-state.json
 

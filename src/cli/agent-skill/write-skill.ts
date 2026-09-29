@@ -40,7 +40,7 @@ export function writeSkill(
     adapter,
     bundle.metadata.harnessRelPaths,
   );
-  body = injectAugmentPlugins(body, pkg.workflowId);
+  body = injectAugmentPlugins(body, pkg.workflowId, projectRoot);
 
   const content: CommandContent = {
     id: bundle.metadata.id,

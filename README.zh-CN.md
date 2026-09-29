@@ -471,7 +471,7 @@ harness/
 }
 ```
 
-未安装插件时省略 `plugins`。Skill 与版本元数据从此文件读取 Sparrow 版本号。
+未安装插件时省略 `plugins`。`enabled` 为 `false` 时禁用该插件；缺省或 `true` 为启用。再次执行 `sparrow init` 会保留已有的 `enabled`，并按该开关重写 skill：禁用的插件不再注入扩展内容，也不会安装它贡献的 skill。Skill 与版本元数据从此文件读取 Sparrow 版本号。
 
 ### sparrow-state.json
 

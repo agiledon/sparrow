@@ -1,10 +1,13 @@
 import { getBundledPlugins } from '../../plugins/index.js';
+import { isPluginEnabled } from '../plugins/plugin-switch.js';
 
 /** Token pattern for augment plugin injection: {{PLUGIN:<pluginId>}} */
 const PLUGIN_TOKEN_RE = /\{\{PLUGIN:([\w-]+)\}\}/g;
 
-export function injectAugmentPlugins(body: string, workflowId: string): string {
+export function injectAugmentPlugins(body: string, workflowId: string, projectRoot?: string): string {
   return body.replace(PLUGIN_TOKEN_RE, (match, pluginId) => {
+    if (projectRoot && !isPluginEnabled(projectRoot, pluginId)) return '';
+
     const plugin = getBundledPlugins().find((p) => p.manifest.name === pluginId);
     if (!plugin) return match;
 

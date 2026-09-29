@@ -5,6 +5,7 @@ import type { Plugin } from '../../../plugins/types.js';
 import { getGlobalConfigDir } from '../../harness/install.js';
 import { getPluginStatus, markPluginInstalled } from '../../shell/global-config.js';
 import { readProjectConfig, writeProjectConfig } from '../../../kernel/runtime/project-config.js';
+import { isPluginEnabled, readProjectPluginSwitches } from '../../plugins/plugin-switch.js';
 
 const PLUGINS_SUBDIR = 'plugins';
 
@@ -35,10 +36,11 @@ function writeSparrowConfig(projectRoot: string, config: Record<string, unknown>
 }
 
 function getProjectPlugins(projectRoot: string): SpWriterPlugin[] {
-  const config = readSparrowConfig(projectRoot);
-  const plugins = config.plugins;
-  if (Array.isArray(plugins)) return plugins as SpWriterPlugin[];
-  return [];
+  return readProjectPluginSwitches(projectRoot).map((plugin) => ({
+    name: plugin.name,
+    version: plugin.version ?? '',
+    enabled: plugin.enabled !== false,
+  }));
 }
 
 function upsertProjectPlugin(projectRoot: string, name: string, version: string): void {
@@ -52,17 +54,6 @@ function upsertProjectPlugin(projectRoot: string, name: string, version: string)
   }
   config.plugins = plugins;
   writeSparrowConfig(projectRoot, config);
-}
-
-function isPluginEnabled(name: string, projectRoot: string): boolean {
-  const projectPlugins = getProjectPlugins(projectRoot);
-  const pp = projectPlugins.find((p) => p.name === name);
-  if (pp) return pp.enabled !== false;
-
-  const gs = getPluginStatus(name);
-  if (gs) return gs.enabled !== false;
-
-  return true;
 }
 
 function isPluginAvailable(name: string, projectRoot: string): boolean {
@@ -106,7 +97,7 @@ export function initializePluginRuntimes(projectRoot: string): string[] {
     const name = plugin.manifest.name;
 
     if (isPluginAvailable(name, projectRoot)) {
-      if (isPluginEnabled(name, projectRoot)) {
+      if (isPluginEnabled(projectRoot, name)) {
         written.push(name + ' (cached)');
       }
       continue;
