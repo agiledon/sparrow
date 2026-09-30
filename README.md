@@ -72,7 +72,7 @@ The **process workflow** is Sparrow's main spec-driven DDD pipeline — eight or
 - **Product-level** `archive` (8) runs **once** per change after all team-level slugs complete — it collects every slug's delivery specs (not source code) and promotes them into `master/` for versioning.
 - After any step, pause to review artifacts, refine through dialog, and re-run — the next step always reads the latest version.
 
-**Spec layout**: Active work happens under `docs/sparrow/change/current/{change-id}/`; the published baseline lives in `docs/sparrow/master/` (populated after the first **archive promote**). `development-mode` (`tbd` | `greenfield` | `iteration` | `brownfield`) is stored in `.sparrow/sparrow-state.json`. Brownfield process pipeline is not supported yet. See [Output Structure](#output-structure).
+**Spec layout**: Active work happens under `docs/sparrow/change/current/{change-id}/`; the published baseline lives in `docs/sparrow/master/` (populated after the first **archive promote**). `development-mode` (`tbd` | `greenfield` | `increment` | `brownfield`) is stored in `.sparrow/sparrow-state.json`. Brownfield process pipeline is not supported yet. See [Output Structure](#output-structure).
 
 See [Process Workflow Reference](#process-workflow-reference) below for inputs, outputs, and details of each step.
 
@@ -247,7 +247,7 @@ Detailed inputs, outputs, and behavior for each step in the [process workflows](
 - `requirement/quality/quality.md` — quality attributes (performance, security, availability, etc.)
 - `requirement/ui/` — \[optional\] UI specs (operation flows ← EBP), design tokens, components, HTML prototypes
 
-**Grill Me** follows the requirement V-model: stakeholders, value stream, end-to-end business process, and business service, then bottom-up induction. Optional UI converts those processes into end-to-end operation flows. For **iteration**, diff against `master/requirement/`. No `<!-- version -->` metadata blocks in the change workspace.
+**Grill Me** follows the requirement V-model: stakeholders, value stream, end-to-end business process, and business service, then bottom-up induction. Optional UI converts those processes into end-to-end operation flows. For **increment**, diff against `master/requirement/`. No `<!-- version -->` metadata blocks in the change workspace.
 
 ### Step 2: sparrow-architecture (Product-level)
 
@@ -404,7 +404,7 @@ harness/
 | Mode | Extra (conditional) harness |
 |------|-----------------------------|
 | `greenfield` | None |
-| `iteration` | None |
+| `increment` | None |
 | `brownfield` | **`common/conditional/brownfield.md`** |
 
 How it works:
@@ -492,10 +492,10 @@ While a greenfield change is in progress (product-level `requirement` done; team
 | Field | Values / notes |
 |-------|----------------|
 | `active-change.changeId` | kebab-case change-id, or `null` until confirmed |
-| `development-mode` | `tbd` \| `greenfield` \| `iteration` \| `brownfield` (`tbd` until `/sparrow-requirement` detects it) |
+| `development-mode` | `tbd` \| `greenfield` \| `increment` \| `brownfield` (`tbd` until `/sparrow-requirement` detects it) |
 | `pipeline` | **Must be `null` when `development-mode` is `tbd`**. Otherwise: top-level `current-step` + `status` (`ongoing` \| `done`); team-level steps also fill `contexts.<slug>` |
 
-Brownfield is detected then aborted (core flow not supported yet). After a successful `/sparrow-archive`, `changeId` is cleared, `greenfield` becomes `iteration`, and `pipeline` is set to `null`.
+Brownfield is detected then aborted (core flow not supported yet). After a successful `/sparrow-archive`, `changeId` is cleared, `greenfield` becomes `increment`, and `pipeline` is set to `null`. A stored `iteration` value is read as `increment`.
 
 ### Overriding output paths
 

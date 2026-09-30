@@ -2,7 +2,7 @@
  * Shared types and constants for sparrow-state.json.
  */
 
-export type DevelopmentMode = 'tbd' | 'greenfield' | 'brownfield' | 'iteration';
+export type DevelopmentMode = 'tbd' | 'greenfield' | 'brownfield' | 'increment';
 export type PipelineStatus = 'ongoing' | 'done';
 export type PipelineStep =
   | 'requirement'
@@ -37,7 +37,7 @@ export const DEFAULT_PROJECT_STATE: SparrowProjectState = {
   pipeline: null,
 };
 
-export const MODES = new Set<DevelopmentMode>(['tbd', 'greenfield', 'brownfield', 'iteration']);
+export const MODES = new Set<DevelopmentMode>(['tbd', 'greenfield', 'brownfield', 'increment']);
 export const STEPS = new Set<PipelineStep>([
   'requirement',
   'architecture',
@@ -58,9 +58,8 @@ export function normalizeProjectState(raw: unknown): SparrowProjectState {
       : {};
   const changeId =
     typeof active.changeId === 'string' && active.changeId.length > 0 ? active.changeId : null;
-  const mode = MODES.has(src['development-mode'] as DevelopmentMode)
-    ? (src['development-mode'] as DevelopmentMode)
-    : 'tbd';
+  const rawMode = src['development-mode'] === 'iteration' ? 'increment' : src['development-mode'];
+  const mode = MODES.has(rawMode as DevelopmentMode) ? (rawMode as DevelopmentMode) : 'tbd';
   let pipeline: PipelineState | null = null;
   if (mode !== 'tbd' && src.pipeline && typeof src.pipeline === 'object') {
     const p = src.pipeline as Record<string, unknown>;

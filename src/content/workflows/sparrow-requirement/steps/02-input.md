@@ -1,6 +1,6 @@
 # 收集需求输入
 
-`greenfield` 与 `iteration` 走同一套核心流程（iteration 仍按 revise / master diff）。
+`greenfield` 与 `increment` 走同一套核心流程（increment 仍按 revise / master diff）。
 
 **必须**遵守 harness `requirement/ingest-cli.md` 与 SKILL「包 CLI」节：
 

@@ -1,5 +1,5 @@
 /**
- * Detect greenfield / brownfield / iteration from workspace contents.
+ * Detect greenfield / brownfield / increment from workspace contents.
  */
 
 import { existsSync, readdirSync, statSync } from 'node:fs';
@@ -107,7 +107,7 @@ export function detectDevelopmentMode(projectRoot: string): DetectModeResult {
   if (archiveHas) reasons.push('change/archive has documents');
   if (masterHas) reasons.push('master has documents');
   if (currentHas || archiveHas || masterHas) {
-    return { mode: 'iteration', reasons };
+    return { mode: 'increment', reasons };
   }
   if (hasSourceFiles(projectRoot)) {
     reasons.push('archive and change are empty; source files found');

@@ -72,7 +72,7 @@ flowchart LR
 - **产品级** `archive`（8）每个 change 在全部团队级 slug 完成后 **运行一次**——收束每个 slug 的交付规格（不含源代码）并 promote 至 `master/` 做版本管理。
 - 任一步骤完成后可暂停审阅、对话 refine 并重新运行——下一步始终读取最新版本。
 
-**规格布局**：活动变更在 `docs/sparrow/change/current/{change-id}/` 读写；已发布基线在 `docs/sparrow/master/`（首次 **archive promote** 后才有内容）。`development-mode`（`tbd` | `greenfield` | `iteration` | `brownfield`）写在 `.sparrow/sparrow-state.json`。棕地过程流水线暂不支持。详见 [输出结构](#输出结构)。
+**规格布局**：活动变更在 `docs/sparrow/change/current/{change-id}/` 读写；已发布基线在 `docs/sparrow/master/`（首次 **archive promote** 后才有内容）。`development-mode`（`tbd` | `greenfield` | `increment` | `brownfield`）写在 `.sparrow/sparrow-state.json`。棕地过程流水线暂不支持。详见 [输出结构](#输出结构)。
 
 各步骤的输入、输出与细节见下文 [过程工作流参考](#过程工作流参考)。
 
@@ -247,7 +247,7 @@ sparrow update
 - `requirement/quality/quality.md` — 系统质量属性（性能、安全、高可用等）
 - `requirement/ui/` — \[可选\] UI 规格（操作流程 ← EBP）、设计令牌、组件库与 HTML 原型
 
-**Grill Me** 按需求结构 V 模型推进：利益相关者、价值流、端到端业务流程、业务服务，再自底向上归纳，并做端到端覆盖；可选 UI 将端到端业务流程转为操作流程。**版本迭代**时对照 `master/requirement/` 做增量；change 内规格**不写** `<!-- version -->` 元数据块。
+**Grill Me** 按需求结构 V 模型推进：利益相关者、价值流、端到端业务流程、业务服务，再自底向上归纳，并做端到端覆盖；可选 UI 将端到端业务流程转为操作流程。**增量**模式时对照 `master/requirement/` 做增量；change 内规格**不写** `<!-- version -->` 元数据块。
 
 ### 步骤 2：sparrow-architecture（产品级）
 
@@ -373,7 +373,7 @@ your-project/
 │   │   │       └── model.md         # master 不含 plan.md
 │   ├── change/
 │   │   ├── current/first-ddd/       # 与 master 同构 + plan 等
-│   │   │   ├── proposal.md          # development-mode: greenfield | iteration | brownfield
+│   │   │   ├── proposal.md          # development-mode: greenfield | increment | brownfield
 │   │   │   └── design/{slug}/plan.md
 │   │   └── archive/2026-06-06-first-ddd/
 │   └── harness/                     # 项目级约束占位
@@ -419,7 +419,7 @@ harness/
 | development-mode | conditional 额外加载 |
 |------------------|----------------------|
 | `greenfield`（绿地） | 无 |
-| `iteration`（版本迭代） | 无（arch 侧重限界上下文归属与拓扑确认） |
+| `increment`（增量） | 无（arch 侧重限界上下文归属与拓扑确认） |
 | `brownfield`（棕地） | **`common/conditional/brownfield.md`**；requirement/arch/model 以现有系统取证为主，plan 必须走 solidify 或 refactor |
 
 工作机制：
@@ -507,10 +507,10 @@ harness/
 | 字段 | 取值 / 说明 |
 |------|-------------|
 | `active-change.changeId` | kebab-case 的 change-id；确认前为 `null` |
-| `development-mode` | `tbd` \| `greenfield` \| `iteration` \| `brownfield`（在 `/sparrow-requirement` 探测前为 `tbd`） |
+| `development-mode` | `tbd` \| `greenfield` \| `increment` \| `brownfield`（在 `/sparrow-requirement` 探测前为 `tbd`） |
 | `pipeline` | **`development-mode` 为 `tbd` 时必须为 `null`**。否则为顶层 `current-step` + `status`（`ongoing` \| `done`）；团队级步骤另填 `contexts.<slug>` |
 
-棕地会被探测到，随后终止（过程流水线暂不支持）。`/sparrow-archive` 成功后会清空 `changeId`，`greenfield` 变为 `iteration`，`pipeline` 置为 `null`。
+棕地会被探测到，随后终止（过程流水线暂不支持）。`/sparrow-archive` 成功后会清空 `changeId`，`greenfield` 变为 `increment`（增量），`pipeline` 置为 `null`。已写入的 `iteration` 按 `increment` 读取。
 
 ### 覆盖输出路径
 

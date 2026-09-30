@@ -15,4 +15,4 @@
 
 工作区与 master 同构（含 `architecture/api.md`）：`project.md`、`requirement/business/catalog.md`，以及业务需求树。未达问题空间复杂度阈值（Problem-space Complexity Threshold，见 harness `requirement/requirements.md`）时为 `{sd-slug}/subdomain.md` 与 `{sd-slug}/business-services.md`。达到该阈值时为 `{sd-slug}/{c-slug}/{s-slug}/`（固定文件名 `subdomain.md` / `capability.md` / `scenario.md` / `business-services.md`）。另有 `requirement/quality/`、`requirement/ui/`、`architecture/`（`bounded-contexts.md` 等）、`design/{slug}/`（**仅 change 含** `plan.md`）。`design/{slug}/spec.md` 为该限界上下文业务服务（Business Service）薄投影 + Properties（`source` 指向 `business-services.md#BS-{id}`）。
 
-**change 下禁止** `<!-- version: ... -->`。**development-mode** 以 `.sparrow/sparrow-state.json` 为准（`tbd` \| `greenfield` \| `iteration` \| `brownfield`）；`proposal.md` 抄写该值。`tbd` 时 `pipeline` 必须为空。
+**change 下禁止** `<!-- version: ... -->`。**development-mode** 以 `.sparrow/sparrow-state.json` 为准（`tbd` \| `greenfield` \| `increment` \| `brownfield`）；`proposal.md` 抄写该值。旧值 `iteration` 按 `increment` 处理。`tbd` 时 `pipeline` 必须为空。

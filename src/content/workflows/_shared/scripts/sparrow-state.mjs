@@ -10,7 +10,7 @@ var DEFAULT_PROJECT_STATE = {
   "development-mode": "tbd",
   pipeline: null
 };
-var MODES = /* @__PURE__ */ new Set(["tbd", "greenfield", "brownfield", "iteration"]);
+var MODES = /* @__PURE__ */ new Set(["tbd", "greenfield", "brownfield", "increment"]);
 var STEPS = /* @__PURE__ */ new Set([
   "requirement",
   "architecture",
@@ -26,7 +26,8 @@ function normalizeProjectState(raw) {
   const src = raw && typeof raw === "object" ? raw : {};
   const active = src["active-change"] && typeof src["active-change"] === "object" ? src["active-change"] : {};
   const changeId = typeof active.changeId === "string" && active.changeId.length > 0 ? active.changeId : null;
-  const mode = MODES.has(src["development-mode"]) ? src["development-mode"] : "tbd";
+  const rawMode = src["development-mode"] === "iteration" ? "increment" : src["development-mode"];
+  const mode = MODES.has(rawMode) ? rawMode : "tbd";
   let pipeline = null;
   if (mode !== "tbd" && src.pipeline && typeof src.pipeline === "object") {
     const p = src.pipeline;
@@ -187,7 +188,7 @@ function detectDevelopmentMode(projectRoot) {
   if (archiveHas) reasons.push("change/archive has documents");
   if (masterHas) reasons.push("master has documents");
   if (currentHas || archiveHas || masterHas) {
-    return { mode: "iteration", reasons };
+    return { mode: "increment", reasons };
   }
   if (hasSourceFiles(projectRoot)) {
     reasons.push("archive and change are empty; source files found");
@@ -315,16 +316,16 @@ function applyPipelineContext(state, slug, step, status) {
   return normalizeProjectState({ ...state, pipeline });
 }
 function applyArchiveComplete(state) {
-  const mode = state["development-mode"] === "greenfield" ? "iteration" : state["development-mode"];
+  const mode = state["development-mode"] === "greenfield" ? "increment" : state["development-mode"];
   return normalizeProjectState({
     "active-change": { changeId: null },
-    "development-mode": mode === "tbd" ? "iteration" : mode,
+    "development-mode": mode === "tbd" ? "increment" : mode,
     pipeline: null
   });
 }
 
 // src/kernel/runtime/agent-scripts/sparrow-state.ts
-var MODES2 = /* @__PURE__ */ new Set(["tbd", "greenfield", "brownfield", "iteration"]);
+var MODES2 = /* @__PURE__ */ new Set(["tbd", "greenfield", "brownfield", "increment"]);
 var STEPS2 = /* @__PURE__ */ new Set([
   "requirement",
   "architecture",
@@ -340,7 +341,7 @@ function failUsage() {
   console.error("Usage:");
   console.error("  node <skill>/scripts/sparrow-state.mjs show");
   console.error("  node <skill>/scripts/sparrow-state.mjs detect-mode");
-  console.error("  node <skill>/scripts/sparrow-state.mjs set-mode <tbd|greenfield|brownfield|iteration>");
+  console.error("  node <skill>/scripts/sparrow-state.mjs set-mode <tbd|greenfield|brownfield|increment>");
   console.error("  node <skill>/scripts/sparrow-state.mjs set-change <id|null>");
   console.error("  node <skill>/scripts/sparrow-state.mjs set-step <step> <ongoing|done>");
   console.error("  node <skill>/scripts/sparrow-state.mjs set-context <slug> <step> <ongoing|done>");
@@ -364,7 +365,7 @@ if (cmd === "detect-mode") {
   process.exit(0);
 }
 if (cmd === "set-mode") {
-  const mode = args[0];
+  const mode = args[0] === "iteration" ? "increment" : args[0];
   if (!MODES2.has(mode)) failUsage();
   printJson(saveProjectState(root, applyDevelopmentMode(loadProjectState(root), mode)));
   process.exit(0);

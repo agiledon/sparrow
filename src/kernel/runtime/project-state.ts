@@ -4,7 +4,7 @@
  * Split by responsibility:
  * - project-state-types — types + normalize
  * - project-state-io — load/save/migrate/wipe
- * - development-mode — greenfield/brownfield/iteration detection
+ * - development-mode — greenfield/brownfield/increment detection
  * - archive-readiness — check-archive / prune-contexts
  */
 
@@ -102,10 +102,10 @@ export function applyPipelineContext(
 }
 
 export function applyArchiveComplete(state: SparrowProjectState): SparrowProjectState {
-  const mode = state['development-mode'] === 'greenfield' ? 'iteration' : state['development-mode'];
+  const mode = state['development-mode'] === 'greenfield' ? 'increment' : state['development-mode'];
   return normalizeProjectState({
     'active-change': { changeId: null },
-    'development-mode': mode === 'tbd' ? 'iteration' : mode,
+    'development-mode': mode === 'tbd' ? 'increment' : mode,
     pipeline: null,
   });
 }

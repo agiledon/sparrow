@@ -12,7 +12,7 @@
 | change-id | kebab-case 变更标识。确认后才创建 `change/current/{change-id}/`。 |
 | activeChangeId | `.sparrow/sparrow-state.json` 的 `active-change.changeId`；若为空且 `current/` 仅有一个子目录，则用该目录名。 |
 | archive | `docs/sparrow/change/archive/YYYY-MM-DD-{changeId}/`。归档快照。 |
-| development-mode | `.sparrow/sparrow-state.json` 的 `tbd` \| `greenfield` \| `iteration` \| `brownfield`。`tbd` 表示尚未探测；此时 `pipeline` 必须为空。proposal.md 只抄写该值。 |
+| development-mode | `.sparrow/sparrow-state.json` 的 `tbd` \| `greenfield` \| `increment`（增量） \| `brownfield`。`tbd` 表示尚未探测；此时 `pipeline` 必须为空。proposal.md 只抄写该值。读到旧值 `iteration` 时按 `increment` 处理。 |
 | pipeline | `.sparrow/sparrow-state.json` 的阶段进度：`current-step` + `status`（`ongoing` \| `done`）；团队级另有 `contexts.<slug>`。 |
 | slug | 限界上下文（Bounded Context）或交互上下文的英文目录名，位于 `design/{slug}/`。 |
 | 全局级 harness | `~/.config/sparrow/harness/`（Windows：`%APPDATA%/sparrow/harness/`）。框架维护的 DDD 纪律。 |

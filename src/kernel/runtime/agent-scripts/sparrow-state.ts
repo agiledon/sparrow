@@ -10,7 +10,7 @@
  *
  *   node <skill>/scripts/sparrow-state.mjs show
  *   node <skill>/scripts/sparrow-state.mjs detect-mode
- *   node <skill>/scripts/sparrow-state.mjs set-mode <tbd|greenfield|brownfield|iteration>
+ *   node <skill>/scripts/sparrow-state.mjs set-mode <tbd|greenfield|brownfield|increment>
  *   node <skill>/scripts/sparrow-state.mjs set-change <id|null>
  *   node <skill>/scripts/sparrow-state.mjs set-step <step> <ongoing|done>
  *   node <skill>/scripts/sparrow-state.mjs set-context <slug> <step> <ongoing|done>
@@ -35,7 +35,7 @@ import {
   type PipelineStep,
 } from '../project-state.js';
 
-const MODES = new Set<DevelopmentMode>(['tbd', 'greenfield', 'brownfield', 'iteration']);
+const MODES = new Set<DevelopmentMode>(['tbd', 'greenfield', 'brownfield', 'increment']);
 const STEPS = new Set<PipelineStep>([
   'requirement',
   'architecture',
@@ -52,7 +52,7 @@ function failUsage(): never {
   console.error('Usage:');
   console.error('  node <skill>/scripts/sparrow-state.mjs show');
   console.error('  node <skill>/scripts/sparrow-state.mjs detect-mode');
-  console.error('  node <skill>/scripts/sparrow-state.mjs set-mode <tbd|greenfield|brownfield|iteration>');
+  console.error('  node <skill>/scripts/sparrow-state.mjs set-mode <tbd|greenfield|brownfield|increment>');
   console.error('  node <skill>/scripts/sparrow-state.mjs set-change <id|null>');
   console.error('  node <skill>/scripts/sparrow-state.mjs set-step <step> <ongoing|done>');
   console.error('  node <skill>/scripts/sparrow-state.mjs set-context <slug> <step> <ongoing|done>');
@@ -80,7 +80,7 @@ if (cmd === 'detect-mode') {
 }
 
 if (cmd === 'set-mode') {
-  const mode = args[0] as DevelopmentMode;
+  const mode = (args[0] === 'iteration' ? 'increment' : args[0]) as DevelopmentMode;
   if (!MODES.has(mode)) failUsage();
   printJson(saveProjectState(root, applyDevelopmentMode(loadProjectState(root), mode)));
   process.exit(0);

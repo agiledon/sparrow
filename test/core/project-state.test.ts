@@ -82,13 +82,13 @@ test('detect-mode: empty specs with source → brownfield', () => {
   assert.equal(result.mode, 'brownfield');
 });
 
-test('detect-mode: archive or current or master docs → iteration', () => {
+test('detect-mode: archive or current or master docs → increment', () => {
   const root = tmpRoot('sparrow-detect-it-');
   mkdirSync(join(root, CHANGE_CURRENT), { recursive: true });
   mkdirSync(join(root, CHANGE_ARCHIVE, '2026-01-01-first'), { recursive: true });
   mkdirSync(join(root, MASTER_ROOT), { recursive: true });
   writeFileSync(join(root, CHANGE_ARCHIVE, '2026-01-01-first', 'proposal.md'), '# archived\n');
-  assert.equal(detectDevelopmentMode(root).mode, 'iteration');
+  assert.equal(detectDevelopmentMode(root).mode, 'increment');
 });
 
 test('cannot set pipeline while tbd', () => {
@@ -96,15 +96,24 @@ test('cannot set pipeline while tbd', () => {
   assert.throws(() => applyPipelineStep(state, 'requirement', 'ongoing'));
 });
 
-test('archive-done clears changeId and promotes greenfield to iteration', () => {
+test('archive-done clears changeId and promotes greenfield to increment', () => {
   const next = applyArchiveComplete({
     'active-change': { changeId: 'first-ddd' },
     'development-mode': 'greenfield',
     pipeline: { 'current-step': 'archive', status: 'ongoing', contexts: {} },
   });
   assert.equal(next['active-change'].changeId, null);
-  assert.equal(next['development-mode'], 'iteration');
+  assert.equal(next['development-mode'], 'increment');
   assert.equal(next.pipeline, null);
+});
+
+test('legacy development-mode iteration is read as increment', () => {
+  const state = normalizeProjectState({
+    'active-change': { changeId: 'c1' },
+    'development-mode': 'iteration',
+    pipeline: null,
+  });
+  assert.equal(state['development-mode'], 'increment');
 });
 
 test('generateProjectConfig writes sparrow-config.json and removes sparrow.json', () => {
@@ -164,7 +173,7 @@ test('checkArchiveReadiness: verify/done is ready; design slug without state is 
   mkdirSync(join(root, CHANGE_CURRENT, 'c1', 'design', 'payments'), { recursive: true });
   saveProjectState(root, {
     'active-change': { changeId: 'c1' },
-    'development-mode': 'iteration',
+    'development-mode': 'increment',
     pipeline: {
       'current-step': 'verify',
       status: 'ongoing',
@@ -192,7 +201,7 @@ test('applyPruneContexts removes slugs but keeps changeId', () => {
   mkdirSync(join(root, '.sparrow'), { recursive: true });
   saveProjectState(root, {
     'active-change': { changeId: 'c1' },
-    'development-mode': 'iteration',
+    'development-mode': 'increment',
     pipeline: {
       'current-step': 'verify',
       status: 'ongoing',
