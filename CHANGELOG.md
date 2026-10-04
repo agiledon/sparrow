@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-10-04
+
 ### Changed
 
 - **On-demand skill files**: Each skill's `SKILL.md` names only the first `steps/` file. References and assets are named inside the step that uses them, so later files (such as Grill Me or UI templates) are not read at the start.

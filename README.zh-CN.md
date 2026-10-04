@@ -453,7 +453,7 @@ harness/
 
 ```json
 {
-  "version": "0.6.0",
+  "version": "0.6.1",
   "tools": ["cursor", "claude"],
   "projectName": "my-project",
   "lang": "zh-Hans",
