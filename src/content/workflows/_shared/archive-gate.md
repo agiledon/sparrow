@@ -28,5 +28,6 @@ node <本 skill 目录>/scripts/sparrow-promote.mjs <change-id> <synced-at> [--s
 ```
 
 - **ADDED**：新建；**MODIFIED**：文末追加 delta；**REMOVED**：仅记历史，不删 master 文件
-- 排除 `proposal.md`、`design/{slug}/plan.md`
+- 排除 `proposal.md`、`delta.md`、`design/{slug}/plan.md`
+- `delta.md` 不进入 master。完整归档时随 change 目录留在 `archive/`。部分归档时它留在 `change/current/{id}/`，不随共享物移走
 - 历史按 `### shared` / `### slug: {slug}` 分组写入 requirement/design revision-history

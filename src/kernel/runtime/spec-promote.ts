@@ -64,7 +64,7 @@ function listFilesRecursive(dir: string, base = dir): string[] {
 
 function shouldSkipPromote(rel: string): boolean {
   const norm = rel.replace(/\\/g, '/');
-  if (norm === 'proposal.md') return true;
+  if (norm === 'proposal.md' || norm === 'delta.md') return true;
   return /^design\/[^/]+\/plan\.md$/.test(norm);
 }
 

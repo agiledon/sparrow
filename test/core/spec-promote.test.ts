@@ -10,6 +10,7 @@ function seedChange(root: string, changeId: string): string {
   const base = join(root, CHANGE_CURRENT, changeId);
   mkdirSync(join(base, 'requirement', 'business', 'services'), { recursive: true });
   writeFileSync(join(base, 'requirement', 'business', 'catalog.md'), '# catalog\n', 'utf-8');
+  writeFileSync(join(base, 'delta.md'), '# revisions\n', 'utf-8');
   writeFileSync(join(base, 'requirement', 'business', 'services', 'BS-submit-order.md'), '# svc\n', 'utf-8');
   mkdirSync(join(base, 'architecture'), { recursive: true });
   writeFileSync(join(base, 'architecture', 'bounded-contexts.md'), '# bc\n', 'utf-8');
@@ -30,6 +31,7 @@ test('promote ADDED creates master files and skips plan.md', () => {
   assert.ok(result.promotedFiles.includes('architecture/bounded-contexts.md'));
   assert.ok(result.promotedFiles.includes('design/orders/spec.md'));
   assert.equal(result.promotedFiles.includes('design/orders/plan.md'), false);
+  assert.equal(result.promotedFiles.includes('delta.md'), false);
   assert.ok(existsSync(join(root, MASTER_ROOT, 'design/orders/spec.md')));
   assert.ok(result.deltas.some((d) => d.path === 'design/orders/spec.md' && d.kind === 'ADDED' && d.slug === 'orders'));
   assert.ok(result.deltas.some((d) => d.path === 'requirement/business/catalog.md' && d.kind === 'ADDED' && d.slug === 'shared'));

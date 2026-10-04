@@ -9,5 +9,14 @@
 3. **1.2 业务需求**只更新 catalog 一条的勾选与「待生成 / 已完成」状态；禁止在 1.2 再链 `subdomains/`、`capabilities/`、`scenarios/`、`services/` 或嵌套树中的单个子领域（Subdomain）/能力（Capability）/场景（Scenario）文件。
 4. 将本阶段已生成条目从 `*待生成*` 改为已完成（change 工作区不写 version 号；master 副本用 `*v{version}*`）。
 5. 更新文件头部「最后更新」时间戳。
-6. 基线（无活动变更、首次需求）**不写**「变更管理」块、不标注档位。revise 模式下才创建/更新变更管理块与限界上下文（Bounded Context）的进度档位。
+6. requirement、architecture、design、model、plan、apply 收尾时，若本次写入或更新了规格：按 `revise-gate.md` 追加 `delta.md` 一节，并在「下一步」之前维护「变更管理」块。Greenfield 第一次落盘即 `r1`，同样写入。verify 与 archive 不更新修订号。
+
+```markdown
+## 变更管理
+
+- 当前修订：`rN`
+- 对账：[delta.md](./delta.md)
+```
+
+该块只保留这两行。不把影响范围或 Delta 清单抄进来，也不改动上文固定标题。限界上下文的进度档位仍标在「限界上下文设计」索引上，用来表示下游已过期，不表示要自动重跑。
 7. 不改动未本阶段负责的限界上下文列表结构，除非本阶段职责就是新增/调整 slug 索引（sparrow-architecture）。

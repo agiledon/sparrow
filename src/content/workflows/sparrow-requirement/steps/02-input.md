@@ -1,6 +1,6 @@
 # 收集需求输入
 
-`greenfield` 与 `increment` 走同一套核心流程（increment 仍按 revise / master diff）。
+`greenfield` 与 `increment` 走同一套核心流程。基线差别见 `references/revise-gate.md`：同一份未归档 change 对照上一修订版；increment 新 change 的 `r1` 对照 master。
 
 **必须**遵守 harness `requirement/ingest-cli.md` 与 SKILL「包 CLI」节：
 

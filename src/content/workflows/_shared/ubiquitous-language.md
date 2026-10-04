@@ -19,7 +19,9 @@
 | 项目级 harness | `docs/sparrow/harness/`。本项目约束，优先级高于全局级。 |
 | common harness | harness 下的 `common/`：跨阶段纪律（always / conditional）。不是「全局级」的同义词。 |
 | Grill Me | 决策访谈：每次一问、给推荐答案、收敛后再行动。互动纪律见 harness `common/always/interactive-interaction.md`。需求探索顺序见 harness `requirement/requirements.md`「需求结构 V 模型」，展开见 `grill-me.md`。 |
-| project.md（change） | `change/current/{id}/project.md`。工作区向导索引。 |
+| project.md（change） | `change/current/{id}/project.md`。工作区向导索引。变更管理块只链 `delta.md` 并写当前修订号。 |
+| delta.md | `change/current/{id}/delta.md`。该 change 的修订对账。每节含影响范围与 ADDED / MODIFIED / REMOVED / RENAMED。不进入 master。 |
+| 修订号 | 同一份 change 内的 `r1`、`r2`。不是 master 文档版本号。新的 increment change 从 `r1` 重新计。 |
 | project.md（master） | `docs/sparrow/master/project.md`。promote 后的基线索引。 |
 | sparrow-config.json | `.sparrow/sparrow-config.json`。工具列表、项目名、版本、plugins（`enabled: false` 禁用该插件）、`lang`（文档语言，BCP 47；缺省 `zh-Hans`）。 |
 | sparrow-state.json | `.sparrow/sparrow-state.json`。流水线状态源。 |

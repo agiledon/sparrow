@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [0.6.2]
+
+### Added
+
+- **Change revisions**: An unarchived change is revised in place. After a full archive, only `sparrow-requirement` may start the next change, in `increment` mode. Each revision appends `change/current/{id}/delta.md` with an impact scope and ADDED / MODIFIED / REMOVED / RENAMED. Specs stay full documents. Code changes happen only in `sparrow-apply`, and only for slugs named in that scope. `delta.md` is not promoted to `master/`.
+  - **变更修订**：未归档时修订当前 change；完整归档后只能从 requirement 进入 increment。每次修订把影响范围和四种 Delta 追加到 `delta.md`。规格仍是全文。代码只在 apply 中按影响范围修改。对账不进入 master。
 
 ## [0.6.1] - 2026-10-04
 

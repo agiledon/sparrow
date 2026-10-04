@@ -19,3 +19,5 @@
 - 每次修改必须变更版本号
 
 revise 且写 master / 非 change 文档时，可追加 `change-id: {change-id}`（必要时 `supersedes: {被取代版本}`）。基线无活动变更时不追加这些字段。
+
+change 内的修订号是 `r1`、`r2`，写在 `delta.md`，不是上面的文档版本号。Increment 的新 change 从 `r1` 重新计。格式见 `revise-gate.md`。

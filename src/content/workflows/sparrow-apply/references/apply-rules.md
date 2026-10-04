@@ -1,24 +1,23 @@
-## 变更模式（revise）— 重构迁移与边界回归
+## 变更模式（revise）— 只改影响范围里的代码
 
-> **⚠️ 门控声明（向后兼容硬性约束）**：本节仅在**检测到活动变更**时进入。**若当前为首次需求、无活动变更，请忽略本节，完全按上文原始流程执行（即按 plan.md 正向生成代码），行为须与未引入本节前完全一致。**
+入口与对账格式见 `references/revise-gate.md`。本阶段不是自动重跑。只处理 `delta.md` **最新一节**影响范围里点名的 slug。未点名的 `backend/{slug}/` 不读、不改。
 
-**触发条件**（同 sparrow-architecture「变更处理 / revise」章节）：\`docs/sparrow/change/current/\` 含未归档变更文件夹，或 \`project.md\` 当前 change-id 非空。
+已有代码指 `backend/{slug}/` 存在。没有该目录时，按 plan 正向生成，不做迁移。
 
-**revise 行为总览**：本阶段只处理**档位 == S4（代码已生成）且被本次变更影响**的限界上下文（Bounded Context）。限界上下文↔\`backend/\` 模块 1:1，因此 arch 记录的重构动作直接映射为代码动作。执行前先读取 \`change/current/{change-id}/\` 下 arch 写好的 ADR / 动作记录，确定每个受影响 slug 的目标拓扑。
+没有 `plan.md` 时先 **sparrow-plan**。不得在本阶段新起尚未经过子领域判断和一对一映射的 slug。
 
-### 代码动作映射（仅 S4 执行）
+### 代码动作
 
-- **新增限界上下文（新建 slug）**：按正常正向流程跑 apply，在 \`backend/\` 下新建模块。
-- **合并 A+B→C（Strangler 式）**：
-  1. 保留 A、B 现有模块不动；新建吸收/目标模块 C（若 C 为新 slug，正向 apply；若 C 即 A 或 B 之一，则在原模块上扩展）。
-  2. 将待合并的行为与数据迁入 C；A、B 通过 facade / 协调层 / ACL 委派到 C（并存期）。
-  3. **cutover**（破坏性，需用户确认）：将调用方重定向到 C。
-  4. **退役**：移除 A、B 的 \`backend/\` 模块；若有外部调用方，先保留薄兼容 shim/ACL，确认无调用后再删。
-- **删除限界上下文**：行为已并入吸收方后，移除非空模块；外部调用方经薄 shim/ACL 过渡后退役。
-- **移动聚合（X 从 A→B）**：将 \`domain/aggregate|entity|valueobject/\` 与 \`infrastructure/port|adapter/\` 从 A 模块搬迁到 B 模块；同步 A、B 的 \`api/model\`；跨限界上下文调用方经 ACL 保持聚合外部契约稳定。
-- **防腐层 ACL**：仅新增 \`infrastructure/adapter/acl/\`（或独立 ACL 模块），做上游模型→本地模型翻译，**不改动本地领域模型**。
-- **绞杀者 Strangler**：旧模块保留，新模块并行构建，经 facade / 特性开关路由；并存期双写或事件桥接；cutover 后退役旧模块。
-- **数据迁移**：若 \`tech.md\` 标明「每限界上下文独立 schema」，合并/拆分即跨模块 schema 迁表，并存期双写/CDC，再 cutover。
+- **分给已有限界上下文，且还没有代码**：本阶段不生成代码。规格停在已经写到的那一层。
+- **分给已有限界上下文，且已有代码**：先有规格。契约和模型仍兼容时，在原模块上扩展。被破坏时走绞杀者或防腐层；用户确认切换前，公开 API 保持可调用。确认后再退役旧路径。
+- **新增限界上下文，且还没有代码**：规格已经按正向流程写到 plan 之后，才按 plan 新建 `backend/{slug}/`。不复制其它模块的代码。
+- **删除限界上下文，且还没有代码**：不删模块。规格已在确认后移入该 change 的 `retired/`。
+- **删除限界上下文，且已有代码**：没有接收方时不删模块，先走绞杀者。已有接收方并得到用户确认后，并入接收方，留下垫片；再次确认切换后，才删除 `backend/{slug}/`。
+- **合并 A+B→C**：目标新 slug 必须已经完成子领域判断和一对一映射。有代码的参与者按上面的「已有代码」处理；没有代码的只改规格。cutover 须用户确认。
+- **移动聚合（X 从 A→B）**：A 或 B 已有代码时，才搬迁 `domain/aggregate|entity|valueobject/` 与 `infrastructure/port|adapter/`。跨限界上下文调用经 ACL 保持外部契约稳定。没有代码则只改规格。
+- **防腐层**：仅新增 `infrastructure/adapter/acl/`，不改本地领域模型。
+- **绞杀者**：旧模块保留，新路径并行，经 facade 或特性开关路由。并存期双写或事件桥接。cutover 须用户确认，之后才退役旧模块。
+- **数据迁移**：若 `tech.md` 标明每限界上下文独立 schema，合并或拆分才跨模块迁表。并存期双写或 CDC，cutover 后再停旧表。
 
 ### 架构边界回归校验（fitness function）
 
@@ -31,11 +30,9 @@
 校验不通过则停下并报告，不得带病推进。
 
 ### 收尾
-- 变更后重跑 **Code Review** 生成/更新 \`docs/sparrow/change/current/{activeChangeId}/design/{slug}/code_review.md\`。
-- 受影响模块代码版本递增（在 \`project.md\` 或模块说明中记录），元数据块追加 \`change-id\`。
-- 全部受影响 S4 slug 完成后，提示用户依次执行 **sparrow-verify** 验证，验证通过后执行 **sparrow-archive** 归档本次变更。
-
-> 完整限界上下文→代码映射与数据迁移策略见 \`docs/prd/sparrow-change-management.md\` 第 6 节。
+- 变更后重跑 **Code Review**，生成或更新 `design/{slug}/code_review.md`。
+- change 工作区不写 `<!-- version -->`。代码侧的 Delta 写入 `delta.md`，不在 `project.md` 展开。
+- 影响范围里点名的 slug 都处理完后，提示用户执行 **sparrow-verify**，通过后再 **sparrow-archive**。
 
 ---
 

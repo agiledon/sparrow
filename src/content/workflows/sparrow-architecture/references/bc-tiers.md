@@ -1,46 +1,31 @@
 # 变更处理 / revise（演进式架构重构）
 
-> **⚠️ 门控声明（向后兼容硬性约束）**：本节仅在**检测到活动变更**时进入。判定方法见下方"触发条件"。**若当前为首次需求、无活动变更，请忽略本节，完全按上文原始流程（强制优化调整分析 + 存在性检查 skip/overwrite/update）执行，行为须与未引入本节前完全一致。**
+入口以 `references/revise-gate.md` 为准。未归档时修订当前 change。已完整归档则停在本技能之外，先回到 sparrow-requirement。
 
-## 触发条件（revise 模式检测）
+对账格式、四种 Delta 与影响范围不在本文重复。本文只定义档位，以及限界上下文划分如何落到规格和代码。
 
-在执行 arch 之前，先检测是否存在活动变更：
+## 限界上下文的档位判定
 
-\`\`\`
-活动变更存在，当且仅当满足以下任一：
-  - docs/sparrow/change/current/ 目录存在，且其中包含「未归档」的变更文件夹
-    （未归档 = 不在 change/archive/ 下）
-  - docs/sparrow/change/current/{activeChangeId}/project.md 的「变更管理」块中「当前活动 change-id」非空
-\`\`\`
+档位表示这个 slug 的规格已经写到哪一层。它只用来把更下游标为过期，不自动重跑 design、model、plan、apply。
 
-- **不满足** → 普通模式，跳过本节，按原流程执行（**基线零副作用**）。
-- **满足** → 进入 revise 模式：加载 \`docs/sparrow/change/current/{change-id}/proposal.md\` 与 change 工作区相对 master 的 diff，执行下方决策框架（限界上下文（Bounded Context）拓扑变更须用户确认清单）。
-
-> 完整约定（目录结构、delta 格式、版本元数据扩展、project.md 变更管理块、限界上下文的档位判定）见 \`docs/prd/sparrow-change-management.md\`。各下游阶段（design/model/plan/apply/requirement）的 revise 分支均引用本节作为权威定义。
-
-## 限界上下文的档位判定（revise 范围精确定界）
-
-revise 模式下，对每个**受变更影响的限界上下文**，依据 \`project.md\` 的逐限界上下文版本记录、\`plan.md\` 步骤是否全 \`[x]\`、\`code_review.md\` 是否存在，判定其进度档位，决定下游改到哪一层（requirement 与 arch 始终重跑）：
+已有代码只看 `backend/{slug}/` 是否存在。不看 `plan.md` 是否全部勾选，也不看 `code_review.md`（完整归档后这两份留在 `archive/`）。
 
 | 档位 | 判定依据 | 含义 |
 |---|---|---|
-| **S0 仅 arch** | spec=v，api/tech/model/plan=待生成 | 未进入 design |
-| **S1 design 完成** | +api=v, tech=v，model/plan=待生成 | 仅设计契约 |
-| **S2 +model** | +model=v，plan=待生成 | 已领域建模 |
-| **S3 +plan** | +plan=v | 已出实现计划 |
-| **S4 applied** | plan 全 \`[x]\` 且 \`code_review.md\` 存在 | 代码已生成 |
+| **S0 仅 arch** | 已有 spec，api/tech/model/plan 待生成 | 未进入 design |
+| **S1 design 完成** | 另有 api、tech，model/plan 待生成 | 仅设计契约 |
+| **S2 +model** | 另有 model，plan 待生成 | 已领域建模 |
+| **S3 +plan** | 另有 plan | 已出实现计划 |
+| **S4 已有代码** | `backend/{slug}/` 存在 | 模块已在代码库 |
 
-| 受影响的限界上下文的档位 | revise 改动范围 | 是否动代码 |
+| 档位 | 本次架构修订 | 代码 |
 |---|---|---|
-| S0 仅 arch | 只改 arch 产物（business/application + 该限界上下文的 design/spec 切片）+ 记录变更原因（轻量 ADR） | 否 |
-| S1 design 完成 | arch + design（api/tech）重生成 | 否 |
-| S2 +model | arch + design + model | 否 |
-| S3 +plan | arch + design + model + plan | 否 |
-| S4 applied | 全量修订流程（含代码 Strangler/ACL/迁移/退役，见 sparrow-apply） | 是 |
+| S0–S3 | 更新本层已有规格为全文；更下游标过期，不提前生成 | 不改 `backend/` |
+| S4 | 同样只更新规格并标过期 | 留到用户执行 sparrow-apply，且该 slug 在影响范围里 |
 
-> 跨档位动作（如合并 A=S4 与 B=S1 为 C）：对每个参与限界上下文按其档位分别处理；新建目标 C 正向执行到「与最先进源限界上下文同级」。
+跨档位时（例如合并已有代码的 A 与尚无代码的 B）：有代码的参与者把预定代码动作写入影响范围；没有代码的只改规格。目标新 slug 先完成子领域判断和一对一映射，不在本阶段把下游文档生成到与 A 同级。
 
-## 决策框架：信号 → 动作（Agent 自动判定）
+## 决策框架：信号 → 动作
 
 基于需求 delta 与现有 arch 四维分析，逐项套用下表。**仅破坏性操作需用户确认**（删除限界上下文 / 合并 / 绞杀者 cutover）。
 
@@ -52,56 +37,27 @@ revise 模式下，对每个**受变更影响的限界上下文**，依据 \`pro
 | S3 某聚合变化频率显著高于同限界上下文 | **提取聚合**（AR-4 by Volatility / AR-5 by Cohesion） | Context Mapper AR-4/5 | 低 自动 |
 | S6 跨限界上下文依赖反向 / 上游模型污染下游 | **防腐层 ACL** | Evans 上下文映射 | 低 自动 |
 | S7 上游为遗留/外部系统、需逐步替换 | **绞杀者 Strangler** 并存迁移 | Fowler；MS Architecture Center | 高（cutover 确认）✅ |
-| 新子领域（Subdomain）出现 | **新增限界上下文** | — | 低 自动 |
+| 新职责不属于已有子领域 | **新增限界上下文** | 先按 subdomain-rules，再一对一映射 | 低；映射偏离须写理由 |
 
-**「按状态执行」列**：上述每个动作的落地深度随涉及限界上下文的档位而异——
-- 涉及限界上下文为 **S0**：仅改 arch 产物 + 记录轻量 ADR，**不触发下游重生成、不动代码**。
-- 涉及限界上下文为 **S1–S3**：按档位向上重生成对应层设计文档（api/tech/model/plan），未达档位不碰。
-- 涉及限界上下文为 **S4**：走全量修订流程，含代码迁移（见 sparrow-apply 的「重构迁移」子流程）。
+划分动作不按档位自动重跑下游，也不在本阶段改代码。参与者里有一个 `backend/{slug}/` 已存在，代码侧就按 S4 记入影响范围；没有代码的只改规格。删除、合并、绞杀者切换必须用户确认。
 
-## arch 在 revise 模式的执行步骤
+## arch 在修订时怎么改规格
 
-1. **载入变更**：读取 \`change/current/{change-id}/proposal.md\` 与 change 工作区需求/架构产物，对照 \`master/\`（ADDED/MODIFIED/REMOVED 标记）。
-2. **核对问题空间结构**：在现有 \`requirement/business/\`（catalog / subdomains / services）基础上，识别新增子领域、消失服务、模型冲突；**禁止**在 arch 重划子领域。
-3. **重跑限界上下文映射**：将新限界上下文提案与现有限界上下文对比，算出 diff：新增限界上下文 / 删除限界上下文 / 合并限界上下文 / 拆分限界上下文 / 移动聚合 / 加 ACL / 引绞杀者。
-4. **套决策表**：对每个 diff 项产出动作 + 理由，并标注涉及限界上下文的档位（决定落地深度）。
-5. **破坏性确认**：删除限界上下文、合并限界上下文、绞杀者 cutover 三类操作，先向用户展示方案与理由，确认后再执行。
-6. **落实**：
-   - 更新 \`architecture/bounded-contexts.md\`（MODIFIED 部分按 delta 合并，版本号递增，revise 模式下元数据块追加 \`change-id\` / \`supersedes\`）。问题空间变更在 requirement 侧更新，不写 \`architecture/business.md\`。
-   - 重建 \`design/{slug}/*\`：新建限界上下文创建切片目录；合并/拆分按目标重组切片；删除限界上下文将其 \`design/{slug}/\` 移入 \`change/current/{change-id}/retired/\` 留档后移除索引。
-   - 在 \`change/current/{change-id}/\` 下写 **ADR**（架构决策记录）：记录初始划分假设、触发变更的需求缺口、本次合并/删除/拆分的判定与理由。
-7. **同步上下文映射**：按动作更新上下文映射关系（ACL / OHS / Conformist / Customer-Supplier / Shared Kernel / Publisher-Subscriber / Separate Ways 等）。
-8. **更新 project.md**：调整「限界上下文设计」索引（增/删/合/拆对应子章节与版本），并为每个限界上下文标注档位；在「变更管理」块记录本次变更影响的文档与版本。
+1. 读取 `proposal.md`、需求 Delta 和现有 `architecture/bounded-contexts.md`。基线按 `revise-gate.md`：同一份 change 对照上一修订版，increment 的新 change 对照 master。
+2. 不重划子领域。新增职责是否属于已有子领域，以 requirement 已落盘的 `subdomain.md` 为准。
+3. 先一对一映射，再记录调整。偏离必须写理由。算出：新增、分给已有、删除、合并、拆分、移动聚合。
+4. 每个动作写入当次影响范围：划分动作、对应子领域、是否已有代码、预定代码动作、是否待确认、要改的路径、因此过期的下游、明确不改的限界上下文。
+5. 删除、合并、绞杀者切换先向用户展示方案，确认后再改规格。
+6. 落实为全文，不写补丁正文，change 工作区不写 `<!-- version -->`：
+   - 更新 `architecture/bounded-contexts.md` 与上下文映射。问题空间变更留在 requirement，不写 `architecture/business.md`。
+   - 新增限界上下文：映射成立后才写该 slug 的 `design/{slug}/spec.md`。不在本阶段生成 api、tech、model、plan。
+   - 分给已有限界上下文：只更新已经写到的那一层。更下游标过期，不提前生成。
+   - 删除且还没有代码：用户确认后，把该 slug 的规格移入 `change/current/{change-id}/retired/`，从索引去掉。不删 `master/` 上的文件。
+   - 删除且已有代码：本阶段不删 `backend/{slug}/`。没有接收方则停住，不把删除写成可执行的代码动作。
+   - 共享全文随划分一起改：`catalog.md` 只在 requirement 已改时沿用；本阶段改 `bounded-contexts.md`。`architecture/frontend.md` 与 `architecture/api.md` 若已存在且绑定被删 slug，标过期，等用户再次跑对应步骤时改。
+7. 调整 `project.md` 的限界上下文索引和档位。变更管理块只更新修订号和对账链接。影响范围写在 `delta.md`，不写进 `project.md`。
 
-## 限界上下文 → 代码映射（revise 后的代码处理，由 sparrow-apply 执行）
-
-因 \`backend/\` 下每个限界上下文是独立模块（sparrow-apply 约定），架构动作直接映射为代码动作（仅当涉及限界上下文为 S4 时执行）：
-
-- **新增限界上下文** → 对新 slug 跑 design→apply，建新模块。
-- **合并 A+B→C** → Strangler 式：① 保留 A、B 模块，建协调/ACL 模块 C 委派；② 行为+数据迁入 C；③ cutover 重定向调用方到 C；④ 退役 A、B（归档后删）。
-- **删除限界上下文** → 行为已随合并并入吸收方 → 移除非空模块；若有外部调用方，先留薄兼容 shim/ACL，再退役。
-- **移动聚合（X 从 A→B）** → 搬迁 \`domain/aggregate|entity|valueobject/\` + \`infrastructure/port|adapter/\` 到 B 模块；同步 A、B 的 api/model；跨限界上下文调用方经 ACL 保持聚合外部契约稳定。
-- **防腐层 ACL** → 仅新增 \`infrastructure/adapter/acl/\`（或独立 ACL 模块）做模型翻译，不动本地领域模型。
-- **绞杀者** → 旧模块保留，新模块并行，经 facade/特性开关路由，并存期双写或事件桥接，cutover 后退役旧模块。
-- **数据迁移** → 若 tech.md 标明「每限界上下文独立 schema」，合并/拆分即跨模块 schema 迁表，并存期双写/CDC，再 cutover。
-- **回归校验** → 变更后重跑架构边界/适配度检查（ArchUnit 式 fitness function）+ 现有 \`code_review.md\`，确保新模块边界未退化；bump 代码版本。
-
-> 详细代码迁移步骤见 **sparrow-apply** 的「重构迁移」子流程。
-
-## 版本元数据扩展（revise 模式）
-
-基线（普通模式）输出当前 4 字段（不变）。revise 模式在更新已有文档时，于元数据块追加可选字段：
-
-\`\`\`markdown
-<!--
-  version: v1.1
-  last-updated: {ISO_8601_TIMESTAMP}
-  generated-by: sparrow-architecture
-  sparrow-version: {从 .sparrow/sparrow-config.json 读取}
-  change-id: {change-name}
-  supersedes: v1.0        # 可选，被本变更取代的版本
--->
-\`\`\`
+代码动作的执行步骤在 sparrow-apply 的 `references/apply-rules.md`。本阶段不改 `backend/`。
 
 ## 🖥️ 前端架构（可选）
 
