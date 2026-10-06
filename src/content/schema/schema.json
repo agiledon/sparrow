@@ -115,7 +115,7 @@
         {
           "id": "ingest",
           "usage": "sparrow ingest <path>",
-          "note": "Then execute read-plan.json commands (sparrow ingest show …); optional --project-root"
+          "note": "Plain text and markdown are read directly. For .doc/.docx/.pdf, run ingest then read-plan.json commands (sparrow ingest show …); optional --project-root"
         }
       ]
     },

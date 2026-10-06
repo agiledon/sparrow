@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.6.2]
 
+### Changed
+
+- **Requirement input**: `@` paths that are plain text or Markdown (`.txt`, `.text`, `.md`, `.markdown`) are read directly. `.doc`, `.docx`, and `.pdf` still go through `sparrow ingest`.
+  - **需求输入**：纯文本与 Markdown 直接读取；`.doc`、`.docx`、`.pdf` 仍执行 `sparrow ingest`。
+
 ### Added
 
 - **Change revisions**: An unarchived change is revised in place. After a full archive, only `sparrow-requirement` may start the next change, in `increment` mode. Each revision appends `change/current/{id}/delta.md` with an impact scope and ADDED / MODIFIED / REMOVED / RENAMED. Specs stay full documents. Code changes happen only in `sparrow-apply`, and only for slugs named in that scope. `delta.md` is not promoted to `master/`.
